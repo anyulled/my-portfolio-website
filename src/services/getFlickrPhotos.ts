@@ -27,37 +27,33 @@ export function getFlickrPhotos(): Promise<{
     per_page: "9",
     extras: "url_s, url_m, url_n, url_l, views, date_upload, date_taken",
   })
-    .then((value) => {
-      console.log(value.photos);
-      return {
-        success: true,
-        reason: "",
-        photos: value.photos.photo
-          .map(
-            (photo: {
-              datetaken: string;
-              dateupload: string;
-              height_l: string;
-              title: string;
-              url_l: string;
-              views: string;
-              width_l: string;
-            }) => ({
-              url: photo.url_l,
-              title: photo.title,
-              views: parseInt(photo.views),
-              width: photo.width_l,
-              height: photo.height_l,
-              dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
-              dateTaken: new Date(photo.datetaken.replace(" ", "T")),
-            }),
-          )
-          .sort(
-            (a: Photo, b: Photo) =>
-              a.dateTaken.getTime() - b.dateTaken.getTime(),
-          ),
-      };
-    })
+    .then((value) => ({
+      success: true,
+      reason: "",
+      photos: value.photos.photo
+        .map(
+          (photo: {
+            datetaken: string;
+            dateupload: string;
+            height_l: string;
+            title: string;
+            url_l: string;
+            views: string;
+            width_l: string;
+          }) => ({
+            url: photo.url_l,
+            title: photo.title,
+            views: parseInt(photo.views),
+            width: photo.width_l,
+            height: photo.height_l,
+            dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
+            dateTaken: new Date(photo.datetaken.replace(" ", "T")),
+          }),
+        )
+        .sort(
+          (a: Photo, b: Photo) => a.dateTaken.getTime() - b.dateTaken.getTime(),
+        ),
+    }))
     .catch((reason) => ({
       success: false,
       photos: [],
