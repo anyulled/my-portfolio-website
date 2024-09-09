@@ -1,0 +1,12 @@
+### GET request to example server
+GET http://localhost:3000/api/flickr
+
+###
+
+POST http://localhost:3000/api/contact
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+name = John Doe &
+email = johndoe@example.com &
+ message = Hello, I am John Doe
