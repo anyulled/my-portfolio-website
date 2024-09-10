@@ -11,11 +11,11 @@ import {
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight:"400" });
 
 const socialLinks = [
-  { name: 'Twitter', icon: Twitter, url: 'https://twitter.com/sensuelleboudoir' },
+  { name: 'Twitter', icon: Twitter, url: 'https://twitter.com/anyulled' },
   { name: 'Instagram', icon: Instagram, url: 'https://instagram.com/sensuelleboudoir' },
-  { name: 'Flickr', icon: Camera, url: 'https://flickr.com/sensuelleboudoir' },
-  { name: 'Kavyar', icon: LayoutPanelTop, url: 'https://kavyar.com/sensuelleboudoir' },
-  { name: 'Model Mayhem', icon: User, url: 'https://modelmayhem.com/sensuelleboudoir' },
+  { name: 'Flickr', icon: Camera, url: 'https://flickr.com/people/anyulled' },
+  { name: 'Kavyar', icon: LayoutPanelTop, url: 'https://kavyar.com/anyulled' },
+  { name: 'Model Mayhem', icon: User, url: 'https://modelmayhem.com/anyulled' },
 ]
 
 export default function SocialMedia() {
