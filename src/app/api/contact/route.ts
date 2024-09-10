@@ -1,13 +1,22 @@
 import { NextResponse } from "next/server";
+import { sendEMail } from "@/services/mailer";
 
 export async function POST(req: Request) {
   const formData = await req.formData();
-  const name = formData.get("name");
-  const email = formData.get("email");
-  const message = formData.get("message");
+  const name: string = formData.get("name")!.toString();
+  const email: string = formData.get("email")!.toString();
+  const message: string = formData.get("message")!.toString();
 
-  // Simulate sending an email or saving to a database
   console.log("Form submitted:", { name, email, message });
+  const result = await sendEMail(message, email, name);
+  console.log(result);
+
+  if(result==null){
+    return NextResponse.json({
+      success: false,
+      message: "Sorry, we are not able to send your message at the moment. Please try again later.",
+    })
+  }
 
   return NextResponse.json({
     success: true,
