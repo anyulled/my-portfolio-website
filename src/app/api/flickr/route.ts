@@ -1,4 +1,4 @@
-import { getFlickrPhotos } from "@/services/getFlickrPhotos";
+import { getFlickrPhotos } from "@/services/flickr";
 import { NextResponse } from "next/server";
 
 export async function GET() {

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import "yet-another-react-lightbox/styles.css";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { Photo } from "@/services/getFlickrPhotos";
+import { Photo } from "@/services/flickr";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import {useState} from "react";
 import Lightbox from "yet-another-react-lightbox";

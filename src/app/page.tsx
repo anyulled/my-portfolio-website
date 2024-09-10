@@ -3,7 +3,7 @@ import SocialMedia from "@/components/SocialMedia";
 import Gallery from "@/components/Gallery";
 import ContactForm from "@/components/ContactForm";
 import type { Metadata } from "next";
-import { getFlickrPhotos } from "@/services/getFlickrPhotos";
+import { getFlickrPhotos } from "@/services/flickr";
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
