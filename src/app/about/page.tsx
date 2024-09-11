@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BioPage() {
-  const images = await getFlickrPhotos("covers", "50");
+  const images = await getFlickrPhotos("cover", "50");
   return (
     <div
       className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-neutral-400 to-neutral-50 pt-20`}
@@ -128,7 +128,7 @@ export default async function BioPage() {
         {images?.photos && (
           <>
             <h2
-              className={`${playfair.className} text-3xl font-semibold text-center mb-8`}
+              className={`${playfair.className} text-3xl font-semibold text-center my-4`}
             >
               Published Work
             </h2>
@@ -140,16 +140,16 @@ export default async function BioPage() {
                   className="relative overflow-hidden group"
                 >
                   <Image
-                    src={cover.urlSmall}
+                    src={cover.urlMedium}
                     alt={cover.title}
                     width={300}
                     height={400}
-                    className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
                   />
                   <div className="absolute inset-0 flex items-end justify-center">
                     <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
                       <p
-                        className={`${dancingScript.className} text-sm sm:text-base md:text-lg text-white text-center py-2`}
+                        className={`${playfair.className} text-xs sm:text-xs md:text-sm text-white text-center py-2`}
                       >
                         {cover.title}
                       </p>
@@ -161,7 +161,7 @@ export default async function BioPage() {
           </>
         )}
         <h2
-          className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-neutral-300`}
+          className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-neutral-300  my-4`}
         >
           Collaborations
         </h2>
