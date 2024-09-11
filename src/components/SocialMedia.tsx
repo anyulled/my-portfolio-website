@@ -1,22 +1,27 @@
 import Link from "next/link";
 import { Camera, Instagram, Twitter, User, LayoutPanelTop } from "lucide-react";
-import {Aref_Ruqaa} from "next/font/google";
+import { Aref_Ruqaa } from "next/font/google";
 
 import {
-  Tooltip, TooltipContent,
+  Tooltip,
+  TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight:"400" });
+const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
 const socialLinks = [
-  { name: 'Twitter', icon: Twitter, url: 'https://twitter.com/anyulled' },
-  { name: 'Instagram', icon: Instagram, url: 'https://instagram.com/sensuelleboudoir' },
-  { name: 'Flickr', icon: Camera, url: 'https://flickr.com/people/anyulled' },
-  { name: 'Kavyar', icon: LayoutPanelTop, url: 'https://kavyar.com/anyulled' },
-  { name: 'Model Mayhem', icon: User, url: 'https://modelmayhem.com/anyulled' },
-]
+  { name: "Twitter", icon: Twitter, url: "https://twitter.com/anyulled" },
+  {
+    name: "Instagram",
+    icon: Instagram,
+    url: "https://instagram.com/sensuelleboudoir",
+  },
+  { name: "Flickr", icon: Camera, url: "https://flickr.com/people/anyulled" },
+  { name: "Kavyar", icon: LayoutPanelTop, url: "https://kavyar.com/anyulled" },
+  { name: "Model Mayhem", icon: User, url: "https://modelmayhem.com/anyulled" },
+];
 
 export default function SocialMedia() {
   return (
@@ -30,22 +35,22 @@ export default function SocialMedia() {
         <TooltipProvider>
           <div className="flex justify-center space-x-6">
             {socialLinks.map((social) => (
-                <Tooltip key={social.name}>
-                  <TooltipTrigger asChild>
-                    <Link
-                        href={social.url}
-                        className="text-2xl hover:text-primary transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                      <social.icon />
-                      <span className="sr-only">{social.name}</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Follow us on {social.name}</p>
-                  </TooltipContent>
-                </Tooltip>
+              <Tooltip key={social.name}>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={social.url}
+                    className="text-2xl hover:text-primary transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <social.icon />
+                    <span className="sr-only">{social.name}</span>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Follow us on {social.name}</p>
+                </TooltipContent>
+              </Tooltip>
             ))}
           </div>
         </TooltipProvider>

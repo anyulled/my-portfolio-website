@@ -3,8 +3,8 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const transporter = nodemailer.createTransport({
   service: "smtp",
-  port:465,
-  host:"authsmtp.securemail.pro",
+  port: 465,
+  host: "authsmtp.securemail.pro",
   secure: true,
   auth: {
     user: process.env.EMAIL_USER,
@@ -12,7 +12,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEMail = async (message: string, sender:string, name:string) :Promise<Promise<SMTPTransport.SentMessageInfo> | null> => {
+export const sendEMail = async (
+  message: string,
+  sender: string,
+  name: string,
+): Promise<Promise<SMTPTransport.SentMessageInfo> | null> => {
   try {
     return await transporter.sendMail({
       from: process.env.EMAIL_USER,

@@ -2,7 +2,7 @@
 import { Dancing_Script, Aref_Ruqaa } from "next/font/google";
 import { useScroll } from "@/contexts/ScrollContext";
 
-const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight:"400" });
+const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export default function Hero() {
@@ -27,7 +27,9 @@ export default function Hero() {
         >
           Sensuelle Boudoir
         </h1>
-        <p className={`${arefRuqaa.className} text-2xl md:text-3xl dark:text-neutral-400 text-yellow-700 drop-shadow-lg`}>
+        <p
+          className={`${arefRuqaa.className} text-2xl md:text-3xl dark:text-neutral-400 text-yellow-700 drop-shadow-lg`}
+        >
           Capture Your Essence
         </p>
       </div>

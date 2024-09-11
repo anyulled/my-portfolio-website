@@ -11,11 +11,12 @@ export async function POST(req: Request) {
   const result = await sendEMail(message, email, name);
   console.log(result);
 
-  if(result==null){
+  if (result == null) {
     return NextResponse.json({
       success: false,
-      message: "Sorry, we are not able to send your message at the moment. Please try again later.",
-    })
+      message:
+        "Sorry, we are not able to send your message at the moment. Please try again later.",
+    });
   }
 
   return NextResponse.json({

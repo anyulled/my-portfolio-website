@@ -4,7 +4,7 @@ import "yet-another-react-lightbox/styles.css";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Photo } from "@/services/flickr";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import {useState} from "react";
+import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -36,7 +36,8 @@ export default function Gallery({ photos }: GalleryProps) {
           </h2>
           <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
             {photos.map((image, i) => (
-              <div onClick={() => handleImageClick(i)}
+              <div
+                onClick={() => handleImageClick(i)}
                 key={image.title.concat(image.views.toString())}
                 className="relative overflow-hidden group break-inside-avoid"
               >
@@ -45,7 +46,7 @@ export default function Gallery({ photos }: GalleryProps) {
                   alt={image.title}
                   width={600}
                   height={400 + (i % 3) * 100}
-                   priority
+                  priority
                   className="w-full h-auto transition-all duration-500 ease-in-out opacity-0 group-hover:opacity-100 group-hover:scale-105 rounded-lg"
                   onLoad={(event) =>
                     event.currentTarget.classList.remove("opacity-0")

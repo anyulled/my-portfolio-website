@@ -10,7 +10,14 @@ export interface Photo {
   dateTaken: Date;
 }
 
-export function getFlickrPhotos(): Promise<{
+const photoType: Record<"boudoir" | "covers", string> = {
+  boudoir: "model, boudoir",
+  covers: "magazine, cover",
+};
+
+type PhotoTypeKey = keyof typeof photoType;
+
+export function getFlickrPhotos(tags: PhotoTypeKey): Promise<{
   success: boolean;
   photos: Array<Photo>;
   reason: string;
@@ -21,7 +28,7 @@ export function getFlickrPhotos(): Promise<{
     user_id: "76279599@N00",
     sort: "interestingness-desc",
     safe_search: "3",
-    tags: "model, boudoir",
+    tags: tags,
     content_types: "0",
     media: "photos",
     per_page: "9",

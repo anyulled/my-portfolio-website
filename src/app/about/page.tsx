@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Dancing_Script, Playfair_Display } from "next/font/google";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { getFlickrPhotos } from "@/services/flickr";
 import { Metadata } from "next";
@@ -27,7 +26,7 @@ export default async function BioPage() {
   console.log(images);
   return (
     <div
-      className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-gray-50 to-gray-100" pt-20`}
+      className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-neutral-400 to-neutral-50 pt-20`}
     >
       <div className="container max-w-7xl mx-auto px-4">
         <h1
@@ -123,11 +122,8 @@ export default async function BioPage() {
                 </p>
               </CardContent>
             </Card>
-
           </div>
         </div>
-
-        <Separator className="my-12" />
 
         <h2
           className={`${playfair.className} text-3xl font-semibold text-center mb-8`}
@@ -157,8 +153,6 @@ export default async function BioPage() {
             </div>
           ))}
         </div>
-
-        <Separator className="my-6" />
 
         <h2
           className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-neutral-300`}
@@ -214,7 +208,7 @@ export default async function BioPage() {
           </Card>
         </div>
 
-        <Card className="mt-12 dark:bg-gray-950">
+        <Card className="my-12 dark:bg-gray-950">
           <CardContent className="p-6">
             <h2
               className={`${dancingScript.className} text-3xl mb-4 text-center`}

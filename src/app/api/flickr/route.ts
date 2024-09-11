@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const value = await getFlickrPhotos();
+    const value = await getFlickrPhotos("boudoir");
 
     return NextResponse.json({
       success: true,

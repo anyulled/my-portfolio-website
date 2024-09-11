@@ -4,7 +4,9 @@ const playfair = Playfair_Display({ subsets: ["latin"] });
 
 export default function CookiePage() {
   return (
-    <div className="min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-gray-50 to-gray-100">
+    <div
+      className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-neutral-400 to-neutral-50 pt-20`}
+    >
       <div className="container max-w-7xl mx-auto px-4 py-8">
         <h1
           className={`${playfair.className} text-4xl md:text-5xl font-bold text-center mt-12 mb-8`}
@@ -137,10 +139,10 @@ export default function CookiePage() {
             purposes, market research or the development of satisfaction
             surveys, as well as revoke their consent at any time (without
             retroactive effect). To do so, they must send an email to the
-            address info@boudoir.barcelona When you receive information of interest
-            by email, you can also unsubscribe from said email, by clicking on
-            the link included in it and sending an email to the address
-            info@boudoir.barcelona with the subject “Unsubscribe”.
+            address info@boudoir.barcelona When you receive information of
+            interest by email, you can also unsubscribe from said email, by
+            clicking on the link included in it and sending an email to the
+            address info@boudoir.barcelona with the subject “Unsubscribe”.
           </p>
 
           <h2>Changes to the Privacy Policy.</h2>

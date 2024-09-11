@@ -9,7 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
-import {Metadata} from "next";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
@@ -34,7 +34,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Sensuelle Boudoir",
     description: "Boudoir photography service in Barcelonas.",
-    images: ["https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg"],
+    images: [
+      "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
+    ],
     site: "@anyulled",
     creator: "@anyulled",
   },
@@ -47,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={"bg-neutral-50 dark:bg-zinc-800"}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ScrollProvider>
             <div className={`min-h-screen`}>
