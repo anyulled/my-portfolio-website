@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const res = await getFlickrPhotos();
+  const res = await getFlickrPhotos("boudoir");
 
   if (!res.success) {
     return <div>Error: {res.reason}</div>;
   }
 
   return (
-    <main className={"dark:bg-gray-900 dark:text-white bg-white text-gray-900"}>
+    <main className={"dark:bg-zinc-900 dark:text-white bg-white text-gray-900"}>
       {/* Hero Section with Parallax */}
       <Hero />
 

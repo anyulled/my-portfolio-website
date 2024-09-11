@@ -1,38 +1,35 @@
-"use client";
-
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Dancing_Script, Playfair_Display } from "next/font/google";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useEffect } from "react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
+import { getFlickrPhotos } from "@/services/flickr";
+import { Metadata } from "next";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
-export default function BioPage() {
-  const { theme } = useTheme();
+export const metadata: Metadata = {
+  title: "About Me · Boudoir Photography in Barcelona",
+  description: "Anyul Rivas — Boudoir photographer in Barcelona, Spain",
+  openGraph: {
+    images: [
+      {
+        alt: "Anyul Rivas",
+        url: "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg",
+      },
+    ],
+  },
+};
 
-  useEffect(() => {
-    document.title = "About me — Boudoir Barcelona";
-  }, []);
-  const magazineCovers: Array<{
-    imageUrl: string;
-    title: string;
-    id: string;
-  }> = [];
+export default async function BioPage() {
+  const images = await getFlickrPhotos("covers");
+  console.log(images);
   return (
     <div
-      className={`min-h-screen ${theme === "dark" ? "bg-gradient-to-b from-gray-900 to-gray-800" : "bg-gradient-to-b from-gray-50 to-gray-100"} pt-20`}
+      className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-gray-50 to-gray-100" pt-20`}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="container mx-auto px-4 py-8"
-      >
+      <div className="container max-w-7xl mx-auto px-4">
         <h1
           className={`${playfair.className} text-4xl md:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-neutral-300`}
         >
@@ -63,7 +60,7 @@ export default function BioPage() {
                 <h3 className={`${playfair.className} text-lg mb-4`}>
                   Beyond the Lens, Into the Soul
                 </h3>
-                <p className="text-muted-foreground mb-2">
+                <p className="text-muted-foreground my-2">
                   Anyul Led Rivas, known on social media as{" "}
                   <strong>@anyulled</strong>, is a multifaceted photographer who
                   specializes in portrait, boudoir, and artistic nude
@@ -71,16 +68,19 @@ export default function BioPage() {
                   Venezuela, Anyul has since established himself in the vibrant
                   city of Barcelona, Spain, since 2016.
                 </p>
-                <p className="text-muted-foreground mb-2">
+                <p className="text-muted-foreground my-2">
                   His educational journey in photography includes three years at
-                  <Link href={"https://efacontigo.com/"} target={"_blank"}> Escuela Foto Arte</Link> in Caracas and workshops
-                  with esteemed photographers like Roberto Mata, Eduardo
-                  Álvarez, Luis Eduardo Alonso, Ruben Suarez, Chema Photo, Peter
-                  Coulson, Jon Hernandez, and Antonio Garci. This diverse
-                  education has honed his skills in capturing the essence of his
-                  subjects.
+                  <Link href={"https://efacontigo.com/"} target={"_blank"}>
+                    {" "}
+                    Escuela Foto Arte
+                  </Link>{" "}
+                  in Caracas and workshops with esteemed photographers like
+                  Roberto Mata, Eduardo Álvarez, Luis Eduardo Alonso, Ruben
+                  Suarez, Chema Photo, Peter Coulson, Jon Hernandez, and Antonio
+                  Garci. This diverse education has honed his skills in
+                  capturing the essence of his subjects.
                 </p>
-                <p className="text-muted-foreground mb-2">
+                <p className="text-muted-foreground my-2">
                   His work has been widely recognized and published in various
                   international magazines, such as{" "}
                   <Link href={"https://www.malvie.fr/"} target={"_blank"}>
@@ -96,13 +96,13 @@ export default function BioPage() {
                   , Dominante, and many others, showcasing his unique
                   perspective in photography.
                 </p>
-                <p className="text-muted-foreground mb-2">
+                <p className="text-muted-foreground my-2">
                   Balancing his passion for photography with a successful career
                   as a Principal Software Engineer and conference organizer,
                   Anyul brings a unique blend of technical expertise and
                   artistic sensitivity to his work.
                 </p>
-                <p className="text-muted-foreground mb-2">
+                <p className="text-muted-foreground my-2">
                   Anyul&apos;s photography is particularly noted for its focus
                   on boudoir, followed by artistic nudes and portraits. He
                   excels in revealing the hidden beauty in women, transcending
@@ -110,30 +110,20 @@ export default function BioPage() {
                   images are marked by a sensual yet empowering approach,
                   celebrating the strength and beauty of women.
                 </p>
-                <p className="text-muted-foreground mb-2">
+                <p className="text-muted-foreground my-2">
                   He draws inspiration from a myriad of photographers, including
-                  <strong> Lindsay Adler, Jen Rozenbaum, Antonio Garci, and Helmut
-                    Newton</strong>. His work reflects a blend of these influences,
-                  combined with his personal vision, resulting in photographs
-                  that are not only visually stunning but also emotionally
-                  resonant.
+                  <strong>
+                    {" "}
+                    Lindsay Adler, Jen Rozenbaum, Antonio Garci, and Helmut
+                    Newton
+                  </strong>
+                  . His work reflects a blend of these influences, combined with
+                  his personal vision, resulting in photographs that are not
+                  only visually stunning but also emotionally resonant.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className={"dark:bg-gray-950"}>
-              <CardContent className="p-6">
-                <h2 className={`${dancingScript.className} text-3xl mb-4`}>
-                  My Approach
-                </h2>
-                <p className="text-muted-foreground">
-                  I believe that every person has a unique story to tell. My
-                  approach to boudoir photography is to create a comfortable,
-                  empowering environment where you can express your authentic
-                  self...
-                </p>
-              </CardContent>
-            </Card>
           </div>
         </div>
 
@@ -146,10 +136,10 @@ export default function BioPage() {
         </h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
-          {magazineCovers.map((cover) => (
-            <div key={cover.id} className="relative overflow-hidden group">
+          {images.photos.map((cover) => (
+            <div key={cover.views} className="relative overflow-hidden group">
               <Image
-                src={cover.imageUrl}
+                src={cover.url}
                 alt={cover.title}
                 width={300}
                 height={400}
@@ -240,7 +230,7 @@ export default function BioPage() {
             </p>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }
