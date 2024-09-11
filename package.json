@@ -35,7 +35,7 @@
     "yet-another-react-lightbox": "^3.21.4"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
