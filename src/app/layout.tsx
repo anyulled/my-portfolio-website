@@ -17,11 +17,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sensuelle Boudoir",
     description: "Boudoir photography service in Barcelona.",
-    urlLarge: "https://boudoir.barcelona",
+    url: "https://boudoir.barcelona",
     siteName: "Boudoir photography service in Barcelona",
     images: [
       {
-        urlLarge:
+        url:
           "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
         width: 1200,
         height: 630,
