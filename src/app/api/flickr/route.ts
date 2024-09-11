@@ -6,7 +6,6 @@ export async function GET(request: NextRequest) {
   const query = params.get("query") ?? "boudoir";
   const items = params.get("items") ?? "10";
   try {
-    console.log(`Fetching ${items} for ${params.get("query")}`);
     const value = await getFlickrPhotos(query, items);
 
     return NextResponse.json({

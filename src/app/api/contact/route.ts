@@ -7,9 +7,7 @@ export async function POST(req: Request) {
   const email: string = formData.get("email")!.toString();
   const message: string = formData.get("message")!.toString();
 
-  console.log("Form submitted:", { name, email, message });
   const result = await sendEMail(message, email, name);
-  console.log(result);
 
   if (result == null) {
     return NextResponse.json({

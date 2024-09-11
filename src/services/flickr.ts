@@ -1,13 +1,16 @@
 import { createFlickr } from "flickr-sdk";
 
 export interface Photo {
-  url: string;
+  dateTaken: Date;
+  dateUpload: Date;
+  height: string;
   title: string;
+  urlLarge: string;
+  urlMedium: string;
+  urlNormal: string;
+  urlSmall: string;
   views: number;
   width: string;
-  height: string;
-  dateUpload: Date;
-  dateTaken: Date;
 }
 
 export async function getFlickrPhotos(
@@ -81,7 +84,5 @@ export async function getFlickrPhotos(
         reason: "Unknown error",
       };
     }
-  } finally {
-    console.log("Finished");
   }
 }

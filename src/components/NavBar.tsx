@@ -48,7 +48,6 @@ export default function NavBar() {
     router.push("/#book-session");
   };
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <nav

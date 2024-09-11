@@ -15,8 +15,7 @@ export const metadata: Metadata = {
     images: [
       {
         alt: "Anyul Rivas",
-        url:
-          "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg",
+        url: "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg",
       },
     ],
   },
@@ -24,7 +23,6 @@ export const metadata: Metadata = {
 
 export default async function BioPage() {
   const images = await getFlickrPhotos("covers", "50");
-  console.log(images);
   return (
     <div
       className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-neutral-400 to-neutral-50 pt-20`}
@@ -112,8 +110,13 @@ export default async function BioPage() {
                 </p>
                 <p className="text-muted-foreground my-2">
                   He draws inspiration from a myriad of photographers, including{" "}
-                  <strong>Lindsay Adler, Jen Rozenbaum, Antonio Garci, and Helmut Newton</strong>.
-                  His work reflects a blend of these influences, combined with
+                  <strong>
+                    Lindsay Adler, Jen Rozenbaum, Antonio Garci, and Helmut
+                    Newton
+                  </strong>
+                  {/*
+                   */}
+                  . His work reflects a blend of these influences, combined with
                   his personal vision, resulting in photographs that are not
                   only visually stunning but also emotionally resonant.
                 </p>
@@ -122,35 +125,41 @@ export default async function BioPage() {
           </div>
         </div>
 
-        {images?.photos &&(<><h2
-            className={`${playfair.className} text-3xl font-semibold text-center mb-8`}
-        >
-          Published Work
-        </h2>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
-        {images.photos.map((cover) => (
-          <div key={cover.views} className="relative overflow-hidden group">
-        <Image
-            src={cover.url}
-            alt={cover.title}
-            width={300}
-            height={400}
-            className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-        />
-        <div className="absolute inset-0 flex items-end justify-center">
-          <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
-            <p
-                className={`${dancingScript.className} text-sm sm:text-base md:text-lg text-white text-center py-2`}
+        {images?.photos && (
+          <>
+            <h2
+              className={`${playfair.className} text-3xl font-semibold text-center mb-8`}
             >
-              {cover.title}
-            </p>
-          </div>
-        </div>
-      </div>
-      ))}
-    </div></>)
-}
+              Published Work
+            </h2>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
+              {images.photos.map((cover) => (
+                <div
+                  key={cover.views}
+                  className="relative overflow-hidden group"
+                >
+                  <Image
+                    src={cover.urlSmall}
+                    alt={cover.title}
+                    width={300}
+                    height={400}
+                    className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 flex items-end justify-center">
+                    <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
+                      <p
+                        className={`${dancingScript.className} text-sm sm:text-base md:text-lg text-white text-center py-2`}
+                      >
+                        {cover.title}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
         <h2
           className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-neutral-300`}
         >

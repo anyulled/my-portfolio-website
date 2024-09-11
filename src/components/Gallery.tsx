@@ -20,7 +20,6 @@ export default function Gallery({ photos }: Readonly<GalleryProps>) {
   const [photoIndex, setPhotoIndex] = useState<number>(0);
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
   const handleImageClick = (image: number) => {
-    console.log("Image Clicked");
     gaEventTracker("image_click", `Image ${image}`);
     setLightboxOpen(true);
     setPhotoIndex(image);
@@ -43,7 +42,7 @@ export default function Gallery({ photos }: Readonly<GalleryProps>) {
                   className="relative overflow-hidden group break-inside-avoid"
                 >
                   <Image
-                    src={image.url}
+                    src={image.urlNormal}
                     alt={image.title}
                     width={600}
                     height={400 + (i % 3) * 100}
@@ -71,7 +70,7 @@ export default function Gallery({ photos }: Readonly<GalleryProps>) {
           open={lightboxOpen}
           index={photoIndex}
           close={() => setLightboxOpen(false)}
-          slides={photos.map((value) => ({ src: value.url }))}
+          slides={photos.map((value) => ({ src: value.urlLarge }))}
         />
       )}
     </>
