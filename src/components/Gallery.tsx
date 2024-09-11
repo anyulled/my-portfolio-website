@@ -11,7 +11,7 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 interface GalleryProps {
-  photos: Array<Photo>;
+  photos: Array<Photo> | null;
 }
 
 export default function Gallery({ photos }: GalleryProps) {
@@ -34,37 +34,39 @@ export default function Gallery({ photos }: GalleryProps) {
           >
             Our Gallery
           </h2>
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-            {photos.map((image, i) => (
-              <div
-                onClick={() => handleImageClick(i)}
-                key={image.title.concat(image.views.toString())}
-                className="relative overflow-hidden group break-inside-avoid"
-              >
-                <Image
-                  src={image.url}
-                  alt={image.title}
-                  width={600}
-                  height={400 + (i % 3) * 100}
-                  priority
-                  className="w-full h-auto transition-all duration-500 ease-in-out opacity-0 group-hover:opacity-100 group-hover:scale-105 rounded-lg"
-                  onLoad={(event) =>
-                    event.currentTarget.classList.remove("opacity-0")
-                  }
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                  <span
-                    className={`${dancingScript.className} text-white text-2xl`}
-                  >
-                    View More
-                  </span>
+          {photos && (
+            <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+              {photos.map((image, i) => (
+                <div
+                  onClick={() => handleImageClick(i)}
+                  key={image.title.concat(image.views.toString())}
+                  className="relative overflow-hidden group break-inside-avoid"
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.title}
+                    width={600}
+                    height={400 + (i % 3) * 100}
+                    priority
+                    className="w-full h-auto transition-all duration-500 ease-in-out opacity-0 group-hover:opacity-100 group-hover:scale-105 rounded-lg"
+                    onLoad={(event) =>
+                      event.currentTarget.classList.remove("opacity-0")
+                    }
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                    <span
+                      className={`${dancingScript.className} text-white text-2xl`}
+                    >
+                      View More
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
-      {lightboxOpen && (
+      {photos && lightboxOpen && (
         <Lightbox
           open={lightboxOpen}
           index={photoIndex}

@@ -1,5 +1,5 @@
 import { Playfair_Display } from "next/font/google";
-import {Metadata} from "next";
+import { Metadata } from "next";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 

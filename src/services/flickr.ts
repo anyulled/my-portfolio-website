@@ -10,33 +10,31 @@ export interface Photo {
   dateTaken: Date;
 }
 
-const photoType: Record<"boudoir" | "covers", string> = {
-  boudoir: "model, boudoir",
-  covers: "magazine, cover",
-};
-
-type PhotoTypeKey = keyof typeof photoType;
-
-export function getFlickrPhotos(tags: PhotoTypeKey): Promise<{
+export async function getFlickrPhotos(
+  tags: string,
+  items?: string,
+): Promise<{
+  reason: string | null;
   success: boolean;
-  photos: Array<Photo>;
-  reason: string;
+  photos: Array<Photo> | null;
 }> {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  if (!items) {
+    items = "9";
+  }
 
-  return flickr("flickr.photos.search", {
-    user_id: "76279599@N00",
-    sort: "interestingness-desc",
-    safe_search: "3",
-    tags: tags,
-    content_types: "0",
-    media: "photos",
-    per_page: "9",
-    extras: "url_s, url_m, url_n, url_l, views, date_upload, date_taken",
-  })
-    .then((value) => ({
-      success: true,
-      reason: "",
+  try {
+    const value = await flickr("flickr.photos.search", {
+      user_id: "76279599@N00",
+      sort: "interestingness-desc",
+      safe_search: "3",
+      tags: tags,
+      content_types: "0",
+      media: "photos",
+      per_page: items,
+      extras: "url_s, url_m, url_n, url_l, views, date_upload, date_taken",
+    });
+    return {
       photos: value.photos.photo
         .map(
           (photo: {
@@ -45,10 +43,16 @@ export function getFlickrPhotos(tags: PhotoTypeKey): Promise<{
             height_l: string;
             title: string;
             url_l: string;
+            url_m: string;
+            url_n: string;
+            url_s: string;
             views: string;
             width_l: string;
           }) => ({
-            url: photo.url_l,
+            urlLarge: photo.url_l,
+            urlMedium: photo.url_m,
+            urlSmall: photo.url_s,
+            urlNormal: photo.url_n,
             title: photo.title,
             views: parseInt(photo.views),
             width: photo.width_l,
@@ -60,13 +64,24 @@ export function getFlickrPhotos(tags: PhotoTypeKey): Promise<{
         .sort(
           (a: Photo, b: Photo) => a.dateTaken.getTime() - b.dateTaken.getTime(),
         ),
-    }))
-    .catch((reason) => ({
-      success: false,
-      photos: [],
-      reason: reason.message,
-    }))
-    .finally(() => {
-      console.log("Finished");
-    });
+      reason: null,
+      success: true,
+    };
+  } catch (reason) {
+    if (reason instanceof Error) {
+      return {
+        success: false,
+        photos: null,
+        reason: reason.message,
+      };
+    } else {
+      return {
+        success: false,
+        photos: null,
+        reason: "Unknown error",
+      };
+    }
+  } finally {
+    console.log("Finished");
+  }
 }

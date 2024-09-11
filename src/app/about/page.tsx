@@ -15,14 +15,15 @@ export const metadata: Metadata = {
     images: [
       {
         alt: "Anyul Rivas",
-        url: "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg",
+        url:
+          "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg",
       },
     ],
   },
 };
 
 export default async function BioPage() {
-  const images = await getFlickrPhotos("covers");
+  const images = await getFlickrPhotos("covers", "50");
   console.log(images);
   return (
     <div
@@ -125,35 +126,35 @@ export default async function BioPage() {
           </div>
         </div>
 
-        <h2
-          className={`${playfair.className} text-3xl font-semibold text-center mb-8`}
+        {images && images.photos &&(<><h2
+            className={`${playfair.className} text-3xl font-semibold text-center mb-8`}
         >
           Published Work
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
-          {images.photos.map((cover) => (
-            <div key={cover.views} className="relative overflow-hidden group">
-              <Image
-                src={cover.url}
-                alt={cover.title}
-                width={300}
-                height={400}
-                className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-              />
-              <div className="absolute inset-0 flex items-end justify-center">
-                <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
-                  <p
-                    className={`${dancingScript.className} text-sm sm:text-base md:text-lg text-white text-center py-2`}
-                  >
-                    {cover.title}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
+        {images.photos.map((cover) => (
+          <div key={cover.views} className="relative overflow-hidden group">
+        <Image
+            src={cover.url}
+            alt={cover.title}
+            width={300}
+            height={400}
+            className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+        />
+        <div className="absolute inset-0 flex items-end justify-center">
+          <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
+            <p
+                className={`${dancingScript.className} text-sm sm:text-base md:text-lg text-white text-center py-2`}
+            >
+              {cover.title}
+            </p>
+          </div>
         </div>
-
+      </div>
+      ))}
+    </div></>)
+}
         <h2
           className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-neutral-300`}
         >
