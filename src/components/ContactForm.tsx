@@ -12,8 +12,10 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
 export default function ContactForm() {
   const gaEventTracker = useAnalyticsEventTracker("Contact");
+  const [sendingForm, setSendingForm] = React.useState<boolean>(false);
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSendingForm(true);
     const formData = new FormData(event.currentTarget);
 
     try {
@@ -28,6 +30,7 @@ export default function ContactForm() {
           title: "Success",
           description: result.message,
         });
+        setSendingForm(false);
         gaEventTracker("form_submit", "success");
       } else {
         toast({
@@ -36,6 +39,7 @@ export default function ContactForm() {
             "There was an error submitting your message. Please try again.",
           variant: "destructive",
         });
+        setSendingForm(false);
         gaEventTracker("form_submit", "error");
       }
     } catch (error) {
@@ -44,8 +48,7 @@ export default function ContactForm() {
         description: "An unexpected error occurred. Please try again later.",
         variant: "destructive",
       });
-    } finally {
-      console.log("form submitted");
+      setSendingForm(false);
     }
   };
 
@@ -64,7 +67,7 @@ export default function ContactForm() {
           <Input type="text" name="name" placeholder="Your Name" required />
           <Input type="email" name="email" placeholder="Your Email" required />
           <Textarea name="message" placeholder="Your Message" required />
-          <Button type="submit" className="w-full">
+          <Button disabled={sendingForm} type="submit" className="w-full">
             Send Message
           </Button>
         </form>
