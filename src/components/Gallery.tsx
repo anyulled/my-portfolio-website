@@ -14,7 +14,7 @@ interface GalleryProps {
   photos: Array<Photo> | null;
 }
 
-export default function Gallery({ photos }: GalleryProps) {
+export default function Gallery({ photos }: Readonly<GalleryProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Gallery");
 
   const [photoIndex, setPhotoIndex] = useState<number>(0);

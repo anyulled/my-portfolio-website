@@ -111,13 +111,9 @@ export default async function BioPage() {
                   celebrating the strength and beauty of women.
                 </p>
                 <p className="text-muted-foreground my-2">
-                  He draws inspiration from a myriad of photographers, including
-                  <strong>
-                    {" "}
-                    Lindsay Adler, Jen Rozenbaum, Antonio Garci, and Helmut
-                    Newton
-                  </strong>
-                  . His work reflects a blend of these influences, combined with
+                  He draws inspiration from a myriad of photographers, including{" "}
+                  <strong>Lindsay Adler, Jen Rozenbaum, Antonio Garci, and Helmut Newton</strong>.
+                  His work reflects a blend of these influences, combined with
                   his personal vision, resulting in photographs that are not
                   only visually stunning but also emotionally resonant.
                 </p>
@@ -126,7 +122,7 @@ export default async function BioPage() {
           </div>
         </div>
 
-        {images && images.photos &&(<><h2
+        {images?.photos &&(<><h2
             className={`${playfair.className} text-3xl font-semibold text-center mb-8`}
         >
           Published Work
