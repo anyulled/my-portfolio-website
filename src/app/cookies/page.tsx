@@ -1,6 +1,11 @@
 import { Playfair_Display } from "next/font/google";
+import {Metadata} from "next";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Cookie Policy · Boudoir Photography in Barcelona",
+};
 
 export default function CookiePage() {
   return (
