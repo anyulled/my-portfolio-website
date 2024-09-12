@@ -122,9 +122,9 @@ export default function PrivacyPage() {
           <h2>SIXTH.- PROPERTY RIGHTS</h2>
           All the contents of the Website, such as texts, opinion articles,
           graphics, photographs, logos, icons, images, as well as the graphic
-          design, source code and software, are the exclusive property of Daniel
-          Blanco or third parties, whose rights in this regard are legitimately
-          held by Daniel Blanco, and are therefore protected by national and
+          design, source code and software, are the exclusive property of Sensuelle
+          Boudoir or third parties, whose rights in this regard are legitimately
+          held by Sensuelle Boudoir, and are therefore protected by national and
           international legislation.
           <p>
             The use of all elements subject to industrial and intellectual
@@ -133,19 +133,19 @@ export default function PrivacyPage() {
           </p>
           <h2>SEVENTH.- EXCLUSION OF WARRANTIES AND LIABILITY</h2>
           <p>
-            Daniel Blanco reserves the right to interrupt access to the services
+            Sensuelle Boudoir reserves the right to interrupt access to the services
             at any time and without prior notice, whether for technical,
             security, control, maintenance reasons, power supply failures or for
             any other justified reason.
           </p>
           <p>
-            Consequently, Daniel Blanco does not guarantee the reliability,
+            Consequently, Sensuelle Boudoir does not guarantee the reliability,
             availability or continuity of the Website or the Services, so the
             use of the same by users is carried out at their own risk, and
-            Daniel Blanco cannot be held liable in any way in this regard.
+            Sensuelle Boudoir cannot be held liable in any way in this regard.
           </p>
           <p>
-            Furthermore, Daniel Blanco does not assume any liability arising
+            Furthermore, Sensuelle Boudoir does not assume any liability arising
             from, by way of example but not limited to:
           </p>
           <p>
@@ -160,14 +160,14 @@ export default function PrivacyPage() {
             the service. The content of those pages that users can access from
             links included on the website. From acts or omissions of third
             parties, regardless of whether these third parties may be linked to
-            Daniel Blanco by contractual means.
+            Sensuelle Boudoir by contractual means.
           </p>
           <p>
-            Likewise, Daniel Blanco excludes any liability for damages of any
+            Likewise, Sensuelle Boudoir excludes any liability for damages of any
             kind that may be due to the presence of viruses or the presence of
             other harmful elements in the content that may cause alterations in
             the computer systems as well as in the documents or systems stored
-            therein, so Daniel Blanco will not be liable in any case when the
+            therein, so Sensuelle Boudoir will not be liable in any case when the
             following occur:
           </p>
           <p>
@@ -175,7 +175,7 @@ export default function PrivacyPage() {
             their data in the corresponding form or any anomaly that may arise
             when these incidents are due to problems in the Internet network,
             causes of chance or force majeure and any other unforeseeable
-            contingency beyond the good faith of Daniel Blanco. Failures or
+            contingency beyond the good faith of Sensuelle Boudoir. Failures or
             incidents that may occur in communications, deletion or incomplete
             transmissions, so that it is not guaranteed that the website
             services are constantly operational. Errors or damages caused to the
@@ -184,23 +184,23 @@ export default function PrivacyPage() {
             the user to send the requested information.
           </p>
           <p>
-            In any case, Daniel Blanco undertakes to solve any problems that may
+            In any case, Sensuelle Boudoir undertakes to solve any problems that may
             arise and to offer all necessary support to the user to reach a
             quick and satisfactory solution to the incident.
           </p>
           <h2>EIGHTH.- LINKS TO OTHER WEBSITES</h2>
           <p>
-            Daniel Blanco does not guarantee or assume any type of
+            Sensuelle Boudoir does not guarantee or assume any type of
             responsibility for damages suffered by accessing the
             Services/content of third parties through connections, links or
             links of the linked sites or for the accuracy or reliability of the
-            same. The function of the links that appear on Daniel Blanco is
+            same. The function of the links that appear on Sensuelle Boudoir is
             exclusively to inform the user about the existence of other sources
             of information on the Internet, where they can expand the Services
-            offered by the Portal. Daniel Blanco will not be responsible in any
+            offered by the Portal. Sensuelle Boudoir will not be responsible in any
             case for the result obtained through said links or for the
             consequences that arise from the access by the users to them. These
-            Services of third parties are provided by them, so Daniel Blanco
+            Services of third parties are provided by them, so Sensuelle Boudoir
             cannot control and does not control the legality of the Services or
             their quality. Consequently, the user must exercise extreme caution
             in the evaluation and use of the information and services existing
@@ -208,12 +208,12 @@ export default function PrivacyPage() {
           </p>
           <p>
             The introduction of hyperlinks for commercial purposes on websites
-            other than Daniel Blanco that allow access to this web portal
-            without the express consent of Daniel Blanco is expressly
+            other than Sensuelle Boudoir that allow access to this web portal
+            without the express consent of Sensuelle Boudoir is expressly
             prohibited. In any case, the existence of hyperlinks on websites
             other than the company will not imply in any case the existence of
             commercial or business relations with the owner of the website where
-            the hyperlink is established, nor the acceptance by Daniel Blanco
+            the hyperlink is established, nor the acceptance by Sensuelle Boudoir
           </p>
           <h2>NINTH.- DATA PROCESSING AND USE OF COOKIES</h2>
           <p>
@@ -223,12 +223,12 @@ export default function PrivacyPage() {
             Data 2016/679 of the European Parliament and of the Council, we
             inform you that the personal data that you provide us through our
             website or by sending emails will be incorporated into the files and
-            treatments of Daniel Blanco for the purposes described in the
+            treatments of Sensuelle Boudoir for the purposes described in the
             privacy policy, which must be read, understood and accepted for the
             use of this web portal.
           </p>
           <p>
-            Daniel Blanco is committed to complying with the obligation of
+            Sensuelle Boudoir is committed to complying with the obligation of
             confidentiality of personal data, and has therefore adopted the
             necessary measures to prevent its alteration, loss, processing or
             unauthorized access, taking into account at all times the state of
@@ -240,7 +240,7 @@ export default function PrivacyPage() {
             responsible, in any case, for the veracity of the data provided.
           </p>
           <p>
-            Furthermore, Daniel Blanco informs you that by visiting this web
+            Furthermore, Sensuelle Boudoir informs you that by visiting this web
             portal no personal data that identifies a User is automatically
             recorded, however, there is certain non-personal information that
             cannot be identified with a specific User that is collected during
@@ -253,7 +253,7 @@ export default function PrivacyPage() {
             In any case, all users have the right to exercise, at any time, the
             rights of access, rectification, limitation of processing, deletion,
             opposition and portability of data that assist them, by writing to
-            Daniel Blanco at the email address info@blanco-raw.com . If you
+            Sensuelle Boudoir at the email address info@blanco-raw.com . If you
             consider it necessary, you can file a claim with the Spanish Data
             Protection Agency.
           </p>
