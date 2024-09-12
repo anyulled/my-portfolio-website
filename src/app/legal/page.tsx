@@ -31,7 +31,7 @@ export default function PrivacyPage() {
           <h2>SECOND.- PURPOSE OF THE WEBSITE</h2>
           <p>
             Sensuelle Boudoir makes available to the public (hereinafter user),
-            who accesses WWW.BLANCO-RAW.COM (hereinafter WEBSITE), information
+            who accesses boudoir.barcelona (hereinafter WEBSITE), information
             and data (hereinafter CONTENTS and/or SERVICES), through an
             informative website. The CONTENTS of the website are provided and
             created by the company itself.
@@ -253,7 +253,7 @@ export default function PrivacyPage() {
             In any case, all users have the right to exercise, at any time, the
             rights of access, rectification, limitation of processing, deletion,
             opposition and portability of data that assist them, by writing to
-            Sensuelle Boudoir at the email address info@blanco-raw.com . If you
+            Sensuelle Boudoir at the email address info@boudoir.barccelona . If you
             consider it necessary, you can file a claim with the Spanish Data
             Protection Agency.
           </p>
