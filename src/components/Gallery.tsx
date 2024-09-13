@@ -12,9 +12,13 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 interface GalleryProps {
   photos: Array<Photo> | null;
+  showTitle?: boolean;
 }
 
-export default function Gallery({ photos }: Readonly<GalleryProps>) {
+export default function Gallery({
+  photos,
+  showTitle = true,
+}: Readonly<GalleryProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Gallery");
 
   const [photoIndex, setPhotoIndex] = useState<number>(0);
@@ -28,11 +32,13 @@ export default function Gallery({ photos }: Readonly<GalleryProps>) {
     <>
       <section className="py-16">
         <div className="container mx-auto px-6">
-          <h2
-            className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
-          >
-            Our Gallery
-          </h2>
+          {showTitle && (
+            <h2
+              className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
+            >
+              Our Gallery
+            </h2>
+          )}
           {photos && (
             <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
               {photos.map((image, i) => (
