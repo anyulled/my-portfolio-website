@@ -4,18 +4,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { getFlickrPhotos } from "@/services/flickr";
 import { Metadata } from "next";
+import { openGraph } from "@/app/lib/openGraph";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
+const profileImageUrl = "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg";
 export const metadata: Metadata = {
   title: "About Me · Boudoir Photography in Barcelona",
   description: "Anyul Rivas — Boudoir photographer in Barcelona, Spain",
   openGraph: {
+    ...openGraph,
     images: [
       {
         alt: "Anyul Rivas",
-        url: "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg",
+        url: profileImageUrl,
       },
     ],
   },
@@ -39,7 +42,7 @@ export default async function BioPage() {
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 <Image
-                  src="https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg"
+                  src={profileImageUrl}
                   alt="Anyul Rivas — Boudoir photographer in Barcelona, Spain"
                   width={400}
                   height={600}
