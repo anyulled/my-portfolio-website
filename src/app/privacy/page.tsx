@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: "Privacy Terms · Boudoir Photography in Barcelona",
+  title: "Privacy Terms ",
 };
 export default function PrivacyPage() {
   return (

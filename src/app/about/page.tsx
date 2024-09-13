@@ -9,9 +9,10 @@ import { openGraph } from "@/app/lib/openGraph";
 const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
-const profileImageUrl = "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg";
+const profileImageUrl =
+  "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg";
 export const metadata: Metadata = {
-  title: "About Me · Boudoir Photography in Barcelona",
+  title: "About Me",
   description: "Anyul Rivas — Boudoir photographer in Barcelona, Spain",
   openGraph: {
     ...openGraph,

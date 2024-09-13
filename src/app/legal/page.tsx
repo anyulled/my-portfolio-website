@@ -4,7 +4,7 @@ import { Metadata } from "next";
 const playfair = Playfair_Display({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Privacy Terms · Boudoir Photography in Barcelona",
+  title: "Privacy Terms",
 };
 
 export default function PrivacyPage() {
@@ -122,10 +122,10 @@ export default function PrivacyPage() {
           <h2>SIXTH.- PROPERTY RIGHTS</h2>
           All the contents of the Website, such as texts, opinion articles,
           graphics, photographs, logos, icons, images, as well as the graphic
-          design, source code and software, are the exclusive property of Sensuelle
-          Boudoir or third parties, whose rights in this regard are legitimately
-          held by Sensuelle Boudoir, and are therefore protected by national and
-          international legislation.
+          design, source code and software, are the exclusive property of
+          Sensuelle Boudoir or third parties, whose rights in this regard are
+          legitimately held by Sensuelle Boudoir, and are therefore protected by
+          national and international legislation.
           <p>
             The use of all elements subject to industrial and intellectual
             property for commercial purposes is strictly prohibited, as is their
@@ -133,10 +133,10 @@ export default function PrivacyPage() {
           </p>
           <h2>SEVENTH.- EXCLUSION OF WARRANTIES AND LIABILITY</h2>
           <p>
-            Sensuelle Boudoir reserves the right to interrupt access to the services
-            at any time and without prior notice, whether for technical,
-            security, control, maintenance reasons, power supply failures or for
-            any other justified reason.
+            Sensuelle Boudoir reserves the right to interrupt access to the
+            services at any time and without prior notice, whether for
+            technical, security, control, maintenance reasons, power supply
+            failures or for any other justified reason.
           </p>
           <p>
             Consequently, Sensuelle Boudoir does not guarantee the reliability,
@@ -163,12 +163,12 @@ export default function PrivacyPage() {
             Sensuelle Boudoir by contractual means.
           </p>
           <p>
-            Likewise, Sensuelle Boudoir excludes any liability for damages of any
-            kind that may be due to the presence of viruses or the presence of
-            other harmful elements in the content that may cause alterations in
-            the computer systems as well as in the documents or systems stored
-            therein, so Sensuelle Boudoir will not be liable in any case when the
-            following occur:
+            Likewise, Sensuelle Boudoir excludes any liability for damages of
+            any kind that may be due to the presence of viruses or the presence
+            of other harmful elements in the content that may cause alterations
+            in the computer systems as well as in the documents or systems
+            stored therein, so Sensuelle Boudoir will not be liable in any case
+            when the following occur:
           </p>
           <p>
             Errors or delays in access to the services by the user when entering
@@ -184,8 +184,8 @@ export default function PrivacyPage() {
             the user to send the requested information.
           </p>
           <p>
-            In any case, Sensuelle Boudoir undertakes to solve any problems that may
-            arise and to offer all necessary support to the user to reach a
+            In any case, Sensuelle Boudoir undertakes to solve any problems that
+            may arise and to offer all necessary support to the user to reach a
             quick and satisfactory solution to the incident.
           </p>
           <h2>EIGHTH.- LINKS TO OTHER WEBSITES</h2>
@@ -197,8 +197,8 @@ export default function PrivacyPage() {
             same. The function of the links that appear on Sensuelle Boudoir is
             exclusively to inform the user about the existence of other sources
             of information on the Internet, where they can expand the Services
-            offered by the Portal. Sensuelle Boudoir will not be responsible in any
-            case for the result obtained through said links or for the
+            offered by the Portal. Sensuelle Boudoir will not be responsible in
+            any case for the result obtained through said links or for the
             consequences that arise from the access by the users to them. These
             Services of third parties are provided by them, so Sensuelle Boudoir
             cannot control and does not control the legality of the Services or
@@ -213,7 +213,8 @@ export default function PrivacyPage() {
             prohibited. In any case, the existence of hyperlinks on websites
             other than the company will not imply in any case the existence of
             commercial or business relations with the owner of the website where
-            the hyperlink is established, nor the acceptance by Sensuelle Boudoir
+            the hyperlink is established, nor the acceptance by Sensuelle
+            Boudoir
           </p>
           <h2>NINTH.- DATA PROCESSING AND USE OF COOKIES</h2>
           <p>
@@ -253,9 +254,9 @@ export default function PrivacyPage() {
             In any case, all users have the right to exercise, at any time, the
             rights of access, rectification, limitation of processing, deletion,
             opposition and portability of data that assist them, by writing to
-            Sensuelle Boudoir at the email address info@boudoir.barccelona . If you
-            consider it necessary, you can file a claim with the Spanish Data
-            Protection Agency.
+            Sensuelle Boudoir at the email address info@boudoir.barccelona . If
+            you consider it necessary, you can file a claim with the Spanish
+            Data Protection Agency.
           </p>
           <h2>TENTH.- APPLICABLE LAW AND JURISDICTION</h2>
           <p>

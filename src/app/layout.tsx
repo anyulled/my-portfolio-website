@@ -10,27 +10,15 @@ import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
 import { Metadata } from "next";
+import { openGraph } from "@/app/lib/openGraph";
 
 export const metadata: Metadata = {
-  title: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
-  description: "Boudoir photography service in Barcelona.",
-  openGraph: {
-    title: "Sensuelle Boudoir",
-    description: "Boudoir photography service in Barcelona.",
-    url: "https://boudoir.barcelona",
-    siteName: "Boudoir photography service in Barcelona",
-    images: [
-      {
-        url:
-          "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Boudoir photography in Barcelona",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
+  title: {
+    template: "%s · Boudoir Photography in Barcelona",
+    default: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
   },
+  description: "Boudoir photography service in Barcelona.",
+  openGraph: openGraph,
   twitter: {
     card: "summary_large_image",
     title: "Sensuelle Boudoir",
