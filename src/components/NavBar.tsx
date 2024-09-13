@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, Moon, Sun } from "lucide-react";
+import { ChevronDown, Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import { useScroll } from "@/contexts/ScrollContext";
@@ -15,6 +15,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import modeldata from "../data/models.json";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
@@ -32,6 +39,8 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
 
+  const modelLinks = modeldata.models;
+
   const handleThemeChange = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
@@ -40,6 +49,11 @@ export default function NavBar() {
 
   const handleNavClick = (linkName: string) => {
     gaEventTracker("nav_link_click", linkName);
+    setIsOpen(false);
+  };
+
+  const handleModelClick = (modelName: string) => {
+    gaEventTracker("model_link_click", modelName);
     setIsOpen(false);
   };
 
@@ -73,7 +87,24 @@ export default function NavBar() {
               <Moon className="h-6 w-6" />
             )}
           </Button>
-          <div className="hidden md:flex space-x-4">
+          <div className="hidden md:flex space-x-4 items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors">
+                Models <ChevronDown className="ml-1 h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
+                {modelLinks.map((model) => (
+                  <DropdownMenuItem key={model.tag} asChild>
+                    <Link
+                      href={`/models/${model.tag}`}
+                      onClick={() => handleModelClick(model.name)}
+                    >
+                      {model.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -102,6 +133,23 @@ export default function NavBar() {
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors">
+                    Models <ChevronDown className="ml-1 h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
+                    {modelLinks.map((model) => (
+                      <DropdownMenuItem key={model.tag} asChild>
+                        <Link
+                          href={`/models/${model.tag}`}
+                          onClick={() => handleModelClick(model.name)}
+                        >
+                          {model.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 {navLinks.map((link) => (
                   <Link
                     key={link.name}
