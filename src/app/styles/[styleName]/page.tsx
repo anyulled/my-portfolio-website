@@ -24,12 +24,12 @@ export const generateMetadata = async ({
   },
 });
 
-export default async function StylePage({ params }: Props) {
+export default async function StylePage({ params }: Readonly<Props>) {
   const styleName = extractNameFromTag(stylesData.styles, params.styleName);
   const convertedStyleName = styleName ?? "boudoir";
   console.log(`Param ModelName: ${params.styleName}`);
   console.log(`to Flickr: ${styleName}`);
-  const result = await getFlickrPhotos(convertedStyleName, "50");
+  const result = await getFlickrPhotos(convertedStyleName, "100");
 
   if (!styleName) {
     return NotFound();
