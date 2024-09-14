@@ -10,7 +10,7 @@ import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
 import { Metadata } from "next";
-import { openGraph } from "@/app/lib/openGraph";
+import { openGraph } from "@/lib/openGraph";
 
 export const metadata: Metadata = {
   title: {

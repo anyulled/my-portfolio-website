@@ -26,6 +26,8 @@ export async function getFlickrPhotos(
     items = "9";
   }
 
+  console.info(`Getting ${items} photos from ${tags} on Flickr...`);
+
   try {
     const value = await flickr("flickr.photos.search", {
       user_id: "76279599@N00",
@@ -37,6 +39,9 @@ export async function getFlickrPhotos(
       per_page: items,
       extras: "url_s, url_m, url_n, url_l, views, date_upload, date_taken",
     });
+
+    console.info(`Got ${value.photos.photo.length} photos from Flickr.`);
+
     return {
       photos: value.photos.photo
         .map(

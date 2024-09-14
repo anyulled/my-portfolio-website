@@ -1,9 +1,24 @@
 {
   "styles": [
-    "portrait",
-    "boudoir",
-    "artistic nude",
-    "fashion",
-    "swimwear"
+    {
+      "name": "Portrait",
+      "tag": "portrait"
+    },
+    {
+      "name": "Boudoir",
+      "tag": "boudoir"
+    },
+    {
+      "name": "Artistic Nude",
+      "tag": "artistic-nude"
+    },
+    {
+      "name": "Fashion",
+      "tag": "fashion"
+    },
+    {
+      "name": "Swimwear",
+      "tag": "swimwear"
+    }
   ]
 }
