@@ -4,24 +4,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { getFlickrPhotos } from "@/services/flickr";
 import { Metadata } from "next";
-import { openGraph } from "@/app/lib/openGraph";
+import { openGraph } from "@/lib/openGraph";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 const profileImageUrl =
   "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg";
+const metadataImages = [
+  {
+    alt: "Anyul Rivas",
+    url: profileImageUrl,
+  },
+];
 export const metadata: Metadata = {
   title: "About Me",
   description: "Anyul Rivas — Boudoir photographer in Barcelona, Spain",
+  twitter: {
+    images: metadataImages,
+  },
   openGraph: {
     ...openGraph,
-    images: [
-      {
-        alt: "Anyul Rivas",
-        url: profileImageUrl,
-      },
-    ],
+    images: metadataImages,
   },
 };
 
