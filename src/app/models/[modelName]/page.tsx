@@ -20,6 +20,14 @@ export const generateMetadata = async ({
   openGraph: {
     ...openGraph,
     title: `Model ${extractNameFromTag(modelData.models, modelName)} · Boudoir Barcelona`,
+    images: [
+      {
+        url: `/models/${modelName}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: `Model ${extractNameFromTag(modelData.models, modelName)}`,
+      },
+    ],
   },
 });
 

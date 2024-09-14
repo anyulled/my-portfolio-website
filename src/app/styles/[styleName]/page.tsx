@@ -7,6 +7,7 @@ import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
 import stylesData from "@/data/styles.json";
 import { extractNameFromTag } from "@/lib/extractName";
+import modelData from "@/data/models.json";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
@@ -21,6 +22,14 @@ export const generateMetadata = async ({
   openGraph: {
     ...openGraph,
     title: `Style ${extractNameFromTag(stylesData.styles, styleName)} · Boudoir Barcelona`,
+    images: [
+      {
+        url: `/models/${styleName}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: `Model ${extractNameFromTag(modelData.models, styleName)}`,
+      },
+    ],
   },
 });
 
