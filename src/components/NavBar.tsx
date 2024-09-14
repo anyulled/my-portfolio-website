@@ -15,7 +15,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import modeldata from "../data/models.json";
+import modelData from "@/data/models.json";
+import stylesData from "@/data/styles.json";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import {
   DropdownMenu,
@@ -25,12 +26,7 @@ import {
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
-const navLinks = [
-  { name: "About Me", href: "/about" },
-  { name: "Privacy Terms", href: "/privacy" },
-  { name: "Cookies", href: "/cookies" },
-  { name: "Legal Terms", href: "/legal" },
-];
+const navLinks = [{ name: "About Me", href: "/about" }];
 
 export default function NavBar() {
   const { theme, setTheme } = useTheme();
@@ -39,7 +35,7 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
 
-  const modelLinks = modeldata.models;
+  const modelLinks = modelData.models;
 
   const handleThemeChange = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -54,6 +50,11 @@ export default function NavBar() {
 
   const handleModelClick = (modelName: string) => {
     gaEventTracker("model_link_click", modelName);
+    setIsOpen(false);
+  };
+
+  const handleStyleClick = (styleName: string) => {
+    gaEventTracker("style_link_click", styleName);
     setIsOpen(false);
   };
 
@@ -105,6 +106,23 @@ export default function NavBar() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors">
+                Styles <ChevronDown className="ml-1 h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
+                {stylesData.styles.map((style) => (
+                  <DropdownMenuItem key={style.tag} asChild>
+                    <Link
+                      href={`/styles/${style.tag}`}
+                      onClick={() => handleStyleClick(style.name)}
+                    >
+                      {style.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -145,6 +163,23 @@ export default function NavBar() {
                           onClick={() => handleModelClick(model.name)}
                         >
                           {model.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors">
+                    Styles <ChevronDown className="ml-1 h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
+                    {stylesData.styles.map((style) => (
+                      <DropdownMenuItem key={style.tag} asChild>
+                        <Link
+                          href={`/styles/${style.tag}`}
+                          onClick={() => handleStyleClick(style.name)}
+                        >
+                          {style.name}
                         </Link>
                       </DropdownMenuItem>
                     ))}
