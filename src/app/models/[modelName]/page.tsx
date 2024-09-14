@@ -23,13 +23,13 @@ export const generateMetadata = async ({
   },
 });
 
-export default async function ModelPage({ params }: Props) {
+export default async function ModelPage({ params }: Readonly<Props>) {
   const modelName = extractNameFromTag(modelData.models, params.modelName);
   const convertedModel = params.modelName.replaceAll("-", "");
   console.log(`Param ModelName: ${params.modelName}`);
   console.log(`Extracted from JSON: ${modelName}`);
   console.log(`to Flickr: ${convertedModel}`);
-  const result = await getFlickrPhotos(convertedModel);
+  const result = await getFlickrPhotos(convertedModel, "100");
 
   if (!modelName) {
     return NotFound();
