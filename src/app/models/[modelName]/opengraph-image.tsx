@@ -6,7 +6,13 @@ import modelData from "@/data/models.json";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
-export default async function ({ params }: { params: { modelName: string } }) {
+export const runtime = "edge";
+
+export default async function OpengraphImage({
+  params,
+}: {
+  params: { modelName: string };
+}) {
   const modelName = extractNameFromTag(modelData.models, params.modelName);
   const convertedModel = params.modelName.replaceAll("-", "");
   const result = await getFlickrPhotos(convertedModel, "1");

@@ -7,7 +7,13 @@ import { getFlickrPhotos } from "@/services/flickr";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
-export default async function ({ params }: { params: { styleName: string } }) {
+export const runtime = "edge";
+
+export default async function OpengraphImage({
+  params,
+}: {
+  params: { styleName: string };
+}) {
   const styleName = extractNameFromTag(stylesData.styles, params.styleName);
   const convertedStyleName = styleName ?? "boudoir";
   const result = await getFlickrPhotos(convertedStyleName, "1");
