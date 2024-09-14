@@ -1,5 +1,8 @@
 "use client";
 import Image from "next/image";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/styles.css";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Photo } from "@/services/flickr";
@@ -48,7 +51,7 @@ export default function Gallery({
                   className="relative overflow-hidden group break-inside-avoid"
                 >
                   <Image
-                    src={image.urlNormal}
+                    src={image.urlCrop}
                     alt={image.title}
                     width={600}
                     height={400 + (i % 3) * 100}
@@ -74,9 +77,19 @@ export default function Gallery({
       {photos && lightboxOpen && (
         <Lightbox
           open={lightboxOpen}
+          plugins={[Fullscreen, Zoom, Captions]}
           index={photoIndex}
           close={() => setLightboxOpen(false)}
-          slides={photos.map((value) => ({ src: value.urlLarge }))}
+          captions={{
+            descriptionTextAlign: "center",
+            descriptionMaxLines: 3,
+            showToggle: true,
+          }}
+          slides={photos.map((value) => ({
+            src: value.urlOriginal,
+            title: value.title,
+            description: value.description,
+          }))}
         />
       )}
     </>
