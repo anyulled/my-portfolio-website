@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, Moon, Sun } from "lucide-react";
+import { ChevronDown, Menu, Moon, Search, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import { useScroll } from "@/contexts/ScrollContext";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
@@ -15,6 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
 import modelData from "@/data/models.json";
 import stylesData from "@/data/styles.json";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
@@ -25,15 +26,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
-
 const navLinks = [{ name: "About Me", href: "/about" }];
 
 export default function NavBar() {
   const { theme, setTheme } = useTheme();
   const { scrollY } = useScroll();
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredModels, setFilteredModels] = useState<
+    Array<{ tag: string; name: string }>
+  >(modelData.models);
 
   const modelLinks = modelData.models;
 
@@ -62,7 +67,13 @@ export default function NavBar() {
     gaEventTracker("book_now_click", "navbar");
     router.push("/#book-session");
   };
-  const pathname = usePathname();
+
+  useEffect(() => {
+    const filtered = modelLinks.filter((model) =>
+      model.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+    setFilteredModels(filtered);
+  }, [searchTerm, modelLinks]);
 
   return (
     <nav
@@ -93,17 +104,31 @@ export default function NavBar() {
               <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors">
                 Models <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
-                {modelLinks.map((model) => (
-                  <DropdownMenuItem key={model.tag} asChild>
-                    <Link
-                      href={`/models/${model.tag}`}
-                      onClick={() => handleModelClick(model.name)}
-                    >
-                      {model.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
+              <DropdownMenuContent className="w-64">
+                <div className="p-2">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="search"
+                      placeholder="Search models..."
+                      className="pl-8"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="max-h-[60vh] overflow-y-auto">
+                  {filteredModels.map((model) => (
+                    <DropdownMenuItem key={model.tag} asChild>
+                      <Link
+                        href={`/models/${model.tag}`}
+                        onClick={() => handleModelClick(model.name)}
+                      >
+                        {model.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
@@ -155,17 +180,31 @@ export default function NavBar() {
                   <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors">
                     Models <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
-                    {modelLinks.map((model) => (
-                      <DropdownMenuItem key={model.tag} asChild>
-                        <Link
-                          href={`/models/${model.tag}`}
-                          onClick={() => handleModelClick(model.name)}
-                        >
-                          {model.name}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
+                  <DropdownMenuContent className="w-64">
+                    <div className="p-2">
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="search"
+                          placeholder="Search models..."
+                          className="pl-8"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="max-h-[60vh] overflow-y-auto">
+                      {filteredModels.map((model) => (
+                        <DropdownMenuItem key={model.tag} asChild>
+                          <Link
+                            href={`/models/${model.tag}`}
+                            onClick={() => handleModelClick(model.name)}
+                          >
+                            {model.name}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <DropdownMenu>
