@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import { useScroll } from "@/contexts/ScrollContext";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
@@ -36,11 +36,32 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredModels, setFilteredModels] = useState<
-    Array<{ tag: string; name: string }>
-  >(modelData.models);
 
-  const modelLinks = modelData.models;
+  function decodeHtmlEntities(str: string) {
+    return str.replace(/&([^;]+);/g, (match, entity) => {
+      const entities: { [key: string]: string } = {
+        ntilde: "ñ",
+        Ntilde: "Ñ",
+        aacute: "á",
+        eacute: "é",
+        iacute: "í",
+        oacute: "ó",
+        uacute: "ú",
+        Aacute: "Á",
+        Eacute: "É",
+        Iacute: "Í",
+        Oacute: "Ó",
+        Uacute: "Ú",
+        // Add more entities as needed
+      };
+      return entities[entity] || match;
+    });
+  }
+
+  const modelLinks = modelData.models.map((model) => ({
+    ...model,
+    name: decodeHtmlEntities(model.name),
+  }));
 
   const handleThemeChange = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -68,12 +89,11 @@ export default function NavBar() {
     router.push("/#book-session");
   };
 
-  useEffect(() => {
-    const filtered = modelLinks.filter((model) =>
+  const filteredModels = useMemo(() => {
+    return modelLinks.filter((model) =>
       model.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
-    setFilteredModels(filtered);
-  }, [searchTerm, modelLinks]);
+  }, [searchTerm]);
 
   return (
     <nav
