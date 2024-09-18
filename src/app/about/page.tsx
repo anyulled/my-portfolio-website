@@ -143,10 +143,7 @@ export default async function BioPage() {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
               {images.photos.map((cover) => (
-                <div
-                  key={cover.views}
-                  className="relative overflow-hidden group"
-                >
+                <div key={cover.id} className="relative overflow-hidden group">
                   <Image
                     src={cover.urlMedium}
                     alt={cover.title}
