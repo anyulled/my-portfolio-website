@@ -1,6 +1,7 @@
 import { createFlickr } from "flickr-sdk";
 
 export interface Photo {
+  id: number;
   description: string;
   dateTaken: Date;
   dateUpload: Date;
@@ -19,6 +20,7 @@ export interface Photo {
 }
 
 type PhotoFlickr = {
+  id: number;
   description: { _content: string };
   datetaken: string;
   dateupload: string;
@@ -71,6 +73,7 @@ export async function getFlickrPhotos(
     return {
       photos: value.photos.photo
         .map((photo: PhotoFlickr) => ({
+          id: photo.id,
           description: photo.description._content,
           dateTaken: new Date(photo.datetaken.replace(" ", "T")),
           dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
@@ -88,7 +91,7 @@ export async function getFlickrPhotos(
           width: photo.width_l,
         }))
         .sort(
-          (a: Photo, b: Photo) => a.dateTaken.getTime() - b.dateTaken.getTime(),
+          (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
         ),
       reason: null,
       success: true,
