@@ -47,7 +47,7 @@ export default function Gallery({
               {photos.map((image, i) => (
                 <div
                   onClick={() => handleImageClick(i)}
-                  key={image.title.concat(image.views.toString())}
+                  key={image.id}
                   className="relative overflow-hidden group break-inside-avoid"
                 >
                   <Image
