@@ -46,7 +46,9 @@ export default async function StylePage({ params }: Readonly<Props>) {
 
   return (
     <div className={"container mx-auto"}>
-      <h1 className={`${dancingScript.className} pt-44 pb-12`}>{styleName}</h1>
+      <h1 className={`${dancingScript.className} pt-44 pb-3 pl-12 lg:pb-12`}>
+        {styleName}
+      </h1>
       <Gallery photos={result.photos} showTitle={false} />
     </div>
   );
