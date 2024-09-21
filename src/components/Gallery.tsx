@@ -4,6 +4,7 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/captions.css";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Photo } from "@/services/flickr";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
