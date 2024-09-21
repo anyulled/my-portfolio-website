@@ -28,7 +28,10 @@ import {
 import { NavLinks } from "@/components/NavLinks";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
-const navLinks = [{ name: "About Me", href: "/about" }];
+const navLinks = [
+  { name: "What is Boudoir?", href: "/what-is-boudoir" },
+  { name: "About Me", href: "/about" },
+];
 function decodeHtmlEntities(str: string) {
   return str.replace(/&([^;]+);/g, (match, entity) => {
     const entities: { [key: string]: string } = {

@@ -30,10 +30,10 @@ export const event = ({
 
 export const grantConsent = () => {
   // @ts-expect-error gtag
-  window.gtag('consent', 'update', {
-    ad_user_data: 'granted',
-    ad_personalization: 'granted',
-    ad_storage: 'granted',
-    analytics_storage: 'granted'
+  window.gtag("consent", "update", {
+    ad_user_data: "granted",
+    ad_personalization: "granted",
+    ad_storage: "granted",
+    analytics_storage: "granted",
   });
 };

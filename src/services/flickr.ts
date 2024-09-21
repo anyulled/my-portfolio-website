@@ -67,7 +67,6 @@ export async function getFlickrPhotos(
     });
 
     console.info(`Got ${value.photos.photo.length} photos from Flickr.`);
-
     return {
       photos: value.photos.photo
         .map((photo: PhotoFlickr) => ({
