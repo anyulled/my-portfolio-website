@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
+import { grantConsent } from "@/lib/gtag";
 
 export default function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false);
@@ -18,6 +19,7 @@ export default function CookieConsent() {
 
   const handleAccept = () => {
     localStorage.setItem("cookieConsent", "true");
+    grantConsent();
     setShowConsent(false);
   };
 

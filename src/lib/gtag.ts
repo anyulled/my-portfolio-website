@@ -1,8 +1,8 @@
 export const GA_TRACKING_ID = process.env.GOOGLE_ANALYTICS_ID;
 
-// https://developers.google.com/analytics/devguides/collection/gtagjs/pages
+// https://developers.google.com/tag-platform/security/guides/consent?consentmode=basic
 export const pageview = (url: string) => {
-  // @ts-expect-error WTF
+  // @ts-expect-error gtag
   window.gtag("config", GA_TRACKING_ID, {
     page_path: url,
   });
@@ -20,10 +20,20 @@ export const event = ({
   label: string;
   value?: number;
 }) => {
-  // @ts-expect-error WTF
+  // @ts-expect-error gtag
   window.gtag("event", action, {
     event_category: category,
     event_label: label,
     value: value,
+  });
+};
+
+export const grantConsent = () => {
+  // @ts-expect-error gtag
+  window.gtag('consent', 'update', {
+    ad_user_data: 'granted',
+    ad_personalization: 'granted',
+    ad_storage: 'granted',
+    analytics_storage: 'granted'
   });
 };
