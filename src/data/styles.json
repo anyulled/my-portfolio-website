@@ -15,7 +15,11 @@
     {
       "name": "Fashion",
       "tag": "fashion"
-    },{"name":"lingerie", "tag":"lingerie"}
+    },
+    {
+      "name":"lingerie", 
+      "tag":"lingerie"
+    },
     {
       "name": "Swimwear",
       "tag": "swimwear"
