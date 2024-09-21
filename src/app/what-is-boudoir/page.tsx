@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { getFlickrPhotos } from "@/services/flickr";
+/*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -48,7 +49,7 @@ export default async function BoudoirStylePage() {
             </div>
             <div className="md:w-1/2">
               <Image
-                src={photos?.photos?.at(getRandomInt(length))?.urlZoom}
+                src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
@@ -79,7 +80,7 @@ export default async function BoudoirStylePage() {
             </div>
             <div className="md:w-1/2">
               <Image
-                src={photos?.photos?.at(getRandomInt(length))?.urlZoom}
+                src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
@@ -102,21 +103,21 @@ export default async function BoudoirStylePage() {
           </ul>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Image
-              src={photos?.photos?.at(getRandomInt(length))?.urlZoom}
+              src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
               alt="Boudoir Photography"
               width={300}
               height={300}
               className="rounded-lg shadow-lg"
             />
             <Image
-              src={photos?.photos?.at(getRandomInt(length))?.urlZoom}
+              src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
               alt="Boudoir Photography"
               width={300}
               height={300}
               className="rounded-lg shadow-lg"
             />
             <Image
-              src={photos?.photos?.at(getRandomInt(length))?.urlZoom}
+              src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
               alt="Boudoir Photography"
               width={300}
               height={300}
