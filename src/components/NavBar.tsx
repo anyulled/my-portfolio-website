@@ -11,6 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -28,8 +29,29 @@ import { NavLinks } from "@/components/NavLinks";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [{ name: "About Me", href: "/about" }];
+function decodeHtmlEntities(str: string) {
+  return str.replace(/&([^;]+);/g, (match, entity) => {
+    const entities: { [key: string]: string } = {
+      ntilde: "ñ",
+      Ntilde: "Ñ",
+      aacute: "á",
+      eacute: "é",
+      iacute: "í",
+      oacute: "ó",
+      uacute: "ú",
+      Aacute: "Á",
+      Eacute: "É",
+      Iacute: "Í",
+      Oacute: "Ó",
+      Uacute: "Ú",
+      // Add more entities as needed
+    };
+    return entities[entity] || match;
+  });
+}
 
 export default function NavBar() {
+  //region State
   const { theme, setTheme } = useTheme();
   const { scrollY } = useScroll();
   const router = useRouter();
@@ -37,33 +59,14 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  function decodeHtmlEntities(str: string) {
-    return str.replace(/&([^;]+);/g, (match, entity) => {
-      const entities: { [key: string]: string } = {
-        ntilde: "ñ",
-        Ntilde: "Ñ",
-        aacute: "á",
-        eacute: "é",
-        iacute: "í",
-        oacute: "ó",
-        uacute: "ú",
-        Aacute: "Á",
-        Eacute: "É",
-        Iacute: "Í",
-        Oacute: "Ó",
-        Uacute: "Ú",
-        // Add more entities as needed
-      };
-      return entities[entity] || match;
-    });
-  }
+  //endregion
 
   const modelLinks = modelData.models.map((model) => ({
     ...model,
     name: decodeHtmlEntities(model.name),
   }));
 
+  //region Handlers
   const handleThemeChange = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
@@ -89,6 +92,7 @@ export default function NavBar() {
     gaEventTracker("book_now_click", "navbar");
     router.push("/#book-session");
   };
+  //endregion
 
   const filteredModels = useMemo(() => {
     return modelLinks.filter((model) =>
@@ -117,12 +121,12 @@ export default function NavBar() {
             {theme === "dark" ? (
               <Sun className="h-6 w-6" />
             ) : (
-              <Moon className="h-6 w-6" />
+              <Moon className="h-6 w-6 text-neutral-800" />
             )}
           </Button>
           <div className="hidden md:flex space-x-4 items-center">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors">
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
                 Models <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64">
@@ -153,7 +157,7 @@ export default function NavBar() {
               </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors">
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
                 Styles <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
@@ -177,7 +181,7 @@ export default function NavBar() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 dark:text-white text-neutral-800" />
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
@@ -186,10 +190,11 @@ export default function NavBar() {
                 <SheetTitle className={dancingScript.className}>
                   Sensuelle Boudoir
                 </SheetTitle>
+                <SheetDescription>Capture your essence</SheetDescription>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-4">
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors">
+                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
                     Models <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-64">
@@ -220,7 +225,7 @@ export default function NavBar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors">
+                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
                     Styles <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
