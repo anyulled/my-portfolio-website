@@ -24,6 +24,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { NavLinks } from "@/components/NavLinks";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [{ name: "About Me", href: "/about" }];
@@ -93,7 +94,7 @@ export default function NavBar() {
     return modelLinks.filter((model) =>
       model.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
-  }, [searchTerm]);
+  }, [searchTerm, modelLinks]);
 
   return (
     <nav
@@ -168,16 +169,7 @@ export default function NavBar() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm font-medium hover:text-primary transition-colors"
-                onClick={() => handleNavClick(link.name)}
-              >
-                {link.name}
-              </Link>
-            ))}
+            <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
           </div>
           <Button onClick={handleBookNow} className="hidden md:inline-flex">
             Book Now
@@ -244,16 +236,7 @@ export default function NavBar() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="text-sm font-medium hover:text-primary transition-colors"
-                    onClick={() => handleNavClick(link.name)}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
                 <Button onClick={handleBookNow} className="mt-4">
                   Book Now
                 </Button>
