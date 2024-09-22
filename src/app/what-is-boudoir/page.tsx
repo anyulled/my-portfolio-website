@@ -15,31 +15,31 @@ export default async function BoudoirStylePage() {
 
   return (
     <>
-      <header className="container mx-auto px-4 pt-24 pb-16 text-center">
+      <header className="container mx-auto px-4 pt-24 pb-4 text-center">
         <h1 className={`${dancingScript.className} text-5xl md:text-7xl mb-4`}>
           Boudoir Photography
         </h1>
         <p
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300`}
+          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300 prose`}
         >
           Empowering, Intimate, and Artistic
         </p>
       </header>
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-4">
         <section className="mb-16">
           <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             What is Boudoir Photography?
           </h2>
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">
-              <p className="mb-4">
+              <p className="mb-4 prose lg:prose-xl">
                 Boudoir photography is an intimate and artistic style of
                 portraiture. It captures subjects, typically women, in a
                 sensual, romantic, and sometimes erotic manner. The term
                 &quot;boudoir&quot; comes from the French word for a
                 woman&apos;s private dressing room or bedroom.
               </p>
-              <p>
+              <p className={"prose lg:prose-xl"}>
                 This style of photography aims to celebrate the subject&apos;s
                 body, boost confidence, and create stunning, personal artwork.
                 Boudoir shoots can range from tastefully suggestive to more
@@ -53,7 +53,7 @@ export default async function BoudoirStylePage() {
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-lg"
+                className="rounded-lg shadow-lg h-auto w-full"
               />
             </div>
           </div>
@@ -65,13 +65,13 @@ export default async function BoudoirStylePage() {
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
             <div className="md:w-1/2">
-              <p className="mb-4">
+              <p className="mb-4 prose lg:prose-xl">
                 Boudoir photography is more than just taking pictures; it&apos;s
                 an art form that requires skill, sensitivity, and creativity.
                 Photographers must create a safe, comfortable environment where
                 subjects can express themselves freely.
               </p>
-              <p>
+              <p className={"prose lg:prose-xl"}>
                 Lighting, composition, and posing are crucial elements in
                 boudoir photography. Soft, flattering light is often used to
                 create a romantic atmosphere, while thoughtful composition
@@ -84,7 +84,7 @@ export default async function BoudoirStylePage() {
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-lg"
+                className="rounded-lg shadow-lg h-auto w-full"
               />
             </div>
           </div>
@@ -94,34 +94,34 @@ export default async function BoudoirStylePage() {
           <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             Why Choose Boudoir Photography?
           </h2>
-          <ul className="list-disc list-inside space-y-4 mb-8">
+          <ul className="list-disc list-inside space-y-4 mb-8 ml-4">
             <li>Boost self-confidence and body positivity</li>
             <li>Celebrate a milestone or life change</li>
             <li>Create a unique, personal gift for a partner</li>
             <li>Embrace and express your sensuality</li>
             <li>Capture your beauty at any age or stage of life</li>
           </ul>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             <Image
               src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
               alt="Boudoir Photography"
               width={300}
               height={300}
-              className="rounded-lg shadow-lg"
+              className="rounded-md shadow-lg h-auto w-full"
             />
             <Image
               src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
               alt="Boudoir Photography"
               width={300}
               height={300}
-              className="rounded-lg shadow-lg"
+              className="rounded-md shadow-lg h-auto w-full"
             />
             <Image
               src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
               alt="Boudoir Photography"
               width={300}
               height={300}
-              className="rounded-lg shadow-lg"
+              className="rounded-md shadow-lg h-auto w-full"
             />
           </div>
         </section>
@@ -130,13 +130,13 @@ export default async function BoudoirStylePage() {
           <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             Your Boudoir Experience
           </h2>
-          <p className="mb-4">
+          <p className="mb-4 prose lg:prose-xl">
             At Sensuelle Boudoir, we&apos;re dedicated to providing a luxurious,
             comfortable, and empowering boudoir experience. Our professional
             team will guide you through every step, from planning your shoot to
             selecting your favorite images.
           </p>
-          <p className="mb-8">
+          <p className="mb-8 prose lg:prose-xl">
             Whether you&apos;re looking to boost your confidence, celebrate your
             body, or create a special gift, our boudoir photography sessions are
             tailored to your unique vision and comfort level.
