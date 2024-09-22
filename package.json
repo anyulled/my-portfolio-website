@@ -34,7 +34,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-typography": "3.1.0",
-    "yet-another-react-lightbox": "^3.21.5"
+    "yet-another-react-lightbox": "^3.21.6"
   },
   "devDependencies": {
     "@types/node": "^22",
