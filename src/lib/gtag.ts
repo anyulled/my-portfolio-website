@@ -1,4 +1,4 @@
-export const GA_TRACKING_ID = process.env.GOOGLE_ANALYTICS_ID;
+export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
 // https://developers.google.com/tag-platform/security/guides/consent?consentmode=basic
 export const pageview = (url: string) => {
