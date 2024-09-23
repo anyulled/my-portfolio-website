@@ -1,17 +1,21 @@
 import Image from "next/image";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { getFlickrPhotos } from "@/services/flickr";
+import { getFlickrPhotos, Photo } from "@/services/flickr";
+import { Card, CardContent } from "@/components/ui/card";
+import Gallery from "@/components/Gallery";
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
-const getRandomInt = (max: number): number =>
-  Math.floor(Math.random() * (max + 1));
+function getRandomElements(arr: Photo[], num: number) {
+  const shuffled = arr.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, num);
+}
 
 export default async function BoudoirStylePage() {
-  const photos = await getFlickrPhotos("boudoir, model", "50");
-  const length = photos?.photos?.length ?? 50;
+  const { photos } = await getFlickrPhotos("boudoir, model", "50");
+  const randomPhotos = getRandomElements(photos!, 10);
 
   return (
     <>
@@ -31,7 +35,7 @@ export default async function BoudoirStylePage() {
             What is Boudoir Photography?
           </h2>
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/2">
+            <div className="md:w-1/3">
               <p className="mb-4 prose lg:prose-xl">
                 Boudoir photography is an intimate and artistic style of
                 portraiture. It captures subjects, typically women, in a
@@ -47,9 +51,9 @@ export default async function BoudoirStylePage() {
                 subject.
               </p>
             </div>
-            <div className="md:w-1/2">
+            <div className="md:w-2/3">
               <Image
-                src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
+                src={randomPhotos?.at(1)?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
@@ -64,7 +68,7 @@ export default async function BoudoirStylePage() {
             The Art of Boudoir
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
-            <div className="md:w-1/2">
+            <div className="md:w-2/3">
               <p className="mb-4 prose lg:prose-xl">
                 Boudoir photography is more than just taking pictures; it&apos;s
                 an art form that requires skill, sensitivity, and creativity.
@@ -78,9 +82,9 @@ export default async function BoudoirStylePage() {
                 ensures elegant and tasteful results.
               </p>
             </div>
-            <div className="md:w-1/2">
+            <div className="md:w-1/3">
               <Image
-                src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
+                src={randomPhotos?.at(2)?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
@@ -101,29 +105,11 @@ export default async function BoudoirStylePage() {
             <li>Embrace and express your sensuality</li>
             <li>Capture your beauty at any age or stage of life</li>
           </ul>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <Image
-              src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
-              alt="Boudoir Photography"
-              width={300}
-              height={300}
-              className="rounded-md shadow-lg h-auto w-full"
-            />
-            <Image
-              src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
-              alt="Boudoir Photography"
-              width={300}
-              height={300}
-              className="rounded-md shadow-lg h-auto w-full"
-            />
-            <Image
-              src={photos?.photos?.at(getRandomInt(length))?.urlZoom!}
-              alt="Boudoir Photography"
-              width={300}
-              height={300}
-              className="rounded-md shadow-lg h-auto w-full"
-            />
-          </div>
+          <Card>
+            <CardContent>
+              <Gallery photos={randomPhotos} showTitle={false} />
+            </CardContent>
+          </Card>
         </section>
 
         <section>
