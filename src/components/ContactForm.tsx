@@ -7,6 +7,7 @@ import React from "react";
 import { Aref_Ruqaa } from "next/font/google";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import Link from "next/link";
+import { submitLeadForm } from "@/lib/gtag";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -31,6 +32,7 @@ export default function ContactForm() {
           description: result.message,
         });
         setSendingForm(false);
+        submitLeadForm();
         gaEventTracker("form_submit", "success");
       } else {
         toast({

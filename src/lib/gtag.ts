@@ -8,6 +8,11 @@ export const pageview = (url: string) => {
   });
 };
 
+export const submitLeadForm = () =>{
+  // @ts-expect-error gtag
+  window.gtag('event', 'conversion', {'send_to': 'AW-16670888958/QwUCCMzUnNUZEP6npo0-'});
+}
+
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const event = ({
   action,
