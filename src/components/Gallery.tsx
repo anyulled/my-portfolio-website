@@ -52,13 +52,21 @@ export default function Gallery({
               Our Gallery
             </h2>
           )}
-          {convertedPhotos && (
+          {convertedPhotos && convertedPhotos?.length > 0 ? (
             <RowsPhotoAlbum
               render={{ image: renderNextImage }}
               photos={convertedPhotos}
               defaultContainerWidth={1200}
               onClick={({ index }) => handleImageClick(index)}
             />
+          ) : (
+            <div
+              className={
+                "dark:text-neutral-300 text-neutral-800 text-center text-lg"
+              }
+            >
+              No photos yet
+            </div>
           )}
         </div>
       </section>
