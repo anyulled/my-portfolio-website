@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const res = await getFlickrPhotos("boudoir", "12");
+  const res = await getFlickrPhotos("boudoir", 12, false);
 
   if (!res.success) {
     return <div>Error: {res.reason}</div>;

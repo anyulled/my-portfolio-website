@@ -11,7 +11,7 @@ export default async function OpengraphImage({
 }) {
   const styleName = extractNameFromTag(stylesData.styles, params.styleName);
   const convertedStyleName = styleName ?? "boudoir";
-  const result = await getFlickrPhotos(convertedStyleName, "1");
+  const result = await getFlickrPhotos(convertedStyleName, 1);
   return new ImageResponse(
     (
       <div tw="flex flex-col w-full h-full items-center justify-center bg-black">

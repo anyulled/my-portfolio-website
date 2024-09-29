@@ -37,7 +37,7 @@ export default async function ModelPage({ params }: Readonly<Props>) {
   console.log(`Param ModelName: ${params.modelName}`);
   console.log(`Extracted from JSON: ${modelName}`);
   console.log(`to Flickr: ${convertedModel}`);
-  const result = await getFlickrPhotos(convertedModel, "100");
+  const result = await getFlickrPhotos(convertedModel, 100);
 
   if (!modelName) {
     return NotFound();

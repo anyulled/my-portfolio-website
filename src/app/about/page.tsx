@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BioPage() {
-  const images = await getFlickrPhotos("cover", "50");
+  const images = await getFlickrPhotos("cover", 50);
 
   return (
     <div

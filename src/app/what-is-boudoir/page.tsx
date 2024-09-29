@@ -14,7 +14,7 @@ function getRandomElements(arr: Photo[], num: number) {
 }
 
 export default async function BoudoirStylePage() {
-  const { photos } = await getFlickrPhotos("boudoir, model", "50");
+  const { photos } = await getFlickrPhotos("boudoir, model", 50);
   const randomPhotos = getRandomElements(photos!, 10);
 
   return (

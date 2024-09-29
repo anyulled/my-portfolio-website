@@ -11,7 +11,7 @@ export default async function OpengraphImage({
 }) {
   const modelName = extractNameFromTag(modelData.models, params.modelName);
   const convertedModel = params.modelName.replaceAll("-", "");
-  const result = await getFlickrPhotos(convertedModel, "1");
+  const result = await getFlickrPhotos(convertedModel, 1);
 
   return new ImageResponse(
     (
