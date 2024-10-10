@@ -42,6 +42,7 @@ export async function getFlickrPhotos(
   tags: string,
   items: number = 9,
   orderByDate: boolean = false,
+  orderByViews: boolean = false,
 ): Promise<{
   reason: string | null;
   success: boolean;
@@ -59,13 +60,13 @@ export async function getFlickrPhotos(
       tags: tags,
       content_types: "0",
       media: "photos",
-      per_page: items.toString(),
+      //per_page: items.toString(),
       extras:
         "description, url_s, url_m, url_n, url_l, url_z, url_c, url_o, url_t, views, date_upload, date_taken",
     });
 
     console.info(`Got ${value.photos.photo.length} photos from Flickr.`);
-    let photos = {
+    const photos = {
       photos: value.photos.photo.map((photo: PhotoFlickr) => ({
         id: photo.id,
         description: photo.description._content,
@@ -87,11 +88,26 @@ export async function getFlickrPhotos(
       reason: null,
       success: true,
     };
+
     if (orderByDate) {
-      photos = photos.photos.sort(
+      console.info("Sorting photos by date taken...");
+      photos.photos = photos.photos.sort(
         (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
       );
     }
+
+    if (orderByViews) {
+      console.info("Sorting photos by views...");
+      photos.photos = photos.photos.sort(
+          (a: Photo, b: Photo) => b.views - a.views,
+      );
+    }
+
+    photos.photos = photos.photos.slice(0, items);
+
+
+    console.info("Photos", photos.photos);
+
     return photos;
   } catch (reason) {
     if (reason instanceof Error) {
