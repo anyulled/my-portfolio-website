@@ -32,26 +32,6 @@ const navLinks = [
   { name: "What is Boudoir?", href: "/what-is-boudoir" },
   { name: "About Me", href: "/about" },
 ];
-function decodeHtmlEntities(str: string) {
-  return str.replace(/&([^;]+);/g, (match, entity) => {
-    const entities: { [key: string]: string } = {
-      ntilde: "ñ",
-      Ntilde: "Ñ",
-      aacute: "á",
-      eacute: "é",
-      iacute: "í",
-      oacute: "ó",
-      uacute: "ú",
-      Aacute: "Á",
-      Eacute: "É",
-      Iacute: "Í",
-      Oacute: "Ó",
-      Uacute: "Ú",
-      // Add more entities as needed
-    };
-    return entities[entity] || match;
-  });
-}
 
 export default function NavBar() {
   //region State
@@ -66,7 +46,7 @@ export default function NavBar() {
 
   const modelLinks = modelData.models.map((model) => ({
     ...model,
-    name: decodeHtmlEntities(model.name),
+    name: model.name,
   }));
 
   //region Handlers
