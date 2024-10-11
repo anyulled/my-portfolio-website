@@ -38,7 +38,7 @@ export default async function StylePage({ params }: Readonly<Props>) {
   const convertedStyleName = styleName ?? "boudoir";
   console.log(`Param ModelName: ${params.styleName}`);
   console.log(`to Flickr: ${styleName}`);
-  const result = await getFlickrPhotos(convertedStyleName, 100);
+  const result = await getFlickrPhotos(convertedStyleName, 100, false, true);
 
   if (!styleName) {
     return NotFound();
