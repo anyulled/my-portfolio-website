@@ -9,13 +9,16 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 function getRandomElements(arr: Photo[], num: number) {
+  if (!arr) {
+    return [];
+  }
   const shuffled = arr.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, num);
 }
 
 export default async function BoudoirStylePage() {
   const { photos } = await getFlickrPhotos("boudoir, model", 50);
-  const randomPhotos = getRandomElements(photos!, 10);
+  const randomPhotos = getRandomElements(photos ?? [], 10);
 
   return (
     <>
