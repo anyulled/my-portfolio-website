@@ -1,6 +1,22 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 
+const generateShades = (baseColor: string) => {
+  return {
+    50: baseColor,
+    100: baseColor,
+    200: baseColor,
+    300: baseColor,
+    400: baseColor,
+    500: baseColor,
+    600: baseColor,
+    700: baseColor,
+    800: baseColor,
+    900: baseColor,
+    950: baseColor,
+  };
+};
+
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -11,6 +27,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        'peach-fuzz': generateShades('#FFBE98'), 
+        'sage-green': generateShades('#B2AC88'), 
+        'dusty-blue': generateShades('#7C9EB2'), 
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

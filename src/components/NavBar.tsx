@@ -90,7 +90,7 @@ export default function NavBar() {
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         <Link
           href="/"
-          className={`${dancingScript.className} text-3xl ${pathname !== "/" ? "text-amber-400" : ""}`}
+          className={`${dancingScript.className} text-3xl ${pathname !== "/" ? "text-peach-fuzz-400" : ""}`}
         >
           Sensuelle Boudoir
         </Link>
