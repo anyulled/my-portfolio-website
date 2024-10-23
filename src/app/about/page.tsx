@@ -38,7 +38,7 @@ export default async function BioPage() {
     >
       <div className="container max-w-7xl mx-auto px-4">
         <h1
-          className={`${playfair.className} text-4xl md:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-neutral-300`}
+          className={`${playfair.className} text-4xl md:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-peach-fuzz-300`}
         >
           About me
         </h1>
@@ -137,7 +137,7 @@ export default async function BioPage() {
         {images?.photos && (
           <>
             <h2
-              className={`${playfair.className} text-3xl font-semibold text-center my-4`}
+              className={`${playfair.className} text-3xl font-semibold text-center my-4 dark:text-peach-fuzz-400`}
             >
               Published Work
             </h2>
@@ -167,7 +167,7 @@ export default async function BioPage() {
           </>
         )}
         <h2
-          className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-neutral-300  my-4`}
+          className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-peach-fuzz-400  my-4`}
         >
           Collaborations
         </h2>
@@ -223,7 +223,7 @@ export default async function BioPage() {
         <Card className="my-12 dark:bg-gray-950">
           <CardContent className="p-6">
             <h2
-              className={`${dancingScript.className} text-3xl mb-4 text-center`}
+              className={`${dancingScript.className} text-3xl mb-4 text-center dark:text-peach-fuzz-400`}
             >
               Let&apos;s Create Something Beautiful Together
             </h2>
