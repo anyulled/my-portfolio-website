@@ -3,7 +3,9 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { getFlickrPhotos, Photo } from "@/services/flickr";
 import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
-import Link  from "next/link";
+
+import Link from "next/link";
+
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
