@@ -3,7 +3,9 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { getFlickrPhotos, Photo } from "@/services/flickr";
 import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
-import Link from "next/link";
+import Link  from "next/link";
+import {Suspense} from "react";
+import Loading from "@/app/loading";
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -24,18 +26,18 @@ export default async function BoudoirStylePage() {
   return (
     <>
       <header className="container mx-auto px-4 pt-24 pb-4 text-center">
-        <h1 className={`${dancingScript.className} text-5xl md:text-7xl mb-4`}>
+        <h1 className={`${dancingScript.className} text-5xl md:text-7xl mb-4 dark:text-peach-fuzz-500`}>
           Boudoir Photography
         </h1>
         <p
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300 prose`}
+          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300 prose dark:text-peach-fuzz-400`}
         >
           Empowering, Intimate, and Artistic
         </p>
       </header>
       <main className="container mx-auto px-4 py-4">
         <section className="mb-16">
-          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}>
             What is Boudoir Photography?
           </h2>
           <div className="flex flex-col md:flex-row items-center gap-8">
@@ -56,19 +58,20 @@ export default async function BoudoirStylePage() {
               </p>
             </div>
             <div className="md:w-2/3">
+              <Suspense fallback={<Loading/>}>
               <Image
                 src={randomPhotos?.at(1)?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg h-auto w-full"
-              />
+              /></Suspense>
             </div>
           </div>
         </section>
 
         <section className="mb-16">
-          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}>
             The Art of Boudoir
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
@@ -87,19 +90,20 @@ export default async function BoudoirStylePage() {
               </p>
             </div>
             <div className="md:w-1/3">
+              <Suspense fallback={<Loading/>}>
               <Image
                 src={randomPhotos?.at(2)?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg h-auto w-full"
-              />
+              /></Suspense>
             </div>
           </div>
         </section>
 
         <section className="mb-16">
-          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}>
             Why Choose Boudoir Photography?
           </h2>
           <ul className="list-disc list-inside space-y-4 mb-8 ml-4">
@@ -111,13 +115,15 @@ export default async function BoudoirStylePage() {
           </ul>
           <Card>
             <CardContent>
+              <Suspense fallback={<Loading/>}>
               <Gallery photos={randomPhotos} showTitle={false} />
+              </Suspense>
             </CardContent>
           </Card>
         </section>
 
         <section>
-          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}>
             Your Boudoir Experience
           </h2>
           <p className="mb-4 prose lg:prose-xl">
@@ -134,7 +140,7 @@ export default async function BoudoirStylePage() {
           <div className="text-center">
             <Link
               href="/#book-session"
-              className="inline-block bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+              className="inline-block bg-peach-fuzz-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
               Book Your Boudoir Session
             </Link>
