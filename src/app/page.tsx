@@ -4,6 +4,8 @@ import Gallery from "@/components/Gallery";
 import ContactForm from "@/components/ContactForm";
 import type { Metadata } from "next";
 import { getFlickrPhotos } from "@/services/flickr";
+import Loading from "@/app/loading";
+import {Suspense} from "react";
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
@@ -26,7 +28,9 @@ export default async function HomePage() {
       <SocialMedia />
 
       {/* Gallery Section with Pinterest-like layout */}
-      <Gallery photos={res.photos} />
+      <Suspense fallback={<Loading />}>
+        <Gallery photos={res.photos} />
+      </Suspense>
 
       {/* Contact Form Section */}
       <ContactForm />

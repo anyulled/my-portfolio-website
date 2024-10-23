@@ -3,9 +3,9 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { getFlickrPhotos, Photo } from "@/services/flickr";
 import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
-
-import Link from "next/link";
-
+import Link  from "next/link";
+import {Suspense} from "react";
+import Loading from "@/app/loading";
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -58,13 +58,14 @@ export default async function BoudoirStylePage() {
               </p>
             </div>
             <div className="md:w-2/3">
+              <Suspense fallback={<Loading/>}>
               <Image
                 src={randomPhotos?.at(1)?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg h-auto w-full"
-              />
+              /></Suspense>
             </div>
           </div>
         </section>
@@ -89,13 +90,14 @@ export default async function BoudoirStylePage() {
               </p>
             </div>
             <div className="md:w-1/3">
+              <Suspense fallback={<Loading/>}>
               <Image
                 src={randomPhotos?.at(2)?.urlZoom!}
                 alt="Boudoir Photography"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg h-auto w-full"
-              />
+              /></Suspense>
             </div>
           </div>
         </section>
@@ -113,7 +115,9 @@ export default async function BoudoirStylePage() {
           </ul>
           <Card>
             <CardContent>
+              <Suspense fallback={<Loading/>}>
               <Gallery photos={randomPhotos} showTitle={false} />
+              </Suspense>
             </CardContent>
           </Card>
         </section>

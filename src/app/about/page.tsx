@@ -5,6 +5,8 @@ import Link from "next/link";
 import { getFlickrPhotos } from "@/services/flickr";
 import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
+import Loading from "@/app/loading";
+import { Suspense } from "react";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -47,13 +49,15 @@ export default async function BioPage() {
           <div>
             <Card className="overflow-hidden">
               <CardContent className="p-0">
-                <Image
-                  src={profileImageUrl}
-                  alt="Anyul Rivas — Boudoir photographer in Barcelona, Spain"
-                  width={400}
-                  height={600}
-                  className="w-full h-auto object-cover hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
-                />
+                <Suspense fallback={<Loading />}>
+                  <Image
+                    src={profileImageUrl}
+                    alt="Anyul Rivas — Boudoir photographer in Barcelona, Spain"
+                    width={400}
+                    height={600}
+                    className="w-full h-auto object-cover hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
+                  />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
@@ -145,13 +149,15 @@ export default async function BioPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
               {images.photos.map((cover) => (
                 <div key={cover.id} className="relative overflow-hidden group">
-                  <Image
-                    src={cover.urlMedium}
-                    alt={cover.title}
-                    width={300}
-                    height={400}
-                    className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                  />
+                  <Suspense fallback={<Loading />}>
+                    <Image
+                      src={cover.urlMedium}
+                      alt={cover.title}
+                      width={300}
+                      height={400}
+                      className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+                    />
+                  </Suspense>
                   <div className="absolute inset-0 flex items-end justify-center">
                     <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
                       <p
@@ -175,13 +181,15 @@ export default async function BioPage() {
         <div className="grid md:grid-cols-3 gap-2">
           <Card className="dark:bg-gray-950 overflow-hidden">
             <CardContent className="p-2">
-              <Image
-                src="https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
-                alt="Peter Coulson, Jon Hernandez, Anyul Rivas"
-                width={500}
-                height={300}
-                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
-              />
+              <Suspense fallback={<Loading />}>
+                <Image
+                  src="https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
+                  alt="Peter Coulson, Jon Hernandez, Anyul Rivas"
+                  width={500}
+                  height={300}
+                  className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
+                />
+              </Suspense>
               <p className={`${playfair.className} text-base text-center`}>
                 Workshop with Peter Coulson & Jon Hernández
               </p>
@@ -190,13 +198,15 @@ export default async function BioPage() {
 
           <Card className="dark:bg-gray-950 overflow-hidden">
             <CardContent className="p-2">
-              <Image
-                src="https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
-                alt="Antonio Garci, Chema Photo, Anyul Rivas"
-                width={500}
-                height={300}
-                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
-              />
+              <Suspense fallback={<Loading />}>
+                <Image
+                  src="https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
+                  alt="Antonio Garci, Chema Photo, Anyul Rivas"
+                  width={500}
+                  height={300}
+                  className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
+                />
+              </Suspense>
               <p className={`${playfair.className} text-base text-center`}>
                 Book signature with Antonio Garci & Chema Photo at PhotoForum
                 Fest
@@ -206,13 +216,15 @@ export default async function BioPage() {
 
           <Card className="dark:bg-gray-950 overflow-hidden">
             <CardContent className="p-2">
-              <Image
-                src="https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
-                alt="Rubén Suárez, Anyul Rivas"
-                width={500}
-                height={300}
-                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
-              />
+              <Suspense fallback={<Loading />}>
+                <Image
+                  src="https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
+                  alt="Rubén Suárez, Anyul Rivas"
+                  width={500}
+                  height={300}
+                  className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
+                />
+              </Suspense>
               <p className={`${playfair.className} text-base text-center`}>
                 Fashion & portrait workshop with Rubén Suárez
               </p>

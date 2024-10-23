@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 
-
 import { getFlickrPhotos } from "@/services/flickr";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
@@ -9,6 +8,8 @@ import stylesData from "@/data/styles.json";
 import { extractNameFromTag } from "@/lib/extractName";
 import modelData from "@/data/models.json";
 import NotFound from "@/app/not-found";
+import { Suspense } from "react";
+import Loading from "@/app/loading";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ styleName: string }>;
@@ -43,8 +44,8 @@ export default async function StylePage({ params }: Readonly<Props>) {
     return NotFound();
   }
   const convertedStyleName = styleName ?? "boudoir";
-  console.log(`Param styleName: ${extractedStyleName}`);
-  console.log(`to Flickr: ${styleName}`);
+  console.info(`Param styleName: ${extractedStyleName}`);
+  console.info(`to Flickr: ${styleName}`);
   const result = await getFlickrPhotos(convertedStyleName, 100, false, true);
 
   if (!styleName) {
@@ -58,7 +59,9 @@ export default async function StylePage({ params }: Readonly<Props>) {
       >
         {extractedStyleName}
       </h1>
-      <Gallery photos={result.photos} showTitle={false} />
+      <Suspense fallback={<Loading />}>
+        <Gallery photos={result.photos} showTitle={false} />
+      </Suspense>
     </div>
   );
 }
