@@ -3,6 +3,7 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { getFlickrPhotos, Photo } from "@/services/flickr";
 import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
+import Link from "next/link";
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -131,12 +132,12 @@ export default async function BoudoirStylePage() {
             tailored to your unique vision and comfort level.
           </p>
           <div className="text-center">
-            <a
+            <Link
               href="/#book-session"
               className="inline-block bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
               Book Your Boudoir Session
-            </a>
+            </Link>
           </div>
         </section>
       </main>
