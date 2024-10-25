@@ -1,4 +1,5 @@
 import { createFlickr } from "flickr-sdk";
+import chalk from "chalk";
 
 export interface Photo {
   id: number;
@@ -50,24 +51,39 @@ export async function getFlickrPhotos(
 }> {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
 
-  console.info(`Getting ${items} photos from ${tags} on Flickr...`);
+  console.info(
+    chalk.blue(
+      `Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`,
+    ),
+  );
 
   try {
-    const value = await flickr("flickr.photos.search", {
+    const result = await flickr("flickr.photos.search", {
       user_id: "76279599@N00",
       sort: "interestingness-desc",
       safe_search: "3",
       tags: tags,
       content_types: "0",
       media: "photos",
-      //per_page: items.toString(),
       extras:
         "description, url_s, url_m, url_n, url_l, url_z, url_c, url_o, url_t, views, date_upload, date_taken",
     });
 
-    console.info(`Got ${value.photos.photo.length} photos from Flickr.`);
+    console.info(
+      chalk.blue(
+        `Got ${chalk.bold(result.photos.photo.length)} photos from Flickr.`,
+      ),
+    );
+    if (result.photos.photo.length === 0) {
+      console.error(chalk.red.bold("No photos found."));
+      return {
+        success: false,
+        photos: null,
+        reason: "No photos found",
+      };
+    }
     const photos = {
-      photos: value.photos.photo.map((photo: PhotoFlickr) => ({
+      photos: result.photos.photo.map((photo: PhotoFlickr) => ({
         id: photo.id,
         description: photo.description._content,
         dateTaken: new Date(photo.datetaken.replace(" ", "T")),
@@ -90,24 +106,20 @@ export async function getFlickrPhotos(
     };
 
     if (orderByDate) {
-      console.info("Sorting photos by date taken...");
+      console.info(chalk.cyan("Sorting photos by date taken..."));
       photos.photos = photos.photos.sort(
         (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
       );
     }
 
     if (orderByViews) {
-      console.info("Sorting photos by views...");
+      console.info(chalk.cyan("Sorting photos by views..."));
       photos.photos = photos.photos.sort(
-          (a: Photo, b: Photo) => b.views - a.views,
+        (a: Photo, b: Photo) => b.views - a.views,
       );
     }
 
     photos.photos = photos.photos.slice(0, items);
-
-
-    console.info("Photos", photos.photos);
-
     return photos;
   } catch (reason) {
     if (reason instanceof Error) {
