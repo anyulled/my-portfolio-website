@@ -13,6 +13,7 @@ import Lightbox from "yet-another-react-lightbox";
 import { Image, RowsPhotoAlbum } from "react-photo-album";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import renderNextImage from "@/components/NextImage";
+import { useTranslations } from "next-intl";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -27,6 +28,7 @@ export default function Gallery({
 }: Readonly<GalleryProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Gallery");
 
+  const t = useTranslations("gallery");
   const [photoIndex, setPhotoIndex] = useState<number>(-1);
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
   const handleImageClick = (image: number) => {
@@ -49,7 +51,7 @@ export default function Gallery({
             <h2
               className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
             >
-              Our Gallery
+              {t("title")}
             </h2>
           )}
           {convertedPhotos && convertedPhotos?.length > 0 ? (
@@ -65,7 +67,7 @@ export default function Gallery({
                 "dark:text-neutral-300 text-neutral-800 text-center text-lg"
               }
             >
-              No photos yet
+              {t("no_photos")}
             </div>
           )}
         </div>
