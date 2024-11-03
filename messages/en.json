@@ -1,5 +1,6 @@
 {
   "home": {
+    "capture_your_essence": "Capture Your Essence"
   },
   "about": {
     "title": "About me",
@@ -58,5 +59,13 @@
     "privacy": "Privacy Terms",
     "cookies": "Cookies",
     "legal": "Legal Terms"
+  },
+  "contact_form": {
+    "contact_us": "Contact Us",
+    "send_message": "Send Message",
+    "name": "Your name",
+    "email": "Your email",
+    "message": "Your message",
+    "submit": "Submit"
   }
 }
