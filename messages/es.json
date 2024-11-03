@@ -43,6 +43,11 @@
     "no_photos": "No se han encontrado fotos",
     "title": "Nuestra Galería"
   },
+  "LocaleSwitcher": {
+    "es": "Español",
+    "en": "Inglés",
+    "label": "Idioma"
+  },
   "home": {
     "capture_your_essence": "Captura tu Esencia"
   },

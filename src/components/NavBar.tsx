@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NavLinks } from "@/components/NavLinks";
 import { useTranslations } from "next-intl";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
@@ -97,6 +98,7 @@ export default function NavBar() {
           Sensuelle Boudoir
         </Link>
         <div className="flex items-center space-x-4">
+          <LocaleSwitcher />
           <Button
             variant="ghost"
             size="icon"
