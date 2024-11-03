@@ -26,11 +26,12 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { NavLinks } from "@/components/NavLinks";
+import { useTranslations } from "next-intl";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
-  { name: "What is Boudoir?", href: "/what-is-boudoir" },
-  { name: "About Me", href: "/about" },
+  { name: "menu_what_is_boudoir", href: "/what-is-boudoir" },
+  { name: "menu_about", href: "/about" },
 ];
 
 export default function NavBar() {
@@ -44,6 +45,7 @@ export default function NavBar() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   //endregion
 
+  const t = useTranslations("nav_bar");
   const modelLinks = modelData.models.map((model) => ({
     ...model,
     name: model.name,
@@ -99,7 +101,7 @@ export default function NavBar() {
             variant="ghost"
             size="icon"
             onClick={handleThemeChange}
-            aria-label="Toggle theme"
+            aria-label={t("toggle_theme")}
           >
             {theme === "dark" ? (
               <Sun className="h-6 w-6" />
@@ -110,7 +112,7 @@ export default function NavBar() {
           <div className="hidden md:flex space-x-4 items-center">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
-                Models <ChevronDown className="ml-1 h-4 w-4" />
+                {t("models")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64">
                 <div className="p-2">
@@ -118,7 +120,7 @@ export default function NavBar() {
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="search"
-                      placeholder="Search models..."
+                      placeholder={t("search_models")}
                       className="pl-8"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -141,7 +143,7 @@ export default function NavBar() {
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
-                Styles <ChevronDown className="ml-1 h-4 w-4" />
+                {t("styles")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
                 {stylesData.styles.map((style) => (
@@ -159,13 +161,13 @@ export default function NavBar() {
             <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
           </div>
           <Button onClick={handleBookNow} className="hidden md:inline-flex">
-            Book Now
+            {t("book_now")}
           </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-6 w-6 dark:text-white text-neutral-800" />
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only">{t("open_menu")}</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
@@ -173,12 +175,12 @@ export default function NavBar() {
                 <SheetTitle className={dancingScript.className}>
                   Sensuelle Boudoir
                 </SheetTitle>
-                <SheetDescription>Capture your essence</SheetDescription>
+                <SheetDescription>{t("capture_your_essence")}</SheetDescription>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
-                    Models <ChevronDown className="ml-1 h-4 w-4" />
+                    {t("models")} <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-64">
                     <div className="p-2">
@@ -186,7 +188,7 @@ export default function NavBar() {
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                           type="search"
-                          placeholder="Search models..."
+                          placeholder={t("search_models")}
                           className="pl-8"
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
@@ -209,7 +211,7 @@ export default function NavBar() {
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
-                    Styles <ChevronDown className="ml-1 h-4 w-4" />
+                    {t("styles")} <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
                     {stylesData.styles.map((style) => (
@@ -226,7 +228,7 @@ export default function NavBar() {
                 </DropdownMenu>
                 <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
                 <Button onClick={handleBookNow} className="mt-4">
-                  Book Now
+                  {t("book_now")}
                 </Button>
               </div>
             </SheetContent>

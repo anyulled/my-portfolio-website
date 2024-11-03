@@ -72,6 +72,17 @@
     "title": "our Gallery",
     "no_photos": "No photos found"
   },
+  "nav_bar": {
+    "search_models": "Search Models...",
+    "toggle_theme": "Toggle Theme",
+    "styles": "Styles",
+    "models": "Models",
+    "book_now": "Book Now",
+    "capture_your_essence": "Capture Your Essence",
+    "open_menu": "Open Menu",
+    "menu_about": "About Me",
+    "menu_what_is_boudoir": "What is Boudoir?"
+  },
   "cookie": {
     "cookie_message": "We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.",
     "accept": "Accept"
