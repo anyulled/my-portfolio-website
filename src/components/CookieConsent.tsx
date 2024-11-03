@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { grantConsent } from "@/lib/gtag";
+import { useTranslations } from "next-intl";
 
 export default function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false);
   const { theme } = useTheme();
+  const t = useTranslations("cookie");
 
   useEffect(() => {
     const consent = localStorage.getItem("cookieConsent");
@@ -33,8 +35,7 @@ export default function CookieConsent() {
         <p
           className={`${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}
         >
-          We use cookies to enhance your experience. By continuing to visit this
-          site you agree to our use of cookies.
+          {t("cookie_message")}
         </p>
         <Button
           onClick={handleAccept}
@@ -42,7 +43,7 @@ export default function CookieConsent() {
           size="sm"
           className={`ml-4 ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
         >
-          Accept
+          {t("accept")}
         </Button>
       </div>
     </div>
