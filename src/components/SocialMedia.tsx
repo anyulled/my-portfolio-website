@@ -50,7 +50,7 @@ export default function SocialMedia() {
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{`${t("follow_us")} ${social.name}`}</p>`
+                  <p>{`${t("follow_us")} ${social.name}`}</p>
                 </TooltipContent>
               </Tooltip>
             ))}
