@@ -8,6 +8,7 @@ import { Aref_Ruqaa } from "next/font/google";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import Link from "next/link";
 import { submitLeadForm } from "@/lib/gtag";
+import { useTranslations } from "next-intl";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -53,24 +54,24 @@ export default function ContactForm() {
       setSendingForm(false);
     }
   };
-
+  const t = useTranslations("contact_form");
   return (
     <section id="book-session" className="py-16 bg-opacity-75 backdrop-blur-md">
       <div className="container mx-auto px-6">
         <h2
           className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
         >
-          Contact Us
+          {t("contact_us")}
         </h2>
         <form
           className="max-w-md mx-auto space-y-4"
           onSubmit={handleFormSubmit}
         >
-          <Input type="text" name="name" placeholder="Your Name" required />
-          <Input type="email" name="email" placeholder="Your Email" required />
-          <Textarea name="message" placeholder="Your Message" required />
+          <Input type="text" name="name" placeholder={t("name")} required />
+          <Input type="email" name="email" placeholder={t("email")} required />
+          <Textarea name="message" placeholder={t("message")} required />
           <Button disabled={sendingForm} type="submit" className="w-full">
-            Send Message
+            {t("send_message")}
           </Button>
         </form>
         <div className="mt-8 flex justify-center space-x-4">
