@@ -45,11 +45,11 @@ export default async function BoudoirStylePage() {
             {t("what_is_boudoir")}
           </h2>
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/3">
+            <div className="md:w-2/3">
               <p className="mb-4 prose lg:prose-xl">{t("p1")}</p>
               <p className={"prose lg:prose-xl"}>{t("p2")}</p>
             </div>
-            <div className="md:w-2/3">
+            <div className="md:w-1/3">
               <Image
                 src={randomPhotos?.at(1)?.urlZoom!}
                 alt={t("boudoir_photography")}
