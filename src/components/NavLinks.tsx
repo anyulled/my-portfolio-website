@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export const NavLinks = (props: {
   navLinks: {
@@ -6,17 +7,21 @@ export const NavLinks = (props: {
     href: string;
   }[];
   handleNavClick: (linkName: string) => void;
-}) => (
-  <>
-    {props.navLinks.map((link) => (
-      <Link
-        key={link.name}
-        href={link.href}
-        className="text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800"
-        onClick={() => props.handleNavClick(link.name)}
-      >
-        {link.name}
-      </Link>
-    ))}
-  </>
-);
+}) => {
+  const t = useTranslations("nav_bar");
+  return (
+    <>
+      {props.navLinks.map((link) => (
+        <Link
+          key={link.name}
+          href={link.href}
+          className="text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800"
+          onClick={() => props.handleNavClick(link.name)}
+        >
+          {/* @ts-expect-error i18n issues */}
+          {t(link.name)}
+        </Link>
+      ))}
+    </>
+  );
+};
