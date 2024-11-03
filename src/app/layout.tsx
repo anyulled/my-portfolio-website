@@ -11,6 +11,8 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
 import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: {
@@ -31,37 +33,41 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={"bg-neutral-50 dark:bg-zinc-800"}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ScrollProvider>
-            <div className={`min-h-screen`}>
-              <NavBar />
-              {children}
-            </div>
-            <Toaster />
-            <CookieConsent />
-          </ScrollProvider>
-        </ThemeProvider>
-        <Footer />
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ScrollProvider>
+              <div className={`min-h-screen`}>
+                <NavBar />
+                {children}
+              </div>
+              <Toaster />
+              <CookieConsent />
+            </ScrollProvider>
+          </ThemeProvider>
+          <Footer />
 
-        <div
-          className="fixed inset-0 pointer-events-none z-50 opacity-10"
-          style={{
-            backgroundImage: "url('/api/placeholder?height=200&width=200')",
-            backgroundRepeat: "repeat",
-            mixBlendMode: "overlay",
-          }}
-        />
-        <SpeedInsights />
-        <Analytics />
-        <GoogleAnalytics />
+          <div
+            className="fixed inset-0 pointer-events-none z-50 opacity-10"
+            style={{
+              backgroundImage: "url('/api/placeholder?height=200&width=200')",
+              backgroundRepeat: "repeat",
+              mixBlendMode: "overlay",
+            }}
+          />
+          <SpeedInsights />
+          <Analytics />
+          <GoogleAnalytics />
+        </NextIntlClientProvider>
       </body>
     </html>
   );
