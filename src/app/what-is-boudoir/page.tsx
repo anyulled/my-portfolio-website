@@ -4,6 +4,7 @@ import { getFlickrPhotos, Photo } from "@/services/flickr";
 import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -20,6 +21,7 @@ function getRandomElements(arr: Photo[], num: number) {
 export default async function BoudoirStylePage() {
   const { photos } = await getFlickrPhotos("boudoir, model", 50);
   const randomPhotos = getRandomElements(photos ?? [], 10);
+  const t = await getTranslations("what_is_boudoir");
 
   return (
     <>
@@ -27,12 +29,12 @@ export default async function BoudoirStylePage() {
         <h1
           className={`${dancingScript.className} text-5xl md:text-7xl mb-4 dark:text-peach-fuzz-500`}
         >
-          Boudoir Photography
+          {t("boudoir_photography")}
         </h1>
         <p
           className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300 prose dark:text-peach-fuzz-400`}
         >
-          Empowering, Intimate, and Artistic
+          {t("empowering")}
         </p>
       </header>
       <main className="container mx-auto px-4 py-4">
@@ -40,29 +42,17 @@ export default async function BoudoirStylePage() {
           <h2
             className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
           >
-            What is Boudoir Photography?
+            {t("what_is_boudoir")}
           </h2>
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/3">
-              <p className="mb-4 prose lg:prose-xl">
-                Boudoir photography is an intimate and artistic style of
-                portraiture. It captures subjects, typically women, in a
-                sensual, romantic, and sometimes erotic manner. The term
-                &quot;boudoir&quot; comes from the French word for a
-                woman&apos;s private dressing room or bedroom.
-              </p>
-              <p className={"prose lg:prose-xl"}>
-                This style of photography aims to celebrate the subject&apos;s
-                body, boost confidence, and create stunning, personal artwork.
-                Boudoir shoots can range from tastefully suggestive to more
-                revealing, always prioritizing the comfort and vision of the
-                subject.
-              </p>
+              <p className="mb-4 prose lg:prose-xl">{t("p1")}</p>
+              <p className={"prose lg:prose-xl"}>{t("p2")}</p>
             </div>
             <div className="md:w-2/3">
               <Image
                 src={randomPhotos?.at(1)?.urlZoom!}
-                alt="Boudoir Photography"
+                alt={t("boudoir_photography")}
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg h-auto w-full"
@@ -75,27 +65,17 @@ export default async function BoudoirStylePage() {
           <h2
             className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
           >
-            The Art of Boudoir
+            {t("art_boudoir")}
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
             <div className="md:w-2/3">
-              <p className="mb-4 prose lg:prose-xl">
-                Boudoir photography is more than just taking pictures; it&apos;s
-                an art form that requires skill, sensitivity, and creativity.
-                Photographers must create a safe, comfortable environment where
-                subjects can express themselves freely.
-              </p>
-              <p className={"prose lg:prose-xl"}>
-                Lighting, composition, and posing are crucial elements in
-                boudoir photography. Soft, flattering light is often used to
-                create a romantic atmosphere, while thoughtful composition
-                ensures elegant and tasteful results.
-              </p>
+              <p className="mb-4 prose lg:prose-xl">{t("p3")}</p>
+              <p className={"prose lg:prose-xl"}>{t("p4")}</p>
             </div>
             <div className="md:w-1/3">
               <Image
                 src={randomPhotos?.at(2)?.urlZoom!}
-                alt="Boudoir Photography"
+                alt={t("boudoir_photography")}
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg h-auto w-full"
@@ -108,14 +88,14 @@ export default async function BoudoirStylePage() {
           <h2
             className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
           >
-            Why Choose Boudoir Photography?
+            {t("why_boudoir")}
           </h2>
           <ul className="list-disc list-inside space-y-4 mb-8 ml-4">
-            <li>Boost self-confidence and body positivity</li>
-            <li>Celebrate a milestone or life change</li>
-            <li>Create a unique, personal gift for a partner</li>
-            <li>Embrace and express your sensuality</li>
-            <li>Capture your beauty at any age or stage of life</li>
+            <li>{t("l1")}</li>
+            <li>{t("l2")}</li>
+            <li>{t("l3")}</li>
+            <li>{t("l4")}</li>
+            <li>{t("l5")}</li>
           </ul>
           <Card>
             <CardContent>
@@ -128,25 +108,16 @@ export default async function BoudoirStylePage() {
           <h2
             className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
           >
-            Your Boudoir Experience
+            {t("boudoir_experience")}
           </h2>
-          <p className="mb-4 prose lg:prose-xl">
-            At Sensuelle Boudoir, we&apos;re dedicated to providing a luxurious,
-            comfortable, and empowering boudoir experience. Our professional
-            team will guide you through every step, from planning your shoot to
-            selecting your favorite images.
-          </p>
-          <p className="mb-8 prose lg:prose-xl">
-            Whether you&apos;re looking to boost your confidence, celebrate your
-            body, or create a special gift, our boudoir photography sessions are
-            tailored to your unique vision and comfort level.
-          </p>
+          <p className="mb-4 prose lg:prose-xl">{t("p5")}</p>
+          <p className="mb-8 prose lg:prose-xl">{t("p6")}</p>
           <div className="text-center">
             <Link
               href="/#book-session"
               className="inline-block bg-peach-fuzz-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
-              Book Your Boudoir Session
+              {t("book_session")}
             </Link>
           </div>
         </section>
