@@ -46,6 +46,11 @@
   "home": {
     "capture_your_essence": "Capture Your Essence"
   },
+  "LocaleSwitcher": {
+    "es": "Spanish",
+    "en": "English",
+    "label": "Language"
+  },
   "nav_bar": {
     "book_now": "Book Now",
     "capture_your_essence": "Capture Your Essence",
