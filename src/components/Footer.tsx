@@ -1,12 +1,14 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const footerLinks = [
-  { name: "Privacy Terms", href: "/privacy" },
-  { name: "Cookies", href: "/cookies" },
-  { name: "Legal Terms", href: "/legal" },
+  { name: "privacy", href: "/privacy" },
+  { name: "cookies", href: "/cookies" },
+  { name: "legal", href: "/legal" },
 ];
 
 export default function Footer() {
+  const t = useTranslations("footer");
   return (
     <footer className="bg-background border-t">
       <div className="container mx-auto px-6 py-8">
@@ -18,13 +20,14 @@ export default function Footer() {
                 href={link.href}
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                {link.name}
+                {/* @ts-expect-error i18n issues */}
+                {t(link.name)}
               </Link>
             ))}
           </nav>
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Sensuelle Boudoir. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} Sensuelle Boudoir.{" "}
+            {t("copyright")}
           </p>
         </div>
       </div>
