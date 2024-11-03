@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Camera, Instagram, Twitter, User, LayoutPanelTop } from "lucide-react";
+import { Camera, Instagram, LayoutPanelTop, Twitter, User } from "lucide-react";
 import { Aref_Ruqaa } from "next/font/google";
 
 import {
@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useTranslations } from "next-intl";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -24,13 +25,14 @@ const socialLinks = [
 ];
 
 export default function SocialMedia() {
+  const t = useTranslations("social");
   return (
     <section className="py-16 bg-opacity-75 backdrop-blur-md">
       <div className="container mx-auto px-6">
         <h2
           className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
         >
-          Connect With Us
+          {t("connect")}
         </h2>
         <TooltipProvider>
           <div className="flex justify-center space-x-6">
@@ -48,7 +50,7 @@ export default function SocialMedia() {
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Follow us on {social.name}</p>
+                  <p>{`${t("follow_us")} ${social.name}`}</p>`
                 </TooltipContent>
               </Tooltip>
             ))}
