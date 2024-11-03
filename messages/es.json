@@ -1,10 +1,12 @@
 {
-  "home": {
-    "capture_your_essence": "Captura tu Esencia"
-  },
   "about": {
-    "title": "Acerca de mi",
     "alt_image": "Anyul Rivas — Fotógrafo Boudoir en Barcelona, España",
+    "collab_garci": "Firma de libros con Antonio Garci & Chema Photo en PhotoForum Fest",
+    "collab_peter_coulson": "Taller con Peter Coulson & Jon Hernández",
+    "collab_ruben_suarez": "Taller de retrato y moda con Rubén Suárez",
+    "collaborations": "Colaboraciones",
+    "create_paragraph": "Siempre me entusiasma conocer nuevos clientes y emprender nuevos viajes creativos. Ya sea que estés buscando celebrar un hito, aumentar tu confianza o simplemente crear arte deslumbrante, estoy aquí para guiarte a través de una experiencia boudoir inolvidable.",
+    "create_together": "Vamos a crear algo hermoso juntos",
     "h2": "Capturando la Esencia de la Gracia Femenina",
     "h3": "Más allá del objetivo, dentro del alma",
     "p1": "Anyul Led Rivas, conocido en las redes sociales como @anyulled, es un fotógrafo polifacético que se especializa en retratos, boudoir y fotografía de desnudo artístico. Anyul comenzó su trayectoria en 2013 en Caracas, Venezuela, y desde entonces se ha establecido en la vibrante ciudad de Barcelona, España, desde 2016.",
@@ -17,74 +19,80 @@
     "p8": "Se inspira en una gran variedad de fotógrafos, incluyendo ",
     "p9": "Su obra refleja una mezcla de estas influencias, combinadas con su visión personal, dando como resultado fotografías que no sólo son visualmente impactantes sino también emocionalmente resonantes.",
     "published_works": "Trabajos Publicados",
-    "collaborations": "Colaboraciones",
-    "collab_peter_coulson": "Taller con Peter Coulson & Jon Hernández",
-    "collab_garci": "Firma de libros con Antonio Garci & Chema Photo en PhotoForum Fest",
-    "collab_ruben_suarez": "Taller de retrato y moda con Rubén Suárez",
-    "create_together": "Vamos a crear algo hermoso juntos",
-    "create_paragraph": "Siempre me entusiasma conocer nuevos clientes y emprender nuevos viajes creativos. Ya sea que estés buscando celebrar un hito, aumentar tu confianza o simplemente crear arte deslumbrante, estoy aquí para guiarte a través de una experiencia boudoir inolvidable."
+    "title": "Acerca de mi"
   },
-  "what_is_boudoir": {
-    "boudoir_photography": "Fotografía Boudoir",
-    "empowering": "Empoderadora, Íntima, y Artística",
-    "what_is_boudoir": "¿Qué es la fotografía boudoir?",
-    "p1": "La fotografía boudoir es un estilo íntimo y artístico de retrato. Captura a los sujetos, generalmente mujeres, de una manera sensual, romántica y, a veces, erótica. El término \"boudoir\" proviene de la palabra francesa que designa el vestidor o dormitorio privado de una mujer.",
-    "p2": "Este estilo de fotografía tiene como objetivo celebrar el cuerpo del sujeto, aumentar la confianza y crear obras de arte impresionantes y personales. Las sesiones de boudoir pueden variar desde las más sugerentes hasta las más reveladoras, priorizando siempre la comodidad y la visión del sujeto.",
-    "art_boudoir": "El arte del Boudoir",
-    "p3": "La fotografía boudoir es más que simplemente tomar fotografías; es una forma de arte que requiere habilidad, sensibilidad y creatividad. Los fotógrafos deben crear un entorno seguro y cómodo donde los sujetos puedan expresarse libremente.",
-    "p4": "La iluminación, la composición y la pose son elementos cruciales en la fotografía boudoir. A menudo se utiliza una luz suave y favorecedora para crear una atmósfera romántica, mientras que una composición bien pensada garantiza resultados elegantes y de buen gusto.",
-    "why_boudoir": "¿Por qué elegir la fotografía Boudoir?",
-    "l1": "Mejora tu autoconfianza y positividad sobre tu cuerpo",
-    "l2": "Celebra un hito o cambio de vida",
-    "l3": "Crea un regalo único y personal para tu pareja",
-    "l4": "Abraza y expresa tu sensualidad",
-    "l5": "Captura tu bella en cualquier etapa de la vida",
-    "boudoir_experience": "Tu experiencia Boudoir",
-    "p5": "En Sensuelle Boudoir, nos dedicamos a brindar una experiencia de boudoir lujosa, cómoda y empoderadora. Nuestro equipo profesional la guiará en cada paso, desde la planificación de la sesión hasta la selección de tus imágenes favoritas.",
-    "p6": "Ya sea que busques aumentar tu confianza, celebrar tu cuerpo o crear un regalo especial, nuestras sesiones de fotografía de boudoir se adaptan a tu visión única y nivel de comodidad.",
-    "book_session": "Reserva tu sesión Boudoir"
+  "contact_form": {
+    "contact_us": "Contáctanos",
+    "email": "Tu correo electrónico",
+    "message": "Tu mensaje",
+    "name": "Tu nombre",
+    "send_message": "Enviar Mensaje",
+    "submit": "Enviar"
+  },
+  "cookie": {
+    "accept": "Aceptar",
+    "cookie_message": "Usamos cookies para mejorar tu experiencia. Al visitar este sitio aceptas nuestro uso de las cookies."
+  },
+  "footer": {
+    "cookies": "Cookies",
+    "copyright": "Todos los derechos reservados.",
+    "legal": "Términos legales",
+    "privacy": "Términos de Privacidad"
+  },
+  "gallery": {
+    "no_photos": "No se han encontrado fotos",
+    "title": "Nuestra Galería"
+  },
+  "home": {
+    "capture_your_essence": "Captura tu Esencia"
+  },
+  "nav_bar": {
+    "book_now": "Reserva Ahora",
+    "capture_your_essence": "Captura tu esencia",
+    "menu_about": "Acerca de mí",
+    "menu_what_is_boudoir": "¿Qué es Boudoir?",
+    "models": "Modelos",
+    "open_menu": "Abrir Menú",
+    "search_models": "Buscar Modelos...",
+    "styles": "Estilos",
+    "toggle_theme": "Cambiar tema"
+  },
+  "not_found": {
+    "not_found": "Esta página no exista",
+    "oops": "Ups!",
+    "p1": "La página que buscas puede haber sido movida, eliminada, o nunca existió.",
+    "return_to_homepage": "Regresar al inicio"
   },
   "social": {
     "connect": "Connecta con nosotros",
     "follow_us": "Síguenos en"
   },
-  "not_found": {
-    "oops": "Ups!",
-    "not_found": "Esta página no exista",
-    "return_to_homepage": "Regresar al inicio",
-    "p1": "La página que buscas puede haber sido movida, eliminada, o nunca existió."
+  "styles": {
+    "artistic_nude": "Desnudo Artístico",
+    "boudoir": "Boudoir",
+    "fashion": "Moda",
+    "lingerie": "Lencería",
+    "portrait": "Retrato",
+    "swimwear": "Traje de Baño"
   },
-  "footer": {
-    "copyright": "Todos los derechos reservados.",
-    "privacy": "Términos de Privacidad",
-    "cookies": "Cookies",
-    "legal": "Términos legales"
-  },
-  "contact_form": {
-    "contact_us": "Contáctanos",
-    "send_message": "Enviar Mensaje",
-    "name": "Tu nombre",
-    "email": "Tu correo electrónico",
-    "message": "Tu mensaje",
-    "submit": "Enviar"
-  },
-  "gallery": {
-    "title": "Nuestra Galería",
-    "no_photos": "No se han encontrado fotos"
-  },
-  "nav_bar": {
-    "search_models": "Buscar Modelos...",
-    "toggle_theme": "Cambiar tema",
-    "styles": "Estilos",
-    "models": "Modelos",
-    "book_now": "Reserva Ahora",
-    "capture_your_essence": "Captura tu esencia",
-    "open_menu": "Abrir Menú",
-    "menu_about": "Acerca de mí",
-    "menu_what_is_boudoir": "¿Qué es Boudoir?"
-  },
-  "cookie": {
-    "cookie_message": "Usamos cookies para mejorar tu experiencia. Al visitar este sitio aceptas nuestro uso de las cookies.",
-    "accept": "Aceptar"
+  "what_is_boudoir": {
+    "art_boudoir": "El arte del Boudoir",
+    "book_session": "Reserva tu sesión Boudoir",
+    "boudoir_experience": "Tu experiencia Boudoir",
+    "boudoir_photography": "Fotografía Boudoir",
+    "empowering": "Empoderadora, Íntima, y Artística",
+    "l1": "Mejora tu autoconfianza y positividad sobre tu cuerpo",
+    "l2": "Celebra un hito o cambio de vida",
+    "l3": "Crea un regalo único y personal para tu pareja",
+    "l4": "Abraza y expresa tu sensualidad",
+    "l5": "Captura tu bella en cualquier etapa de la vida",
+    "p1": "La fotografía boudoir es un estilo íntimo y artístico de retrato. Captura a los sujetos, generalmente mujeres, de una manera sensual, romántica y, a veces, erótica. El término \"boudoir\" proviene de la palabra francesa que designa el vestidor o dormitorio privado de una mujer.",
+    "p2": "Este estilo de fotografía tiene como objetivo celebrar el cuerpo del sujeto, aumentar la confianza y crear obras de arte impresionantes y personales. Las sesiones de boudoir pueden variar desde las más sugerentes hasta las más reveladoras, priorizando siempre la comodidad y la visión del sujeto.",
+    "p3": "La fotografía boudoir es más que simplemente tomar fotografías; es una forma de arte que requiere habilidad, sensibilidad y creatividad. Los fotógrafos deben crear un entorno seguro y cómodo donde los sujetos puedan expresarse libremente.",
+    "p4": "La iluminación, la composición y la pose son elementos cruciales en la fotografía boudoir. A menudo se utiliza una luz suave y favorecedora para crear una atmósfera romántica, mientras que una composición bien pensada garantiza resultados elegantes y de buen gusto.",
+    "p5": "En Sensuelle Boudoir, nos dedicamos a brindar una experiencia de boudoir lujosa, cómoda y empoderadora. Nuestro equipo profesional la guiará en cada paso, desde la planificación de la sesión hasta la selección de tus imágenes favoritas.",
+    "p6": "Ya sea que busques aumentar tu confianza, celebrar tu cuerpo o crear un regalo especial, nuestras sesiones de fotografía de boudoir se adaptan a tu visión única y nivel de comodidad.",
+    "what_is_boudoir": "¿Qué es la fotografía boudoir?",
+    "why_boudoir": "¿Por qué elegir la fotografía Boudoir?"
   }
 }

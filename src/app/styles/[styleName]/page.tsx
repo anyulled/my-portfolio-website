@@ -8,6 +8,7 @@ import stylesData from "@/data/styles.json";
 import { extractNameFromTag } from "@/lib/extractName";
 import modelData from "@/data/models.json";
 import NotFound from "@/app/not-found";
+import { getTranslations } from "next-intl/server";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ styleName: string }>;
@@ -37,6 +38,7 @@ export const generateMetadata = async ({
 
 export default async function StylePage({ params }: Readonly<Props>) {
   const { styleName } = await params;
+  const t = await getTranslations("styles");
   const extractedStyleName = extractNameFromTag(stylesData.styles, styleName);
   if (extractedStyleName === undefined) {
     return NotFound();
@@ -55,7 +57,8 @@ export default async function StylePage({ params }: Readonly<Props>) {
       <h1
         className={`${dancingScript.className} pt-44 pb-3 pl-12 lg:pb-12 dark:text-peach-fuzz-400 capitalize`}
       >
-        {extractedStyleName}
+        {/* @ts-expect-error i18n issues */}
+        {t(styleName.replace("-", "_"))}
       </h1>
       <Gallery photos={result.photos} showTitle={false} />
     </div>
