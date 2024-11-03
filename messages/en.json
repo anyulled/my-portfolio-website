@@ -52,5 +52,11 @@
     "not_found": "This page doesn't exist",
     "return_to_homepage": "Return to Homepage",
     "p1": "The page you're looking for might have been moved, deleted, or never existed."
+  },
+  "footer": {
+    "copyright": "All rights reserved.",
+    "privacy": "Privacy Terms",
+    "cookies": "Cookies",
+    "legal": "Legal Terms"
   }
 }
