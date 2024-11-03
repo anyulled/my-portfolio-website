@@ -1,22 +1,24 @@
 "use client";
-import { Dancing_Script, Aref_Ruqaa } from "next/font/google";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { useScroll } from "@/contexts/ScrollContext";
 import React from "react";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export default function Hero() {
   const { scrollY } = useScroll();
-    const { theme } = useTheme();
+  const { theme } = useTheme();
+  const t = useTranslations("home");
 
   const gradient = React.useMemo(() => {
-      if(theme === "dark"){
-          return "linear-gradient(to bottom, rgba(255,255,255,0.1) 75%, rgba(25,24,29,1) 98%)";
-      } else{
-          return "linear-gradient(to bottom, rgba(200,200,200,0.1) 82%, rgba(255,255,255,1) 98%)";
-      }
+    if (theme === "dark") {
+      return "linear-gradient(to bottom, rgba(255,255,255,0.1) 75%, rgba(25,24,29,1) 98%)";
+    } else {
+      return "linear-gradient(to bottom, rgba(200,200,200,0.1) 82%, rgba(255,255,255,1) 98%)";
+    }
   }, [theme]);
   const randomImage = React.useMemo(() => {
     const images = [
@@ -61,7 +63,7 @@ export default function Hero() {
         <p
           className={`${arefRuqaa.className} text-2xl md:text-3xl text-peach-fuzz-600 dark:text-neutral-200 text-shadow-sm shadow-neutral-800 dark:shadow-peach-fuzz-800`}
         >
-          Capture Your Essence
+          {t("capture_your_essence")}
         </p>
       </div>
     </section>
