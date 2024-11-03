@@ -39,8 +39,18 @@
     "l4": "Embrace and express your sensuality",
     "l5": "Capture your beauty at any age or stage of life",
     "boudoir_experience": "Your Boudoir Experience",
-    "p5": "At Sensuelle Boudoir, we&apos;re dedicated to providing a luxurious, comfortable, and empowering boudoir experience. Our professional team will guide you through every step, from planning your shoot to selecting your favorite images.",
-    "p6": "Whether you&apos;re looking to boost your confidence, celebrate your body, or create a special gift, our boudoir photography sessions are tailored to your unique vision and comfort level.",
+    "p5": "At Sensuelle Boudoir, we're dedicated to providing a luxurious, comfortable, and empowering boudoir experience. Our professional team will guide you through every step, from planning your shoot to selecting your favorite images.",
+    "p6": "Whether you're looking to boost your confidence, celebrate your body, or create a special gift, our boudoir photography sessions are tailored to your unique vision and comfort level.",
     "book_session": "Book Your Boudoir Session"
+  },
+  "social": {
+    "connect": "Connect with us",
+    "follow_us": "Follow us on"
+  },
+  "not_found": {
+    "oops": "Oops!",
+    "not_found": "This page doesn't exist",
+    "return_to_homepage": "Return to Homepage",
+    "p1": "The page you're looking for might have been moved, deleted, or never existed."
   }
 }
