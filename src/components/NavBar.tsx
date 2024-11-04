@@ -46,7 +46,7 @@ export default function NavBar() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   //endregion
 
-  const t = useTranslations("nav_bar");
+  const t = useTranslations();
   const modelLinks = modelData.models.map((model) => ({
     ...model,
     name: model.name,
@@ -103,7 +103,7 @@ export default function NavBar() {
             variant="ghost"
             size="icon"
             onClick={handleThemeChange}
-            aria-label={t("toggle_theme")}
+            aria-label={t("nav_bar.toggle_theme")}
           >
             {theme === "dark" ? (
               <Sun className="h-6 w-6" />
@@ -114,7 +114,7 @@ export default function NavBar() {
           <div className="hidden md:flex space-x-4 items-center">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
-                {t("models")} <ChevronDown className="ml-1 h-4 w-4" />
+                {t("nav_bar.models")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64">
                 <div className="p-2">
@@ -122,7 +122,7 @@ export default function NavBar() {
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="search"
-                      placeholder={t("search_models")}
+                      placeholder={t("nav_bar.search_models")}
                       className="pl-8"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -145,7 +145,7 @@ export default function NavBar() {
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
-                {t("styles")} <ChevronDown className="ml-1 h-4 w-4" />
+                {t("nav_bar.styles")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
                 {stylesData.styles.map((style) => (
@@ -154,7 +154,8 @@ export default function NavBar() {
                       href={`/styles/${style.tag}`}
                       onClick={() => handleStyleClick(style.name)}
                     >
-                      {style.name}
+                      {/* @ts-expect-error i18n issues */}
+                      {t(`styles.${style.name}`)}
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -163,13 +164,13 @@ export default function NavBar() {
             <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
           </div>
           <Button onClick={handleBookNow} className="hidden md:inline-flex">
-            {t("book_now")}
+            {t("nav_bar.book_now")}
           </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-6 w-6 dark:text-white text-neutral-800" />
-                <span className="sr-only">{t("open_menu")}</span>
+                <span className="sr-only">{t("nav_bar.open_menu")}</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
@@ -177,12 +178,15 @@ export default function NavBar() {
                 <SheetTitle className={dancingScript.className}>
                   Sensuelle Boudoir
                 </SheetTitle>
-                <SheetDescription>{t("capture_your_essence")}</SheetDescription>
+                <SheetDescription>
+                  {t("nav_bar.capture_your_essence")}
+                </SheetDescription>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
-                    {t("models")} <ChevronDown className="ml-1 h-4 w-4" />
+                    {t("nav_bar.models")}{" "}
+                    <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-64">
                     <div className="p-2">
@@ -190,7 +194,7 @@ export default function NavBar() {
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                           type="search"
-                          placeholder={t("search_models")}
+                          placeholder={t("nav_bar.search_models")}
                           className="pl-8"
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
@@ -213,7 +217,8 @@ export default function NavBar() {
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
-                    {t("styles")} <ChevronDown className="ml-1 h-4 w-4" />
+                    {t("nav_bar.styles")}{" "}
+                    <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
                     {stylesData.styles.map((style) => (
@@ -222,7 +227,8 @@ export default function NavBar() {
                           href={`/styles/${style.tag}`}
                           onClick={() => handleStyleClick(style.name)}
                         >
-                          {style.name}
+                          {/* @ts-expect-error i18n issues */}
+                          {t(style.name)}
                         </Link>
                       </DropdownMenuItem>
                     ))}
@@ -230,7 +236,7 @@ export default function NavBar() {
                 </DropdownMenu>
                 <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
                 <Button onClick={handleBookNow} className="mt-4">
-                  {t("book_now")}
+                  {t("nav_bar.book_now")}
                 </Button>
               </div>
             </SheetContent>
