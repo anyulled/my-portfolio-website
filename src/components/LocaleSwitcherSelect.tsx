@@ -44,18 +44,18 @@ export default function LocaleSwitcherSelect({
         <SelectTrigger
           aria-label={label}
           className={clsx(
-            "rounded-sm p-2 transition-colors hover:bg-neutral-200",
+            "rounded-sm p-2 transition-colors border-none",
             isPending && "pointer-events-none opacity-60",
           )}
         >
           <SelectIcon>
-            <LanguageIcon className="h-6 w-6 dark:text-neutral-300 text-neutral-800 accent-neutral-700 transition-colors group-hover:text-neutral-900" />
+            <LanguageIcon className="h-6 w-6 dark:text-white text-neutral-800 accent-neutral-700 transition-colors group-hover:text-neutral-900" />
           </SelectIcon>
         </SelectTrigger>
         <SelectPortal>
           <SelectContent
             align="end"
-            className="min-w-[8rem] overflow-hidden rounded-sm bg-white py-1 shadow-md"
+            className="min-w-[8rem] overflow-hidden rounded-sm bg-white dark:bg-neutral-800 py-1 shadow-md"
             position="popper"
           >
             <SelectViewport>
@@ -67,14 +67,16 @@ export default function LocaleSwitcherSelect({
                 >
                   <div className="mr-2 w-[1rem]">
                     {item.value === defaultValue && (
-                      <CheckIcon className="h-5 w-5 text-neutral-600" />
+                      <CheckIcon className="h-5 w-5 text-neutral-800" />
                     )}
                   </div>
-                  <span className="text-neutral-900">{item.label}</span>
+                  <span className="dark:text-neutral-400 text-neutral-900">
+                    {item.label}
+                  </span>
                 </SelectItem>
               ))}
             </SelectViewport>
-            <SelectArrow className="fill-white dark:text-white text-neutral-800" />
+            <SelectArrow />
           </SelectContent>
         </SelectPortal>
       </Select>
