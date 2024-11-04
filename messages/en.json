@@ -47,8 +47,11 @@
     "capture_your_essence": "Capture Your Essence"
   },
   "LocaleSwitcher": {
-    "es": "Spanish",
+    "ca": "Catalan",
     "en": "English",
+    "es": "Spanish",
+    "it": "Italian",
+    "fr": "French",
     "label": "Language"
   },
   "nav_bar": {

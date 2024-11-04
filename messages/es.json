@@ -44,8 +44,11 @@
     "title": "Nuestra Galería"
   },
   "LocaleSwitcher": {
-    "es": "Español",
+    "ca": "Catalán",
     "en": "Inglés",
+    "es": "Español",
+    "it": "Italiano",
+    "fr": "Francés",
     "label": "Idioma"
   },
   "home": {
