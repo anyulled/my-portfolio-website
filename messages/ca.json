@@ -1,0 +1,106 @@
+{
+  "about": {
+    "alt_image": "Anyul Rivas — Fotògraf boudoir a Barcelona, Espanya",
+    "collab_garci": "Signatura de llibres amb Antonio Garci & Chema Photo al PhotoForum Fest",
+    "collab_peter_coulson": "Taller amb Peter Coulson & Jon Hernández",
+    "collab_ruben_suarez": "Taller de moda i retrat amb Rubén Suárez",
+    "collaborations": "Col·laboracions",
+    "create_paragraph": "Sempre estic emocionat de conèixer nous clients i embarcar-me en nous viatges creatius. Ja sigui que vulgueu celebrar una fita, augmentar la vostra confiança o simplement crear art impressionant, estic aquí per guiar-vos a través d'una experiència boudoir inoblidable.",
+    "create_together": "Creem Alguna Cosa Bonica Junts",
+    "h2": "Capturant l'Essència de la Gràcia Femenina",
+    "h3": "Més enllà de la Llum, cap a l'Ànima",
+    "p1": "Anyul Led Rivas, conegut a les xarxes socials com @anyulled, és un fotògraf polifacètic especialitzat en fotografia de retrat, boudoir i nus artístic. Va començar el seu viatge el 2013 a Caracas, Veneçuela, i des del 2016 està establert a la vibrant ciutat de Barcelona, Espanya.",
+    "p2": "La seva trajectòria educativa en fotografia inclou tres anys a",
+    "p3": "a Caracas i tallers amb fotògrafs de renom com Roberto Mata, Eduardo Álvarez, Luis Eduardo Alonso, Ruben Suarez, Chema Photo, Peter Coulson, Jon Hernandez i Antonio Garci. Aquesta diversitat en la seva formació ha perfeccionat les seves habilitats per capturar l'essència dels seus subjectes.",
+    "p4": "La seva obra ha estat àmpliament reconeguda i publicada en diverses revistes internacionals, com ara ",
+    "p5": "i moltes altres, mostrant la seva perspectiva única en fotografia.",
+    "p6": "Compaginant la seva passió per la fotografia amb una exitosa carrera com a Enginyer Principal de Programari i organitzador de conferències, Anyul aporta una combinació única d'experiència tècnica i sensibilitat artística a la seva obra.",
+    "p7": "La fotografia d'Anyul es caracteritza especialment per l'enfocament en el boudoir, seguit de nusos artístics i retrats. És expert en revelar la bellesa oculta en les dones, transcendint l'aparença física per capturar la seva essència emocional. Les seves imatges es marquen per un enfocament sensual però apoderador, celebrant la força i bellesa de les dones.",
+    "p8": "S'inspira en una gran varietat de fotògrafs, incloent ",
+    "p9": "La seva obra reflecteix una barreja d'aquestes influències, combinada amb la seva visió personal, donant com a resultat fotografies que no només són visualment impressionants sinó també emocionalment ressonants.",
+    "published_works": "Obres Publicades",
+    "title": "Sobre mi"
+  },
+  "contact_form": {
+    "contact_us": "Contacta'ns",
+    "email": "El teu correu electrònic",
+    "message": "El teu missatge",
+    "name": "El teu nom",
+    "send_message": "Envia Missatge",
+    "submit": "Envia"
+  },
+  "cookie": {
+    "accept": "Accepta",
+    "cookie_message": "Fem servir cookies per millorar la teva experiència. En continuar navegant per aquest lloc, acceptes el nostre ús de cookies."
+  },
+  "footer": {
+    "cookies": "Cookies",
+    "copyright": "Tots els drets reservats.",
+    "legal": "Termes Legals",
+    "privacy": "Termes de Privacitat"
+  },
+  "gallery": {
+    "no_photos": "No s'han trobat fotos",
+    "title": "La nostra Galeria"
+  },
+  "home": {
+    "capture_your_essence": "Captura la Teva Essència"
+  },
+  "LocaleSwitcher": {
+    "ca": "Català",
+    "en": "Anglès",
+    "es": "Espanyol",
+    "it": "Italiano",
+    "fr": "Francès",
+    "label": "Idioma"
+  },
+  "nav_bar": {
+    "book_now": "Reserva Ara",
+    "capture_your_essence": "Captura la Teva Essència",
+    "menu_about": "Sobre mi",
+    "menu_what_is_boudoir": "Què és Boudoir?",
+    "models": "Models",
+    "open_menu": "Obre Menú",
+    "search_models": "Cerca Models...",
+    "styles": "Estils",
+    "toggle_theme": "Canvia Tema"
+  },
+  "not_found": {
+    "not_found": "Aquesta pàgina no existeix",
+    "oops": "Ups!",
+    "p1": "La pàgina que busques pot haver estat moguda, eliminada o mai ha existit.",
+    "return_to_homepage": "Torna a la pàgina principal"
+  },
+  "social": {
+    "connect": "Connecta amb nosaltres",
+    "follow_us": "Segueix-nos a"
+  },
+  "styles": {
+    "artistic_nude": "Nu Artístic",
+    "boudoir": "Boudoir",
+    "fashion": "Moda",
+    "lingerie": "Llenceria",
+    "portrait": "Retrat",
+    "swimwear": "Banyador"
+  },
+  "what_is_boudoir": {
+    "art_boudoir": "L'Art del Boudoir",
+    "book_session": "Reserva la Teva Sessió Boudoir",
+    "boudoir_experience": "La Teva Experiència Boudoir",
+    "boudoir_photography": "Fotografia Boudoir",
+    "empowering": "Apoderadora, Íntima i Artística",
+    "l1": "Augmenta l'autoestima i la positivitat corporal",
+    "l2": "Celebra un moment important o canvi de vida",
+    "l3": "Crea un regal únic i personal per a una parella",
+    "l4": "Abraça i expressa la teva sensualitat",
+    "l5": "Captura la teva bellesa a qualsevol edat o etapa de la vida",
+    "p1": "La fotografia boudoir és un estil íntim i artístic de retrat. Captura els subjectes, típicament dones, de manera sensual, romàntica i de vegades eròtica. El terme \"boudoir\" prové del francès i fa referència a l'habitació o vestidor privat d'una dona.",
+    "p2": "Aquest estil de fotografia pretén celebrar el cos del subjecte, augmentar la confiança i crear art personal impressionant. Les sessions de boudoir poden anar des de suggerents fins a més reveladores, sempre prioritzant el confort i la visió del subjecte.",
+    "p3": "La fotografia boudoir és més que fer fotos; és una forma d'art que requereix habilitat, sensibilitat i creativitat. Els fotògrafs han de crear un entorn segur i còmode on els subjectes puguin expressar-se lliurement.",
+    "p4": "La il·luminació, la composició i la posada en escena són elements crucials en la fotografia boudoir. Sovint es fa servir llum suau i afalagadora per crear una atmosfera romàntica, mentre que una composició ben pensada garanteix resultats elegants i amb gust.",
+    "p5": "A Sensuelle Boudoir, ens dediquem a oferir una experiència boudoir luxosa, còmoda i apoderadora. El nostre equip professional et guiarà en cada pas, des de la planificació de la sessió fins a la selecció de les teves imatges preferides.",
+    "p6": "Ja sigui per augmentar la teva confiança, celebrar el teu cos o crear un regal especial, les nostres sessions de fotografia boudoir estan adaptades a la teva visió única i al teu nivell de confort.",
+    "what_is_boudoir": "Què és la Fotografia Boudoir?",
+    "why_boudoir": "Per què escollir la Fotografia Boudoir?"
+  }
+}
