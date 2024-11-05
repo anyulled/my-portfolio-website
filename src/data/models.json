@@ -36,7 +36,10 @@
     {"tag":"sara-fernandez","name":"Sara Fernandez"},
     {"tag":"sara-moratilla","name":"Sara Moratilla"},
     {"tag":"saray-navau","name":"Saray Navau"},
-    {"tag":"silvia-texido","name":"Silvia Texido"},
+    {
+      "tag": "silvia-teixido",
+      "name": "Silvia Teixido"
+    },
     {"tag":"sophie-angel","name":"Sophie Angel"},
     {"tag":"valentina-bonnanir","name":"Valentina Bonnanir"},
     {"tag":"zurine-aspiunza","name":"Zurine Aspiunza"}
