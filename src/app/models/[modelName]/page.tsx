@@ -5,7 +5,7 @@ import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
 import { extractNameFromTag } from "@/lib/extractName";
-import modelData from "@/data/models.json";
+import models from "@/data/models";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ modelName: string }>;
@@ -19,16 +19,16 @@ export const generateMetadata = async ({
 }): Promise<Metadata> => {
   const { modelName } = await params;
   return {
-    title: `Model ${extractNameFromTag(modelData.models, modelName)} · Boudoir Barcelona`,
+    title: `Model ${extractNameFromTag(models, modelName)} · Boudoir Barcelona`,
     openGraph: {
       ...openGraph,
-      title: `Model ${extractNameFromTag(modelData.models, modelName)} · Boudoir Barcelona`,
+      title: `Model ${extractNameFromTag(models, modelName)} · Boudoir Barcelona`,
       images: [
         {
           url: `/models/${modelName}/opengraph-image`,
           width: 1200,
           height: 630,
-          alt: `Model ${extractNameFromTag(modelData.models, modelName)}`,
+          alt: `Model ${extractNameFromTag(models, modelName)}`,
         },
       ],
     },
@@ -37,7 +37,7 @@ export const generateMetadata = async ({
 
 export default async function ModelPage({ params }: Readonly<Props>) {
   const { modelName } = await params;
-  const extractedModelName = extractNameFromTag(modelData.models, modelName);
+  const extractedModelName = extractNameFromTag(models, modelName);
   const convertedModel = modelName.replaceAll("-", "");
   console.log(`Param ModelName: ${modelName}`);
   console.log(`Extracted from JSON: ${extractedModelName}`);

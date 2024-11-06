@@ -17,7 +17,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import modelData from "@/data/models.json";
+import modelData from "@/data/models";
 import stylesData from "@/data/styles.json";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import {
@@ -47,7 +47,7 @@ export default function NavBar() {
   //endregion
 
   const t = useTranslations();
-  const modelLinks = modelData.models.map((model) => ({
+  const modelLinks = modelData.map((model) => ({
     ...model,
     name: model.name,
   }));

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
 import { getFlickrPhotos } from "@/services/flickr";
-import modelData from "@/data/models.json";
+import modelData from "@/data/models";
 /*eslint-disable @next/next/no-img-element */
 
 export default async function OpengraphImage({
@@ -9,7 +9,7 @@ export default async function OpengraphImage({
 }: {
   params: { modelName: string };
 }) {
-  const modelName = extractNameFromTag(modelData.models, params.modelName);
+  const modelName = extractNameFromTag(modelData, params.modelName);
   const convertedModel = params.modelName.replaceAll("-", "");
   const result = await getFlickrPhotos(convertedModel, 1);
 
