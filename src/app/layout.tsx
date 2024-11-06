@@ -55,15 +55,6 @@ export default async function RootLayout({
             </ScrollProvider>
           </ThemeProvider>
           <Footer />
-
-          <div
-            className="fixed inset-0 pointer-events-none z-50 opacity-10"
-            style={{
-              backgroundImage: "url('/api/placeholder?height=200&width=200')",
-              backgroundRepeat: "repeat",
-              mixBlendMode: "overlay",
-            }}
-          />
           <SpeedInsights />
           <Analytics />
           <GoogleAnalytics />
