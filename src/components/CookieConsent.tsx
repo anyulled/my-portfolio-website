@@ -33,7 +33,7 @@ export default function CookieConsent() {
     >
       <div className="container mx-auto flex justify-between items-center">
         <p
-          className={`${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}
+          className="dark:text-gray-300 text-neutral-800"
         >
           {t("cookie_message")}
         </p>
@@ -41,7 +41,7 @@ export default function CookieConsent() {
           onClick={handleAccept}
           variant="outline"
           size="sm"
-          className={`ml-4 ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
+          className="dark:hover:bg-gray-700 hover:bg-gray-200 dark:text-gray-300 text-neutral-800"
         >
           {t("accept")}
         </Button>

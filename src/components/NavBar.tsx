@@ -106,7 +106,7 @@ export default function NavBar() {
             aria-label={t("nav_bar.toggle_theme")}
           >
             {theme === "dark" ? (
-              <Sun className="h-6 w-6" />
+              <Sun className="h-6 w-6 text-neutral-300" />
             ) : (
               <Moon className="h-6 w-6 text-neutral-800" />
             )}

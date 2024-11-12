@@ -32,7 +32,7 @@ export default async function BoudoirStylePage() {
           {t("boudoir_photography")}
         </h1>
         <p
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300 prose dark:text-peach-fuzz-400`}
+          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-700 prose dark:text-peach-fuzz-400`}
         >
           {t("empowering")}
         </p>
