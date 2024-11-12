@@ -228,7 +228,7 @@ export default function NavBar() {
                           onClick={() => handleStyleClick(style.name)}
                         >
                           {/* @ts-expect-error i18n issues */}
-                          {t(style.name)}
+                          {t(`styles.${style.name}`)}
                         </Link>
                       </DropdownMenuItem>
                     ))}
