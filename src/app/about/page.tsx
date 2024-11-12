@@ -36,7 +36,7 @@ export default async function BioPage() {
 
   return (
     <div
-      className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-neutral-400 to-neutral-50 pt-20`}
+      className={`min-h-screen pt-20`}
     >
       <div className="container max-w-7xl mx-auto px-4">
         <h1
