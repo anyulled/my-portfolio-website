@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
 import stylesData from "@/data/styles.json";
-import { getFlickrPhotos } from "@/services/flickr"; /*eslint-disable @next/next/no-img-element */
+import { getFlickrPhotos } from "@/services/flickr";
+import {createFlickr} from "flickr-sdk"; /*eslint-disable @next/next/no-img-element */
 /*eslint-disable @next/next/no-img-element */
 
 export default async function OpengraphImage({
@@ -11,7 +12,8 @@ export default async function OpengraphImage({
 }) {
   const styleName = extractNameFromTag(stylesData.styles, params.styleName);
   const convertedStyleName = styleName ?? "boudoir";
-  const result = await getFlickrPhotos(convertedStyleName, 1);
+  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const result = await getFlickrPhotos(flickr, convertedStyleName, 1);
   return new ImageResponse(
     (
       <div tw="flex flex-col w-full h-full items-center justify-center bg-black">

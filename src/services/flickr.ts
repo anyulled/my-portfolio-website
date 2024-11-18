@@ -1,5 +1,5 @@
-import { createFlickr } from "flickr-sdk";
 import chalk from "chalk";
+import {Flickr} from "flickr-sdk";
 
 export interface Photo {
   id: number;
@@ -32,24 +32,33 @@ type PhotoFlickr = {
   url_m: string;
   url_n: string;
   url_o: string;
-  url_s: string;
   url_t: string;
+  url_s: string;
   url_z: string;
   views: string;
   width_l: string;
 };
 
+export class NoPhotosFoundError extends Error {
+  constructor() {
+    super("No photos found");
+    this.name = "NoPhotosFoundError";
+  }
+}
+
+type FlickrResponse = {
+  photos: Array<Photo> | null;
+  reason: string | null;
+  success: boolean;
+};
+
 export async function getFlickrPhotos(
+  flickr: Flickr,
   tags: string,
   items: number = 9,
   orderByDate: boolean = false,
   orderByViews: boolean = false,
-): Promise<{
-  reason: string | null;
-  success: boolean;
-  photos: Array<Photo> | null;
-}> {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+): Promise<FlickrResponse> {
 
   console.info(
     chalk.blue(
@@ -74,36 +83,11 @@ export async function getFlickrPhotos(
         `Got ${chalk.bold(result.photos.photo.length)} photos from Flickr.`,
       ),
     );
+
     if (result.photos.photo.length === 0) {
       console.error(chalk.red.bold("No photos found."));
-      return {
-        success: false,
-        photos: null,
-        reason: "No photos found",
-      };
     }
-    const photos = {
-      photos: result.photos.photo.map((photo: PhotoFlickr) => ({
-        id: photo.id,
-        description: photo.description._content,
-        dateTaken: new Date(photo.datetaken.replace(" ", "T")),
-        dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
-        height: photo.height_l,
-        title: photo.title,
-        urlCrop: photo.url_c, //800px
-        urlLarge: photo.url_l, //1024px
-        urlMedium: photo.url_m, //500px
-        urlNormal: photo.url_n, //320px
-        urlOriginal: photo.url_o, //original
-        urlThumbnail: photo.url_t, //100px
-        urlSmall: photo.url_s, //240px
-        urlZoom: photo.url_z, //640px
-        views: parseInt(photo.views),
-        width: photo.width_l,
-      })),
-      reason: null,
-      success: true,
-    };
+    const photos = processFlickrPhotos(result.photos.photo);
 
     if (orderByDate) {
       console.info(chalk.cyan("Sorting photos by date taken..."));
@@ -122,7 +106,13 @@ export async function getFlickrPhotos(
     photos.photos = photos.photos.slice(0, items);
     return photos;
   } catch (reason) {
-    if (reason instanceof Error) {
+    if (reason instanceof NoPhotosFoundError) {
+      return {
+        success: false,
+        photos: null,
+        reason: reason.message,
+      };
+    } else if (reason instanceof Error) {
       return {
         success: false,
         photos: null,
@@ -136,4 +126,29 @@ export async function getFlickrPhotos(
       };
     }
   }
+}
+
+export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): { photos: Array<Photo>; reason: null; success: true } {
+  return {
+    photos: photosFlickr.map((photo: PhotoFlickr) => ({
+      id: photo.id,
+      description: photo.description._content,
+      dateTaken: new Date(photo.datetaken.replace(" ", "T")),
+      dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
+      height: photo.height_l,
+      title: photo.title,
+      urlCrop: photo.url_c, //800px
+      urlLarge: photo.url_l, //1024px
+      urlMedium: photo.url_m, //500px
+      urlNormal: photo.url_n, //320px
+      urlOriginal: photo.url_o, //original
+      urlThumbnail: photo.url_t, //100px
+      urlSmall: photo.url_s, //240px
+      urlZoom: photo.url_z, //640px
+      views: parseInt(photo.views),
+      width: photo.width_l,
+    })),
+    reason: null,
+    success: true,
+  };
 }

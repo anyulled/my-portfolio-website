@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import {createFlickr} from "flickr-sdk";
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -19,7 +20,8 @@ function getRandomElements(arr: Photo[], num: number) {
 }
 
 export default async function BoudoirStylePage() {
-  const { photos } = await getFlickrPhotos("boudoir, model", 50);
+  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const { photos } = await getFlickrPhotos(flickr, "boudoir, model", 50);
   const randomPhotos = getRandomElements(photos ?? [], 10);
   const t = await getTranslations("what_is_boudoir");
 
