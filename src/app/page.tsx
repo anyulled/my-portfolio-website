@@ -4,6 +4,7 @@ import Gallery from "@/components/Gallery";
 import ContactForm from "@/components/ContactForm";
 import type { Metadata } from "next";
 import { getFlickrPhotos } from "@/services/flickr";
+import {createFlickr} from "flickr-sdk";
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const res = await getFlickrPhotos("boudoir", 12, false, true);
+    const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const res = await getFlickrPhotos(flickr, "boudoir", 12, false, true);
 
   if (!res.success) {
     return <div>Error: {res.reason}</div>;

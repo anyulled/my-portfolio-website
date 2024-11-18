@@ -6,6 +6,7 @@ import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
 import { extractNameFromTag } from "@/lib/extractName";
 import models from "@/data/models";
+import { createFlickr } from "flickr-sdk";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ modelName: string }>;
@@ -38,11 +39,11 @@ export const generateMetadata = async ({
 export default async function ModelPage({ params }: Readonly<Props>) {
   const { modelName } = await params;
   const extractedModelName = extractNameFromTag(models, modelName);
-  const convertedModel = modelName.replaceAll("-", "");
   console.log(`Param ModelName: ${modelName}`);
-  console.log(`Extracted from JSON: ${extractedModelName}`);
-  console.log(`to Flickr: ${convertedModel}`);
-  const result = await getFlickrPhotos(convertedModel, 100);
+  console.log(`Extracted from Models: ${extractedModelName}`);
+  console.log(`to Flickr: ${modelName}`);
+  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const result = await getFlickrPhotos(flickr, modelName, 100);
 
   if (!modelName) {
     return NotFound();

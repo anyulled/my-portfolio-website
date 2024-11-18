@@ -9,6 +9,7 @@ import { extractNameFromTag } from "@/lib/extractName";
 import modelData from "@/data/models";
 import NotFound from "@/app/not-found";
 import { getTranslations } from "next-intl/server";
+import { createFlickr } from "flickr-sdk";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ styleName: string }>;
@@ -46,7 +47,14 @@ export default async function StylePage({ params }: Readonly<Props>) {
   const convertedStyleName = styleName ?? "boudoir";
   console.log(`Param styleName: ${extractedStyleName}`);
   console.log(`to Flickr: ${styleName}`);
-  const result = await getFlickrPhotos(convertedStyleName, 100, false, true);
+  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const result = await getFlickrPhotos(
+    flickr,
+    convertedStyleName,
+    100,
+    false,
+    true,
+  );
 
   if (!styleName) {
     return NotFound();

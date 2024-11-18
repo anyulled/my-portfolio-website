@@ -6,6 +6,7 @@ import { getFlickrPhotos } from "@/services/flickr";
 import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
 import { getTranslations } from "next-intl/server";
+import {createFlickr} from "flickr-sdk";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -31,7 +32,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BioPage() {
-  const images = await getFlickrPhotos("cover", 50);
+  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const images = await getFlickrPhotos(flickr, "cover", 50);
   const t = await getTranslations("about");
 
   return (
