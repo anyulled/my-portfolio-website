@@ -48,7 +48,7 @@ const models: Array<Model> = [
   { tag: "sara-moratilla", name: "Sara Moratilla" },
   { tag: "saray-navau", name: "Saray Navau" },
   { tag: "silvia-teixido", name: "Silvia Teixidó" },
-  { tag: "silv_timeless_model", name: "Silvia Farro" },
+  { tag: "silvia_gabarron", name: "Silvia Gabarrón" },
   { tag: "sophie-angel", name: "Sophie Angel" },
   { tag: "valentina-bonnanir", name: "Valentina Bonnanir" },
   { tag: "yara-oliveira", name: "Yara de Oliveira" },
