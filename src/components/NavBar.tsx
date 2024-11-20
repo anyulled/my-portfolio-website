@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import modelData from "@/data/models";
-import stylesData from "@/data/styles.json";
+import {styles} from "@/data/styles";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import {
   DropdownMenu,
@@ -148,7 +148,7 @@ export default function NavBar() {
                 {t("nav_bar.styles")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
-                {stylesData.styles.map((style) => (
+                {styles.map((style) => (
                   <DropdownMenuItem key={style.tag} asChild>
                     <Link
                       href={`/styles/${style.tag}`}
@@ -221,7 +221,7 @@ export default function NavBar() {
                     <ChevronDown className="ml-1 h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
-                    {stylesData.styles.map((style) => (
+                    {styles.map((style) => (
                       <DropdownMenuItem key={style.tag} asChild>
                         <Link
                           href={`/styles/${style.tag}`}

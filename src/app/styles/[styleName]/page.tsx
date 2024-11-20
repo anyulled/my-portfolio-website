@@ -4,7 +4,7 @@ import { getFlickrPhotos } from "@/services/flickr";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
-import stylesData from "@/data/styles.json";
+import {styles} from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
 import modelData from "@/data/models";
 import NotFound from "@/app/not-found";
@@ -21,10 +21,10 @@ export const generateMetadata = async ({
 }: Props): Promise<Metadata> => {
   const { styleName } = await params;
   return {
-    title: `Style ${extractNameFromTag(stylesData.styles, styleName)} · Boudoir Barcelona`,
+    title: `Style ${extractNameFromTag(styles, styleName)} · Boudoir Barcelona`,
     openGraph: {
       ...openGraph,
-      title: `Style ${extractNameFromTag(stylesData.styles, styleName)} · Boudoir Barcelona`,
+      title: `Style ${extractNameFromTag(styles, styleName)} · Boudoir Barcelona`,
       images: [
         {
           url: `/models/${styleName}/opengraph-image`,
@@ -40,7 +40,7 @@ export const generateMetadata = async ({
 export default async function StylePage({ params }: Readonly<Props>) {
   const { styleName } = await params;
   const t = await getTranslations("styles");
-  const extractedStyleName = extractNameFromTag(stylesData.styles, styleName);
+  const extractedStyleName = extractNameFromTag(styles, styleName);
   if (extractedStyleName === undefined) {
     return NotFound();
   }
