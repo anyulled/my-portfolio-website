@@ -22,6 +22,10 @@ interface GalleryProps {
   showTitle?: boolean;
 }
 
+function nextImageUrl(src: string, size: number) {
+    return `/_next/image?url=${encodeURIComponent(src)}&w=${size}&q=75`;
+}
+
 export default function Gallery({
   photos,
   showTitle = true,
@@ -36,9 +40,23 @@ export default function Gallery({
     setLightboxOpen(true);
     setPhotoIndex(image);
   };
+  const imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
+  const deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
 
   const convertedPhotos: Image[] | undefined = photos?.map((photo) => ({
-    src: photo.urlZoom,
+    src: nextImageUrl(photo.urlOriginal, parseInt(photo.width)),
+    srcSet: imageSizes
+      .concat(...deviceSizes)
+      .filter((size) => size <= parseInt(photo.width))
+      .map((size) => ({
+        src: nextImageUrl(photo.urlOriginal, size),
+        width: size,
+        title: photo.title,
+        description: photo.description,
+        height: Math.round(
+          (parseInt(photo.height) / parseInt(photo.width)) * size,
+        ),
+      })),
     alt: photo.title,
     width: parseInt(photo.width),
     height: parseInt(photo.height),
@@ -72,7 +90,7 @@ export default function Gallery({
           )}
         </div>
       </section>
-      {photos && lightboxOpen && (
+      {convertedPhotos && lightboxOpen && (
         <Lightbox
           open={lightboxOpen}
           plugins={[Fullscreen, Zoom, Captions]}
@@ -83,11 +101,7 @@ export default function Gallery({
             descriptionMaxLines: 3,
             showToggle: true,
           }}
-          slides={photos.map((value) => ({
-            src: value.urlOriginal,
-            title: value.title,
-            description: value.description,
-          }))}
+          slides={convertedPhotos}
         />
       )}
     </>
