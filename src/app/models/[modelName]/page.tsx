@@ -52,7 +52,7 @@ export default async function ModelPage({ params }: Readonly<Props>) {
   return (
     <div className={"container mx-auto"}>
       <h1
-        className={`${dancingScript.className} pt-44 pb-3 pl-12 lg:pb-12 dark:text-peach-fuzz-400 capitalize`}
+        className={`${dancingScript.className} pt-44 pb-3 pl-12 lg:pb-12 capitalize`}
       >
         {extractedModelName}
       </h1>

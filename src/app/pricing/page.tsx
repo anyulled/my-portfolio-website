@@ -83,15 +83,15 @@ export default async function PricingPage() {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-16">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center text-peach-fuzz-500`}
+          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center`}
         >
           {t("pricing")}
         </h1>
-        <p
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-800 dark:text-neutral-300 text-center mb-12`}
+        <h2
+          className={`${arefRuqaa.className} text-xl md:text-2xl text-center mb-12`}
         >
           {t("discover_our_experiences")}
-        </p>
+        </h2>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {packages.map((pkg, index) => (
@@ -110,12 +110,12 @@ export default async function PricingPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h2
-                    className={`${arefRuqaa.className} text-2xl md:text-3xl mb-2 text-white`}
+                    className={`${arefRuqaa.className} text-2xl md:text-3xl mb-2`}
                   >
                     {pkg.name}
                   </h2>
                   <p
-                    className={`${dancingScript.className} text-4xl md:text-5xl text-white`}
+                    className={`${dancingScript.className} text-4xl md:text-5xl text-peach-fuzz-200`}
                   >
                     {pkg.price}
                   </p>

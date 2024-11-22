@@ -30,7 +30,7 @@ export default function SocialMedia() {
     <section className="py-16 bg-opacity-75 backdrop-blur-md">
       <div className="container mx-auto px-6">
         <h2
-          className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8 text-peach-fuzz-500 dark:text-peach-fuzz-500`}
+          className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
         >
           {t("connect")}
         </h2>

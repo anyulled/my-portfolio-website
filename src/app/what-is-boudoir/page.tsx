@@ -29,20 +29,20 @@ export default async function BoudoirStylePage() {
     <>
       <header className="container mx-auto px-4 pt-24 pb-4 text-center">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 dark:text-peach-fuzz-500`}
+          className={`${dancingScript.className} text-5xl md:text-7xl mb-4`}
         >
           {t("boudoir_photography")}
         </h1>
-        <p
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-700 prose dark:text-peach-fuzz-400`}
+        <h2
+          className={`${arefRuqaa.className} text-xl md:text-2xl`}
         >
           {t("empowering")}
-        </p>
+        </h2>
       </header>
       <main className="container mx-auto px-4 py-4">
         <section className="mb-16">
           <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
+            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}
           >
             {t("what_is_boudoir")}
           </h2>
@@ -65,7 +65,7 @@ export default async function BoudoirStylePage() {
 
         <section className="mb-16">
           <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
+            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}
           >
             {t("art_boudoir")}
           </h2>
@@ -88,7 +88,7 @@ export default async function BoudoirStylePage() {
 
         <section className="mb-16">
           <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
+            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}
           >
             {t("why_boudoir")}
           </h2>
@@ -108,7 +108,7 @@ export default async function BoudoirStylePage() {
 
         <section>
           <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
+            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}
           >
             {t("boudoir_experience")}
           </h2>
