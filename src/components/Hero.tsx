@@ -56,12 +56,12 @@ export default function Hero() {
       />
       <div className="relative z-10 text-center">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-peach-fuzz-600 dark:text-white text-shadow-default shadow-neutral-800 dark:shadow-peach-fuzz-800`}
+          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-peach-fuzz-500 dark:text-white text-shadow-default shadow-peach-fuzz-800 dark:shadow-peach-fuzz-300`}
         >
           Sensuelle Boudoir
         </h1>
         <p
-          className={`${arefRuqaa.className} text-2xl md:text-3xl text-peach-fuzz-600 dark:text-neutral-200 text-shadow-sm shadow-neutral-800 dark:shadow-peach-fuzz-800`}
+          className={`${arefRuqaa.className} text-2xl md:text-3xl text-peach-fuzz-600 dark:text-peach-fuzz-200 text-shadow-sm shadow-peach-fuzz-800 dark:shadow-peach-fuzz-300`}
         >
           {t("capture_your_essence")}
         </p>

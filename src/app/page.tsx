@@ -24,11 +24,11 @@ export default async function HomePage() {
       {/* Hero Section with Parallax */}
       <Hero />
 
-      {/* Social Media Links */}
-      <SocialMedia />
-
       {/* Gallery Section with Pinterest-like layout */}
       <Gallery photos={res.photos} />
+
+        {/* Social Media Links */}
+      <SocialMedia />
 
       {/* Contact Form Section */}
       <ContactForm />

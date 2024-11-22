@@ -59,7 +59,7 @@ export default function ContactForm() {
     <section id="book-session" className="py-16 bg-opacity-75 backdrop-blur-md">
       <div className="container mx-auto px-6">
         <h2
-          className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
+          className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8 text-peach-fuzz-500 dark:text-peach-fuzz-500`}
         >
           {t("contact_us")}
         </h2>
@@ -70,7 +70,7 @@ export default function ContactForm() {
           <Input type="text" name="name" placeholder={t("name")} required />
           <Input type="email" name="email" placeholder={t("email")} required />
           <Textarea name="message" placeholder={t("message")} required />
-          <Button disabled={sendingForm} type="submit" className="w-full">
+          <Button disabled={sendingForm} type="submit" className="w-full bg-peach-fuzz-500 dark:bg-peach-fuzz-500">
             {t("send_message")}
           </Button>
         </form>

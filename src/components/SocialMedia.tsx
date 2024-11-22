@@ -30,7 +30,7 @@ export default function SocialMedia() {
     <section className="py-16 bg-opacity-75 backdrop-blur-md">
       <div className="container mx-auto px-6">
         <h2
-          className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
+          className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8 text-peach-fuzz-500 dark:text-peach-fuzz-500`}
         >
           {t("connect")}
         </h2>
@@ -41,7 +41,7 @@ export default function SocialMedia() {
                 <TooltipTrigger asChild>
                   <Link
                     href={social.url}
-                    className="text-2xl hover:text-primary transition-colors"
+                    className="text-2xl text-peach-fuzz-600 dark:text-peach-fuzz-100 hover:text-peach-fuzz-800 transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
