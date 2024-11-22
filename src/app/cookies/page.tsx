@@ -1,7 +1,7 @@
-import { Playfair_Display } from "next/font/google";
+import { Aref_Ruqaa } from "next/font/google";
 import { Metadata } from "next";
 
-const playfair = Playfair_Display({ subsets: ["latin"] });
+const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: "Cookie Policy",
@@ -14,7 +14,7 @@ export default function CookiePage() {
     >
       <div className="container max-w-7xl mx-auto px-4 py-8">
         <h1
-          className={`${playfair.className} text-4xl md:text-5xl font-bold text-center mt-12 mb-8`}
+          className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mt-12 mb-8`}
         >
           Cookie Policy
         </h1>

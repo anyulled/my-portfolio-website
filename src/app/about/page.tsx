@@ -1,12 +1,12 @@
 import Image from "next/image";
-import {Aref_Ruqaa, Dancing_Script, Playfair_Display} from "next/font/google";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { getFlickrPhotos } from "@/services/flickr";
 import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
 import { getTranslations } from "next-intl/server";
-import {createFlickr} from "flickr-sdk";
+import { createFlickr } from "flickr-sdk";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -37,9 +37,7 @@ export default async function BioPage() {
   const t = await getTranslations("about");
 
   return (
-    <div
-      className={`min-h-screen pt-20`}
-    >
+    <div className={`min-h-screen pt-20`}>
       <div className="container max-w-7xl mx-auto px-4">
         <h1
           className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mb-8`}
