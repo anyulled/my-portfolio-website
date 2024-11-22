@@ -1,8 +1,11 @@
 import { Dancing_Script, Aref_Ruqaa } from "next/font/google";
 import { Check, Camera, Clock, Shirt, Video, UserRound, Image as Photo } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button"
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { Metadata } from "next";
+import ContactForm from "@/components/ContactForm";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -80,7 +83,7 @@ export default async function PricingPage() {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-16">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center`}
+          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center text-peach-fuzz-500`}
         >
           {t("pricing")}
         </h1>
@@ -129,9 +132,20 @@ export default async function PricingPage() {
                     </li>
                   ))}
                 </ul>
-                <button className="w-full bg-peach-fuzz-600 hover:bg-peach-fuzz-700 text-white font-bold py-2 px-4 rounded transition duration-300">
-                  {t("book_now")}
-                </button>
+
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                        className="w-full bg-peach-fuzz-600 hover:bg-peach-fuzz-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                    >
+                      {t("book_now")}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px] bg-neutral-800 text-neutral-100">
+                    <ContactForm/>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           ))}
