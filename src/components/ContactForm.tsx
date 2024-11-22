@@ -95,7 +95,7 @@ export default function ContactForm() {
               WhatsApp
             </Button>
           </Link>
-          <Link href={"https://t.me/anyulled"} target={"_blank"}>
+          <Link href={"https://t.me/m/1f-erIOJMjhk"} target={"_blank"}>
             <Button
               variant="outline"
               className={"bg-telegram text-neutral-100"}
