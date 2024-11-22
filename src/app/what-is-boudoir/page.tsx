@@ -52,6 +52,7 @@ export default async function BoudoirStylePage() {
             </div>
             <div className="md:w-1/3">
               <Image
+                priority
                 src={randomPhotos?.at(1)?.urlZoom!}
                 alt={t("boudoir_photography")}
                 width={600}
@@ -73,6 +74,7 @@ export default async function BoudoirStylePage() {
             </div>
             <div className="md:w-1/3">
               <Image
+                priority
                 src={randomPhotos?.at(2)?.urlZoom!}
                 alt={t("boudoir_photography")}
                 width={600}
