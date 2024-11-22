@@ -1,5 +1,5 @@
 import { Dancing_Script, Aref_Ruqaa } from "next/font/google";
-import { Check, Camera, Clock, Shirt, Video } from "lucide-react";
+import { Check, Camera, Clock, Shirt, Video, UserRound, Image as Photo } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { Metadata } from "next";
@@ -21,7 +21,7 @@ export default async function PricingPage() {
         "https://live.staticflickr.com/65535/54154502487_981fb48243_c_d.jpg",
       features: [
         {
-          icon: <Camera className="w-5 h-5" />,
+          icon: <Photo className="w-5 h-5" />,
           text: `12 ${t("edited_photos")}`,
         },
         {
@@ -33,7 +33,7 @@ export default async function PricingPage() {
           text: `2 ${t("hours_studio")}`,
         },
         {
-          icon: <Check className="w-5 h-5" />,
+          icon: <Camera className="w-5 h-5" />,
           text: `200 ${t("photos_hd")}`,
         },
         {
@@ -49,12 +49,12 @@ export default async function PricingPage() {
         "https://live.staticflickr.com/65535/53307099860_93b77dd6dc_k_d.jpg",
       features: [
         {
-          icon: <Camera className="w-5 h-5" />,
+          icon: <Photo className="w-5 h-5" />,
           text: `20 ${t("edited_photos")}`,
         },
         { icon: <Video className="w-5 h-5" />, text: t("video") },
         {
-          icon: <Check className="w-5 h-5" />,
+          icon: <UserRound className="w-5 h-5" />,
           text: t("professional_makeup"),
         },
         {
