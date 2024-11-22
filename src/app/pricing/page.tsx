@@ -1,7 +1,15 @@
-import { Dancing_Script, Aref_Ruqaa } from "next/font/google";
-import { Check, Camera, Clock, Shirt, Video, UserRound, Image as Photo } from "lucide-react";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import {
+  Camera,
+  Check,
+  Clock,
+  Image as Photo,
+  Shirt,
+  UserRound,
+  Video,
+} from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { Metadata } from "next";
@@ -80,7 +88,7 @@ export default async function PricingPage() {
     },
   ];
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-24">
       <div className="container mx-auto px-4 py-16">
         <h1
           className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center`}
@@ -133,17 +141,14 @@ export default async function PricingPage() {
                   ))}
                 </ul>
 
-
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button
-                        className="w-full bg-peach-fuzz-600 hover:bg-peach-fuzz-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-                    >
+                    <Button className="w-full bg-peach-fuzz-600 hover:bg-peach-fuzz-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                       {t("book_now")}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px] bg-neutral-800 text-neutral-100">
-                    <ContactForm/>
+                    <ContactForm />
                   </DialogContent>
                 </Dialog>
               </div>
