@@ -4,12 +4,14 @@ import { getFlickrPhotos } from "@/services/flickr";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
-import {styles} from "@/data/styles";
+import { styles } from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
 import modelData from "@/data/models";
 import NotFound from "@/app/not-found";
 import { getTranslations } from "next-intl/server";
 import { createFlickr } from "flickr-sdk";
+import Loading from "@/app/loading";
+import { Suspense } from "react";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ styleName: string }>;
@@ -68,7 +70,9 @@ export default async function StylePage({ params }: Readonly<Props>) {
         {/* @ts-expect-error i18n issues */}
         {t(styleName.replace("-", "_"))}
       </h1>
-      <Gallery photos={result.photos} showTitle={false} />
+      <Suspense fallback={<Loading />}>
+        <Gallery photos={result.photos} showTitle={false} />
+      </Suspense>
     </div>
   );
 }

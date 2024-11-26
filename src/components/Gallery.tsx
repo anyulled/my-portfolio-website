@@ -22,9 +22,8 @@ interface GalleryProps {
   showTitle?: boolean;
 }
 
-function nextImageUrl(src: string, size: number) {
-    return `/_next/image?url=${encodeURIComponent(src)}&w=${size}&q=75`;
-}
+const nextImageUrl = (src: string, size: number): string =>
+  `/_next/image?url=${encodeURIComponent(src)}&w=${size}&q=75`;
 
 export default function Gallery({
   photos,
@@ -44,7 +43,7 @@ export default function Gallery({
   const deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
 
   const convertedPhotos: Image[] | undefined = photos?.map((photo) => ({
-    src: nextImageUrl(photo.urlOriginal, parseInt(photo.width)),
+    src: photo.urlOriginal,
     srcSet: imageSizes
       .concat(...deviceSizes)
       .filter((size) => size <= parseInt(photo.width))
@@ -58,6 +57,7 @@ export default function Gallery({
         ),
       })),
     alt: photo.title,
+    blurDataURL: photo.urlSmall,
     width: parseInt(photo.width),
     height: parseInt(photo.height),
   }));

@@ -7,6 +7,8 @@ import { Dancing_Script } from "next/font/google";
 import { extractNameFromTag } from "@/lib/extractName";
 import models from "@/data/models";
 import { createFlickr } from "flickr-sdk";
+import Loading from "@/app/loading";
+import { Suspense } from "react";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ modelName: string }>;
@@ -56,7 +58,9 @@ export default async function ModelPage({ params }: Readonly<Props>) {
       >
         {extractedModelName}
       </h1>
-      <Gallery photos={result.photos} showTitle={false} />
+      <Suspense fallback={<Loading />}>
+        <Gallery photos={result.photos} showTitle={false} />
+      </Suspense>
     </div>
   );
 }
