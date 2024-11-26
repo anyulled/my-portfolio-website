@@ -16,7 +16,7 @@ export default function Loading() {
   if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black">
+    <div className="flex items-center justify-center h-screen w-full">
       <motion.h1
         className={`text-4xl md:text-6xl lg:text-8xl ${dancingScript.className} text-transparent bg-clip-text`}
         style={{
