@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import { useScroll } from "@/contexts/ScrollContext";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import modelData from "@/data/models";
-import {styles} from "@/data/styles";
+import { styles } from "@/data/styles";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import {
   DropdownMenu,
@@ -28,6 +28,7 @@ import {
 import { NavLinks } from "@/components/NavLinks";
 import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
+import chalk from "chalk";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
@@ -52,8 +53,15 @@ export default function NavBar() {
     name: model.name,
   }));
 
+  useEffect(() => {
+    if (!theme) {
+      setTheme("light");
+    }
+  }, [setTheme, theme]);
+
   //region Handlers
   const handleThemeChange = () => {
+    console.log(chalk.red(`Theme change: ${theme}`));
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     gaEventTracker("theme_change", newTheme);
