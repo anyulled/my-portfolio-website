@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import {Flickr} from "flickr-sdk";
+import { Flickr } from "flickr-sdk";
 
 export interface Photo {
   id: number;
@@ -59,7 +59,6 @@ export async function getFlickrPhotos(
   orderByDate: boolean = false,
   orderByViews: boolean = false,
 ): Promise<FlickrResponse> {
-
   console.info(
     chalk.blue(
       `Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`,
@@ -106,29 +105,21 @@ export async function getFlickrPhotos(
     photos.photos = photos.photos.slice(0, items);
     return photos;
   } catch (reason) {
-    if (reason instanceof NoPhotosFoundError) {
-      return {
-        success: false,
-        photos: null,
-        reason: reason.message,
-      };
-    } else if (reason instanceof Error) {
-      return {
-        success: false,
-        photos: null,
-        reason: reason.message,
-      };
-    } else {
-      return {
-        success: false,
-        photos: null,
-        reason: "Unknown error",
-      };
-    }
+    const errorMessage =
+      reason instanceof Error ? reason.message : "Unknown error";
+    return {
+      success: false,
+      photos: null,
+      reason: errorMessage,
+    };
   }
 }
 
-export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): { photos: Array<Photo>; reason: null; success: true } {
+export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
+  photos: Array<Photo>;
+  reason: null;
+  success: true;
+} {
   return {
     photos: photosFlickr.map((photo: PhotoFlickr) => ({
       id: photo.id,
