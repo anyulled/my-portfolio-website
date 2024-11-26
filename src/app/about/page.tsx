@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Dancing_Script, Playfair_Display } from "next/font/google";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { getFlickrPhotos } from "@/services/flickr";
@@ -8,7 +8,7 @@ import { openGraph } from "@/lib/openGraph";
 import { getTranslations } from "next-intl/server";
 import { createFlickr } from "flickr-sdk";
 
-const playfair = Playfair_Display({ subsets: ["latin"] });
+const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 const profileImageUrl =
@@ -43,7 +43,7 @@ export default async function BioPage() {
     <div className={`min-h-screen pt-20`}>
       <div className="container max-w-7xl mx-auto px-4">
         <h1
-          className={`${playfair.className} text-4xl md:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-peach-fuzz-300`}
+          className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mb-8`}
         >
           {t("title")}
         </h1>
@@ -72,7 +72,7 @@ export default async function BioPage() {
                 <h2 className={`${dancingScript.className} text-3xl mb-1`}>
                   {t("h2")}
                 </h2>
-                <h3 className={`${playfair.className} text-lg mb-4`}>
+                <h3 className={`${arefRuqaa.className} text-lg mb-4`}>
                   {t("h3")}
                 </h3>
                 <p className="text-muted-foreground my-2">{t("p1")}</p>
@@ -115,7 +115,7 @@ export default async function BioPage() {
         {images?.photos && (
           <>
             <h2
-              className={`${playfair.className} text-3xl font-semibold text-center my-4 dark:text-peach-fuzz-400`}
+              className={`${arefRuqaa.className} text-3xl font-semibold text-center my-4`}
             >
               {t("published_works")}
             </h2>
@@ -135,7 +135,7 @@ export default async function BioPage() {
                   <div className="absolute inset-0 flex items-end justify-center">
                     <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
                       <p
-                        className={`${playfair.className} text-xs sm:text-xs md:text-sm text-white text-center py-2`}
+                        className={`${arefRuqaa.className} text-xs sm:text-xs md:text-sm text-white text-center py-2`}
                       >
                         {cover.title}
                       </p>
@@ -147,7 +147,7 @@ export default async function BioPage() {
           </>
         )}
         <h2
-          className={`${playfair.className} text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-peach-fuzz-400  my-4`}
+          className={`${arefRuqaa.className} text-3xl font-semibold text-center mb-8  my-4`}
         >
           {t("collaborations")}
         </h2>
@@ -164,7 +164,7 @@ export default async function BioPage() {
                 height={300}
                 className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-transform duration-300 ease-in-out hover:rotate-1"
               />
-              <p className={`${playfair.className} text-base text-center`}>
+              <p className={`${arefRuqaa.className} text-base text-center`}>
                 {t("collab_peter_coulson")}
               </p>
             </CardContent>
@@ -181,7 +181,7 @@ export default async function BioPage() {
                 height={300}
                 className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-transform duration-300 ease-in-out hover:rotate-1"
               />
-              <p className={`${playfair.className} text-base text-center`}>
+              <p className={`${arefRuqaa.className} text-base text-center`}>
                 {t("collab_garci")}
               </p>
             </CardContent>
@@ -198,7 +198,7 @@ export default async function BioPage() {
                 height={300}
                 className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-transform duration-300 ease-in-out hover:rotate-1"
               />
-              <p className={`${playfair.className} text-base text-center`}>
+              <p className={`${arefRuqaa.className} text-base text-center`}>
                 {t("collab_ruben_suarez")}
               </p>
             </CardContent>
@@ -208,7 +208,7 @@ export default async function BioPage() {
         <Card className="my-12 dark:bg-gray-950">
           <CardContent className="p-6">
             <h2
-              className={`${dancingScript.className} text-3xl mb-4 text-center dark:text-peach-fuzz-400`}
+              className={`${dancingScript.className} text-3xl mb-4 text-center`}
             >
               {t("create_together")}
             </h2>

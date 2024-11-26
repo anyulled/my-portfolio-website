@@ -1,7 +1,7 @@
-import { Playfair_Display } from "next/font/google";
+import { Aref_Ruqaa } from "next/font/google";
 import { Metadata } from "next";
 
-const playfair = Playfair_Display({ subsets: ["latin"] });
+const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 export const metadata: Metadata = {
   title: "Privacy Terms ",
 };
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     >
       <div className="container max-w-7xl mx-auto px-4 py-8">
         <h1
-          className={`${playfair.className} text-4xl md:text-5xl font-bold text-center mt-12 mb-8`}
+          className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mt-12 mb-8`}
         >
           Privacy Terms
         </h1>
@@ -25,7 +25,7 @@ export default function PrivacyPage() {
             personal data of the users of the web portal.
           </p>
 
-          <h2 className={`${playfair.className}`}>
+          <h2 className={`${arefRuqaa.className}`}>
             Definition of personal data
           </h2>
           <p>
@@ -43,7 +43,7 @@ export default function PrivacyPage() {
             08000 Barcelona.
           </p>
 
-          <h2 className={`${playfair.className} `}>
+          <h2 className={`${arefRuqaa.className} `}>
             Processing and purposes of the data collected
           </h2>
           <p>
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
             notice section.
           </p>
 
-          <h2 className={`${playfair.className} `}>
+          <h2 className={`${arefRuqaa.className} `}>
             Legitimacy for the processing of your data
           </h2>
           <p>
@@ -113,7 +113,9 @@ export default function PrivacyPage() {
             by the interested party.
           </p>
 
-          <h2 className={`${playfair.className} `}>Period of data retention</h2>
+          <h2 className={`${arefRuqaa.className} `}>
+            Period of data retention
+          </h2>
           <p>
             The data will be kept for the time necessary to respond to queries,
             provide the requested service and fulfill the indicated purposes.
@@ -122,7 +124,7 @@ export default function PrivacyPage() {
             through the procedure enabled for this purpose.
           </p>
 
-          <h2 className={`${playfair.className} `}>
+          <h2 className={`${arefRuqaa.className} `}>
             Communication of your personal data to third parties
           </h2>
           <p>
@@ -136,7 +138,7 @@ export default function PrivacyPage() {
             a third party, your consent will be requested.
           </p>
 
-          <h2 className={`${playfair.className} `}>
+          <h2 className={`${arefRuqaa.className} `}>
             Security of your personal data
           </h2>
           <p>
@@ -148,7 +150,7 @@ export default function PrivacyPage() {
             Https data encryption protocols.
           </p>
 
-          <h2 className={`${playfair.className} `}>
+          <h2 className={`${arefRuqaa.className} `}>
             Information on the Use of Cookies
           </h2>
           <p>

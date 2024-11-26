@@ -41,7 +41,7 @@ export default function SocialMedia() {
                 <TooltipTrigger asChild>
                   <Link
                     href={social.url}
-                    className="text-2xl hover:text-primary transition-colors"
+                    className="text-2xl text-peach-fuzz-600 dark:text-peach-fuzz-100 hover:text-peach-fuzz-800 transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

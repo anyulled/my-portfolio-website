@@ -98,18 +98,49 @@ body {
     }
 
     h1{
-        @apply text-3xl sm:text-4xl font-bold text-gray-800 dark:text-neutral-300;
+        @apply text-3xl sm:text-4xl font-bold text-peach-fuzz-500 dark:text-peach-fuzz-500;
     }
 
     h2 {
-        @apply text-lg sm:text-2xl font-bold text-gray-800 dark:text-neutral-300;
+        @apply text-xl sm:text-2xl font-bold text-peach-fuzz-400 dark:text-peach-fuzz-400;
+    }
+
+    h3 {
+        @apply text-lg sm:text-xl font-bold text-peach-fuzz-300 dark:text-peach-fuzz-300;
     }
 
     ul {
         @apply text-gray-800 dark:text-neutral-300;
     }
 
+    li {
+        @apply list-disc marker:text-peach-fuzz-800 ml-5;
+    }
+
     p {
         @apply my-2 text-gray-800 dark:text-neutral-300;
+    }
+
+    input, textarea {
+        @apply text-peach-fuzz-900 dark:text-peach-fuzz-900 placeholder:text-peach-fuzz-800 dark:placeholder:text-peach-fuzz-800;
+    }
+
+    img {
+        animation: linear fadeIn both;
+        animation-timeline: view();
+        animation-timeline-axis: block;
+        animation-range: entry 5% cover 30%;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            translate: 0 100px;
+        }
+        100% {
+            opacity: 1;
+            translate: 0 0;
+        }
+
     }
 }

@@ -17,9 +17,9 @@
     "p6": "Al equilibrar su pasión por la fotografía con una exitosa carrera como Ingeniero de Software Principal y organizador de conferencias, Anyul aporta una combinación única de experiencia técnica y sensibilidad artística a su trabajo.",
     "p7": "La fotografía de Anyul se destaca especialmente por su enfoque en el boudoir, seguido de desnudos artísticos y retratos. Se destaca por revelar la belleza oculta en las mujeres, trascendiendo la apariencia física para capturar su esencia emocional. Sus imágenes se caracterizan por un enfoque sensual pero empoderador, que celebra la fuerza y la belleza de las mujeres.",
     "p8": "Se inspira en una gran variedad de fotógrafos, incluyendo ",
-    "p9": "Su obra refleja una mezcla de estas influencias, combinadas con su visión personal, dando como resultado fotografías que no sólo son visualmente impactantes sino también emocionalmente resonantes.",
+    "p9": "Su obra refleja una mezcla de estas influencias, combinadas con su visión personal, dando como resultado fotografías que no solo son visualmente impactantes sino también emocionalmente resonantes.",
     "published_works": "Trabajos Publicados",
-    "title": "Acerca de mi"
+    "title": "Acerca de mí"
   },
   "contact_form": {
     "contact_us": "Contáctanos",
@@ -66,13 +66,13 @@
     "toggle_theme": "Cambiar tema"
   },
   "not_found": {
-    "not_found": "Esta página no exista",
+    "not_found": "Esta página no existe",
     "oops": "Ups!",
     "p1": "La página que buscas puede haber sido movida, eliminada, o nunca existió.",
     "return_to_homepage": "Regresar al inicio"
   },
   "social": {
-    "connect": "Connecta con nosotros",
+    "connect": "Conecta con nosotros",
     "follow_us": "Síguenos en"
   },
   "styles": {
@@ -102,5 +102,19 @@
     "p6": "Ya sea que busques aumentar tu confianza, celebrar tu cuerpo o crear un regalo especial, nuestras sesiones de fotografía de boudoir se adaptan a tu visión única y nivel de comodidad.",
     "what_is_boudoir": "¿Qué es la fotografía boudoir?",
     "why_boudoir": "¿Por qué elegir la fotografía Boudoir?"
+  },
+  "pricing": {
+    "pricing": "Precios",
+    "discover_our_experiences": "Descubre nuestras experiencias Boudoir",
+    "boudoir_experience": "Experiencia Boudoir",
+    "deluxe_experience": "Experiencia de Lujo",
+    "edited_photos": "fotos editadas",
+    "clothing_change": "cambios de ropa",
+    "hours_studio": "horas en estudio privado con sets",
+    "photos_hd": "fotos calidad HD",
+    "clothing_and_attrezzo": "Batas y Attrezzo incluidos",
+    "video": "1 - 2min. video book incluido",
+    "professional_makeup": "Maquillaje profesional",
+    "book_now": "Reserva ahora"
   }
 }

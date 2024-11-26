@@ -70,7 +70,7 @@ export default function ContactForm() {
           <Input type="text" name="name" placeholder={t("name")} required />
           <Input type="email" name="email" placeholder={t("email")} required />
           <Textarea name="message" placeholder={t("message")} required />
-          <Button disabled={sendingForm} type="submit" className="w-full">
+          <Button disabled={sendingForm} type="submit" className="w-full bg-peach-fuzz-500 dark:bg-peach-fuzz-500">
             {t("send_message")}
           </Button>
         </form>
@@ -95,7 +95,7 @@ export default function ContactForm() {
               WhatsApp
             </Button>
           </Link>
-          <Link href={"https://t.me/anyulled"} target={"_blank"}>
+          <Link href={"https://t.me/m/1f-erIOJMjhk"} target={"_blank"}>
             <Button
               variant="outline"
               className={"bg-telegram text-neutral-100"}

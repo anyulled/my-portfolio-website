@@ -9,6 +9,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 import { createFlickr } from "flickr-sdk";
+
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -35,22 +36,16 @@ export default async function BoudoirStylePage() {
   return (
     <>
       <header className="container mx-auto px-4 pt-24 pb-4 text-center">
-        <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 dark:text-peach-fuzz-500`}
-        >
+        <h1 className={`${dancingScript.className} text-5xl md:text-7xl mb-4`}>
           {t("boudoir_photography")}
         </h1>
-        <p
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-700 prose dark:text-peach-fuzz-400`}
-        >
+        <h2 className={`${arefRuqaa.className} text-xl md:text-2xl`}>
           {t("empowering")}
-        </p>
+        </h2>
       </header>
       <main className="container mx-auto px-4 py-4">
         <section className="mb-16">
-          <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
-          >
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             {t("what_is_boudoir")}
           </h2>
           <div className="flex flex-col md:flex-row items-center gap-8">
@@ -72,9 +67,7 @@ export default async function BoudoirStylePage() {
           </div>
         </section>
         <section className="mb-16">
-          <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
-          >
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             {t("art_boudoir")}
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center gap-8">
@@ -96,17 +89,15 @@ export default async function BoudoirStylePage() {
           </div>
         </section>
         <section className="mb-16">
-          <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
-          >
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             {t("why_boudoir")}
           </h2>
-          <ul className="list-disc list-inside space-y-4 mb-8 ml-4">
-            <li>{t("l1")}</li>
-            <li>{t("l2")}</li>
-            <li>{t("l3")}</li>
-            <li>{t("l4")}</li>
-            <li>{t("l5")}</li>
+          <ul className="list-disc list-inside mb-8 ml-4">
+            <li>{t("l1")}.</li>
+            <li>{t("l2")}.</li>
+            <li>{t("l3")}.</li>
+            <li>{t("l4")}.</li>
+            <li>{t("l5")}.</li>
           </ul>
           <Card>
             <CardContent>
@@ -117,9 +108,7 @@ export default async function BoudoirStylePage() {
           </Card>
         </section>
         <section>
-          <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 dark:text-peach-fuzz-500`}
-          >
+          <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             {t("boudoir_experience")}
           </h2>
           <p className="mb-4 prose lg:prose-xl">{t("p5")}</p>
