@@ -58,6 +58,7 @@ export default async function BoudoirStylePage() {
                 priority
                 src={randomPhotos?.at(1)?.urlZoom!}
                 blurDataURL={randomPhotos?.at(1)?.urlCrop!}
+                placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}
                 height={400}
@@ -80,6 +81,7 @@ export default async function BoudoirStylePage() {
                 priority
                 src={randomPhotos?.at(2)?.urlZoom!}
                 blurDataURL={randomPhotos?.at(2)?.urlCrop!}
+                placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}
                 height={400}

@@ -31,6 +31,7 @@ export default function Gallery({
 }: Readonly<GalleryProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Gallery");
 
+  //region Component State
   const t = useTranslations("gallery");
   const [photoIndex, setPhotoIndex] = useState<number>(-1);
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
@@ -41,10 +42,10 @@ export default function Gallery({
   };
   const imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
   const deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
+  //endregion
 
-  const convertedPhotos: Image[] | undefined = photos?.map((photo) => ({
-    src: photo.urlOriginal,
-    srcSet: imageSizes
+  const getSrcSet = (photo: Photo) =>
+    imageSizes
       .concat(...deviceSizes)
       .filter((size) => size <= parseInt(photo.width))
       .map((size) => ({
@@ -55,12 +56,17 @@ export default function Gallery({
         height: Math.round(
           (parseInt(photo.height) / parseInt(photo.width)) * size,
         ),
-      })),
+      }));
+
+  const convertedPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
+    src: photo.urlOriginal,
+    srcSet: getSrcSet(photo),
     alt: photo.title,
     blurDataURL: photo.urlSmall,
     width: parseInt(photo.width),
     height: parseInt(photo.height),
   }));
+
   return (
     <>
       <section className="py-6 md:py-3">
