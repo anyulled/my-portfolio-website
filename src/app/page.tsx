@@ -7,6 +7,7 @@ import { getFlickrPhotos } from "@/services/flickr";
 import { createFlickr } from "flickr-sdk";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
@@ -33,6 +34,7 @@ export default async function HomePage() {
 
       {/* Social Media Links */}
       <SocialMedia />
+      <Separator className="my-4" />
 
       {/* Contact Form Section */}
       <Suspense fallback={<Loading />}>
