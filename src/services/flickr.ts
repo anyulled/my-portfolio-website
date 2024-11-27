@@ -100,7 +100,6 @@ export async function getFlickrPhotos(
     if (result.photos.photo.length === 0) {
       console.error(chalk.red.bold("No photos found."));
     }
-    console.log(result.photos.photo);
 
     const photos = processFlickrPhotos(result.photos.photo);
 
