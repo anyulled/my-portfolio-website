@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
 import { grantConsent } from "@/lib/gtag";
 import { useTranslations } from "next-intl";
 
 export default function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false);
-  const { theme } = useTheme();
   const t = useTranslations("cookie");
 
   useEffect(() => {

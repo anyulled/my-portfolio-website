@@ -38,6 +38,7 @@ const navLinks = [
 
 export default function NavBar() {
   //region State
+  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { scrollY } = useScroll();
   const router = useRouter();
@@ -52,12 +53,22 @@ export default function NavBar() {
     ...model,
     name: model.name,
   }));
+  const filteredModels = useMemo(() => {
+    return modelLinks.filter((model) =>
+      model.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [searchTerm, modelLinks]);
 
   useEffect(() => {
+    setMounted(true);
     if (!theme) {
       setTheme("light");
     }
   }, [setTheme, theme]);
+
+  if (!mounted) {
+    return null;
+  }
 
   //region Handlers
   const handleThemeChange = () => {
@@ -87,12 +98,6 @@ export default function NavBar() {
     router.push("/#book-session");
   };
   //endregion
-
-  const filteredModels = useMemo(() => {
-    return modelLinks.filter((model) =>
-      model.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-  }, [searchTerm, modelLinks]);
 
   return (
     <nav
