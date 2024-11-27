@@ -22,12 +22,16 @@ interface GalleryProps {
   showTitle?: boolean;
 }
 
+const nextImageUrl = (src: string, size: number): string =>
+  `/_next/image?url=${encodeURIComponent(src)}&w=${size}&q=75`;
+
 export default function Gallery({
   photos,
   showTitle = true,
 }: Readonly<GalleryProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Gallery");
 
+  //region Component State
   const t = useTranslations("gallery");
   const [photoIndex, setPhotoIndex] = useState<number>(-1);
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
@@ -36,13 +40,33 @@ export default function Gallery({
     setLightboxOpen(true);
     setPhotoIndex(image);
   };
+  const imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
+  const deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
+  //endregion
 
-  const convertedPhotos: Image[] | undefined = photos?.map((photo) => ({
-    src: photo.urlZoom,
+  const getSrcSet = (photo: Photo) =>
+    imageSizes
+      .concat(...deviceSizes)
+      .filter((size) => size <= parseInt(photo.width))
+      .map((size) => ({
+        src: nextImageUrl(photo.urlOriginal, size),
+        width: size,
+        title: photo.title,
+        description: photo.description,
+        height: Math.round(
+          (parseInt(photo.height) / parseInt(photo.width)) * size,
+        ),
+      }));
+
+  const convertedPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
+    src: photo.urlOriginal,
+    srcSet: getSrcSet(photo),
     alt: photo.title,
+    blurDataURL: photo.urlSmall,
     width: parseInt(photo.width),
     height: parseInt(photo.height),
   }));
+
   return (
     <>
       <section className="py-6 md:py-3">
@@ -72,7 +96,7 @@ export default function Gallery({
           )}
         </div>
       </section>
-      {photos && lightboxOpen && (
+      {convertedPhotos && lightboxOpen && (
         <Lightbox
           open={lightboxOpen}
           plugins={[Fullscreen, Zoom, Captions]}
@@ -83,11 +107,7 @@ export default function Gallery({
             descriptionMaxLines: 3,
             showToggle: true,
           }}
-          slides={photos.map((value) => ({
-            src: value.urlOriginal,
-            title: value.title,
-            description: value.description,
-          }))}
+          slides={convertedPhotos}
         />
       )}
     </>

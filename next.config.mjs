@@ -10,6 +10,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: 'https',
+        hostname: '**.vercel.app',
+      },
+      {
         protocol: "https",
         hostname: "live.staticflickr.com",
       },

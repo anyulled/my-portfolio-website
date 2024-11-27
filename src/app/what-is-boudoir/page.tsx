@@ -5,8 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { createFlickr } from "flickr-sdk";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import Loading from "@/app/loading";
+import { createFlickr } from "flickr-sdk";
+
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -54,6 +57,8 @@ export default async function BoudoirStylePage() {
               <Image
                 priority
                 src={randomPhotos?.at(1)?.urlZoom!}
+                blurDataURL={randomPhotos?.at(1)?.urlCrop!}
+                placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}
                 height={400}
@@ -62,7 +67,6 @@ export default async function BoudoirStylePage() {
             </div>
           </div>
         </section>
-
         <section className="mb-16">
           <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             {t("art_boudoir")}
@@ -76,6 +80,8 @@ export default async function BoudoirStylePage() {
               <Image
                 priority
                 src={randomPhotos?.at(2)?.urlZoom!}
+                blurDataURL={randomPhotos?.at(2)?.urlCrop!}
+                placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}
                 height={400}
@@ -84,7 +90,6 @@ export default async function BoudoirStylePage() {
             </div>
           </div>
         </section>
-
         <section className="mb-16">
           <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             {t("why_boudoir")}
@@ -98,11 +103,12 @@ export default async function BoudoirStylePage() {
           </ul>
           <Card>
             <CardContent>
-              <Gallery photos={randomPhotos} showTitle={false} />
+              <Suspense fallback={<Loading />}>
+                <Gallery photos={randomPhotos} showTitle={false} />
+              </Suspense>
             </CardContent>
           </Card>
         </section>
-
         <section>
           <h2 className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6`}>
             {t("boudoir_experience")}
@@ -112,7 +118,7 @@ export default async function BoudoirStylePage() {
           <div className="text-center">
             <Link
               href="/#book-session"
-              className="inline-block bg-peach-fuzz-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+              className="inline-block bg-peach-fuzz-400 hover:bg-peach-fuzz-700 text-white font-bold py-2 px-4 rounded transition duration-300"
             >
               {t("book_session")}
             </Link>

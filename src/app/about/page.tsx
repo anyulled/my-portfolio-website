@@ -13,6 +13,9 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 const profileImageUrl =
   "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg";
+
+const imageThumbnail =
+  "https://live.staticflickr.com/65535/53985281833_769ef447ff_c_d.jpg";
 const metadataImages = [
   {
     alt: "Anyul Rivas",
@@ -51,6 +54,9 @@ export default async function BioPage() {
               <CardContent className="p-0">
                 <Image
                   src={profileImageUrl}
+                  blurDataURL={imageThumbnail}
+                  placeholder="blur"
+                  priority
                   alt={t("alt_image")}
                   width={400}
                   height={600}
@@ -119,6 +125,8 @@ export default async function BioPage() {
                 <div key={cover.id} className="relative overflow-hidden group">
                   <Image
                     src={cover.urlMedium}
+                    blurDataURL={cover.urlSmall}
+                    placeholder="blur"
                     alt={cover.title}
                     width={300}
                     height={400}
@@ -149,6 +157,8 @@ export default async function BioPage() {
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
+                blurDataURL="https://live.staticflickr.com/65535/53985394873_d9fca2f480_w_d.jpg"
+                placeholder="blur"
                 alt="Peter Coulson, Jon Hernandez, Anyul Rivas"
                 width={500}
                 height={300}
@@ -164,6 +174,8 @@ export default async function BioPage() {
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
+                blurDataURL="https://live.staticflickr.com/65535/53984294097_715ef9c26c_w_d.jpg"
+                placeholder="blur"
                 alt="Antonio Garci, Chema Photo, Anyul Rivas"
                 width={500}
                 height={300}
@@ -179,6 +191,8 @@ export default async function BioPage() {
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
+                blurDataURL="https://live.staticflickr.com/65535/53985940379_089fa1da0e_w_d.jpg"
+                placeholder="blur"
                 alt="Rubén Suárez, Anyul Rivas"
                 width={500}
                 height={300}

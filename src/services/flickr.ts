@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import {Flickr} from "flickr-sdk";
+import { Flickr } from "flickr-sdk";
 
 export interface Photo {
   id: number;
@@ -21,22 +21,36 @@ export interface Photo {
 }
 
 type PhotoFlickr = {
-  id: number;
-  description: { _content: string };
   datetaken: string;
   dateupload: string;
+  description: { _content: string };
+  height_c: string;
   height_l: string;
+  height_m: string;
+  height_n: string;
+  height_o: string;
+  height_s: string;
+  height_t: string;
+  height_z: string;
+  id: number;
   title: string;
   url_c: string;
   url_l: string;
   url_m: string;
   url_n: string;
   url_o: string;
-  url_t: string;
   url_s: string;
+  url_t: string;
   url_z: string;
   views: string;
+  width_c: string;
   width_l: string;
+  width_m: string;
+  width_n: string;
+  width_o: string;
+  width_s: string;
+  width_t: string;
+  width_z: string;
 };
 
 export class NoPhotosFoundError extends Error {
@@ -59,7 +73,6 @@ export async function getFlickrPhotos(
   orderByDate: boolean = false,
   orderByViews: boolean = false,
 ): Promise<FlickrResponse> {
-
   console.info(
     chalk.blue(
       `Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`,
@@ -87,6 +100,8 @@ export async function getFlickrPhotos(
     if (result.photos.photo.length === 0) {
       console.error(chalk.red.bold("No photos found."));
     }
+    console.log(result.photos.photo);
+
     const photos = processFlickrPhotos(result.photos.photo);
 
     if (orderByDate) {
@@ -106,36 +121,28 @@ export async function getFlickrPhotos(
     photos.photos = photos.photos.slice(0, items);
     return photos;
   } catch (reason) {
-    if (reason instanceof NoPhotosFoundError) {
-      return {
-        success: false,
-        photos: null,
-        reason: reason.message,
-      };
-    } else if (reason instanceof Error) {
-      return {
-        success: false,
-        photos: null,
-        reason: reason.message,
-      };
-    } else {
-      return {
-        success: false,
-        photos: null,
-        reason: "Unknown error",
-      };
-    }
+    const errorMessage =
+      reason instanceof Error ? reason.message : "Unknown error";
+    return {
+      success: false,
+      photos: null,
+      reason: errorMessage,
+    };
   }
 }
 
-export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): { photos: Array<Photo>; reason: null; success: true } {
+export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
+  photos: Array<Photo>;
+  reason: null;
+  success: true;
+} {
   return {
     photos: photosFlickr.map((photo: PhotoFlickr) => ({
       id: photo.id,
       description: photo.description._content,
       dateTaken: new Date(photo.datetaken.replace(" ", "T")),
       dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
-      height: photo.height_l,
+      height: photo.height_o,
       title: photo.title,
       urlCrop: photo.url_c, //800px
       urlLarge: photo.url_l, //1024px
@@ -146,7 +153,7 @@ export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): { photos:
       urlSmall: photo.url_s, //240px
       urlZoom: photo.url_z, //640px
       views: parseInt(photo.views),
-      width: photo.width_l,
+      width: photo.width_o,
     })),
     reason: null,
     success: true,
