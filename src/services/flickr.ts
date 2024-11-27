@@ -21,22 +21,36 @@ export interface Photo {
 }
 
 type PhotoFlickr = {
-  id: number;
-  description: { _content: string };
   datetaken: string;
   dateupload: string;
+  description: { _content: string };
+  height_c: string;
   height_l: string;
+  height_m: string;
+  height_n: string;
+  height_o: string;
+  height_s: string;
+  height_t: string;
+  height_z: string;
+  id: number;
   title: string;
   url_c: string;
   url_l: string;
   url_m: string;
   url_n: string;
   url_o: string;
-  url_t: string;
   url_s: string;
+  url_t: string;
   url_z: string;
   views: string;
+  width_c: string;
   width_l: string;
+  width_m: string;
+  width_n: string;
+  width_o: string;
+  width_s: string;
+  width_t: string;
+  width_z: string;
 };
 
 export class NoPhotosFoundError extends Error {
@@ -86,6 +100,8 @@ export async function getFlickrPhotos(
     if (result.photos.photo.length === 0) {
       console.error(chalk.red.bold("No photos found."));
     }
+    console.log(result.photos.photo);
+
     const photos = processFlickrPhotos(result.photos.photo);
 
     if (orderByDate) {
@@ -126,7 +142,7 @@ export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
       description: photo.description._content,
       dateTaken: new Date(photo.datetaken.replace(" ", "T")),
       dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
-      height: photo.height_l,
+      height: photo.height_o,
       title: photo.title,
       urlCrop: photo.url_c, //800px
       urlLarge: photo.url_l, //1024px
@@ -137,7 +153,7 @@ export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
       urlSmall: photo.url_s, //240px
       urlZoom: photo.url_z, //640px
       views: parseInt(photo.views),
-      width: photo.width_l,
+      width: photo.width_o,
     })),
     reason: null,
     success: true,
