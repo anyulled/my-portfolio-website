@@ -16,6 +16,7 @@ export default function renderNextImage(
       <Image
         fill
         src={photo}
+        unoptimized
         alt={alt}
         title={title}
         sizes={sizes}
