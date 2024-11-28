@@ -8,10 +8,11 @@ const nextConfig = {
     missingSuspenseWithCSRBailout: false,
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**.vercel.app',
+        protocol: "https",
+        hostname: "**.vercel.app",
       },
       {
         protocol: "https",
