@@ -18,6 +18,15 @@ export interface Photo {
   urlZoom: string;
   views: number;
   width: string;
+  srcSet: Array<PhotoSource>;
+}
+
+export interface PhotoSource {
+  src: string;
+  width: number;
+  height: number;
+  title: string;
+  description: string;
 }
 
 type PhotoFlickr = {
@@ -136,6 +145,23 @@ export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
   reason: null;
   success: true;
 } {
+  const sizeMapping: {
+    [key: string]: {
+      urlKey: keyof PhotoFlickr;
+      widthKey: keyof PhotoFlickr;
+      heightKey: keyof PhotoFlickr;
+    };
+  } = {
+    thumbnail: { urlKey: "url_t", widthKey: "width_t", heightKey: "height_t" },
+    small: { urlKey: "url_s", widthKey: "width_s", heightKey: "height_s" },
+    medium: { urlKey: "url_m", widthKey: "width_m", heightKey: "height_m" },
+    normal: { urlKey: "url_n", widthKey: "width_n", heightKey: "height_n" },
+    large: { urlKey: "url_l", widthKey: "width_l", heightKey: "height_l" },
+    original: { urlKey: "url_o", widthKey: "width_o", heightKey: "height_o" },
+    zoom: { urlKey: "url_z", widthKey: "width_z", heightKey: "height_z" },
+    crop: { urlKey: "url_c", widthKey: "width_c", heightKey: "height_c" },
+  };
+
   return {
     photos: photosFlickr.map((photo: PhotoFlickr) => ({
       id: photo.id,
@@ -154,6 +180,15 @@ export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
       urlZoom: photo.url_z, //640px
       views: parseInt(photo.views),
       width: photo.width_o,
+      srcSet: Object.entries(sizeMapping).map(
+        ([, { urlKey, widthKey, heightKey }]) => ({
+          src: <string>photo[urlKey],
+          width: parseInt(<string>photo[widthKey]),
+          height: parseInt(<string>photo[heightKey]),
+          title: photo.title,
+          description: photo.description._content,
+        }),
+      ),
     })),
     reason: null,
     success: true,

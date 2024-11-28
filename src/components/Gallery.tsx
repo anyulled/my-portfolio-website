@@ -22,9 +22,6 @@ interface GalleryProps {
   showTitle?: boolean;
 }
 
-const nextImageUrl = (src: string, size: number): string =>
-  `/_next/image?url=${encodeURIComponent(src)}&w=${size}&q=75`;
-
 export default function Gallery({
   photos,
   showTitle = true,
@@ -40,27 +37,11 @@ export default function Gallery({
     setLightboxOpen(true);
     setPhotoIndex(image);
   };
-  const imageSizes = [16, 32, 48, 64, 96, 128, 256, 384];
-  const deviceSizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
   //endregion
-
-  const getSrcSet = (photo: Photo) =>
-    imageSizes
-      .concat(...deviceSizes)
-      .filter((size) => size <= parseInt(photo.width))
-      .map((size) => ({
-        src: nextImageUrl(photo.urlOriginal, size),
-        width: size,
-        title: photo.title,
-        description: photo.description,
-        height: Math.round(
-          (parseInt(photo.height) / parseInt(photo.width)) * size,
-        ),
-      }));
 
   const convertedPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
     src: photo.urlOriginal,
-    srcSet: getSrcSet(photo),
+    srcSet: photo.srcSet,
     alt: photo.title,
     blurDataURL: photo.urlSmall,
     width: parseInt(photo.width),
