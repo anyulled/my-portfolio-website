@@ -19,7 +19,14 @@ export default async function HomePage() {
   const res = await getFlickrPhotos(flickr, "boudoir", 12, false, true);
 
   if (!res.success) {
-    return <div>Error: {res.reason}</div>;
+    return (
+      <>
+        <h1 className={"text-2xl font-bold text-peach-fuzz-400"}>
+          Sensuelle Boudoir
+        </h1>
+        Error: {res.reason}
+      </>
+    );
   }
 
   return (

@@ -83,6 +83,10 @@
     "portrait": "Retrat",
     "swimwear": "Banyador"
   },
+  "styles-index": {
+    "photography-styles": "Estils de Fotografia",
+    "discover-our-styles": "Descobreix els nostres estils fotogràfics"
+  },
   "what_is_boudoir": {
     "art_boudoir": "L'Art del Boudoir",
     "book_session": "Reserva la Teva Sessió Boudoir",

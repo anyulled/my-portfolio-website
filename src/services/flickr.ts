@@ -1,6 +1,10 @@
 import chalk from "chalk";
-import { Flickr } from "flickr-sdk";
+import {Flickr} from "flickr-sdk";
 
+/**
+ * Represents a photo.
+ * @interface
+ */
 export interface Photo {
   id: number;
   description: string;
@@ -18,9 +22,14 @@ export interface Photo {
   urlZoom: string;
   views: number;
   width: string;
+  tags: string;
   srcSet: Array<PhotoSource>;
 }
 
+/**
+ * Represents a source of a photo.
+ * @interface
+ */
 export interface PhotoSource {
   src: string;
   width: number;
@@ -29,6 +38,10 @@ export interface PhotoSource {
   description: string;
 }
 
+/**
+ * Represents a photo from Flickr.
+ * @typedef {Object} PhotoFlickr
+ */
 type PhotoFlickr = {
   datetaken: string;
   dateupload: string;
@@ -42,6 +55,7 @@ type PhotoFlickr = {
   height_t: string;
   height_z: string;
   id: number;
+  tags: string;
   title: string;
   url_c: string;
   url_l: string;
@@ -62,6 +76,11 @@ type PhotoFlickr = {
   width_z: string;
 };
 
+/**
+ * Error thrown when no photos are found.
+ * @class
+ * @extends Error
+ */
 export class NoPhotosFoundError extends Error {
   constructor() {
     super("No photos found");
@@ -69,12 +88,28 @@ export class NoPhotosFoundError extends Error {
   }
 }
 
+/**
+ * Represents the response from Flickr API.
+ * @typedef {Object} FlickrResponse
+ */
 type FlickrResponse = {
   photos: Array<Photo> | null;
   reason: string | null;
   success: boolean;
 };
 
+
+/**
+ * Fetches photos from Flickr based on the provided tags and options.
+ * @async
+ * @function getFlickrPhotos
+ * @param {Flickr} flickr - The Flickr API instance.
+ * @param {string} tags - The tags to search for.
+ * @param {number} [items=9] - The number of photos to retrieve.
+ * @param {boolean} [orderByDate=false] - Whether to order photos by date taken.
+ * @param {boolean} [orderByViews=false] - Whether to order photos by views.
+ * @returns {Promise<FlickrResponse>} The response containing the fetched photos.
+ */
 export async function getFlickrPhotos(
   flickr: Flickr,
   tags: string,
@@ -97,7 +132,7 @@ export async function getFlickrPhotos(
       content_types: "0",
       media: "photos",
       extras:
-        "description, url_s, url_m, url_n, url_l, url_z, url_c, url_o, url_t, views, date_upload, date_taken",
+        "description, url_s, url_m, url_n, url_l, url_z, url_c, url_o, url_t, views, date_upload, date_taken, tags",
     });
 
     console.info(
@@ -115,14 +150,14 @@ export async function getFlickrPhotos(
 
     if (orderByDate) {
       console.info(chalk.cyan("Sorting photos by date taken..."));
-      photos.photos = photos.photos.sort(
+      photos.photos = photos.photos.toSorted(
         (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
       );
     }
 
     if (orderByViews) {
       console.info(chalk.cyan("Sorting photos by views..."));
-      photos.photos = photos.photos.sort(
+      photos.photos = photos.photos.toSorted(
         (a: Photo, b: Photo) => b.views - a.views,
       );
     }
@@ -140,6 +175,12 @@ export async function getFlickrPhotos(
   }
 }
 
+/**
+ * Processes an array of Flickr photos and returns a structured format.
+ * @function processFlickrPhotos
+ * @param {Array<PhotoFlickr>} photosFlickr - The array of Flickr photos to process.
+ * @returns {{ photos: Array<Photo>, reason: null, success: true }} The processed photos.
+ */
 export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
   photos: Array<Photo>;
   reason: null;
@@ -169,6 +210,7 @@ export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
       dateTaken: new Date(photo.datetaken.replace(" ", "T")),
       dateUpload: new Date(parseInt(photo.dateupload, 10) * 1000),
       height: photo.height_o,
+      tags: photo.tags,
       title: photo.title,
       urlCrop: photo.url_c, //800px
       urlLarge: photo.url_l, //1024px

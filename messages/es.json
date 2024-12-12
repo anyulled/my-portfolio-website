@@ -83,6 +83,10 @@
     "portrait": "Retrato",
     "swimwear": "Traje de Baño"
   },
+  "styles-index": {
+    "photography-styles": "Estilos de Fotografía",
+    "discover-our-styles": "Descubre nuestros estilos de fotografía"
+  },
   "what_is_boudoir": {
     "art_boudoir": "El arte del Boudoir",
     "book_session": "Reserva tu sesión Boudoir",

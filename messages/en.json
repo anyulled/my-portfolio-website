@@ -83,6 +83,10 @@
     "portrait": "Portrait",
     "swimwear": "Swimwear"
   },
+  "styles-index": {
+    "photography-styles": "Photography Styles",
+    "discover-our-styles": "Discover Our photography Styles"
+  },
   "what_is_boudoir": {
     "art_boudoir": "The Art of Boudoir",
     "book_session": "Book Your Boudoir Session",

@@ -1,11 +1,12 @@
 import { getFlickrPhotos } from "@/services/flickr";
 import { NextRequest, NextResponse } from "next/server";
-import {createFlickr} from "flickr-sdk";
+import { createFlickr } from "flickr-sdk";
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const query = params.get("query") ?? "boudoir";
-  const items = parseInt(<string>params.get("items")) ?? 10;
+  const items =
+    params.get("items") !== null ? parseInt(<string>params.get("items")) : 10;
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
   try {
     const value = await getFlickrPhotos(flickr, query, items);
