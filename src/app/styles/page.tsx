@@ -11,7 +11,7 @@ const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Boudoir Barcelona - Our Photography styles",
+  title: "Our Photography styles",
   description: "Boudoir photography service in Barcelona",
 };
 
@@ -19,8 +19,8 @@ export default async function PhotographyStylesPage() {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
   const res = await getFlickrPhotos(
     flickr,
-    "model, boudoir, swimwear, fashion, portrait, artisticnude",
-    100,
+    styles.map((style) => style.tag.replace("-", "")).join(", "),
+    500,
     false,
     true,
   );

@@ -129,6 +129,7 @@ export async function getFlickrPhotos(
       sort: "interestingness-desc",
       safe_search: "3",
       tags: tags,
+      tag_mode: "any",
       content_types: "0",
       media: "photos",
       extras:
