@@ -34,10 +34,10 @@ export default async function ModelIndexPage() {
       false,
       true,
     );
-    allPhotos.push(...res.photos); // Aggregate results
+    if (res.success && res.photos != null) {
+      allPhotos.push(...res.photos);
+    }
   }
-
-  console.log("aggregated results", allPhotos);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 text-neutral-100">
