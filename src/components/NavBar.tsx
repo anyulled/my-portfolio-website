@@ -125,6 +125,7 @@ export default function NavBar() {
             )}
           </Button>
           <div className="hidden md:flex space-x-4 items-center">
+            <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
                 {t("nav_bar.models")} <ChevronDown className="ml-1 h-4 w-4" />
@@ -174,7 +175,6 @@ export default function NavBar() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
           </div>
           <Button onClick={handleBookNow} className="hidden md:inline-flex">
             {t("nav_bar.book_now")}
@@ -196,6 +196,7 @@ export default function NavBar() {
                 </SheetDescription>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-4">
+                <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
                     {t("nav_bar.models")}{" "}
@@ -247,7 +248,6 @@ export default function NavBar() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
                 <Button onClick={handleBookNow} className="mt-4">
                   {t("nav_bar.book_now")}
                 </Button>
