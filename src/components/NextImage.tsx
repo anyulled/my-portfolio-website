@@ -13,15 +13,18 @@ export default function renderNextImage(
         aspectRatio: `${width} / ${height}`,
       }}
     >
-      <Image
-        fill
-        src={photo}
-        unoptimized
-        alt={alt}
-        title={title}
-        sizes={sizes}
-        placeholder={"blurDataURL" in photo ? "blur" : undefined}
-      />
+      {photo.srcSet && (
+        <Image
+          fill
+          src={photo}
+          unoptimized
+          alt={alt}
+          title={title}
+          sizes={sizes}
+          placeholder={"blurDataURL" in photo ? "blur" : undefined}
+          blurDataURL={photo.srcSet[0].src}
+        />
+      )}
     </div>
   );
 }
