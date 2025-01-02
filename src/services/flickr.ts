@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import {Flickr} from "flickr-sdk";
+import {FetchTransport, Flickr} from "flickr-sdk";
 
 /**
  * Represents a photo.
@@ -98,6 +98,11 @@ type FlickrResponse = {
   success: boolean;
 };
 
+export const fetchTransport = new FetchTransport({
+  headers: {
+    next: "{ revalidate: 10 }",
+  },
+});
 
 /**
  * Fetches photos from Flickr based on the provided tags and options.
@@ -194,7 +199,11 @@ export function processFlickrPhotos(photosFlickr: Array<PhotoFlickr>): {
       heightKey: keyof PhotoFlickr;
     };
   } = {
-    thumbnail: { urlKey: "url_t", widthKey: "width_t", heightKey: "height_t" },
+    thumbnail: {
+      urlKey: "url_t",
+      widthKey: "width_t",
+      heightKey: "height_t",
+    },
     small: { urlKey: "url_s", widthKey: "width_s", heightKey: "height_s" },
     medium: { urlKey: "url_m", widthKey: "width_m", heightKey: "height_m" },
     normal: { urlKey: "url_n", widthKey: "width_n", heightKey: "height_n" },
