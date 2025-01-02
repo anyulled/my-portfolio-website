@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { getFlickrPhotos } from "@/services/flickr";
+import { fetchTransport, getFlickrPhotos } from "@/services/flickr";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
@@ -18,6 +18,14 @@ type Params = Promise<{ styleName: string }>;
 
 export type Props = { params: Params };
 
+export const revalidate = 43200;
+
+export async function generateStaticParams() {
+  return styles.map((style) => ({
+    styleName: style.name,
+  }));
+}
+
 export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
@@ -32,7 +40,7 @@ export const generateMetadata = async ({
           url: `/models/${styleName}/opengraph-image`,
           width: 1200,
           height: 630,
-          alt: `Model ${extractNameFromTag(modelData, styleName)}`,
+          alt: `Style ${extractNameFromTag(modelData, styleName)}`,
         },
       ],
     },
@@ -49,21 +57,21 @@ export default async function StylePage({ params }: Readonly<Props>) {
   const convertedStyleName = styleName ?? "boudoir";
   console.log(`Param styleName: ${extractedStyleName}`);
   console.log(`to Flickr: ${styleName}`);
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!, fetchTransport);
   const result = await getFlickrPhotos(
     flickr,
     convertedStyleName,
-    100,
+    48,
     false,
     true,
   );
 
-  if (!styleName) {
+  if (!styleName || !result.success) {
     return NotFound();
   }
 
   return (
-    <div className={"container mx-auto"}>
+    <div className="container mx-auto">
       <h1
         className={`${dancingScript.className} pt-44 pb-3 pl-12 lg:pb-12 capitalize`}
       >
