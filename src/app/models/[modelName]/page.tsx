@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import NotFound from "next/dist/client/components/not-found-error";
-import { getFlickrPhotos } from "@/services/flickr";
+import { fetchTransport, getFlickrPhotos } from "@/services/flickr";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
@@ -38,16 +38,22 @@ export const generateMetadata = async ({
   };
 };
 
+export const revalidate = 43200;
+
+export async function generateStaticParams() {
+  return models.map((model) => ({ modelName: model.tag }));
+}
+
 export default async function ModelPage({ params }: Readonly<Props>) {
   const { modelName } = await params;
   const extractedModelName = extractNameFromTag(models, modelName);
   console.log(`Param ModelName: ${modelName}`);
   console.log(`Extracted from Models: ${extractedModelName}`);
   console.log(`to Flickr: ${modelName}`);
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!, fetchTransport);
   const result = await getFlickrPhotos(flickr, modelName, 100);
 
-  if (!modelName) {
+  if (!modelName || !result.success) {
     return NotFound();
   }
 
