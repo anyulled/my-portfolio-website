@@ -65,7 +65,7 @@ export default async function BioPage() {
           </Card>
 
           <div className="space-y-6 md:col-span-2 lg:col-auto">
-            <Card className={"dark:bg-gray-950"}>
+            <Card className=" bg-mocha-mousse-50 dark:bg-mocha-mousse-50">
               <CardContent className="p-6">
                 <h2 className={`${dancingScript.className} text-3xl mb-1`}>
                   {t("h2")}
@@ -73,8 +73,8 @@ export default async function BioPage() {
                 <h3 className={`${arefRuqaa.className} text-lg mb-4`}>
                   {t("h3")}
                 </h3>
-                <p className="text-muted-foreground my-2">{t("p1")}</p>
-                <p className="text-muted-foreground my-2">
+                <p className=" my-2">{t("p1")}</p>
+                <p className=" my-2">
                   {t("p2")}
                   <Link href={"https://efacontigo.com/"} target={"_blank"}>
                     {" "}
@@ -82,7 +82,7 @@ export default async function BioPage() {
                   </Link>{" "}
                   {t("p3")}
                 </p>
-                <p className="text-muted-foreground my-2">
+                <p className=" my-2">
                   {t("p4")}
                   <Link href={"https://www.malvie.fr/"} target={"_blank"}>
                     Malvie
@@ -96,12 +96,13 @@ export default async function BioPage() {
                   </Link>
                   , Dominante, {t("p5")}
                 </p>
-                <p className="text-muted-foreground my-2">{t("p6")}</p>
-                <p className="text-muted-foreground my-2">{t("p7")}</p>
-                <p className="text-muted-foreground my-2">
+                <p className=" my-2">{t("p6")}</p>
+                <p className=" my-2">{t("p7")}</p>
+                <p className=" my-2">
                   {t("p8")}
                   <strong>
-                    Lindsay Adler, Jen Rozenbaum, Antonio Garci, & Helmut Newton
+                    Lindsay Adler, Jen Rozenbaum, Antonio Garci, Dan Hecho &
+                    Helmut Newton
                   </strong>
                   .
                 </p>
@@ -117,31 +118,35 @@ export default async function BioPage() {
             >
               {t("published_works")}
             </h2>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
-              {images.photos.map((cover) => (
-                <div key={cover.id} className="relative overflow-hidden group">
-                  <Image
-                    src={cover.urlMedium}
-                    blurDataURL={cover.urlSmall}
-                    placeholder="blur"
-                    alt={cover.title}
-                    width={300}
-                    height={400}
-                    className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 flex items-end justify-center">
-                    <div className="w-full bg-black bg-opacity-50 backdrop-blur-md">
-                      <p
-                        className={`${arefRuqaa.className} text-xs sm:text-xs md:text-sm text-white text-center py-2`}
-                      >
-                        {cover.title}
-                      </p>
+            <Card className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-50 p-3"}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
+                {images.photos.map((cover) => (
+                  <div
+                    key={cover.id}
+                    className="relative overflow-hidden group  rounded-lg"
+                  >
+                    <Image
+                      src={cover.urlMedium}
+                      blurDataURL={cover.urlSmall}
+                      placeholder="blur"
+                      alt={cover.title}
+                      width={300}
+                      height={400}
+                      className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105 rounded-lg"
+                    />
+                    <div className="absolute inset-0 flex items-end justify-center">
+                      <div className="w-full bg-black bg-opacity-50 backdrop-blur-md rounded-b-lg">
+                        <p
+                          className={`${arefRuqaa.className} text-xs sm:text-xs md:text-sm text-white text-center py-2`}
+                        >
+                          {cover.title}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </Card>
           </>
         )}
         <h2
@@ -151,7 +156,7 @@ export default async function BioPage() {
         </h2>
 
         <div className="grid md:grid-cols-3 gap-2">
-          <Card className="dark:bg-gray-950 overflow-hidden">
+          <Card className="overflow-hidden">
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
@@ -168,7 +173,7 @@ export default async function BioPage() {
             </CardContent>
           </Card>
 
-          <Card className="dark:bg-gray-950 overflow-hidden">
+          <Card className="overflow-hidden">
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
@@ -185,7 +190,7 @@ export default async function BioPage() {
             </CardContent>
           </Card>
 
-          <Card className="dark:bg-gray-950 overflow-hidden">
+          <Card className="overflow-hidden">
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
@@ -203,16 +208,14 @@ export default async function BioPage() {
           </Card>
         </div>
 
-        <Card className="my-12 dark:bg-gray-950">
+        <Card className="my-12">
           <CardContent className="p-6">
             <h2
               className={`${dancingScript.className} text-3xl mb-4 text-center`}
             >
               {t("create_together")}
             </h2>
-            <p className="text-center text-muted-foreground">
-              {t("create_paragraph")}
-            </p>
+            <p className="text-center ">{t("create_paragraph")}</p>
           </CardContent>
         </Card>
       </div>

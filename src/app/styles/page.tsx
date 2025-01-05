@@ -43,12 +43,12 @@ export default async function PhotographyStylesPage() {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-16">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center mt-4 text-peach-fuzz-500`}
+          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center mt-4 text-mocha-mousse-500`}
         >
           {t("photography-styles")}
         </h1>
         <p
-          className={`${playfair.className} text-xl md:text-2xl text-peach-fuzz-300 text-center mb-12`}
+          className={`${playfair.className} text-xl md:text-2xl text-mocha-mousse-300 text-center mb-12`}
         >
           {t("discover-our-styles")}
         </p>
@@ -67,7 +67,7 @@ export default async function PhotographyStylesPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h2
-                    className={`${playfair.className} text-2xl md:text-3xl text-peach-fuzz-500 group-hover:text-peach-fuzz-400 transition-colors duration-300 capitalize`}
+                    className={`${playfair.className} text-2xl md:text-3xl text-mocha-mousse-500 group-hover:text-mocha-mousse-400 transition-colors duration-300 capitalize`}
                   >
                     {style.name}
                   </h2>
