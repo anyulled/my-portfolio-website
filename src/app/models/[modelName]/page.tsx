@@ -69,7 +69,7 @@ export default async function ModelPage({ params }: Readonly<Props>) {
   const t = await getTranslations("gallery");
   //endregion
   try {
-    const result = await getFlickrPhotos(flickr, modelName, 100);
+    const result = await getFlickrPhotos(flickr, modelName, 36, false, true);
 
     if (!modelName || !result.success) {
       return NotFound();
