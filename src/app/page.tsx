@@ -27,7 +27,7 @@ export default async function HomePage() {
   if (!res.success) {
     return (
       <>
-        <h1 className={"text-2xl font-bold text-peach-fuzz-400"}>
+        <h1 className={"text-2xl font-bold text-mocha-mousse-400"}>
           Sensuelle Boudoir
         </h1>
         Error: {res.reason}
