@@ -1,6 +1,5 @@
 "use client";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { useScroll } from "@/contexts/ScrollContext";
 import React from "react";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
@@ -9,7 +8,6 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export default function Hero() {
-  const { scrollY } = useScroll();
   const { theme } = useTheme();
   const t = useTranslations("home");
 
@@ -37,6 +35,7 @@ export default function Hero() {
       <div
         className="absolute"
         style={{
+          display: "none",
           background: gradient,
           zIndex: 9,
           width: "100%",
@@ -52,17 +51,17 @@ export default function Hero() {
           backgroundAttachment: "fixed",
           backgroundPosition: "center",
           backgroundSize: "cover",
-          transform: `translateY(${scrollY * 0.5}px)`,
+          mask: "linear-gradient(to bottom, black 75%, transparent 90%)",
         }}
       />
       <div className="relative z-10 text-center">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-peach-fuzz-500 dark:text-white text-shadow-default shadow-peach-fuzz-800 dark:shadow-peach-fuzz-300`}
+          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-mocha-mousse-900 shadow-mocha-mousse-100 dark:shadow-mocha-mousse-200 dark:text-white text-shadow-default`}
         >
           Sensuelle Boudoir
         </h1>
         <p
-          className={`${arefRuqaa.className} text-2xl md:text-3xl text-peach-fuzz-600 dark:text-peach-fuzz-200 text-shadow-sm shadow-peach-fuzz-800 dark:shadow-peach-fuzz-300`}
+          className={`${arefRuqaa.className} text-2xl md:text-3xl text-neutral-300 shadow-mocha-mousse-800 dark:text-neutral-200 dark:shadow-mocha-mousse-300 text-shadow-sm`}
         >
           {t("capture_your_essence")}
         </p>

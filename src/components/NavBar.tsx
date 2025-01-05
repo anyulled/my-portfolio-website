@@ -106,37 +106,38 @@ export default function NavBar() {
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         <Link
           href="/"
-          className={`${dancingScript.className} text-3xl ${pathname !== "/" ? "text-peach-fuzz-400" : ""}`}
+          className={`dark:text-mocha-mousse-100 text-mocha-mousse-200 ${dancingScript.className} text-3xl ${pathname !== "/" ? "text-mocha-mousse-400" : ""}`}
         >
           Sensuelle Boudoir
         </Link>
         <div className="flex items-center space-x-4">
           <LocaleSwitcher />
           <Button
+            className="!ml-0"
             variant="ghost"
             size="icon"
             onClick={handleThemeChange}
             aria-label={t("nav_bar.toggle_theme")}
           >
             {theme === "dark" ? (
-              <Sun className="h-6 w-6 text-neutral-300" />
+              <Sun className="h-6 w-6 text-mocha-mousse-100" />
             ) : (
-              <Moon className="h-6 w-6 text-neutral-800" />
+              <Moon className="h-6 w-6 text-mocha-mousse-900" />
             )}
           </Button>
           <div className="hidden md:flex space-x-4 items-center">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-mocha-mousse-100 text-mocha-mousse-900">
                 {t("nav_bar.models")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64">
                 <div className="p-2">
                   <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-mocha-mousse-900 dark:text-mocha-mousse-100" />
                     <Input
                       type="search"
                       placeholder={t("nav_bar.search_models")}
-                      className="pl-8"
+                      className="pl-8 text-mocha-mousse-900 dark:text-mocha-mousse-100 placeholder:text-mocha-mousse-900 dark:placeholder:text-mocha-mousse-100"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -157,7 +158,7 @@ export default function NavBar() {
               </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-mocha-mousse-100 text-mocha-mousse-900">
                 {t("nav_bar.styles")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
@@ -176,7 +177,10 @@ export default function NavBar() {
             </DropdownMenu>
             <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
           </div>
-          <Button onClick={handleBookNow} className="hidden md:inline-flex">
+          <Button
+            onClick={handleBookNow}
+            className="hidden md:inline-flex bg-mocha-mousse-400 dark:bg-mocha-mousse-700 text-mocha-mousse-50 dark:text-mocha-mousse-100"
+          >
             {t("nav_bar.book_now")}
           </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -248,7 +252,10 @@ export default function NavBar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
-                <Button onClick={handleBookNow} className="mt-4">
+                <Button
+                  onClick={handleBookNow}
+                  className="mt-4 bg-mocha-mousse-400 dark:bg-mocha-mousse-700"
+                >
                   {t("nav_bar.book_now")}
                 </Button>
               </div>

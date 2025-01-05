@@ -58,7 +58,7 @@ export default async function BoudoirStylePage() {
               <Image
                 priority
                 src={randomPhotos?.at(1)?.urlZoom!}
-                blurDataURL={randomPhotos?.at(1)?.urlCrop!}
+                blurDataURL={randomPhotos?.at(1)?.urlCrop}
                 placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}
@@ -81,7 +81,7 @@ export default async function BoudoirStylePage() {
               <Image
                 priority
                 src={randomPhotos?.at(2)?.urlZoom!}
-                blurDataURL={randomPhotos?.at(2)?.urlCrop!}
+                blurDataURL={randomPhotos?.at(2)?.urlCrop}
                 placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}
@@ -102,7 +102,7 @@ export default async function BoudoirStylePage() {
             <li>{t("l4")}.</li>
             <li>{t("l5")}.</li>
           </ul>
-          <Card>
+          <Card className={"bg-mocha-mousse-200 dark:bg-mocha-mousse-800"}>
             <CardContent>
               <Suspense fallback={<Loading />}>
                 <Gallery photos={randomPhotos} showTitle={false} />
@@ -116,10 +116,10 @@ export default async function BoudoirStylePage() {
           </h2>
           <p className="mb-4 prose lg:prose-xl">{t("p5")}</p>
           <p className="mb-8 prose lg:prose-xl">{t("p6")}</p>
-          <div className="text-center">
+          <div className="text-center pb-5">
             <Link
               href="/#book-session"
-              className="inline-block bg-peach-fuzz-400 hover:bg-peach-fuzz-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+              className="inline-block bg-mocha-mousse-400 hover:bg-mocha-mousse-700 text-mocha-mousse-50 dark:text-mocha-mousse-50 font-bold py-2 px-4 rounded transition duration-300"
             >
               {t("book_session")}
             </Link>
