@@ -1,4 +1,12 @@
 {
+  "LocaleSwitcher": {
+    "ca": "Català",
+    "en": "Anglès",
+    "es": "Espanyol",
+    "fr": "Francès",
+    "it": "Italiano",
+    "label": "Idioma"
+  },
   "about": {
     "alt_image": "Anyul Rivas — Fotògraf boudoir a Barcelona, Espanya",
     "collab_garci": "Signatura de llibres amb Antonio Garci & Chema Photo al PhotoForum Fest",
@@ -46,14 +54,6 @@
   "home": {
     "capture_your_essence": "Captura la Teva Essència"
   },
-  "LocaleSwitcher": {
-    "ca": "Català",
-    "en": "Anglès",
-    "es": "Espanyol",
-    "it": "Italiano",
-    "fr": "Francès",
-    "label": "Idioma"
-  },
   "nav_bar": {
     "book_now": "Reserva Ara",
     "capture_your_essence": "Captura la Teva Essència",
@@ -71,6 +71,21 @@
     "p1": "La pàgina que busques pot haver estat moguda, eliminada o mai ha existit.",
     "return_to_homepage": "Torna a la pàgina principal"
   },
+  "pricing": {
+    "book_now": "Reserva Ara",
+    "boudoir_experience": "Experiència Boudoir",
+    "boudoir_express": "Boudoir Express",
+    "clothing_and_attrezzo": "Roba i Attrezzo inclosos",
+    "clothing_change": "canvis de roba",
+    "deluxe_experience": "Experiència Deluxe",
+    "discover_our_experiences": "Descobreix les nostres Experiències Boudoir",
+    "edited_photos": "fotografies editades",
+    "hours_studio": "hores en estudi privat amb sets",
+    "photos_hd": "Fotografies en qualitat HD",
+    "pricing": "Preus",
+    "professional_makeup": "Maquillatge professional",
+    "video": "Vídeo d'1-2 min. inclòs"
+  },
   "social": {
     "connect": "Connecta amb nosaltres",
     "follow_us": "Segueix-nos a"
@@ -84,8 +99,8 @@
     "swimwear": "Banyador"
   },
   "styles-index": {
-    "photography-styles": "Estils de Fotografia",
-    "discover-our-styles": "Descobreix els nostres estils fotogràfics"
+    "discover-our-styles": "Descobreix els nostres estils fotogràfics",
+    "photography-styles": "Estils de Fotografia"
   },
   "what_is_boudoir": {
     "art_boudoir": "L'Art del Boudoir",
@@ -106,19 +121,5 @@
     "p6": "Ja sigui per augmentar la teva confiança, celebrar el teu cos o crear un regal especial, les nostres sessions de fotografia boudoir estan adaptades a la teva visió única i al teu nivell de confort.",
     "what_is_boudoir": "Què és la Fotografia Boudoir?",
     "why_boudoir": "Per què escollir la Fotografia Boudoir?"
-  },
-  "pricing": {
-    "pricing": "Preus",
-    "discover_our_experiences": "Descobreix les nostres Experiències Boudoir",
-    "boudoir_experience": "Experiència Boudoir",
-    "deluxe_experience": "Experiència Deluxe",
-    "edited_photos": "fotografies editades",
-    "clothing_change": "canvis de roba",
-    "hours_studio": "hores en estudi privat amb sets",
-    "photos_hd": "Fotografies en qualitat HD",
-    "clothing_and_attrezzo": "Roba i Attrezzo inclosos",
-    "video": "Vídeo d'1-2 min. inclòs",
-    "professional_makeup": "Maquillatge professional",
-    "book_now": "Reserva Ara"
   }
 }

@@ -26,6 +26,34 @@ export default async function PricingPage() {
   const t = await getTranslations("pricing");
   const packages = [
     {
+      name: t("boudoir_express"),
+      price: "150 €",
+      image:
+        "https://live.staticflickr.com/65535/53232949297_8eb88c70b6_c_d.jpg",
+      features: [
+        {
+          icon: <Photo className="w-5 h-5" />,
+          text: `12 ${t("edited_photos")}`,
+        },
+        {
+          icon: <Camera className="w-5 h-5" />,
+          text: `150 ${t("photos_hd")}`,
+        },
+        {
+          icon: <Shirt className="w-5 h-5" />,
+          text: `3 ${t("clothing_change")}`,
+        },
+        {
+          icon: <Clock className="w-5 h-5" />,
+          text: `2 ${t("hours_studio")}`,
+        },
+        {
+          icon: <Check className="w-5 h-5" />,
+          text: t("clothing_and_attrezzo"),
+        },
+      ],
+    },
+    {
       name: t("boudoir_experience"),
       price: "350 €",
       image:
@@ -33,7 +61,7 @@ export default async function PricingPage() {
       features: [
         {
           icon: <Photo className="w-5 h-5" />,
-          text: `12 ${t("edited_photos")}`,
+          text: `18 ${t("edited_photos")}`,
         },
         {
           icon: <Shirt className="w-5 h-5" />,
@@ -61,7 +89,7 @@ export default async function PricingPage() {
       features: [
         {
           icon: <Photo className="w-5 h-5" />,
-          text: `20 ${t("edited_photos")}`,
+          text: `24 ${t("edited_photos")}`,
         },
         { icon: <Video className="w-5 h-5" />, text: t("video") },
         {
@@ -101,13 +129,13 @@ export default async function PricingPage() {
           {t("discover_our_experiences")}
         </h2>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {packages.map((pkg, index) => (
+        <div className="grid lg:grid-cols-3 gap-6">
+          {packages.map((pkg) => (
             <div
-              key={index}
+              key={pkg.name.replaceAll(" ", "-")}
               className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row"
             >
-              <div className="md:w-2/5 relative">
+              <div className="md:w-7/12 relative">
                 <Image
                   src={pkg.image}
                   alt={pkg.name}
@@ -129,10 +157,13 @@ export default async function PricingPage() {
                   </p>
                 </div>
               </div>
-              <div className="md:w-3/5 p-6 flex flex-col justify-between">
+              <div className="md:w-5/12 p-3 flex flex-col justify-between">
                 <ul className="space-y-4 mb-6">
-                  {pkg.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center">
+                  {pkg.features.map((feature) => (
+                    <li
+                      key={pkg.name.replaceAll(" ", "-").concat(feature.text)}
+                      className="flex items-center ml-4"
+                    >
                       <span className="mr-2 text-peach-fuzz-500">
                         {feature.icon}
                       </span>

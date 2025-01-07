@@ -1,4 +1,12 @@
 {
+  "LocaleSwitcher": {
+    "ca": "Catalano",
+    "en": "Inglese",
+    "es": "Spagnolo",
+    "fr": "Francese",
+    "it": "Italiano",
+    "label": "Lingua"
+  },
   "about": {
     "alt_image": "Anyul Rivas — Fotografo boudoir a Barcellona, Spagna",
     "collab_garci": "Firma del libro con Antonio Garci & Chema Photo al PhotoForum Fest",
@@ -46,14 +54,6 @@
   "home": {
     "capture_your_essence": "Cattura la Tua Essenza"
   },
-  "LocaleSwitcher": {
-    "ca": "Catalano",
-    "es": "Spagnolo",
-    "en": "Inglese",
-    "fr": "Francese",
-    "it": "Italiano",
-    "label": "Lingua"
-  },
   "nav_bar": {
     "book_now": "Prenota Ora",
     "capture_your_essence": "Cattura la Tua Essenza",
@@ -71,6 +71,21 @@
     "p1": "La pagina che stai cercando potrebbe essere stata spostata, eliminata o non è mai esistita.",
     "return_to_homepage": "Torna alla Homepage"
   },
+  "pricing": {
+    "book_now": "Prenota Ora",
+    "boudoir_experience": "Esperienza Boudoir",
+    "boudoir_express": "Boudoir Express",
+    "clothing_and_attrezzo": "Abiti e Attrezzi inclusi",
+    "clothing_change": "cambi di vestiti",
+    "deluxe_experience": "Esperienza Deluxe",
+    "discover_our_experiences": "Scopri le nostre Esperienze Boudoir",
+    "edited_photos": "fotografie modificate",
+    "hours_studio": "ore in studio privato con set",
+    "photos_hd": "Fotografie in qualità HD",
+    "pricing": "Prezzi",
+    "professional_makeup": "trucco professionale",
+    "video": "Video di 1-2 min. Incluso"
+  },
   "social": {
     "connect": "Connettiti con noi",
     "follow_us": "Seguici su"
@@ -84,8 +99,8 @@
     "swimwear": "Costume da Bagno"
   },
   "styles-index": {
-    "photography-styles": "Stile di Fotografia",
-    "discover-our-styles": "Scopri i nostri Stili fotografici"
+    "discover-our-styles": "Scopri i nostri Stili fotografici",
+    "photography-styles": "Stile di Fotografia"
   },
   "what_is_boudoir": {
     "art_boudoir": "L'Arte del Boudoir",
@@ -106,19 +121,5 @@
     "p6": "Che tu voglia aumentare la tua fiducia, celebrare il tuo corpo o creare un regalo speciale, i nostri servizi fotografici boudoir sono adattati alla tua visione unica e al tuo livello di comfort.",
     "what_is_boudoir": "Cos'è la Fotografia Boudoir?",
     "why_boudoir": "Perché Scegliere la Fotografia Boudoir?"
-  },
-  "pricing": {
-    "pricing": "Prezzi",
-    "discover_our_experiences": "Scopri le nostre Esperienze Boudoir",
-    "boudoir_experience": "Esperienza Boudoir",
-    "deluxe_experience": "Esperienza Deluxe",
-    "edited_photos": "fotografie modificate",
-    "clothing_change": "cambi di vestiti",
-    "hours_studio": "ore in studio privato con set",
-    "photos_hd": "Fotografie in qualità HD",
-    "clothing_and_attrezzo": "Abiti e Attrezzi inclusi",
-    "video": "Video di 1-2 min. Incluso",
-    "professional_makeup": "trucco professionale",
-    "book_now": "Prenota Ora"
   }
 }
