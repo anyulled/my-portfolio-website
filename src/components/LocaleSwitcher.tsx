@@ -8,7 +8,6 @@ export default function LocaleSwitcher() {
   return (
     <LocaleSwitcherSelect
       defaultValue={locale}
-      data-testid="localeSwitcher"
       items={[
         {
           value: "en",

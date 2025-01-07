@@ -40,7 +40,11 @@ export default function LocaleSwitcherSelect({
 
   return (
     <div className="relative">
-      <Select defaultValue={defaultValue} onValueChange={onChange}>
+      <Select
+        defaultValue={defaultValue}
+        onValueChange={onChange}
+        data-testid="localeSwitcher"
+      >
         <SelectTrigger
           aria-label={label}
           className={clsx(
