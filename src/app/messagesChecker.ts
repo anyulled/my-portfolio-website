@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import chalk from "chalk";
 
+/*eslint-disable @typescript-eslint/ban-ts-comment */
+
 const referenceFilePath = path.join("messages", "en.json");
 const messagesFolderPath = path.join("messages");
 
@@ -41,7 +43,7 @@ fs.readdir(messagesFolderPath, (err, files) => {
       const referenceKeysSet = new Set(referenceKeys);
       const fileKeysSet = new Set(fileKeys);
 
-      // @ts-expect-error: non-sense error
+      // @ts-ignore
       const missingKeys = [...referenceKeysSet].filter(
         (key) => !fileKeysSet.has(key),
       );
