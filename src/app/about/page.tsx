@@ -48,25 +48,23 @@ export default async function BioPage() {
           {t("title")}
         </h1>
 
-        <div className="grid md:grid-cols-[auto_1fr] gap-8 items-start">
-          <div>
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <Image
-                  src={profileImageUrl}
-                  blurDataURL={imageThumbnail}
-                  placeholder="blur"
-                  priority
-                  alt={t("alt_image")}
-                  width={400}
-                  height={600}
-                  className="w-full h-auto object-cover hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
-                />
-              </CardContent>
-            </Card>
-          </div>
+        <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-[auto_1fr] gap-8 md:gap-6 lg:gap-8 items-start">
+          <Card className="overflow-hidden md:col-span-1 lg:col-auto">
+            <CardContent className="p-0">
+              <Image
+                src={profileImageUrl}
+                blurDataURL={imageThumbnail}
+                placeholder="blur"
+                priority
+                alt={t("alt_image")}
+                width={400}
+                height={600}
+                className="w-full h-auto object-cover hover:scale-110 transition-transform duration-300 ease-in-out hover:rotate-1"
+              />
+            </CardContent>
+          </Card>
 
-          <div className="space-y-6">
+          <div className="space-y-6 md:col-span-2 lg:col-auto">
             <Card className={"dark:bg-gray-950"}>
               <CardContent className="p-6">
                 <h2 className={`${dancingScript.className} text-3xl mb-1`}>
