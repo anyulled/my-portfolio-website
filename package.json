@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "npm run check-i18n && next build",
+    "check-i18n": "npx tsx src/app/messagesChecker.ts",
     "dev": "next dev",
     "lint": "next lint",
     "prepare": "husky",
