@@ -1,3 +1,5 @@
+![](https://api.checklyhq.com/v1/badges/checks/8fb0d035-0146-4b64-8826-d01e721d34e6?style=flat&theme=default)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
