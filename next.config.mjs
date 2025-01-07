@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
+    instrumentationHook: true,
   },
   images: {
     unoptimized: true,
