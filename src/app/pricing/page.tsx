@@ -143,7 +143,7 @@ export default async function PricingPage() {
           {t("discover_our_experiences")}
         </h2>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-2">
           {packages.map((pkg) => (
             <div
               key={pkg.name.replaceAll(" ", "-")}
