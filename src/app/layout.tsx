@@ -15,6 +15,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://boudoir.barcelona"),
   title: {
     template: "%s · Boudoir Photography in Barcelona",
     default: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
