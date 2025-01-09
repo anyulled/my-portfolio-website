@@ -58,7 +58,7 @@
     "@types/node": "^22",
     "@types/nodemailer": "^6.4.16",
     "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react-dom": "^19",
     "@vercel/toolbar": "^0.1.24",
     "babel-jest": "^29.7.0",
     "eslint": "^8",
