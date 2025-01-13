@@ -56,7 +56,7 @@ export default function ContactForm() {
   };
   const t = useTranslations("contact_form");
   return (
-    <section id="book-session" className="my-2 bg-opacity-75 backdrop-blur-md">
+    <section id="book-session" className="py-2">
       <div className="container mx-auto px-6">
         <h2
           className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
