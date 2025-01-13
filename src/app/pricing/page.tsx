@@ -27,7 +27,7 @@ export default async function PricingPage() {
   const packages = [
     {
       name: t("boudoir_express"),
-      price: "150 €",
+      price: "200 €",
       image:
         "https://live.staticflickr.com/65535/53232949297_8eb88c70b6_c_d.jpg",
       features: [
