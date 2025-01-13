@@ -36,7 +36,7 @@ export default async function HomePage() {
   }
 
   return (
-    <main className={"dark:bg-zinc-900 dark:text-white bg-white text-gray-900"}>
+    <main>
       {/* Hero Section with Parallax */}
       <Hero />
 

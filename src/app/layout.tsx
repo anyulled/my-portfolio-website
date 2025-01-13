@@ -50,7 +50,9 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ScrollProvider>
-              <div className={`min-h-screen`}>
+              <div
+                className={`min-h-screen bg-mocha-mousse-50 text-mocha-mousse-800 dark:bg-mocha-mousse-900 dark:text-mocha-mousse-100`}
+              >
                 <NavBar />
                 {children}
               </div>
