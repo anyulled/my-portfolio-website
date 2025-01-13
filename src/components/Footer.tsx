@@ -10,7 +10,7 @@ const footerLinks = [
 export default function Footer() {
   const t = useTranslations("footer");
   return (
-    <footer className="bg-mocha-mousse-50 border-t">
+    <footer className="bg-mocha-mousse-100 dark:bg-mocha-mousse-50 border-t">
       <div className="container mx-auto px-6 py-8">
         <div className="flex flex-col items-center">
           <nav className="flex flex-wrap justify-center gap-4 mb-4">
