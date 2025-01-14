@@ -15,7 +15,7 @@ export const NavLinks = (props: {
         <Link
           key={link.name}
           href={link.href}
-          className="text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800"
+          className="text-sm font-medium hover:text-primary transition-colors dark:text-mocha-mousse-100 text-mocha-mouse-600"
           onClick={() => props.handleNavClick(link.name)}
         >
           {/* @ts-expect-error i18n issues */}

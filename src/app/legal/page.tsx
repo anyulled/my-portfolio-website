@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div
-      className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-neutral-400 to-neutral-50 pt-20`}
-    >
+    <div className={`min-h-screen  pt-20`}>
       <div className="container max-w-7xl mx-auto px-4 py-8">
         <h1
           className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mt-12 mb-8`}
@@ -120,12 +118,14 @@ export default function PrivacyPage() {
             brought to the attention of the Spanish Data Protection Agency.
           </p>
           <h2>SIXTH.- PROPERTY RIGHTS</h2>
-          All the contents of the Website, such as texts, opinion articles,
-          graphics, photographs, logos, icons, images, as well as the graphic
-          design, source code and software, are the exclusive property of
-          Sensuelle Boudoir or third parties, whose rights in this regard are
-          legitimately held by Sensuelle Boudoir, and are therefore protected by
-          national and international legislation.
+          <p>
+            All the contents of the Website, such as texts, opinion articles,
+            graphics, photographs, logos, icons, images, as well as the graphic
+            design, source code and software, are the exclusive property of
+            Sensuelle Boudoir or third parties, whose rights in this regard are
+            legitimately held by Sensuelle Boudoir, and are therefore protected
+            by national and international legislation.
+          </p>
           <p>
             The use of all elements subject to industrial and intellectual
             property for commercial purposes is strictly prohibited, as is their

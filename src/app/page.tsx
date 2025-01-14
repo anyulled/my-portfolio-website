@@ -21,7 +21,7 @@ export default async function HomePage() {
   if (!res.success) {
     return (
       <>
-        <h1 className={"text-2xl font-bold text-peach-fuzz-400"}>
+        <h1 className={"text-2xl font-bold text-mocha-mousse-400"}>
           Sensuelle Boudoir
         </h1>
         Error: {res.reason}
@@ -30,7 +30,7 @@ export default async function HomePage() {
   }
 
   return (
-    <main className={"dark:bg-zinc-900 dark:text-white bg-white text-gray-900"}>
+    <main>
       {/* Hero Section with Parallax */}
       <Hero />
 

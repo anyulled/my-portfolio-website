@@ -10,22 +10,18 @@ const footerLinks = [
 export default function Footer() {
   const t = useTranslations("footer");
   return (
-    <footer className="bg-background border-t">
+    <footer className="bg-mocha-mousse-100 dark:bg-mocha-mousse-50 border-t">
       <div className="container mx-auto px-6 py-8">
         <div className="flex flex-col items-center">
           <nav className="flex flex-wrap justify-center gap-4 mb-4">
             {footerLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
+              <Link key={link.name} href={link.href} className="text-sm">
                 {/* @ts-expect-error i18n issues */}
                 {t(link.name)}
               </Link>
             ))}
           </nav>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm">
             &copy; {new Date().getFullYear()} Sensuelle Boudoir.{" "}
             {t("copyright")}
           </p>
