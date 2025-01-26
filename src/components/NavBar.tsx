@@ -106,7 +106,7 @@ export default function NavBar() {
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         <Link
           href="/"
-          className={`dark:text-mocha-mousse-100 text-mocha-mousse-200 ${dancingScript.className} text-3xl ${pathname !== "/" ? "text-mocha-mousse-400" : ""}`}
+          className={`dark:text-mocha-mousse-50 text-mocha-mousse-200 ${dancingScript.className} text-3xl ${pathname !== "/" ? "text-mocha-mousse-400" : ""}`}
         >
           Sensuelle Boudoir
         </Link>
@@ -120,24 +120,24 @@ export default function NavBar() {
             aria-label={t("nav_bar.toggle_theme")}
           >
             {theme === "dark" ? (
-              <Sun className="h-6 w-6 text-mocha-mousse-100" />
+              <Sun className="h-6 w-6 text-mocha-mousse-50" />
             ) : (
               <Moon className="h-6 w-6 text-mocha-mousse-900" />
             )}
           </Button>
           <div className="hidden md:flex space-x-4 items-center">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-mocha-mousse-100 text-mocha-mousse-900">
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-mocha-mousse-50 text-mocha-mousse-900">
                 {t("nav_bar.models")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64">
                 <div className="p-2">
                   <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-mocha-mousse-900 dark:text-mocha-mousse-100" />
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-mocha-mousse-900 dark:text-mocha-mousse-50" />
                     <Input
                       type="search"
                       placeholder={t("nav_bar.search_models")}
-                      className="pl-8 text-mocha-mousse-900 dark:text-mocha-mousse-100 placeholder:text-mocha-mousse-900 dark:placeholder:text-mocha-mousse-100"
+                      className="pl-8 text-mocha-mousse-900 dark:text-mocha-mousse-50 placeholder:text-mocha-mousse-900 dark:placeholder:text-mocha-mousse-50"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -158,7 +158,7 @@ export default function NavBar() {
               </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-mocha-mousse-100 text-mocha-mousse-900">
+              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-mocha-mousse-50 text-mocha-mousse-900">
                 {t("nav_bar.styles")} <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
@@ -186,7 +186,7 @@ export default function NavBar() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6 dark:text-white text-neutral-800" />
+                <Menu className="h-6 w-6 dark:text-mocha-mousse-50 text-neutral-800" />
                 <span className="sr-only">{t("nav_bar.open_menu")}</span>
               </Button>
             </SheetTrigger>

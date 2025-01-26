@@ -46,13 +46,11 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={"bg-neutral-50 dark:bg-zinc-800"}>
+      <body className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-900"}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ScrollProvider>
-              <div
-                className={`min-h-screen bg-mocha-mousse-50 text-mocha-mousse-800 dark:bg-mocha-mousse-900 dark:text-mocha-mousse-100`}
-              >
+              <div className={`min-h-screen`}>
                 <NavBar />
                 {children}
               </div>
