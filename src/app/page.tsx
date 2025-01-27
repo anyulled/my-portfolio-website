@@ -47,7 +47,7 @@ export default async function HomePage() {
 
       {/* Social Media Links */}
       <SocialMedia />
-      <Separator className="my-4" />
+      <Separator className="my-4 bg-mocha-mousse-900 dark:bg-mocha-mousse-500" />
 
       {/* Contact Form Section */}
       <Suspense fallback={<Loading />}>
