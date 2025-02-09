@@ -16,7 +16,13 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const res = await getFlickrPhotos(flickr, "boudoir, -cover", 12, false, true);
+  const res = await getFlickrPhotos(
+    flickr,
+    "model, boudoir, -cover, woman",
+    12,
+    false,
+    true,
+  );
 
   if (!res.success) {
     return (

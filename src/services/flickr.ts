@@ -1,6 +1,9 @@
 import chalk from "chalk";
 import {FetchTransport, Flickr} from "flickr-sdk";
 
+import {getCachedData, setCachedData} from "@/services/cache";
+import * as Sentry from "@sentry/nextjs";
+
 /**
  * Represents a photo.
  * @interface
@@ -76,6 +79,8 @@ type PhotoFlickr = {
   width_z: string;
 };
 
+const CACHE_EXPIRY = 60 * 60 * 24; // 24 hours
+
 /**
  * Error thrown when no photos are found.
  * @class
@@ -140,6 +145,7 @@ export async function getFlickrPhotos(
       extras:
         "description, url_s, url_m, url_n, url_l, url_z, url_c, url_o, url_t, views, date_upload, date_taken, tags",
     });
+    const cachedPhotos = await getCachedData(tags);
 
     console.info(
       chalk.blue(
@@ -147,12 +153,14 @@ export async function getFlickrPhotos(
       ),
     );
 
-    if (result.photos.photo.length === 0) {
-      console.error(chalk.red.bold("No photos found."));
-      return Promise.reject(new NoPhotosFoundError());
+    if (result.photos.photo.length !== 0) {
+      console.info(chalk.blue.bold("Update cache with Flickr data."));
+      await setCachedData(tags, result.photos.photo, CACHE_EXPIRY);
     }
 
-    const photos = processFlickrPhotos(result.photos.photo);
+    const photos = processFlickrPhotos(
+      result.photos.photo.length !== 0 ? result.photos.photo : cachedPhotos,
+    );
 
     if (orderByDate) {
       console.info(chalk.cyan("Sorting photos by date taken..."));
@@ -173,6 +181,7 @@ export async function getFlickrPhotos(
   } catch (reason) {
     const errorMessage =
       reason instanceof Error ? reason.message : "Unknown error";
+    Sentry.captureException(reason);
     return {
       success: false,
       photos: null,

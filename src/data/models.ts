@@ -26,6 +26,7 @@ const models: Array<Model> = [
   { tag: "delaia-gonzalez", name: "Delaia González" },
   { tag: "dubis-venares", name: "Dubis Venares" },
   { tag: "francelys-flex", name: "Francelys Flex" },
+  { tag: "giulia-chiucchi", name: "Giulia Chiucchi" },
   { tag: "jana", name: "Jana" },
   { tag: "julia-munns", name: "Julia Munns" },
   { tag: "karina-vasylyuk", name: "Karina Vasylyuk" },
