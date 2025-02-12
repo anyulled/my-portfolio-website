@@ -14,6 +14,7 @@ import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
+import { openGraph } from "@/lib/openGraph";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
     description: "Discover our pricing and book your experience today!",
   },
   openGraph: {
+    ...openGraph,
     type: "article",
     title: "Pricing",
     description: "Discover our pricing and book your experience today!",
