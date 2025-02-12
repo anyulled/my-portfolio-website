@@ -27,14 +27,26 @@ export const generateMetadata = async ({
     twitter: {
       title: "Pricing",
       description: "Discover our pricing and book your experience today!",
-      images: [{ url: "/opengraph-image", height: 1200, width: 630 }],
+      images: [
+        {
+          url: `/models/${modelName}/opengraph-image`,
+          height: 1200,
+          width: 630,
+        },
+      ],
     },
     openGraph: {
       ...openGraph,
       type: "article",
       title: "Pricing",
       description: "Discover our pricing and book your experience today!",
-      images: [{ url: "/opengraph-image", height: 1200, width: 630 }],
+      images: [
+        {
+          url: `/models/${modelName}/opengraph-image`,
+          height: 1200,
+          width: 630,
+        },
+      ],
     },
   };
 };

@@ -33,12 +33,24 @@ export const generateMetadata = async ({
     title: `Style: ${extractNameFromTag(styles, styleName)}`,
     twitter: {
       title: `Style: ${extractNameFromTag(styles, styleName)}`,
-      images: [{ url: "/opengraph-image", height: 1200, width: 630 }],
+      images: [
+        {
+          url: `/models/${styleName}/opengraph-image`,
+          height: 1200,
+          width: 630,
+        },
+      ],
     },
     openGraph: {
       ...openGraph,
       title: `Style: ${extractNameFromTag(styles, styleName)}`,
-      images: [{ url: "/opengraph-image", height: 1200, width: 630 }],
+      images: [
+        {
+          url: `/models/${styleName}/opengraph-image`,
+          height: 1200,
+          width: 630,
+        },
+      ],
     },
   };
 };
