@@ -1,6 +1,8 @@
 import { ImageResponse } from "next/og";
 /*eslint-disable @next/next/no-img-element */
 
+export const runtime = "edge";
+
 export default function PricingImage() {
   return new ImageResponse(
     (

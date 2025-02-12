@@ -1,9 +1,11 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
-import {styles} from "@/data/styles";
+import { styles } from "@/data/styles";
 import { getFlickrPhotos } from "@/services/flickr";
-import {createFlickr} from "flickr-sdk"; /*eslint-disable @next/next/no-img-element */
+import { createFlickr } from "flickr-sdk"; /*eslint-disable @next/next/no-img-element */
 /*eslint-disable @next/next/no-img-element */
+
+export const runtime = "edge";
 
 export default async function OpengraphImage({
   params,

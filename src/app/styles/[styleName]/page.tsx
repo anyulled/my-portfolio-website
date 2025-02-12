@@ -6,7 +6,6 @@ import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
 import { styles } from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
-import modelData from "@/data/models";
 import NotFound from "@/app/not-found";
 import { getTranslations } from "next-intl/server";
 import { createFlickr } from "flickr-sdk";
@@ -31,18 +30,15 @@ export const generateMetadata = async ({
 }: Props): Promise<Metadata> => {
   const { styleName } = await params;
   return {
-    title: `Style ${extractNameFromTag(styles, styleName)} · Boudoir Barcelona`,
+    title: `Style: ${extractNameFromTag(styles, styleName)}`,
+    twitter: {
+      title: `Style: ${extractNameFromTag(styles, styleName)}`,
+      images: [{ url: "/opengraph-image", height: 1200, width: 630 }],
+    },
     openGraph: {
       ...openGraph,
-      title: `Style ${extractNameFromTag(styles, styleName)} · Boudoir Barcelona`,
-      images: [
-        {
-          url: `/models/${styleName}/opengraph-image`,
-          width: 1200,
-          height: 630,
-          alt: `Style ${extractNameFromTag(modelData, styleName)}`,
-        },
-      ],
+      title: `Style: ${extractNameFromTag(styles, styleName)}`,
+      images: [{ url: "/opengraph-image", height: 1200, width: 630 }],
     },
   };
 };
