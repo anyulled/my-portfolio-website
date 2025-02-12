@@ -26,22 +26,9 @@ export const generateMetadata = async ({
     title: title,
     openGraph: {
       ...openGraph,
-      title: title,
-      type: "profile",
-      firstName: extractNameFromTag(models, modelName)?.split(" ")[0],
-      lastName: extractNameFromTag(models, modelName)
-        ?.split(" ")
-        .slice(1)
-        .join(" "),
-      gender: "female",
-      images: [
-        {
-          url: `/models/${modelName}/opengraph-image`,
-          width: 1200,
-          height: 630,
-          alt: `Model ${extractNameFromTag(models, modelName)}`,
-        },
-      ],
+      type: "article",
+      title: "Pricing",
+      description: "Discover our pricing and book your experience today!",
     },
   };
 };
