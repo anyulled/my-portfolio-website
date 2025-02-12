@@ -24,8 +24,11 @@ export const metadata: Metadata = {
   openGraph: openGraph,
   twitter: {
     card: "summary_large_image",
-    title: "Sensuelle Boudoir",
-    description: "Boudoir photography service in Barcelonas.",
+    title: {
+      template: "%s · Boudoir Photography in Barcelona",
+      default: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
+    },
+    description: "Boudoir photography service in Barcelona.",
     images: [
       "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
     ],

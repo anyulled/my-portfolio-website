@@ -1,5 +1,10 @@
-export const openGraph = {
-  title: "Sensuelle Boudoir",
+import { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
+
+export const openGraph: OpenGraph = {
+  title: {
+    default: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
+    template: "%s · Boudoir photography service in Barcelona",
+  },
   description: "Boudoir photography service in Barcelona.",
   url: "https://boudoir.barcelona",
   siteName: "Boudoir photography service in Barcelona",

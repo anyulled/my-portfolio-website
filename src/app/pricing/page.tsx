@@ -19,7 +19,17 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
-  title: " Pricing",
+  title: " Pricing ",
+  description: "Discover our pricing and book your experience today!",
+  twitter: {
+    title: "Pricing",
+    description: "Discover our pricing and book your experience today!",
+  },
+  openGraph: {
+    type: "article",
+    title: "Pricing",
+    description: "Discover our pricing and book your experience today!",
+  },
 };
 
 export default async function PricingPage() {
