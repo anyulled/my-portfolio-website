@@ -6,6 +6,12 @@ import { createFlickr } from "flickr-sdk";
 /*eslint-disable @next/next/no-img-element */
 
 export const runtime = "edge";
+export const contentType = "image/png";
+export const alt = "Sensuelle Boudoir";
+export const size = {
+  width: 1200,
+  height: 630,
+};
 
 export default async function OpengraphImage({
   params,
