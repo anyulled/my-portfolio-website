@@ -11,6 +11,8 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Models",
+  openGraph: { title: "Models" },
+  twitter: { title: "Models" },
 };
 
 const batchModels = (models: Model[], batchSize: number) => {

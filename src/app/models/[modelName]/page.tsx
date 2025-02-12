@@ -21,11 +21,19 @@ export const generateMetadata = async ({
   params: Params;
 }): Promise<Metadata> => {
   const { modelName } = await params;
+  const title = `Model: ${extractNameFromTag(models, modelName)}`;
   return {
-    title: `Model ${extractNameFromTag(models, modelName)} · Boudoir Barcelona`,
+    title: title,
     openGraph: {
       ...openGraph,
-      title: `Model ${extractNameFromTag(models, modelName)} · Boudoir Barcelona`,
+      title: title,
+      type: "profile",
+      firstName: extractNameFromTag(models, modelName)?.split(" ")[0],
+      lastName: extractNameFromTag(models, modelName)
+        ?.split(" ")
+        .slice(1)
+        .join(" "),
+      gender: "female",
       images: [
         {
           url: `/models/${modelName}/opengraph-image`,
