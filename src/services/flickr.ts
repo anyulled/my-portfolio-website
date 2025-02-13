@@ -79,7 +79,7 @@ type PhotoFlickr = {
   width_z: string;
 };
 
-const CACHE_EXPIRY = 60 * 60 * 24; // 24 hours
+const CACHE_EXPIRY = 60 * 60 * 12; // 12 hours
 
 /**
  * Error thrown when no photos are found.
@@ -155,7 +155,13 @@ export async function getFlickrPhotos(
 
     if (result.photos.photo.length !== 0) {
       console.info(chalk.blue.bold("Update cache with Flickr data."));
-      await setCachedData(tags, result.photos.photo, CACHE_EXPIRY);
+      try {
+        await setCachedData(tags, result.photos.photo, CACHE_EXPIRY);
+        console.info(chalk.green.bold("Update cache with Flickr data."));
+      } catch (e) {
+        console.error(chalk.red("Failed to update cache.", e));
+        Sentry.captureException(e);
+      }
     }
 
     const photos = processFlickrPhotos(
