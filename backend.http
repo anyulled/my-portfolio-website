@@ -22,3 +22,9 @@ Content-Type: application/x-www-form-urlencoded
 name = John Doe &
 email = johndoe@example.com &
  message = Hello, I am John Doe
+
+###
+GET http://localhost:3000/api/blobs
+BLOB_READ_WRITE_TOKEN: {{BLOB_TOKEN}}
+Accept: application/json
+
