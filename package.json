@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.24.7",
-    "@faker-js/faker": "^9.4.0",
+    "@faker-js/faker": "^9.5.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
