@@ -18,8 +18,7 @@ export default async function HomePage() {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
   const res = await getFlickrPhotos(
     flickr,
-    "model, boudoir, -cover, woman",
-    12,
+    "model, boudoir, -landscape, -cover, woman", 12,
     false,
     true,
   );
@@ -27,7 +26,7 @@ export default async function HomePage() {
   if (!res.success) {
     return (
       <>
-        <h1 className={"text-2xl font-bold text-peach-fuzz-400"}>
+        <h1 className={"text-2xl font-bold text-mocha-mousse-400"}>
           Sensuelle Boudoir
         </h1>
         Error: {res.reason}
@@ -36,7 +35,7 @@ export default async function HomePage() {
   }
 
   return (
-    <main className={"dark:bg-zinc-900 dark:text-white bg-white text-gray-900"}>
+    <main>
       {/* Hero Section with Parallax */}
       <Hero />
 
@@ -47,7 +46,7 @@ export default async function HomePage() {
 
       {/* Social Media Links */}
       <SocialMedia />
-      <Separator className="my-4" />
+      <Separator className="my-4 bg-mocha-mousse-900 dark:bg-mocha-mousse-500" />
 
       {/* Contact Form Section */}
       <Suspense fallback={<Loading />}>
