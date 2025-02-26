@@ -39,12 +39,16 @@ const fetchFlickrPhotos = async (
   tags: string,
 ): Promise<Array<PhotoFlickr> | null> => {
   try {
+    const { includedTags, excludedTags } = splitTags(tags);
     const result = await flickr(
       "flickr.photos.search",
-      createFlickrConfig(tags),
+      createFlickrConfig(includedTags),
+    );
+    const filteredPhotos = result.photos.photo.filter(
+      (photo: PhotoFlickr) => !shouldExcludePhoto(photo, excludedTags),
     );
 
-    return result.photos.photo.length > 0 ? result.photos.photo : null;
+    return result.photos.photo.length > 0 ? filteredPhotos : null;
   } catch (error) {
     console.error(chalk.red("Failed to fetch from Flickr API:", error));
     Sentry.captureException(error);
@@ -234,3 +238,30 @@ export async function getFlickrPhotos(
 
   return processedPhotos;
 }
+
+const shouldExcludePhoto = (
+  photo: PhotoFlickr,
+  excludedTags: string[],
+): boolean => {
+  if (!excludedTags.length) return false;
+
+  const photoTags = photo.tags.toLowerCase().split(" ");
+  return excludedTags.some((excludedTag) =>
+    photoTags.includes(excludedTag.toLowerCase()),
+  );
+};
+
+const splitTags = (
+  tags: string,
+): {
+  includedTags: string;
+  excludedTags: string[];
+} => {
+  const terms = tags.split(",").map((term) => term.trim());
+  return {
+    includedTags: terms.filter((term) => !term.startsWith("-")).join(","),
+    excludedTags: terms
+      .filter((term) => term.startsWith("-"))
+      .map((term) => term.slice(1)), // Remove the '-' prefix
+  };
+};
