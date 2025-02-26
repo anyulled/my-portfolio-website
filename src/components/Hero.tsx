@@ -22,6 +22,7 @@ export default function Hero() {
   }, [theme]);
   const randomImage = React.useMemo(() => {
     const images = [
+      "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg",
       "https://live.staticflickr.com/65535/53564630658_b2aeab68f2_h.jpg",
       "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
       "https://live.staticflickr.com/65535/53923428207_dc41871f93_h.jpg",
