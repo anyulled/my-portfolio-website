@@ -24,7 +24,7 @@ function getRandomElements(arr: Photo[], num: number) {
   if (!arr) {
     return [];
   }
-  const shuffled = arr.sort(() => 0.5 - Math.random());
+  const shuffled = arr.toSorted(() => 0.5 - Math.random());
   return shuffled.slice(0, num);
 }
 

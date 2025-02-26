@@ -53,9 +53,9 @@ export default async function PricingImage() {
     return new ImageResponse(
       (
         <div tw="flex flex-row w-full h-full bg-white">
-          {images.map((src, index) => (
+          {images.map((src) => (
             <img
-              key={index}
+              key={crypto.randomUUID()}
               src={src}
               alt="Sensuelle Boudoir"
               tw="h-full object-cover"
