@@ -1,4 +1,5 @@
 ![](https://api.checklyhq.com/v1/badges/checks/8fb0d035-0146-4b64-8826-d01e721d34e6?style=flat&theme=default)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=anyulled_my-portfolio-website&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=anyulled_my-portfolio-website)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
