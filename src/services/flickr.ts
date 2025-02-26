@@ -45,7 +45,7 @@ export interface PhotoSource {
  * Represents a photo from Flickr.
  * @typedef {Object} PhotoFlickr
  */
-type PhotoFlickr = {
+export type PhotoFlickr = {
   datetaken: string;
   dateupload: string;
   description: { _content: string };
@@ -79,19 +79,7 @@ type PhotoFlickr = {
   width_z: string;
 };
 
-const CACHE_EXPIRY = 60 * 60 * 12; // 12 hours
-
-/**
- * Error thrown when no photos are found.
- * @class
- * @extends Error
- */
-export class NoPhotosFoundError extends Error {
-  constructor() {
-    super("No photos found");
-    this.name = "NoPhotosFoundError";
-  }
-}
+const CACHE_EXPIRY = 60 * 60 * 24; // 12 hours
 
 /**
  * Represents the response from Flickr API.
@@ -133,6 +121,10 @@ export async function getFlickrPhotos(
     ),
   );
 
+  let flickrPhotos: Array<PhotoFlickr> | null = null;
+  let cachedPhotos: Array<PhotoFlickr> | null = null;
+  let errorMessage: string | null = null;
+
   try {
     const result = await flickr("flickr.photos.search", {
       user_id: "76279599@N00",
@@ -145,55 +137,78 @@ export async function getFlickrPhotos(
       extras:
         "description, url_s, url_m, url_n, url_l, url_z, url_c, url_o, url_t, views, date_upload, date_taken, tags",
     });
-    const cachedPhotos = await getCachedData(tags);
-
-    console.info(
-      chalk.blue(
-        `Got ${chalk.bold(result.photos.photo.length)} photos from Flickr.`,
-      ),
-    );
 
     if (result.photos.photo.length !== 0) {
-      console.info(chalk.blue.bold("Update cache with Flickr data."));
+      flickrPhotos = result.photos.photo;
+      console.info(
+        chalk.blue(
+          `Got ${chalk.bold(result.photos.photo.length)} photos from Flickr.`,
+        ),
+      );
+
+      // Try to update cache with new data
       try {
+        console.info(chalk.blue.bold("Update cache with Flickr data."));
         await setCachedData(tags, result.photos.photo, CACHE_EXPIRY);
-        console.info(chalk.green.bold("Update cache with Flickr data."));
+        console.info(chalk.green.bold("Updated cache with Flickr data."));
       } catch (e) {
+        // Just log cache update failure, don't fail the request
         console.error(chalk.red("Failed to update cache.", e));
         Sentry.captureException(e);
       }
     }
+  } catch (error) {
+    console.error(chalk.red("Failed to fetch from Flickr API:", error));
+    Sentry.captureException(error);
+    errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch from Flickr API";
+  }
 
-    const photos = processFlickrPhotos(
-      result.photos.photo.length !== 0 ? result.photos.photo : cachedPhotos,
-    );
-
-    if (orderByDate) {
-      console.info(chalk.cyan("Sorting photos by date taken..."));
-      photos.photos = photos.photos.toSorted(
-        (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
-      );
+  if (!flickrPhotos) {
+    try {
+      cachedPhotos = await getCachedData(tags);
+      if (cachedPhotos) {
+        console.info(chalk.blue("Using cached photos."));
+      }
+    } catch (error) {
+      console.error(chalk.red("Failed to get cached data:", error));
+      Sentry.captureException(error);
+      // Only set error message if we don't have Flickr photos
+      if (!flickrPhotos) {
+        errorMessage = "Failed to get photos from both Flickr API and cache";
+      }
     }
+  }
 
-    if (orderByViews) {
-      console.info(chalk.cyan("Sorting photos by views..."));
-      photos.photos = photos.photos.toSorted(
-        (a: Photo, b: Photo) => b.views - a.views,
-      );
-    }
-
-    photos.photos = photos.photos.slice(0, items);
-    return photos;
-  } catch (reason) {
-    const errorMessage =
-      reason instanceof Error ? reason.message : "Unknown error";
-    Sentry.captureException(reason);
+  if (!flickrPhotos && !cachedPhotos) {
     return {
       success: false,
       photos: null,
-      reason: errorMessage,
+      reason: errorMessage || "No photos available",
     };
   }
+
+  const photosToProcess = flickrPhotos || cachedPhotos;
+  const processedPhotos = processFlickrPhotos(photosToProcess!);
+
+  if (orderByDate) {
+    console.info(chalk.cyan("Sorting photos by date taken..."));
+    processedPhotos.photos = processedPhotos.photos.toSorted(
+      (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
+    );
+  }
+
+  if (orderByViews) {
+    console.info(chalk.cyan("Sorting photos by views..."));
+    processedPhotos.photos = processedPhotos.photos.toSorted(
+      (a: Photo, b: Photo) => b.views - a.views,
+    );
+  }
+
+  processedPhotos.photos = processedPhotos.photos.slice(0, items);
+  return processedPhotos;
 }
 
 /**

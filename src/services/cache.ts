@@ -1,5 +1,5 @@
 import { list, put } from "@vercel/blob";
-import { Photo } from "@/services/flickr";
+import { Photo, PhotoFlickr } from "@/services/flickr";
 import chalk from "chalk";
 
 function sanitizeKey(key: string): string {
@@ -9,7 +9,9 @@ function sanitizeKey(key: string): string {
     .substring(0, 100)}.json`;
 }
 
-export async function getCachedData(key: string): Promise<Photo[] | null> {
+export async function getCachedData(
+  key: string,
+): Promise<PhotoFlickr[] | null> {
   const sanitizedKey = sanitizeKey(key);
   const response = await list();
   console.log(chalk.cyan(`Getting Cache for (${sanitizedKey}):`));
