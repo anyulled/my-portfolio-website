@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { getFlickrPhotos, Photo } from "@/services/flickr";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
 import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 import { createFlickr } from "flickr-sdk";
+import { Photo } from "@/services/flickr/flickr.types";
 
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 

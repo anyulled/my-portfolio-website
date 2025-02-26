@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import NotFound from "next/dist/client/components/not-found-error";
-import { fetchTransport, getFlickrPhotos } from "@/services/flickr";
+import { fetchTransport, getFlickrPhotos } from "@/services/flickr/flickr";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";

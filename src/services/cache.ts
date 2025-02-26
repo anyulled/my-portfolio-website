@@ -1,6 +1,6 @@
 import { list, put } from "@vercel/blob";
-import { Photo, PhotoFlickr } from "@/services/flickr";
 import chalk from "chalk";
+import { PhotoFlickr } from "@/services/flickr/flickr.types";
 
 function sanitizeKey(key: string): string {
   return `${key
@@ -29,7 +29,7 @@ export async function getCachedData(
 
 export async function setCachedData(
   key: string,
-  data: Photo[],
+  data: Array<PhotoFlickr>,
   expiryInSeconds: number,
 ): Promise<void> {
   const sanitizedKey = sanitizeKey(key);

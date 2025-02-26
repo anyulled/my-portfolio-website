@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { getFlickrPhotos } from "@/services/flickr";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
 import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
 import { getTranslations } from "next-intl/server";

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
 import { styles } from "@/data/styles";
-import { getFlickrPhotos } from "@/services/flickr";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
 import { createFlickr } from "flickr-sdk";
 /*eslint-disable @next/next/no-img-element */
 

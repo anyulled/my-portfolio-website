@@ -1,4 +1,4 @@
-import { getFlickrPhotos } from "@/services/flickr";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
 import { NextRequest, NextResponse } from "next/server";
 import { createFlickr } from "flickr-sdk";
 

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Dancing_Script, Playfair_Display } from "next/font/google";
 import { styles } from "@/data/styles";
 import { createFlickr } from "flickr-sdk";
-import { getFlickrPhotos } from "@/services/flickr";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 

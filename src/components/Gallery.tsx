@@ -7,13 +7,13 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import { Aref_Ruqaa } from "next/font/google";
-import { Photo } from "@/services/flickr";
 import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import { Image, RowsPhotoAlbum } from "react-photo-album";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import renderNextImage from "@/components/NextImage";
 import { useTranslations } from "next-intl";
+import { Photo } from "@/services/flickr/flickr.types";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 

@@ -3,7 +3,7 @@ import SocialMedia from "@/components/SocialMedia";
 import Gallery from "@/components/Gallery";
 import ContactForm from "@/components/ContactForm";
 import type { Metadata } from "next";
-import { getFlickrPhotos } from "@/services/flickr";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
 import { createFlickr } from "flickr-sdk";
 import { Suspense } from "react";
 import Loading from "@/app/loading";

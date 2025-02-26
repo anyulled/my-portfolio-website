@@ -4,7 +4,8 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import models, { Model } from "@/data/models";
 import { Metadata } from "next";
 import { createFlickr } from "flickr-sdk";
-import { getFlickrPhotos, Photo } from "@/services/flickr";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
+import { Photo } from "@/services/flickr/flickr.types";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
