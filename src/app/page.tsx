@@ -19,7 +19,7 @@ export default async function HomePage() {
   const res = await getFlickrPhotos(
     flickr,
     "model, boudoir, -cover, woman",
-    12,
+    15,
     false,
     true,
   );

@@ -64,7 +64,7 @@ const updatePhotoCache = async (
   photos: Array<PhotoFlickr>,
 ): Promise<void> => {
   try {
-    console.info(chalk.blue.bold("Update cache with Flickr data."));
+    console.info(chalk.blue.bold("Updating cache with Flickr data."));
     await setCachedData(tags, photos, CACHE_EXPIRY);
     console.info(chalk.green.bold("Updated cache with Flickr data."));
   } catch (error) {
@@ -212,7 +212,6 @@ export async function getFlickrPhotos(
 
   const flickrPhotos = await fetchFlickrPhotos(flickr, tags);
 
-  // If we got photos from Flickr, update the cache
   if (flickrPhotos) {
     await updatePhotoCache(tags, flickrPhotos);
   }
