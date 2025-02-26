@@ -19,9 +19,9 @@ import {
 } from "@radix-ui/react-select";
 
 type Props = {
-  defaultValue: string;
-  items: Array<{ value: string; label: string }>;
-  label: string;
+  readonly defaultValue: string;
+  readonly items: Array<{ value: string; label: string }>;
+  readonly label: string;
 };
 
 export default function LocaleSwitcherSelect({
