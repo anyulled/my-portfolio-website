@@ -17,11 +17,12 @@ export default function renderNextImage(
         <Image
           fill
           src={photo}
+          className={"rounded-lg"}
           unoptimized
           alt={alt}
           title={title}
           sizes={sizes}
-          placeholder={"blurDataURL" in photo ? "blur" : undefined}
+          placeholder="blur"
           blurDataURL={photo.srcSet[0].src}
         />
       )}

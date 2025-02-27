@@ -53,7 +53,7 @@ export default function LocaleSwitcherSelect({
           )}
         >
           <SelectIcon>
-            <LanguageIcon className="h-6 w-6 dark:text-white text-neutral-800 accent-neutral-700 transition-colors group-hover:text-neutral-900" />
+            <LanguageIcon className="h-6 w-6 dark:text-mocha-mousse-100 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900" />
           </SelectIcon>
         </SelectTrigger>
         <SelectPortal>
@@ -74,7 +74,7 @@ export default function LocaleSwitcherSelect({
                       <CheckIcon className="h-5 w-5 text-neutral-800" />
                     )}
                   </div>
-                  <span className="dark:text-neutral-400 text-neutral-900">
+                  <span className="dark:text-mocha-mousse-100 text-mocha-mousse-600">
                     {item.label}
                   </span>
                 </SelectItem>

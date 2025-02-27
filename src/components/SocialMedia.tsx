@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { Camera, Instagram, LayoutPanelTop, Twitter, User } from "lucide-react";
+import {
+  Bird,
+  Camera,
+  Instagram,
+  LayoutPanelTop,
+  Twitter,
+  User,
+} from "lucide-react";
 import { Aref_Ruqaa } from "next/font/google";
 
 import {
@@ -22,6 +29,11 @@ const socialLinks = [
   { name: "Flickr", icon: Camera, url: "https://flickr.com/people/anyulled" },
   { name: "Kavyar", icon: LayoutPanelTop, url: "https://kavyar.com/anyulled" },
   { name: "Model Mayhem", icon: User, url: "https://modelmayhem.com/anyulled" },
+  {
+    name: "Bluesky",
+    icon: Bird,
+    url: "https://bsky.app/profile/sensuelle-boudoir.bsky.social",
+  },
 ];
 
 export default function SocialMedia() {
@@ -41,7 +53,7 @@ export default function SocialMedia() {
                 <TooltipTrigger asChild>
                   <Link
                     href={social.url}
-                    className="text-2xl text-peach-fuzz-600 dark:text-peach-fuzz-100 hover:text-peach-fuzz-800 transition-colors"
+                    className="text-2xl text-mocha-mousse-600 dark:text-mocha-mousse-100 hover:text-mocha-mousse-800 transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
