@@ -1,25 +1,14 @@
 "use client";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { useScroll } from "@/contexts/ScrollContext";
 import React from "react";
-import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export default function Hero() {
-  const { scrollY } = useScroll();
-  const { theme } = useTheme();
   const t = useTranslations("home");
 
-  const gradient = React.useMemo(() => {
-    if (theme === "dark") {
-      return "linear-gradient(to bottom, rgba(255,255,255,0.1) 75%, rgba(25,24,29,1) 98%)";
-    } else {
-      return "linear-gradient(to bottom, rgba(200,200,200,0.1) 82%, rgba(255,255,255,1) 98%)";
-    }
-  }, [theme]);
   const randomImage = React.useMemo(() => {
     const images = [
       "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg",
@@ -33,18 +22,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div
-        className="absolute"
-        style={{
-          background: gradient,
-          zIndex: 9,
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        &nbsp;
-      </div>
+    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-mocha-mousse-50 dark:bg-mocha-mousse-900 text-mocha-mousse-900 dark:text-mocha-mousse-50">
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -52,17 +30,17 @@ export default function Hero() {
           backgroundAttachment: "fixed",
           backgroundPosition: "center",
           backgroundSize: "cover",
-          transform: `translateY(${scrollY * 0.5}px)`,
+          mask: "linear-gradient(to bottom, black 66%, transparent 90%)",
         }}
       />
       <div className="relative z-10 text-center">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-peach-fuzz-500 dark:text-white text-shadow-default shadow-peach-fuzz-800 dark:shadow-peach-fuzz-300`}
+          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-mocha-mousse-900 shadow-mocha-mousse-100 dark:shadow-mocha-mousse-200 dark:text-white text-shadow-default`}
         >
           Sensuelle Boudoir
         </h1>
         <p
-          className={`${arefRuqaa.className} text-2xl md:text-3xl text-peach-fuzz-600 dark:text-peach-fuzz-200 text-shadow-sm shadow-peach-fuzz-800 dark:shadow-peach-fuzz-300`}
+          className={`${arefRuqaa.className} text-2xl md:text-3xl text-neutral-300 shadow-mocha-mousse-800 dark:text-neutral-200 dark:shadow-mocha-mousse-300 text-shadow-sm`}
         >
           {t("capture_your_essence")}
         </p>

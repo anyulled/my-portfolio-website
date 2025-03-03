@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, Moon, Search, Sun } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import { useScroll } from "@/contexts/ScrollContext";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
@@ -16,15 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
-import modelData from "@/data/models";
-import { styles } from "@/data/styles";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+
 import { NavLinks } from "@/components/NavLinks";
 import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
@@ -34,6 +26,7 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
   { name: "menu_what_is_boudoir", href: "/what-is-boudoir" },
   { name: "menu_about", href: "/about" },
+  { name: "menu_testimonials", href: "/testimonials" },
 ];
 
 export default function NavBar() {
@@ -45,19 +38,9 @@ export default function NavBar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
-  const [searchTerm, setSearchTerm] = useState<string>("");
   //endregion
 
   const t = useTranslations();
-  const modelLinks = modelData.map((model) => ({
-    ...model,
-    name: model.name,
-  }));
-  const filteredModels = useMemo(() => {
-    return modelLinks.filter((model) =>
-      model.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-  }, [searchTerm, modelLinks]);
 
   useEffect(() => {
     setMounted(true);
@@ -83,16 +66,6 @@ export default function NavBar() {
     setIsOpen(false);
   };
 
-  const handleModelClick = (modelName: string) => {
-    gaEventTracker("model_link_click", modelName);
-    setIsOpen(false);
-  };
-
-  const handleStyleClick = (styleName: string) => {
-    gaEventTracker("style_link_click", styleName);
-    setIsOpen(false);
-  };
-
   const handleBookNow = () => {
     gaEventTracker("book_now_click", "navbar");
     router.push("/#book-session");
@@ -106,83 +79,38 @@ export default function NavBar() {
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         <Link
           href="/"
-          className={`${dancingScript.className} text-3xl ${pathname !== "/" ? "text-peach-fuzz-400" : ""}`}
+          className={`dark:text-mocha-mousse-50 text-mocha-mousse-200 ${dancingScript.className} text-3xl ${pathname !== "/" ? "text-mocha-mousse-400" : ""}`}
         >
           Sensuelle Boudoir
         </Link>
         <div className="flex items-center space-x-4">
           <LocaleSwitcher />
           <Button
+            className="!ml-0"
             variant="ghost"
             size="icon"
             onClick={handleThemeChange}
             aria-label={t("nav_bar.toggle_theme")}
           >
             {theme === "dark" ? (
-              <Sun className="h-6 w-6 text-neutral-300" />
+              <Sun className="h-6 w-6 text-mocha-mousse-50" />
             ) : (
-              <Moon className="h-6 w-6 text-neutral-800" />
+              <Moon className="h-6 w-6 text-mocha-mousse-900" />
             )}
           </Button>
           <div className="hidden md:flex space-x-4 items-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
-                {t("nav_bar.models")} <ChevronDown className="ml-1 h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64">
-                <div className="p-2">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="search"
-                      placeholder={t("nav_bar.search_models")}
-                      className="pl-8"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="max-h-[60vh] overflow-y-auto">
-                  {filteredModels.map((model) => (
-                    <DropdownMenuItem key={model.tag} asChild>
-                      <Link
-                        href={`/models/${model.tag}`}
-                        onClick={() => handleModelClick(model.name)}
-                      >
-                        {model.name}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-sm font-medium hover:text-primary transition-colors dark:text-white text-neutral-800">
-                {t("nav_bar.styles")} <ChevronDown className="ml-1 h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
-                {styles.map((style) => (
-                  <DropdownMenuItem key={style.tag} asChild>
-                    <Link
-                      href={`/styles/${style.tag}`}
-                      onClick={() => handleStyleClick(style.name)}
-                    >
-                      {/* @ts-expect-error i18n issues */}
-                      {t(`styles.${style.name}`)}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
             <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
           </div>
-          <Button onClick={handleBookNow} className="hidden md:inline-flex">
+          <Button
+            onClick={handleBookNow}
+            className="hidden md:inline-flex bg-mocha-mousse-400 dark:bg-mocha-mousse-700 text-mocha-mousse-50 dark:text-mocha-mousse-100"
+          >
             {t("nav_bar.book_now")}
           </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6 dark:text-white text-neutral-800" />
+                <Menu className="h-6 w-6 dark:text-mocha-mousse-50 text-neutral-800" />
                 <span className="sr-only">{t("nav_bar.open_menu")}</span>
               </Button>
             </SheetTrigger>
@@ -196,59 +124,11 @@ export default function NavBar() {
                 </SheetDescription>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-4">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
-                    {t("nav_bar.models")}{" "}
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-64">
-                    <div className="p-2">
-                      <div className="relative">
-                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          type="search"
-                          placeholder={t("nav_bar.search_models")}
-                          className="pl-8"
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="max-h-[60vh] overflow-y-auto">
-                      {filteredModels.map((model) => (
-                        <DropdownMenuItem key={model.tag} asChild>
-                          <Link
-                            href={`/models/${model.tag}`}
-                            onClick={() => handleModelClick(model.name)}
-                          >
-                            {model.name}
-                          </Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </div>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center justify-between text-sm font-medium hover:text-primary transition-colors ">
-                    {t("nav_bar.styles")}{" "}
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="max-h-[60vh] overflow-y-auto">
-                    {styles.map((style) => (
-                      <DropdownMenuItem key={style.tag} asChild>
-                        <Link
-                          href={`/styles/${style.tag}`}
-                          onClick={() => handleStyleClick(style.name)}
-                        >
-                          {/* @ts-expect-error i18n issues */}
-                          {t(`styles.${style.name}`)}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
                 <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
-                <Button onClick={handleBookNow} className="mt-4">
+                <Button
+                  onClick={handleBookNow}
+                  className="mt-4 bg-mocha-mousse-400 dark:bg-mocha-mousse-700"
+                >
                   {t("nav_bar.book_now")}
                 </Button>
               </div>

@@ -143,7 +143,7 @@ export default async function PricingPage() {
           {t("discover_our_experiences")}
         </h2>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-2">
           {packages.map((pkg) => (
             <div
               key={pkg.name.replaceAll(" ", "-")}
@@ -165,7 +165,7 @@ export default async function PricingPage() {
                     {pkg.name}
                   </h2>
                   <p
-                    className={`${dancingScript.className} text-4xl md:text-5xl text-peach-fuzz-200`}
+                    className={`${dancingScript.className} text-4xl md:text-5xl text-mocha-mousse-200`}
                   >
                     {pkg.price}
                   </p>
@@ -178,7 +178,7 @@ export default async function PricingPage() {
                       key={pkg.name.replaceAll(" ", "-").concat(feature.text)}
                       className="flex items-center ml-4"
                     >
-                      <span className="mr-2 text-peach-fuzz-500">
+                      <span className="mr-2 text-mocha-mousse-500">
                         {feature.icon}
                       </span>
                       <span>{feature.text}</span>
@@ -188,7 +188,7 @@ export default async function PricingPage() {
 
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="w-full bg-peach-fuzz-600 hover:bg-peach-fuzz-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    <Button className="w-full bg-mocha-mousse-600 hover:bg-mocha-mousse-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                       {t("book_now")}
                     </Button>
                   </DialogTrigger>

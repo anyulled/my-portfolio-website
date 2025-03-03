@@ -69,7 +69,7 @@ export default async function StylePage({ params }: Readonly<Props>) {
   const result = await getFlickrPhotos(
     flickr,
     convertedStyleName,
-    48,
+    36,
     false,
     true,
   );

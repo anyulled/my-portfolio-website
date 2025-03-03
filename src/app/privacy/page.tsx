@@ -7,9 +7,7 @@ export const metadata: Metadata = {
 };
 export default function PrivacyPage() {
   return (
-    <div
-      className={`min-h-screen dark:from-zinc-900 dark:to-zinc-800 bg-gradient-to-b from-neutral-400 to-neutral-50 pt-20`}
-    >
+    <div className={`min-h-screen pt-20`}>
       <div className="container max-w-7xl mx-auto px-4 py-8">
         <h1
           className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mt-12 mb-8`}

@@ -98,31 +98,39 @@ body {
     }
 
     h1{
-        @apply text-3xl sm:text-4xl font-bold text-peach-fuzz-500 dark:text-peach-fuzz-500;
+        @apply text-3xl sm:text-4xl font-bold text-mocha-mousse-500 dark:text-mocha-mousse-500;
     }
 
     h2 {
-        @apply text-xl sm:text-2xl font-bold text-peach-fuzz-400 dark:text-peach-fuzz-400;
+        @apply text-xl sm:text-2xl font-bold text-mocha-mousse-400 dark:text-mocha-mousse-400;
     }
 
     h3 {
-        @apply text-lg sm:text-xl font-bold text-peach-fuzz-300 dark:text-peach-fuzz-300;
+        @apply text-lg sm:text-xl font-bold text-mocha-mousse-300 dark:text-mocha-mousse-300;
     }
 
     ul {
-        @apply text-gray-800 dark:text-neutral-300;
+        @apply text-mocha-mousse-800 dark:text-mocha-mousse-100;
     }
 
     li {
-        @apply list-disc marker:text-peach-fuzz-800 ml-5;
+        @apply list-disc marker:text-mocha-mousse-800 ml-5;
     }
 
     p {
-        @apply my-2 text-gray-800 dark:text-neutral-300;
+        @apply my-2 text-mocha-mousse-800 dark:text-mocha-mousse-300;
+    }
+
+    strong {
+        @apply my-2 text-darkBrown dark:text-darkBrown;
+    }
+
+    a {
+        @apply text-mocha-mousse-900 hover:text-mocha-mousse-600 dark:text-mocha-mousse-500 dark:hover:text-mocha-mousse-800 transition-colors;
     }
 
     input, textarea {
-        @apply text-peach-fuzz-900 dark:text-peach-fuzz-900 placeholder:text-peach-fuzz-800 dark:placeholder:text-peach-fuzz-800;
+        @apply text-mocha-mousse-900 dark:text-mocha-mousse-900 placeholder:text-mocha-mousse-800 dark:placeholder:text-mocha-mousse-800;
     }
 
     img {
