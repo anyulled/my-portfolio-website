@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npm run check-i18n && next build",
     "check-i18n": "npx tsx src/app/messagesChecker.ts",
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
     "lint": "next lint",
     "prepare": "husky",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
