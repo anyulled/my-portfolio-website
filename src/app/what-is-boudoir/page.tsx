@@ -102,7 +102,7 @@ export default async function BoudoirStylePage() {
             <li>{t("l4")}.</li>
             <li>{t("l5")}.</li>
           </ul>
-          <Card className={"bg-mocha-mousse-200 dark:bg-mocha-mousse-800"}>
+          <Card className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-900"}>
             <CardContent>
               <Suspense fallback={<Loading />}>
                 <Gallery photos={randomPhotos} showTitle={false} />
