@@ -156,7 +156,11 @@ export default async function BioPage() {
         </h2>
 
         <div className="grid md:grid-cols-3 gap-2">
-          <Card className="overflow-hidden">
+          <Card
+            className={
+              "bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
+            }
+          >
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
@@ -173,7 +177,11 @@ export default async function BioPage() {
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden">
+          <Card
+            className={
+              "bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
+            }
+          >
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
@@ -190,7 +198,11 @@ export default async function BioPage() {
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden">
+          <Card
+            className={
+              "bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
+            }
+          >
             <CardContent className="p-2">
               <Image
                 src="https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
@@ -208,7 +220,11 @@ export default async function BioPage() {
           </Card>
         </div>
 
-        <Card className="my-12">
+        <Card
+          className={
+            "my-1 bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
+          }
+        >
           <CardContent className="p-6">
             <h2
               className={`${dancingScript.className} text-3xl mb-4 text-center`}
