@@ -73,7 +73,7 @@ export default function ContactForm() {
           <Button
             disabled={sendingForm}
             type="submit"
-            className="w-full bg-mocha-mousse-500 dark:bg-mocha-mousse-500"
+            className="w-full text-bold bg-mocha-mousse-400 text-mocha-mousse-50"
           >
             {t("send_message")}
           </Button>

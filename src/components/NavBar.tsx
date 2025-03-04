@@ -47,6 +47,7 @@ export default function NavBar() {
     if (!theme) {
       setTheme("light");
     }
+    console.log(chalk.cyan(`Current theme: ${theme}`));
   }, [setTheme, theme]);
 
   if (!mounted) {
@@ -55,7 +56,7 @@ export default function NavBar() {
 
   //region Handlers
   const handleThemeChange = () => {
-    console.log(chalk.red(`Theme change: ${theme}`));
+    console.log(chalk.cyan(`Theme change: ${theme}`));
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     gaEventTracker("theme_change", newTheme);
@@ -93,9 +94,9 @@ export default function NavBar() {
             aria-label={t("nav_bar.toggle_theme")}
           >
             {theme === "dark" ? (
-              <Sun className="h-6 w-6 text-mocha-mousse-50" />
+              <Sun className="h-6 w-6" />
             ) : (
-              <Moon className="h-6 w-6 text-mocha-mousse-900" />
+              <Moon className="h-6 w-6" />
             )}
           </Button>
           <div className="hidden md:flex space-x-4 items-center">
@@ -103,7 +104,7 @@ export default function NavBar() {
           </div>
           <Button
             onClick={handleBookNow}
-            className="hidden md:inline-flex bg-mocha-mousse-400 dark:bg-mocha-mousse-700 text-mocha-mousse-50 dark:text-mocha-mousse-100"
+            className="hidden md:inline-flex bg-mocha-mousse-400 text-mocha-mousse-50"
           >
             {t("nav_bar.book_now")}
           </Button>
