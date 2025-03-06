@@ -12,23 +12,23 @@ const images = [
   },
   {
     image: "https://live.staticflickr.com/65535/53564630658_b2aeab68f2_h.jpg",
-    position: "left top",
+    position: "37% top",
   },
   {
     image: "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
-    position: "left top",
+    position: "25% top",
   },
   {
     image: "https://live.staticflickr.com/65535/53923428207_dc41871f93_h.jpg",
-    position: "left top",
+    position: "25% top",
   },
   {
     image: "https://live.staticflickr.com/65535/53564630648_06aa8a167d_h.jpg",
-    position: "center top",
+    position: "37% top",
   },
   {
     image: "https://live.staticflickr.com/65535/53963952034_7372534fc0_h.jpg",
-    position: "right top",
+    position: "75% top",
   },
 ];
 
