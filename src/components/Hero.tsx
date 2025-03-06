@@ -5,6 +5,32 @@ import { useTranslations } from "next-intl";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
+const images = [
+  {
+    image: "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg",
+    position: "left top",
+  },
+  {
+    image: "https://live.staticflickr.com/65535/53564630658_b2aeab68f2_h.jpg",
+    position: "left top",
+  },
+  {
+    image: "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
+    position: "left top",
+  },
+  {
+    image: "https://live.staticflickr.com/65535/53923428207_dc41871f93_h.jpg",
+    position: "left top",
+  },
+  {
+    image: "https://live.staticflickr.com/65535/53564630648_06aa8a167d_h.jpg",
+    position: "center top",
+  },
+  {
+    image: "https://live.staticflickr.com/65535/53963952034_7372534fc0_h.jpg",
+    position: "right top",
+  },
+];
 
 export default function Hero() {
   const t = useTranslations("home");
@@ -15,38 +41,6 @@ export default function Hero() {
   }, []);
 
   const randomImage = React.useMemo(() => {
-    const images = [
-      {
-        image:
-          "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg",
-        position: "left top",
-      },
-      {
-        image:
-          "https://live.staticflickr.com/65535/53564630658_b2aeab68f2_h.jpg",
-        position: "left top",
-      },
-      {
-        image:
-          "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
-        position: "left top",
-      },
-      {
-        image:
-          "https://live.staticflickr.com/65535/53923428207_dc41871f93_h.jpg",
-        position: "left top",
-      },
-      {
-        image:
-          "https://live.staticflickr.com/65535/53564630648_06aa8a167d_h.jpg",
-        position: "center top",
-      },
-      {
-        image:
-          "https://live.staticflickr.com/65535/53963952034_7372534fc0_h.jpg",
-        position: "right top",
-      },
-    ];
     return images[Math.floor(Math.random() * images.length)];
   }, []);
 
