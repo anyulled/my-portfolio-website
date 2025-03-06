@@ -48,18 +48,18 @@ export default function LocaleSwitcherSelect({
         <SelectTrigger
           aria-label={label}
           className={clsx(
-            "rounded-sm p-2 transition-colors border-none",
+            "rounded-sm p-2 transition-colors border-none bg-mocha-mousse-50 dark:bg-mocha-mousse-900",
             isPending && "pointer-events-none opacity-60",
           )}
         >
           <SelectIcon>
-            <LanguageIcon className="h-6 w-6 dark:text-mocha-mousse-100 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900" />
+            <LanguageIcon className="h-6 w-6 dark:text-mocha-mousse-100 dark:bg-mocha-mousse-900 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900" />
           </SelectIcon>
         </SelectTrigger>
         <SelectPortal>
           <SelectContent
             align="end"
-            className="min-w-[8rem] overflow-hidden rounded-sm bg-white dark:bg-neutral-800 py-1 shadow-md"
+            className="min-w-[8rem] overflow-hidden rounded-sm py-1 shadow-md"
             position="popper"
           >
             <SelectViewport>

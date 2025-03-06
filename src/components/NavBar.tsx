@@ -26,7 +26,7 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
   { name: "menu_what_is_boudoir", href: "/what-is-boudoir" },
   { name: "menu_about", href: "/about" },
-  { name: "menu_testimonials", href: "/testimonials" },
+  //{ name: "menu_testimonials", href: "/testimonials" },
 ];
 
 export default function NavBar() {
@@ -87,7 +87,7 @@ export default function NavBar() {
         <div className="flex items-center space-x-4">
           <LocaleSwitcher />
           <Button
-            className="!ml-0"
+            className="!ml-0 bg-mocha-mousse-50 text-mocha-mousse-500 dark:bg-mocha-mousse-900"
             variant="ghost"
             size="icon"
             onClick={handleThemeChange}
