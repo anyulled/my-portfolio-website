@@ -17,6 +17,7 @@ import {
   SelectPortal,
   SelectViewport,
 } from "@radix-ui/react-select";
+import { usePathname } from "next/navigation";
 
 type Props = {
   readonly defaultValue: string;
@@ -30,6 +31,7 @@ export default function LocaleSwitcherSelect({
   label,
 }: Props) {
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
 
   function onChange(value: string) {
     const locale = value as Locale;
@@ -50,6 +52,7 @@ export default function LocaleSwitcherSelect({
           className={clsx(
             "rounded-sm p-2 transition-colors border-none bg-mocha-mousse-50 dark:bg-mocha-mousse-900",
             isPending && "pointer-events-none opacity-60",
+            pathname === "/" && "!bg-transparent",
           )}
         >
           <SelectIcon>

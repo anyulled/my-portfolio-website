@@ -21,6 +21,7 @@ import { NavLinks } from "@/components/NavLinks";
 import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import chalk from "chalk";
+import clsx from "clsx";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
@@ -80,14 +81,20 @@ export default function NavBar() {
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         <Link
           href="/"
-          className={`dark:text-mocha-mousse-50 text-mocha-mousse-200 ${dancingScript.className} text-3xl ${pathname !== "/" ? "text-mocha-mousse-400" : ""}`}
+          className={clsx(
+            `dark:text-mocha-mousse-50 text-mocha-mousse-200 ${dancingScript.className} text-3xl`,
+            pathname !== "/" && "text-mocha-mousse-400",
+          )}
         >
           Sensuelle Boudoir
         </Link>
         <div className="flex items-center space-x-4">
           <LocaleSwitcher />
           <Button
-            className="!ml-0 bg-mocha-mousse-50 text-mocha-mousse-500 dark:bg-mocha-mousse-900"
+            className={clsx(
+              "!ml-0 bg-mocha-mousse-50 text-mocha-mousse-500 dark:bg-mocha-mousse-900",
+              pathname === "/" && "!bg-transparent",
+            )}
             variant="ghost"
             size="icon"
             onClick={handleThemeChange}
