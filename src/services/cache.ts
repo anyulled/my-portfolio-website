@@ -1,13 +1,7 @@
-import { list, put } from "@vercel/blob";
+import {list, put} from "@vercel/blob";
 import chalk from "chalk";
-import { PhotoFlickr } from "@/services/flickr/flickr.types";
-
-function sanitizeKey(key: string): string {
-  return `${key
-    .replace(/[^a-zA-Z0-9\s-]/g, "")
-    .replace(/\s+/g, "_")
-    .substring(0, 100)}.json`;
-}
+import {PhotoFlickr} from "@/services/flickr/flickr.types";
+import {sanitizeKey} from "@/lib/sanitizer";
 
 export async function getCachedData(
   key: string,
