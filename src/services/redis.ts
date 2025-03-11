@@ -28,7 +28,7 @@ export async function setCachedData(
 ): Promise<void> {
     const redis = Redis.fromEnv();
     const sanitizedKey = sanitizeKey(key);
-    const result = await redis.set(key, JSON.stringify(data));
+    const result = await redis.set(key, JSON.stringify(data), {ex: expiryInSeconds});
     console.log(`Cache Write Success (${sanitizedKey}):`);
     console.log(chalk.cyan("Cache response"), result);
     return;
