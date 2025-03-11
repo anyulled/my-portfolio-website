@@ -8,15 +8,15 @@ export async function getCachedData(
 ): Promise<PhotoFlickr[] | null> {
     const redis = Redis.fromEnv();
     const sanitizedKey = sanitizeKey(key);
-    console.log(chalk.cyan(`Getting Cache for (${sanitizedKey}):`));
-    const data = redis.get<Array<PhotoFlickr>>(key);
+    console.log(chalk.cyan(`- Getting Redis Cache for (${sanitizedKey}):`));
+    const data = await redis.get<Array<PhotoFlickr>>(key);
 
     if (data === null) {
-        console.warn(chalk.red("Cache miss"));
+        console.warn(chalk.red("- Redis Cache miss"));
         return null;
     }
 
-    console.log(chalk.green("Cache hit"));
+    console.log(chalk.green("- Redis Cache hit", data.length));
     return data;
 
 }
@@ -29,7 +29,7 @@ export async function setCachedData(
     const redis = Redis.fromEnv();
     const sanitizedKey = sanitizeKey(key);
     const result = await redis.set(key, JSON.stringify(data), {ex: expiryInSeconds});
-    console.log(`Cache Write Success (${sanitizedKey}):`);
-    console.log(chalk.cyan("Cache response"), result);
+    console.log(`- Redis Cache Write Success (${sanitizedKey}):`);
+    console.log(chalk.cyan("- Redis Cache response"), result);
     return;
 }
