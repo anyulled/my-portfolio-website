@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, LanguagesIcon as LanguageIcon } from "lucide-react";
+import {CheckIcon, LanguagesIcon as LanguageIcon} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -8,16 +8,16 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import clsx from "clsx";
-import { useTransition } from "react";
-import { Locale } from "@/i18n/config";
-import { setUserLocale } from "@/services/locale";
+import {useTransition} from "react";
+import {Locale} from "@/i18n/config";
+import {setUserLocale} from "@/services/locale";
 import {
   SelectArrow,
   SelectIcon,
   SelectPortal,
   SelectViewport,
 } from "@radix-ui/react-select";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 
 type Props = {
   readonly defaultValue: string;
@@ -56,7 +56,8 @@ export default function LocaleSwitcherSelect({
           )}
         >
           <SelectIcon>
-            <LanguageIcon className="h-6 w-6 dark:text-mocha-mousse-100 dark:bg-mocha-mousse-900 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900" />
+            <LanguageIcon
+                className="h-6 w-6 dark:text-mocha-mousse-100 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900"/>
           </SelectIcon>
         </SelectTrigger>
         <SelectPortal>

@@ -1,7 +1,8 @@
 import chalk from "chalk";
-import { API, FetchTransport, Flickr } from "flickr-sdk";
+import {API, FetchTransport, Flickr} from "flickr-sdk";
 
-import { getCachedData, setCachedData } from "@/services/cache";
+//import { getCachedData, setCachedData } from "@/services/cache";
+import {getCachedData, setCachedData} from "@/services/redis";
 import * as Sentry from "@sentry/nextjs";
 import {
   FlickrResponse,
