@@ -1,12 +1,12 @@
 import Image from "next/image";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { Card, CardContent } from "@/components/ui/card";
+import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
+import {Card, CardContent} from "@/components/ui/card";
 import Link from "next/link";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
-import { Metadata } from "next";
-import { openGraph } from "@/lib/openGraph";
-import { getTranslations } from "next-intl/server";
-import { createFlickr } from "flickr-sdk";
+import {getFlickrPhotos} from "@/services/flickr/flickr";
+import {Metadata} from "next";
+import {openGraph} from "@/lib/openGraph";
+import {getTranslations} from "next-intl/server";
+import {createFlickr} from "flickr-sdk";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -40,7 +40,7 @@ export default async function BioPage() {
   const t = await getTranslations("about");
 
   return (
-    <div className={`min-h-screen pt-20`}>
+      <div className="min-h-screen pt-20">
       <div className="container max-w-7xl mx-auto px-4">
         <h1
           className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mb-8`}
@@ -157,9 +157,7 @@ export default async function BioPage() {
 
         <div className="grid md:grid-cols-3 gap-2">
           <Card
-            className={
-              "bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
-            }
+              className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0"
           >
             <CardContent className="p-2">
               <Image
@@ -169,7 +167,7 @@ export default async function BioPage() {
                 alt="Peter Coulson, Jon Hernandez, Anyul Rivas"
                 width={500}
                 height={300}
-                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-transform duration-300 ease-in-out hover:rotate-1"
+                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
               />
               <p className={`${arefRuqaa.className} text-base text-center`}>
                 {t("collab_peter_coulson")}
@@ -178,9 +176,7 @@ export default async function BioPage() {
           </Card>
 
           <Card
-            className={
-              "bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
-            }
+              className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0"
           >
             <CardContent className="p-2">
               <Image
@@ -190,7 +186,7 @@ export default async function BioPage() {
                 alt="Antonio Garci, Chema Photo, Anyul Rivas"
                 width={500}
                 height={300}
-                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-transform duration-300 ease-in-out hover:rotate-1"
+                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
               />
               <p className={`${arefRuqaa.className} text-base text-center`}>
                 {t("collab_garci")}
@@ -199,9 +195,7 @@ export default async function BioPage() {
           </Card>
 
           <Card
-            className={
-              "bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
-            }
+              className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden  border-0"
           >
             <CardContent className="p-2">
               <Image
@@ -211,10 +205,28 @@ export default async function BioPage() {
                 alt="Rubén Suárez, Anyul Rivas"
                 width={500}
                 height={300}
-                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-transform duration-300 ease-in-out hover:rotate-1"
+                className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
               />
               <p className={`${arefRuqaa.className} text-base text-center`}>
                 {t("collab_ruben_suarez")}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card
+              className="my-1 bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden  border-0">
+            <CardContent className="p-2">
+              <Image
+                  src="https://live.staticflickr.com/65535/54396567099_28021d76b8_z.jpg"
+                  blurDataURL="https://live.staticflickr.com/65535/54396567099_28021d76b8_w_d.jpg"
+                  placeholder="blur"
+                  alt="Dan Hecho, Anyul Rivas"
+                  width={500}
+                  height={300}
+                  className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
+              />
+              <p className={`${arefRuqaa.className} text-base text-center`}>
+                {t("collab_dan_hecho")}
               </p>
             </CardContent>
           </Card>
@@ -222,7 +234,7 @@ export default async function BioPage() {
 
         <Card
           className={
-            "my-1 bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden"
+            "my-1 bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden border-0"
           }
         >
           <CardContent className="p-6">
@@ -234,6 +246,7 @@ export default async function BioPage() {
             <p className="text-center ">{t("create_paragraph")}</p>
           </CardContent>
         </Card>
+
       </div>
     </div>
   );
