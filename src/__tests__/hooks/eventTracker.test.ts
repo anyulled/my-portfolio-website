@@ -1,6 +1,8 @@
 import {renderHook} from '@testing-library/react';
 import useAnalyticsEventTracker from '@/hooks/eventTracker';
 import * as gtag from '@/lib/gtag';
+// Import test utilities
+import {commonBeforeEach} from '@/__tests__/utils/testUtils';
 
 // Mock the gtag module
 jest.mock('@/lib/gtag', () => ({
@@ -9,7 +11,7 @@ jest.mock('@/lib/gtag', () => ({
 
 describe('useAnalyticsEventTracker', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+      commonBeforeEach();
     });
 
     it('should return a function', () => {

@@ -1,5 +1,7 @@
 import {sendEMail} from '@/services/mailer';
 import nodemailer from 'nodemailer';
+// Import test utilities
+import {commonAfterEach, commonBeforeEach} from '@/__tests__/utils/testUtils';
 
 // Mock nodemailer
 jest.mock('nodemailer', () => {
@@ -12,7 +14,7 @@ jest.mock('nodemailer', () => {
     };
 
     // Create a mock for createTransport that returns the mock transporter
-    const mockCreateTransport = jest.fn().mockImplementation((config) => {
+    const mockCreateTransport = jest.fn().mockImplementation(() => {
         return mockTransporter;
     });
 
@@ -25,11 +27,8 @@ jest.mock('nodemailer', () => {
 const originalEnv = process.env;
 
 describe('Mailer Service', () => {
-    // Mock console.error
-    const originalConsoleError = console.error;
-
     beforeEach(() => {
-        jest.clearAllMocks();
+        commonBeforeEach();
 
         // Mock environment variables
         process.env = {
@@ -37,17 +36,13 @@ describe('Mailer Service', () => {
             EMAIL_USER: 'test@example.com',
             EMAIL_PASS: 'password123',
         };
-
-        // Mock console.error to prevent noise in test output
-        console.error = jest.fn();
     });
 
     afterEach(() => {
+        commonAfterEach();
+
         // Restore environment variables
         process.env = originalEnv;
-
-        // Restore console.error
-        console.error = originalConsoleError;
     });
 
     describe('sendEMail', () => {

@@ -1,6 +1,11 @@
 import {getCachedData, setCachedData} from '@/services/cache';
 import {list, put} from '@vercel/blob';
-import {PhotoFlickr} from '@/services/flickr/flickr.types';
+// Import test utilities
+import {
+    commonAfterEach,
+    commonBeforeEach,
+    mockPhotoFlickr
+} from '@/__tests__/utils/testUtils';
 
 // Mock the @vercel/blob module
 jest.mock('@vercel/blob', () => ({
@@ -13,60 +18,13 @@ jest.mock('@/lib/sanitizer', () => ({
     sanitizeKey: jest.fn((key) => `sanitized-${key}`),
 }));
 
-// Mock console methods
-const originalConsoleLog = console.log;
-const originalConsoleWarn = console.warn;
-
 describe('Cache Service', () => {
-    const mockPhotoFlickr: PhotoFlickr[] = [
-        {
-            id: 123,
-            title: 'Test Photo',
-            description: {_content: 'Test Description'},
-            datetaken: '2023-01-01 12:00:00',
-            dateupload: '1672531200',
-            tags: 'test',
-            views: '100',
-            url_s: 'http://example.com/small.jpg',
-            url_m: 'http://example.com/medium.jpg',
-            url_n: 'http://example.com/normal.jpg',
-            url_l: 'http://example.com/large.jpg',
-            url_o: 'http://example.com/original.jpg',
-            url_t: 'http://example.com/thumbnail.jpg',
-            url_z: 'http://example.com/zoom.jpg',
-            url_c: 'http://example.com/crop.jpg',
-            width_s: '240',
-            width_m: '500',
-            width_n: '320',
-            width_l: '1024',
-            width_o: '2048',
-            width_t: '100',
-            width_z: '640',
-            width_c: '800',
-            height_s: '180',
-            height_m: '375',
-            height_n: '240',
-            height_l: '768',
-            height_o: '1536',
-            height_t: '75',
-            height_z: '480',
-            height_c: '600',
-        },
-    ];
-
     beforeEach(() => {
-        // Clear all mocks
-        jest.clearAllMocks();
-
-        // Mock console methods to prevent noise in test output
-        console.log = jest.fn();
-        console.warn = jest.fn();
+        commonBeforeEach();
     });
 
     afterEach(() => {
-        // Restore console methods
-        console.log = originalConsoleLog;
-        console.warn = originalConsoleWarn;
+        commonAfterEach();
     });
 
     describe('getCachedData', () => {
