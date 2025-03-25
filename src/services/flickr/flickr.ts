@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import {API, FetchTransport, Flickr} from "flickr-sdk";
 
-//import { getCachedData, setCachedData } from "@/services/cache";
 import {getCachedData, setCachedData} from "@/services/redis";
 import * as Sentry from "@sentry/nextjs";
 import {
@@ -26,7 +25,7 @@ const createFlickrConfig = (tags: string): API["flickr.photos.search"][0] => {
   };
 };
 
-export const fetchTransport = new FetchTransport({
+export const fetchTransport: FetchTransport = new FetchTransport({
   headers: {
     next: "{ revalidate: 10 }",
   },
