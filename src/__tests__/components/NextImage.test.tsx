@@ -45,8 +45,9 @@ describe('renderNextImage', () => {
         // Assert
         const image = screen.getByAltText('Test image');
         expect(image).toBeInTheDocument();
-        expect(image).toHaveAttribute('title', 'Test title');
-        expect(image).toHaveAttribute('sizes', '(max-width: 768px) 100vw, 50vw');
+        expect(image).toHaveAttribute('title', props.title);
+        expect(image).toHaveAttribute('sizes', props.sizes);
+        expect(image).toHaveAttribute('src', props.src);
     });
 
     // Test case: Component doesn't render Image when photo.srcSet is missing
@@ -148,6 +149,7 @@ describe('renderNextImage', () => {
         // Assert
         const image = screen.getByAltText('Test image');
         expect(image).toHaveAttribute('placeholder', 'blur');
+        expect(image).toHaveAttribute('src', props.src);
         expect(image).toHaveAttribute('blurDataURL', 'test-image-small.jpg');
     });
 });

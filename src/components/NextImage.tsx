@@ -16,7 +16,7 @@ export default function renderNextImage(
       {photo.srcSet && (
         <Image
           fill
-          src={photo}
+          src={photo.src}
           className={"rounded-lg"}
           unoptimized
           alt={alt}
