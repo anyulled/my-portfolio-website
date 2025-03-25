@@ -198,6 +198,29 @@ export const processFlickrPhotos = (
  * Fetches photos from Flickr based on the provided tags and options.
  * Returns cached photos immediately if available, and updates cache in the background.
  */
+
+/**
+ * Processes and sorts photos from Flickr
+ */
+const processAndSortPhotos = (
+    photosFlickr: Array<PhotoFlickr>,
+    items: number,
+    orderByDate: boolean,
+    orderByViews: boolean,
+): FlickrResponse => {
+  const processedPhotos = processFlickrPhotos(photosFlickr);
+
+  if (processedPhotos.photos) {
+    processedPhotos.photos = sortPhotos(
+        processedPhotos.photos,
+        orderByDate,
+        orderByViews,
+    ).slice(0, items);
+  }
+
+  return processedPhotos;
+};
+
 export async function getFlickrPhotos(
   flickr: Flickr,
   tags: string,
@@ -230,17 +253,7 @@ export async function getFlickrPhotos(
     })();
 
     // Process and return cached photos immediately
-    const processedPhotos = processFlickrPhotos(cachedPhotos);
-
-    if (processedPhotos.photos) {
-      processedPhotos.photos = sortPhotos(
-          processedPhotos.photos,
-          orderByDate,
-          orderByViews,
-      ).slice(0, items);
-    }
-
-    return processedPhotos;
+    return processAndSortPhotos(cachedPhotos, items, orderByDate, orderByViews);
   }
 
   // If no cached data, we need to wait for Flickr API call
@@ -251,17 +264,7 @@ export async function getFlickrPhotos(
     await updatePhotoCache(tags, flickrPhotos);
 
     // Process and return Flickr photos
-    const processedPhotos = processFlickrPhotos(flickrPhotos);
-
-    if (processedPhotos.photos) {
-      processedPhotos.photos = sortPhotos(
-          processedPhotos.photos,
-          orderByDate,
-          orderByViews,
-      ).slice(0, items);
-    }
-
-    return processedPhotos;
+    return processAndSortPhotos(flickrPhotos, items, orderByDate, orderByViews);
   }
 
   // If we reach here, both Flickr API and cache failed
