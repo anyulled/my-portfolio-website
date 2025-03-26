@@ -196,7 +196,31 @@ export const processFlickrPhotos = (
 
 /**
  * Fetches photos from Flickr based on the provided tags and options.
+ * Returns cached photos immediately if available, and updates cache in the background.
  */
+
+/**
+ * Processes and sorts photos from Flickr
+ */
+const processAndSortPhotos = (
+    photosFlickr: Array<PhotoFlickr>,
+    items: number,
+    orderByDate: boolean,
+    orderByViews: boolean,
+): FlickrResponse => {
+  const processedPhotos = processFlickrPhotos(photosFlickr);
+
+  if (processedPhotos.photos) {
+    processedPhotos.photos = sortPhotos(
+        processedPhotos.photos,
+        orderByDate,
+        orderByViews,
+    ).slice(0, items);
+  }
+
+  return processedPhotos;
+};
+
 export async function getFlickrPhotos(
   flickr: Flickr,
   tags: string,
@@ -204,38 +228,49 @@ export async function getFlickrPhotos(
   orderByDate: boolean = false,
   orderByViews: boolean = false,
 ): Promise<FlickrResponse> {
-  console.info(
-    chalk.blue(
-      `Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`,
-    ),
-  );
 
+  const cachedPhotos = await getPhotosFromCache(tags);
+
+  // If we have cached data, trigger Flickr API call in the background and return cached data immediately
+  if (cachedPhotos) {
+    console.info(chalk.blue("Returning cached photos while updating in background."));
+
+    void (async function updateCacheInBackground() {
+      try {
+        console.info(
+            chalk.blue(
+                `Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`,
+            ),
+        );
+        const flickrPhotos = await fetchFlickrPhotos(flickr, tags);
+        if (flickrPhotos) {
+          await updatePhotoCache(tags, flickrPhotos);
+        }
+      } catch (error) {
+        console.error(chalk.red("Background cache update failed:", error));
+        Sentry.captureException(error);
+      }
+    })();
+
+    // Process and return cached photos immediately
+    return processAndSortPhotos(cachedPhotos, items, orderByDate, orderByViews);
+  }
+
+  // If no cached data, we need to wait for Flickr API call
   const flickrPhotos = await fetchFlickrPhotos(flickr, tags);
 
   if (flickrPhotos) {
+    // Update cache with new photos
     await updatePhotoCache(tags, flickrPhotos);
+
+    // Process and return Flickr photos
+    return processAndSortPhotos(flickrPhotos, items, orderByDate, orderByViews);
   }
 
-  const cachedPhotos = !flickrPhotos ? await getPhotosFromCache(tags) : null;
-
-  if (!flickrPhotos && !cachedPhotos) {
-    return createErrorResponse(
-        `Failed to get photos from both Flickr API and cache for tags: ${tags}`,
-    );
-  }
-
-  const photosToProcess = flickrPhotos || cachedPhotos;
-  const processedPhotos = processFlickrPhotos(photosToProcess!);
-
-  if (processedPhotos.photos) {
-    processedPhotos.photos = sortPhotos(
-      processedPhotos.photos,
-      orderByDate,
-      orderByViews,
-    ).slice(0, items);
-  }
-
-  return processedPhotos;
+  // If we reach here, both Flickr API and cache failed
+  return createErrorResponse(
+     `Failed to get photos from both Flickr API and cache for tags: ${tags}`,
+  );
 }
 
 const shouldExcludePhoto = (
