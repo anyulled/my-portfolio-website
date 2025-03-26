@@ -269,7 +269,7 @@ export async function getFlickrPhotos(
 
   // If we reach here, both Flickr API and cache failed
   return createErrorResponse(
-      "Failed to get photos from both Flickr API and cache",
+     `Failed to get photos from both Flickr API and cache for tags: ${tags}`,
   );
 }
 
