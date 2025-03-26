@@ -6,7 +6,7 @@ import {RenderImageContext, RenderImageProps} from 'react-photo-album';
 // Mock the next/image component
 jest.mock('next/image', () => ({
     __esModule: true,
-    default: (props: any) => {
+    default: (props: { alt: string }) => {
         // eslint-disable-next-line @next/next/no-img-element
         return <img {...props} alt={props.alt || ''}/>;
     },

@@ -1,15 +1,15 @@
 import {
-  fetchTransport,
-  getFlickrPhotos,
-  processFlickrPhotos
+    fetchTransport,
+    getFlickrPhotos,
+    processFlickrPhotos
 } from '@/services/flickr/flickr';
 // Import the mocked functions
 import {getCachedData, setCachedData} from '@/services/redis';
 // Import test utilities
 import {
-  commonAfterEach,
-  commonBeforeEach,
-  mockPhotoFlickr
+    commonAfterEach,
+    commonBeforeEach,
+    mockPhotoFlickr
 } from '@/__tests__/utils/testUtils';
 
 // Mock the redis module
@@ -131,7 +131,7 @@ describe('Flickr Service', () => {
             // Check the result
             expect(result.success).toBe(false);
             expect(result.photos).toBeNull();
-            expect(result.reason).toBe('Failed to get photos from both Flickr API and cache');
+            expect(result.reason).toBe('Failed to get photos from both Flickr API and cache for tags: test');
         });
 
         it('should sort photos by date when orderByDate is true', async () => {
