@@ -1,24 +1,17 @@
-import {getCachedData, setCachedData} from '@/services/redis';
 import {Redis} from '@upstash/redis';
+import {getCachedData, setCachedData} from '@/services/redis';
 import {PhotoFlickr} from '@/services/flickr/flickr.types';
+import {sanitizeKey} from '@/lib/sanitizer';
+import {commonAfterEach, commonBeforeEach} from '@/__tests__/utils/testUtils';
 
-// Mock the @upstash/redis module
-jest.mock('@upstash/redis', () => ({
-    Redis: {
-        fromEnv: jest.fn(),
-    },
-}));
-
-// Mock the sanitizeKey function
-jest.mock('@/lib/sanitizer', () => ({
-    sanitizeKey: jest.fn((key) => `sanitized-${key}`),
-}));
-
-// Mock console methods
-const originalConsoleLog = console.log;
-const originalConsoleWarn = console.warn;
+// Mock the dependencies
+jest.mock('@upstash/redis');
+jest.mock('@/lib/sanitizer');
 
 describe('Redis Service', () => {
+    // Mock data
+    const mockKey = 'test-key';
+    const mockSanitizedKey = 'test_key';
     const mockPhotoFlickr: PhotoFlickr[] = [
         {
             id: 123,
@@ -56,103 +49,130 @@ describe('Redis Service', () => {
     ];
 
     // Mock Redis client
-    const mockRedisClient = {
-        get: jest.fn(),
-        set: jest.fn(),
+    const mockRedisGet = jest.fn();
+    const mockRedisSet = jest.fn();
+    const mockRedis = {
+        get: mockRedisGet,
+        set: mockRedisSet,
     };
 
     beforeEach(() => {
-        // Clear all mocks
-        jest.clearAllMocks();
+        commonBeforeEach();
 
-        // Mock Redis.fromEnv to return our mock client
-        (Redis.fromEnv as jest.Mock).mockReturnValue(mockRedisClient);
+        // Reset all mocks
+        jest.resetAllMocks();
 
-        // Mock console methods to prevent noise in test output
-        console.log = jest.fn();
-        console.warn = jest.fn();
+        // Mock Redis.fromEnv to return our mock Redis client
+        (Redis.fromEnv as jest.Mock).mockReturnValue(mockRedis);
+
+        // Mock sanitizeKey to return a predictable value
+        (sanitizeKey as jest.Mock).mockReturnValue(mockSanitizedKey);
     });
 
     afterEach(() => {
-        // Restore console methods
-        console.log = originalConsoleLog;
-        console.warn = originalConsoleWarn;
+        commonAfterEach();
     });
 
     describe('getCachedData', () => {
         it('should return cached data when available', async () => {
-            // Mock Redis get to return data
-            mockRedisClient.get.mockResolvedValue(mockPhotoFlickr);
+            // Mock Redis.get to return data
+            mockRedisGet.mockResolvedValue(mockPhotoFlickr);
 
-            const result = await getCachedData('test-key');
+            // Call the function
+            const result = await getCachedData(mockKey);
 
-            // Check that Redis client was created
+            // Check that Redis.fromEnv was called
             expect(Redis.fromEnv).toHaveBeenCalled();
 
-            // Check that get was called with the correct key
-            expect(mockRedisClient.get).toHaveBeenCalledWith('test-key');
+            // Check that sanitizeKey was called with the correct key
+            expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
+
+            // Check that Redis.get was called with the correct key
+            expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
 
             // Check the result
             expect(result).toEqual(mockPhotoFlickr);
         });
 
-        it('should return null when cache misses', async () => {
-            // Mock Redis get to return null (cache miss)
-            mockRedisClient.get.mockResolvedValue(null);
+        it('should return null when cache is empty', async () => {
+            // Mock Redis.get to return null
+            mockRedisGet.mockResolvedValue(null);
 
-            const result = await getCachedData('test-key');
+            // Call the function
+            const result = await getCachedData(mockKey);
 
-            // Check that Redis client was created
+            // Check that Redis.fromEnv was called
             expect(Redis.fromEnv).toHaveBeenCalled();
 
-            // Check that get was called with the correct key
-            expect(mockRedisClient.get).toHaveBeenCalledWith('test-key');
+            // Check that sanitizeKey was called with the correct key
+            expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
+
+            // Check that Redis.get was called with the correct key
+            expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
 
             // Check the result
             expect(result).toBeNull();
         });
 
-        it('should handle errors gracefully', async () => {
-            // Mock Redis get to throw an error
-            mockRedisClient.get.mockRejectedValue(new Error('Redis error'));
+        it('should handle errors from Redis', async () => {
+            // Mock Redis.get to throw an error
+            mockRedisGet.mockRejectedValue(new Error('Redis error'));
 
-            try {
-                await getCachedData('test-key');
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-                expect((error as Error).message).toBe('Redis error');
-            }
+            // Call the function and expect it to throw
+            await expect(getCachedData(mockKey)).rejects.toThrow('Redis error');
+
+            // Check that Redis.fromEnv was called
+            expect(Redis.fromEnv).toHaveBeenCalled();
+
+            // Check that sanitizeKey was called with the correct key
+            expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
+
+            // Check that Redis.get was called with the correct key
+            expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
         });
     });
 
     describe('setCachedData', () => {
-        it('should set data in Redis with the correct parameters', async () => {
-            // Mock Redis set to return success
-            mockRedisClient.set.mockResolvedValue('OK');
+        it('should set data in Redis with the correct expiry', async () => {
+            // Mock Redis.set to return OK
+            mockRedisSet.mockResolvedValue('OK');
 
-            await setCachedData('test-key', mockPhotoFlickr, 3600);
+            // Call the function
+            await setCachedData(mockKey, mockPhotoFlickr, 3600);
 
-            // Check that Redis client was created
+            // Check that Redis.fromEnv was called
             expect(Redis.fromEnv).toHaveBeenCalled();
 
-            // Check that set was called with the correct parameters
-            expect(mockRedisClient.set).toHaveBeenCalledWith(
-                'test-key',
+            // Check that sanitizeKey was called with the correct key
+            expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
+
+            // Check that Redis.set was called with the correct parameters
+            expect(mockRedisSet).toHaveBeenCalledWith(
+                mockKey,
                 JSON.stringify(mockPhotoFlickr),
                 {ex: 3600}
             );
         });
 
-        it('should handle errors gracefully', async () => {
-            // Mock Redis set to throw an error
-            mockRedisClient.set.mockRejectedValue(new Error('Redis error'));
+        it('should handle errors from Redis', async () => {
+            // Mock Redis.set to throw an error
+            mockRedisSet.mockRejectedValue(new Error('Redis error'));
 
-            try {
-                await setCachedData('test-key', mockPhotoFlickr, 3600);
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-                expect((error as Error).message).toBe('Redis error');
-            }
+            // Call the function and expect it to throw
+            await expect(setCachedData(mockKey, mockPhotoFlickr, 3600)).rejects.toThrow('Redis error');
+
+            // Check that Redis.fromEnv was called
+            expect(Redis.fromEnv).toHaveBeenCalled();
+
+            // Check that sanitizeKey was called with the correct key
+            expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
+
+            // Check that Redis.set was called with the correct parameters
+            expect(mockRedisSet).toHaveBeenCalledWith(
+                mockKey,
+                JSON.stringify(mockPhotoFlickr),
+                {ex: 3600}
+            );
         });
     });
 });
