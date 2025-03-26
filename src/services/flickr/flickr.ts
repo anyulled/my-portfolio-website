@@ -235,7 +235,7 @@ export async function getFlickrPhotos(
   if (cachedPhotos) {
     console.info(chalk.blue("Returning cached photos while updating in background."));
 
-    void (async () => {
+    void (async function updateCacheInBackground() {
       try {
         console.info(
             chalk.blue(
