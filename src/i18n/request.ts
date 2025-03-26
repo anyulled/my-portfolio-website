@@ -29,7 +29,7 @@ export async function findMessagesDir(): Promise<{
       console.log(`Successfully found messages directory at: ${messagesDir}`);
       break;
     } catch (e) {
-      console.log(`Directory not found: ${dir}`);
+      console.log(`Directory not found: ${dir}`, e);
     }
   }
 
