@@ -130,7 +130,15 @@ body {
     }
 
     input, textarea {
-        @apply text-mocha-mousse-400 dark:text-mocha-mousse-200 placeholder:text-mocha-mousse-400 dark:placeholder:text-mocha-mousse-200;
+        @apply text-mocha-mousse-400 dark:text-mocha-mousse-200
+        placeholder:text-red-500 dark:placeholder:text-red-200
+        outline-mocha-mousse-200 dark:outline-mocha-mousse-300
+        border-mocha-mousse-900 dark:border-mocha-mousse-300;
+    }
+
+    option {
+        @apply text-mocha-mousse-800
+        border-mocha-mousse-500
     }
 
     img {

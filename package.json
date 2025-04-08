@@ -17,8 +17,11 @@
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.200.0",
     "@opentelemetry/sdk-trace-base": "^1.30.0",
+    "@radix-ui/react-checkbox": "^1.1.4",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.1",
@@ -49,7 +52,8 @@
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-typography": "3.1.0",
-    "yet-another-react-lightbox": "^3.21.6"
+    "yet-another-react-lightbox": "^3.21.6",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@angular/common": "^19.2.1",

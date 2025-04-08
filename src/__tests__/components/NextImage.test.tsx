@@ -1,9 +1,8 @@
-import {render, screen} from '@testing-library/react';
-import '@testing-library/jest-dom';
-import renderNextImage from '@/components/NextImage';
-import {RenderImageContext, RenderImageProps} from 'react-photo-album';
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import renderNextImage from "@/components/NextImage";
+import { RenderImageContext, RenderImageProps } from "react-photo-album";
 
-// Mock the next/image component
 jest.mock('next/image', () => ({
     __esModule: true,
     default: (props: { alt: string }) => {
@@ -13,9 +12,7 @@ jest.mock('next/image', () => ({
 }));
 
 describe('renderNextImage', () => {
-    // Test case: Component renders correctly with valid props
     it('renders correctly with valid props', () => {
-        // Arrange
         const props: RenderImageProps = {
             alt: 'Test image',
             title: 'Test title',
@@ -39,10 +36,8 @@ describe('renderNextImage', () => {
             height: 600,
         };
 
-        // Act
         render(renderNextImage(props, context));
 
-        // Assert
         const image = screen.getByAltText('Test image');
         expect(image).toBeInTheDocument();
         expect(image).toHaveAttribute('title', props.title);
@@ -50,9 +45,7 @@ describe('renderNextImage', () => {
         expect(image).toHaveAttribute('src', props.src);
     });
 
-    // Test case: Component doesn't render Image when photo.srcSet is missing
     it('does not render Image when photo.srcSet is missing', () => {
-        // Arrange
         const props: RenderImageProps = {
             alt: 'Test image',
             title: 'Test title',
@@ -71,12 +64,9 @@ describe('renderNextImage', () => {
             height: 600,
         };
 
-        // Act
         const {container} = render(renderNextImage(props, context));
 
-        // Assert
         expect(container.querySelector('img')).not.toBeInTheDocument();
-        // The div should still be rendered
         expect(container.firstChild).toBeInTheDocument();
         expect(container.firstChild).toHaveStyle({
             width: '100%',
@@ -84,9 +74,7 @@ describe('renderNextImage', () => {
         });
     });
 
-    // Test case: Component renders with default alt text when not provided
     it('renders with default alt text when not provided', () => {
-        // Arrange
         const props: RenderImageProps = {
             title: 'Test title',
             sizes: '(max-width: 768px) 100vw, 50vw',
@@ -109,17 +97,13 @@ describe('renderNextImage', () => {
             height: 600,
         };
 
-        // Act
         render(renderNextImage(props, context));
 
-        // Assert
         const image = screen.getByAltText('');
         expect(image).toBeInTheDocument();
     });
 
-    // Test case: Component uses correct blur data URL
     it('uses correct blur data URL', () => {
-        // Arrange
         const props: RenderImageProps = {
             alt: 'Test image',
             title: 'Test title',
@@ -143,10 +127,8 @@ describe('renderNextImage', () => {
             height: 600,
         };
 
-        // Act
         render(renderNextImage(props, context));
 
-        // Assert
         const image = screen.getByAltText('Test image');
         expect(image).toHaveAttribute('placeholder', 'blur');
         expect(image).toHaveAttribute('src', props.src);
