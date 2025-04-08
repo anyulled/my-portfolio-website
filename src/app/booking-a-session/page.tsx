@@ -1,14 +1,14 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { Aref_Ruqaa } from "next/font/google";
+import {useTranslations} from "next-intl";
+import {Aref_Ruqaa} from "next/font/google";
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+import {Button} from "@/components/ui/button";
+import {toast} from "@/hooks/use-toast";
+import {Label} from "@/components/ui/label";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { z } from "zod";
+import {Checkbox} from "@/components/ui/checkbox";
+import {z} from "zod";
 import {
   Controller,
   FieldErrors,
@@ -25,7 +25,8 @@ import {
   SubmitHandler,
   useForm
 } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {CheckedState} from "@radix-ui/react-checkbox";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -114,9 +115,9 @@ export default function BookingPage() {
    * @param checked - Whether the checkbox is checked or not
    */
   const handleCheckboxChange = (
-    field: { value: string[]; onChange: (value: string[]) => void },
-    type: string,
-    checked: boolean
+      field: { value: string[]; onChange: (value: string[]) => void },
+      type: string,
+      checked: CheckedState
   ) => {
     // If checked, add the type to the array; otherwise, remove it
     const updatedValue = checked
