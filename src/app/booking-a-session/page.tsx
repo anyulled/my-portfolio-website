@@ -1,14 +1,14 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { Aref_Ruqaa } from "next/font/google";
-import React, { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {useTranslations} from "next-intl";
+import {Aref_Ruqaa} from "next/font/google";
+import React, {useCallback, useEffect, useState} from "react";
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+import {Button} from "@/components/ui/button";
+import {toast} from "@/hooks/use-toast";
+import {Label} from "@/components/ui/label";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { z } from "zod";
+import {Checkbox} from "@/components/ui/checkbox";
+import {z} from "zod";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -111,7 +111,7 @@ export default function BookingPage() {
   });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const validateField = (name: string, value: string): string | undefined => {
+  const validateField = useCallback((name: string, value: string): string | undefined => {
     if (!bookingFormSchema.shape || !(name in bookingFormSchema.shape)) {
       return undefined;
     }
@@ -125,14 +125,14 @@ export default function BookingPage() {
       if (error instanceof z.ZodError) {
         const fieldError = error.errors.find(err => err.path[0] === name);
         if (fieldError) {
-          return t(fieldError.message as any) || fieldError.message;
+          return t(fieldError.message) || fieldError.message;
         }
       }
       return undefined;
     }
-  };
+  }, [t]);
 
-  const validateDateRange = (): string | undefined => {
+  const validateDateRange = useCallback((): string | undefined => {
     if (formValues.startDate && formValues.endDate) {
       try {
         bookingFormSchema.parse(formValues);
@@ -147,7 +147,7 @@ export default function BookingPage() {
       }
     }
     return undefined;
-  };
+  }, [formValues, t]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -169,11 +169,11 @@ export default function BookingPage() {
     setFormValues(prev => {
       const currentPaymentTypes = [...prev.paymentTypes];
       if (checked) {
-        if (!currentPaymentTypes.includes(value as any)) {
-          currentPaymentTypes.push(value as any);
+        if (!currentPaymentTypes.includes(value as (typeof PAYMENT_TYPES)[number])) {
+          currentPaymentTypes.push(value as (typeof PAYMENT_TYPES)[number]);
         }
       } else {
-        const index = currentPaymentTypes.indexOf(value as any);
+        const index = currentPaymentTypes.indexOf(value as (typeof PAYMENT_TYPES)[number]);
         if (index !== -1) {
           currentPaymentTypes.splice(index, 1);
         }
@@ -204,7 +204,7 @@ export default function BookingPage() {
     }
 
     setErrors(newErrors);
-  }, [formValues, touched]);
+  }, [formValues, touched, validateField, validateDateRange]);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -218,7 +218,7 @@ export default function BookingPage() {
       if (error instanceof z.ZodError) {
         error.errors.forEach(err => {
           const fieldName = err.path[0] as keyof FormErrors;
-          newErrors[fieldName] = t(err.message as any) || err.message;
+          newErrors[fieldName] = t(err.message) || err.message;
         });
       }
 
@@ -603,7 +603,7 @@ export default function BookingPage() {
                       id={`payment-${type}`}
                       name="paymentTypes"
                       value={type}
-                      checked={formValues.paymentTypes.includes(type as any)}
+                      checked={formValues.paymentTypes.includes(type)}
                       onCheckedChange={(checked) => handleCheckboxChange(type, checked as boolean)}
                     />
                     <Label
