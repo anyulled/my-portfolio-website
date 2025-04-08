@@ -1,14 +1,14 @@
 "use client";
 
-import {useTranslations} from "next-intl";
-import {Aref_Ruqaa} from "next/font/google";
-import React, {useCallback, useEffect, useState} from "react";
-import {Input} from "@/components/ui/input";
-import {Textarea} from "@/components/ui/textarea";
-import {Button} from "@/components/ui/button";
-import {toast} from "@/hooks/use-toast";
-import {Label} from "@/components/ui/label";
-import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa } from "next/font/google";
+import React from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -16,16 +16,62 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import {Checkbox} from "@/components/ui/checkbox";
-import {z} from "zod";
+import { Checkbox } from "@/components/ui/checkbox";
+import { z } from "zod";
+import {
+  Controller,
+  FieldErrors,
+  FieldValues,
+  SubmitHandler,
+  useForm
+} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
+
+interface ErrorMessageProps<T extends FieldValues> {
+  name: keyof T;
+  errors: FieldErrors<T>;
+  t: {
+    (key: string): string;
+    <K extends string>(key: K): string;
+  };
+}
+
+const ErrorMessage = <T extends FieldValues>({
+                                               name,
+                                               errors,
+                                               t
+                                             }: ErrorMessageProps<T>) => {
+  const error = errors[name];
+  if (!error) return null;
+
+  const errorMessage = error.message as string;
+  let translatedMessage = errorMessage;
+
+  if (errorMessage === "error_full_name") translatedMessage = t("error_full_name");
+  else if (errorMessage === "error_social_account") translatedMessage = t("error_social_account");
+  else if (errorMessage === "error_country") translatedMessage = t("error_country");
+  else if (errorMessage === "error_height") translatedMessage = t("error_height");
+  else if (errorMessage === "error_chest") translatedMessage = t("error_chest");
+  else if (errorMessage === "error_waist") translatedMessage = t("error_waist");
+  else if (errorMessage === "error_hips") translatedMessage = t("error_hips");
+  else if (errorMessage === "error_hair_color") translatedMessage = t("error_hair_color");
+  else if (errorMessage === "error_eye_color") translatedMessage = t("error_eye_color");
+  else if (errorMessage === "error_startDate") translatedMessage = t("error_startDate");
+  else if (errorMessage === "error_endDate") translatedMessage = t("error_endDate");
+  else if (errorMessage === "error_date_range") translatedMessage = t("error_date_range");
+  else if (errorMessage === "error_rates") translatedMessage = t("error_rates");
+  else if (errorMessage === "error_payment_type") translatedMessage = t("error_payment_type");
+
+  return <p className="text-red-500 text-sm mt-1">{translatedMessage}</p>;
+};
 
 const COLORS = [
   "brown", "black", "blue", "green", "red", "gray", "other"
 ] as const;
 
-const PAYMENT_TYPES = ["cash", "bankTransfer", "bizum", "paypal", "other"] as const;
+const PAYMENT_TYPES = ["cash", "bank", "bizum", "paypal", "other"] as const;
 
 const bookingFormSchema = z.object({
   fullName: z.string().min(2, { message: "error_full_name" }),
@@ -67,192 +113,57 @@ const bookingFormSchema = z.object({
   }
 );
 
-interface FormErrors {
-  fullName?: string;
-  socialAccount?: string;
-  country?: string;
-  height?: string;
-  chest?: string;
-  waist?: string;
-  hips?: string;
-  hairColor?: string;
-  eyeColor?: string;
-  implants?: string;
-  startDate?: string;
-  endDate?: string;
-  rates?: string;
-  modelRelease?: string;
-  paymentTypes?: string;
-}
-
 type FormValues = z.infer<typeof bookingFormSchema>;
 
 export default function BookingPage() {
   const t = useTranslations("booking_form");
-  const [sendingForm, setSendingForm] = useState<boolean>(false);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [formValues, setFormValues] = useState<FormValues>({
-    fullName: "",
-    socialAccount: "",
-    country: "",
-    height: "",
-    chest: "",
-    waist: "",
-    hips: "",
-    tattoos: "",
-    hairColor: "brown" as const,
-    eyeColor: "brown" as const,
-    implants: "no",
-    startDate: "",
-    endDate: "",
-    rates: "",
-    modelRelease: "yes",
-    paymentTypes: []
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+    reset
+  } = useForm<FormValues>({
+    resolver: zodResolver(bookingFormSchema),
+    defaultValues: {
+      fullName: "",
+      socialAccount: "",
+      country: "",
+      height: "",
+      chest: "",
+      waist: "",
+      hips: "",
+      tattoos: "",
+      hairColor: "brown" as const,
+      eyeColor: "brown" as const,
+      implants: "no",
+      startDate: "",
+      endDate: "",
+      rates: "",
+      modelRelease: "yes",
+      paymentTypes: []
+    }
   });
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const validateField = useCallback((name: string, value: string): string | undefined => {
-    if (!bookingFormSchema.shape || !(name in bookingFormSchema.shape)) {
-      return undefined;
-    }
-
-    const fieldSchema = z.object({ [name]: bookingFormSchema.shape[name as keyof FormValues] });
-
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      fieldSchema.parse({ [name]: value });
-      return undefined;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldError = error.errors.find(err => err.path[0] === name);
-        if (fieldError) {
-          return t(fieldError.message) || fieldError.message;
+      const formData = new FormData();
+
+      // Add all form fields to FormData
+      Object.entries(data).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach(item => formData.append(key, item));
+        } else {
+          formData.append(key, value);
         }
-      }
-      return undefined;
-    }
-  }, [t]);
-
-  const validateDateRange = useCallback((): string | undefined => {
-    if (formValues.startDate && formValues.endDate) {
-      try {
-        bookingFormSchema.parse(formValues);
-        return undefined;
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          const dateRangeError = error.errors.find(err => err.path.includes("endDate") && err.message === "error_date_range");
-          if (dateRangeError) {
-            return t("error_date_range") || "End date must be after start date";
-          }
-        }
-      }
-    }
-    return undefined;
-  }, [formValues, t]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormValues(prev => ({ ...prev, [name]: value }));
-    setTouched(prev => ({ ...prev, [name]: true }));
-  };
-
-  const handleRadioChange = (name: string, value: string) => {
-    setFormValues(prev => ({ ...prev, [name]: value }));
-    setTouched(prev => ({ ...prev, [name]: true }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormValues(prev => ({ ...prev, [name]: value }));
-    setTouched(prev => ({ ...prev, [name]: true }));
-  };
-
-  const handleCheckboxChange = (value: string, checked: boolean) => {
-    setFormValues(prev => {
-      const currentPaymentTypes = [...prev.paymentTypes];
-      if (checked) {
-        if (!currentPaymentTypes.includes(value as (typeof PAYMENT_TYPES)[number])) {
-          currentPaymentTypes.push(value as (typeof PAYMENT_TYPES)[number]);
-        }
-      } else {
-        const index = currentPaymentTypes.indexOf(value as (typeof PAYMENT_TYPES)[number]);
-        if (index !== -1) {
-          currentPaymentTypes.splice(index, 1);
-        }
-      }
-      return { ...prev, paymentTypes: currentPaymentTypes };
-    });
-    setTouched(prev => ({ ...prev, paymentTypes: true }));
-  };
-
-  useEffect(() => {
-    const newErrors: FormErrors = {};
-
-    Object.keys(touched).forEach(fieldName => {
-      if (touched[fieldName]) {
-        const fieldValue = formValues[fieldName as keyof FormValues];
-        const error = validateField(fieldName, fieldValue);
-        if (error) {
-          newErrors[fieldName as keyof FormErrors] = error;
-        }
-      }
-    });
-
-    if (touched.startDate && touched.endDate) {
-      const dateRangeError = validateDateRange();
-      if (dateRangeError) {
-        newErrors.endDate = dateRangeError;
-      }
-    }
-
-    setErrors(newErrors);
-  }, [formValues, touched, validateField, validateDateRange]);
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    try {
-      bookingFormSchema.parse(formValues);
-      setErrors({});
-      return true;
-    } catch (error) {
-      console.error(error);
-      if (error instanceof z.ZodError) {
-        error.errors.forEach(err => {
-          const fieldName = err.path[0] as keyof FormErrors;
-          newErrors[fieldName] = t(err.message) || err.message;
-        });
-      }
-
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
-    }
-  };
-
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const allTouched: Record<string, boolean> = {};
-    Object.keys(formValues).forEach(key => {
-      allTouched[key] = true;
-    });
-    setTouched(allTouched);
-
-    if (!validateForm()) {
-      toast({
-        title: "Validation Error",
-        description: t("validation_error") || "Please correct the errors in the form",
-        variant: "destructive"
       });
-      return;
-    }
 
-    setSendingForm(true);
-    const formData = new FormData(event.currentTarget);
-
-    try {
       const res = await fetch("/api/booking", {
         method: "POST",
         body: formData
       });
+
       const result = await res.json();
 
       console.log("== Result ==", result);
@@ -262,33 +173,13 @@ export default function BookingPage() {
           title: "Success",
           description: result.message
         });
-        setSendingForm(false);
-        setFormValues({
-          fullName: "",
-          socialAccount: "",
-          country: "",
-          height: "",
-          chest: "",
-          waist: "",
-          hips: "",
-          tattoos: "",
-          hairColor: "brown" as const,
-          eyeColor: "brown" as const,
-          implants: "no",
-          startDate: "",
-          endDate: "",
-          rates: "",
-          modelRelease: "yes",
-          paymentTypes: []
-        });
-        setTouched({});
+        reset();
       } else {
         toast({
           title: "Error",
           description: result.message || "There was an error submitting your booking request. Please try again.",
           variant: "destructive"
         });
-        setSendingForm(false);
       }
     } catch (error) {
       console.error("error", error);
@@ -297,14 +188,9 @@ export default function BookingPage() {
         description: "An unexpected error occurred. Please try again later.",
         variant: "destructive"
       });
-      setSendingForm(false);
     }
   };
 
-  const ErrorMessage = ({ error }: { error?: string }) => {
-    if (!error) return null;
-    return <p className="text-red-500 text-sm mt-1">{error}</p>;
-  };
 
   return (
     <section className="py-12">
@@ -320,7 +206,7 @@ export default function BookingPage() {
         </div>
 
         <form className="max-w-2xl mx-auto space-y-6"
-              onSubmit={handleFormSubmit}>
+              onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">{t("personal_info")}</h2>
 
@@ -328,48 +214,34 @@ export default function BookingPage() {
               <Label htmlFor="fullName">{t("full_name")} *</Label>
               <Input
                 id="fullName"
-                name="fullName"
                 placeholder={t("full_name")}
-                value={formValues.fullName}
-                onChange={handleInputChange}
-                onBlur={() => setTouched(prev => ({ ...prev, fullName: true }))}
                 className={errors.fullName ? "border-red-500" : ""}
-                required
+                {...register("fullName")}
               />
-              <ErrorMessage error={errors.fullName} />
+              <ErrorMessage<FormValues> name="fullName" errors={errors} t={t} />
             </div>
 
             <div>
               <Label htmlFor="socialAccount">{t("social_account")} *</Label>
               <Input
                 id="socialAccount"
-                name="socialAccount"
                 placeholder={t("social_account")}
-                value={formValues.socialAccount}
-                onChange={handleInputChange}
-                onBlur={() => setTouched(prev => ({
-                  ...prev,
-                  socialAccount: true
-                }))}
                 className={errors.socialAccount ? "border-red-500" : ""}
-                required
+                {...register("socialAccount")}
               />
-              <ErrorMessage error={errors.socialAccount} />
+              <ErrorMessage<FormValues> name="socialAccount" errors={errors}
+                                        t={t} />
             </div>
 
             <div>
               <Label htmlFor="country">{t("country")} *</Label>
               <Input
                 id="country"
-                name="country"
                 placeholder={t("country")}
-                value={formValues.country}
-                onChange={handleInputChange}
-                onBlur={() => setTouched(prev => ({ ...prev, country: true }))}
                 className={errors.country ? "border-red-500" : ""}
-                required
+                {...register("country")}
               />
-              <ErrorMessage error={errors.country} />
+              <ErrorMessage<FormValues> name="country" errors={errors} t={t} />
             </div>
           </div>
 
@@ -381,16 +253,12 @@ export default function BookingPage() {
               <Label htmlFor="height">{t("height")} *</Label>
               <Input
                 id="height"
-                name="height"
                 type="number"
                 placeholder={t("height")}
-                value={formValues.height}
-                onChange={handleInputChange}
-                onBlur={() => setTouched(prev => ({ ...prev, height: true }))}
                 className={errors.height ? "border-red-500" : ""}
-                required
+                {...register("height")}
               />
-              <ErrorMessage error={errors.height} />
+              <ErrorMessage<FormValues> name="height" errors={errors} t={t} />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
@@ -398,46 +266,34 @@ export default function BookingPage() {
                 <Label htmlFor="chest">{t("chest")} *</Label>
                 <Input
                   id="chest"
-                  name="chest"
                   type="number"
                   placeholder={t("chest")}
-                  value={formValues.chest}
-                  onChange={handleInputChange}
-                  onBlur={() => setTouched(prev => ({ ...prev, chest: true }))}
                   className={errors.chest ? "border-red-500" : ""}
-                  required
+                  {...register("chest")}
                 />
-                <ErrorMessage error={errors.chest} />
+                <ErrorMessage<FormValues> name="chest" errors={errors} t={t} />
               </div>
               <div>
                 <Label htmlFor="waist">{t("waist")} *</Label>
                 <Input
                   id="waist"
-                  name="waist"
                   type="number"
                   placeholder={t("waist")}
-                  value={formValues.waist}
-                  onChange={handleInputChange}
-                  onBlur={() => setTouched(prev => ({ ...prev, waist: true }))}
                   className={errors.waist ? "border-red-500" : ""}
-                  required
+                  {...register("waist")}
                 />
-                <ErrorMessage error={errors.waist} />
+                <ErrorMessage<FormValues> name="waist" errors={errors} t={t} />
               </div>
               <div>
                 <Label htmlFor="hips">{t("hips")} *</Label>
                 <Input
                   id="hips"
-                  name="hips"
                   type="number"
                   placeholder={t("hips")}
-                  value={formValues.hips}
-                  onChange={handleInputChange}
-                  onBlur={() => setTouched(prev => ({ ...prev, hips: true }))}
                   className={errors.hips ? "border-red-500" : ""}
-                  required
+                  {...register("hips")}
                 />
-                <ErrorMessage error={errors.hips} />
+                <ErrorMessage<FormValues> name="hips" errors={errors} t={t} />
               </div>
             </div>
 
@@ -445,77 +301,88 @@ export default function BookingPage() {
               <Label htmlFor="tattoos">{t("tattoos")}</Label>
               <Input
                 id="tattoos"
-                name="tattoos"
                 placeholder={t("tattoos_placeholder")}
-                value={formValues.tattoos}
-                onChange={handleInputChange}
+                {...register("tattoos")}
               />
             </div>
 
             <div>
               <Label htmlFor="hairColor">{t("hair_color")} *</Label>
-              <Select
+              <Controller
                 name="hairColor"
-                value={formValues.hairColor}
-                onValueChange={(value) => handleSelectChange("hairColor", value)}
-                required
-              >
-                <SelectTrigger id="hairColor"
-                               className={errors.hairColor ? "border-red-500" : ""}>
-                  <SelectValue placeholder={t("hair_color")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {COLORS.map((color) => (
-                    <SelectItem key={color} value={color}>
-                      {t(`hair_${color}`) || color.charAt(0).toUpperCase() + color.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <ErrorMessage error={errors.hairColor} />
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <SelectTrigger id="hairColor"
+                                   className={errors.hairColor ? "border-red-500" : ""}>
+                      <SelectValue placeholder={t("hair_color")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {COLORS.map((color) => (
+                        <SelectItem key={color} value={color}>
+                          {t(`hair_${color}`) || color.charAt(0).toUpperCase() + color.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <ErrorMessage<FormValues> name="hairColor" errors={errors}
+                                        t={t} />
             </div>
 
             <div>
               <Label htmlFor="eyeColor">{t("eye_color")} *</Label>
-              <Select
+              <Controller
                 name="eyeColor"
-                value={formValues.eyeColor}
-                onValueChange={(value) => handleSelectChange("eyeColor", value)}
-                required
-              >
-                <SelectTrigger id="eyeColor"
-                               className={errors.eyeColor ? "border-red-500" : ""}>
-                  <SelectValue placeholder={t("eye_color")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {COLORS.map((color) => (
-                    <SelectItem key={color} value={color}>
-                      {t(`eye_${color}`) || color.charAt(0).toUpperCase() + color.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <ErrorMessage error={errors.eyeColor} />
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <SelectTrigger id="eyeColor"
+                                   className={errors.eyeColor ? "border-red-500" : ""}>
+                      <SelectValue placeholder={t("eye_color")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {COLORS.map((color) => (
+                        <SelectItem key={color} value={color}>
+                          {t(`eye_${color}`) || color.charAt(0).toUpperCase() + color.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <ErrorMessage<FormValues> name="eyeColor" errors={errors} t={t} />
             </div>
 
             <div className="space-y-2">
               <Label>{t("implants")} *</Label>
-              <RadioGroup
+              <Controller
                 name="implants"
-                value={formValues.implants}
-                onValueChange={(value) => handleRadioChange("implants", value)}
-                required
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="yes" id="implants-yes" />
-                  <Label htmlFor="implants-yes">{t("yes")}</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="no" id="implants-no" />
-                  <Label htmlFor="implants-no">{t("no")}</Label>
-                </div>
-              </RadioGroup>
-              <ErrorMessage error={errors.implants} />
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="implants-yes" />
+                      <Label htmlFor="implants-yes">{t("yes")}</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="implants-no" />
+                      <Label htmlFor="implants-no">{t("no")}</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+              <ErrorMessage<FormValues> name="implants" errors={errors} t={t} />
             </div>
           </div>
 
@@ -527,35 +394,23 @@ export default function BookingPage() {
                 <Label htmlFor="startDate">{t("available_from")} *</Label>
                 <Input
                   id="startDate"
-                  name="startDate"
                   type="date"
-                  value={formValues.startDate}
-                  onChange={handleInputChange}
-                  onBlur={() => setTouched(prev => ({
-                    ...prev,
-                    startDate: true
-                  }))}
                   className={errors.startDate ? "border-red-500" : ""}
-                  required
+                  {...register("startDate")}
                 />
-                <ErrorMessage error={errors.startDate} />
+                <ErrorMessage<FormValues> name="startDate" errors={errors}
+                                          t={t} />
               </div>
               <div>
                 <Label htmlFor="endDate">{t("available_until")} *</Label>
                 <Input
                   id="endDate"
-                  name="endDate"
                   type="date"
-                  value={formValues.endDate}
-                  onChange={handleInputChange}
-                  onBlur={() => setTouched(prev => ({
-                    ...prev,
-                    endDate: true
-                  }))}
                   className={errors.endDate ? "border-red-500" : ""}
-                  required
+                  {...register("endDate")}
                 />
-                <ErrorMessage error={errors.endDate} />
+                <ErrorMessage<FormValues> name="endDate" errors={errors}
+                                          t={t} />
               </div>
             </div>
 
@@ -563,59 +418,74 @@ export default function BookingPage() {
               <Label htmlFor="rates">{t("rates")} *</Label>
               <Textarea
                 id="rates"
-                name="rates"
                 placeholder={t("rates_placeholder")}
-                value={formValues.rates}
-                onChange={handleInputChange}
-                onBlur={() => setTouched(prev => ({ ...prev, rates: true }))}
                 className={errors.rates ? "border-red-500" : ""}
-                required
+                {...register("rates")}
               />
-              <ErrorMessage error={errors.rates} />
+              <ErrorMessage<FormValues> name="rates" errors={errors} t={t} />
             </div>
 
             <div className="space-y-2">
               <Label>{t("model_release")} *</Label>
-              <RadioGroup
+              <Controller
                 name="modelRelease"
-                value={formValues.modelRelease}
-                onValueChange={(value) => handleRadioChange("modelRelease", value)}
-                required
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="yes" id="release-yes" />
-                  <Label htmlFor="release-yes">{t("yes")}</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="no" id="release-no" />
-                  <Label htmlFor="release-no">{t("no")}</Label>
-                </div>
-              </RadioGroup>
-              <ErrorMessage error={errors.modelRelease} />
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="release-yes" />
+                      <Label htmlFor="release-yes">{t("yes")}</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="release-no" />
+                      <Label htmlFor="release-no">{t("no")}</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+              <ErrorMessage<FormValues> name="modelRelease" errors={errors}
+                                        t={t} />
             </div>
 
             <div>
               <Label>{t("payment_type")} *</Label>
               <div className="space-y-2 mt-2">
-                {PAYMENT_TYPES.map((type) => (
-                  <div key={type} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`payment-${type}`}
-                      name="paymentTypes"
-                      value={type}
-                      checked={formValues.paymentTypes.includes(type)}
-                      onCheckedChange={(checked) => handleCheckboxChange(type, checked as boolean)}
-                    />
-                    <Label
-                      htmlFor={`payment-${type}`}
-                      className="cursor-pointer"
-                    >
-                      {t(`payment_${type}`)}
-                    </Label>
-                  </div>
-                ))}
+                <Controller
+                  name="paymentTypes"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      {PAYMENT_TYPES.map((type) => (
+                        <div key={type}
+                             className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`payment-${type}`}
+                            value={type}
+                            checked={field.value.includes(type)}
+                            onCheckedChange={(checked) => {
+                              const updatedValue = checked
+                                ? [...field.value, type]
+                                : field.value.filter((val: string) => val !== type);
+                              field.onChange(updatedValue);
+                            }}
+                          />
+                          <Label
+                            htmlFor={`payment-${type}`}
+                            className="cursor-pointer"
+                          >
+                            {t(`payment_${type}`)}
+                          </Label>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                />
               </div>
-              <ErrorMessage error={errors.paymentTypes} />
+              <ErrorMessage<FormValues> name="paymentTypes" errors={errors}
+                                        t={t} />
             </div>
           </div>
 
@@ -623,9 +493,9 @@ export default function BookingPage() {
             <Button
               type="submit"
               className="w-full text-bold bg-mocha-mousse-400 text-mocha-mousse-50"
-              disabled={sendingForm}
+              disabled={isSubmitting}
             >
-              {sendingForm ? t("submitting") : t("submit")}
+              {isSubmitting ? t("submitting") : t("submit")}
             </Button>
           </div>
         </form>
