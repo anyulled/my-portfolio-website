@@ -47,22 +47,10 @@ const ErrorMessage = <T extends FieldValues>({
   if (!error) return null;
 
   const errorMessage = error.message as string;
-  let translatedMessage = errorMessage;
 
-  if (errorMessage === "error_full_name") translatedMessage = t("error_full_name");
-  else if (errorMessage === "error_social_account") translatedMessage = t("error_social_account");
-  else if (errorMessage === "error_country") translatedMessage = t("error_country");
-  else if (errorMessage === "error_height") translatedMessage = t("error_height");
-  else if (errorMessage === "error_chest") translatedMessage = t("error_chest");
-  else if (errorMessage === "error_waist") translatedMessage = t("error_waist");
-  else if (errorMessage === "error_hips") translatedMessage = t("error_hips");
-  else if (errorMessage === "error_hair_color") translatedMessage = t("error_hair_color");
-  else if (errorMessage === "error_eye_color") translatedMessage = t("error_eye_color");
-  else if (errorMessage === "error_startDate") translatedMessage = t("error_startDate");
-  else if (errorMessage === "error_endDate") translatedMessage = t("error_endDate");
-  else if (errorMessage === "error_date_range") translatedMessage = t("error_date_range");
-  else if (errorMessage === "error_rates") translatedMessage = t("error_rates");
-  else if (errorMessage === "error_payment_type") translatedMessage = t("error_payment_type");
+  // Directly use the error message as the translation key if it starts with "error_"
+  // Otherwise, use the original error message
+  const translatedMessage = errorMessage.startsWith("error_") ? t(errorMessage) : errorMessage;
 
   return <p className="text-red-500 text-sm mt-1">{translatedMessage}</p>;
 };
@@ -76,6 +64,7 @@ const PAYMENT_TYPES = ["cash", "bank", "bizum", "paypal", "other"] as const;
 const bookingFormSchema = z.object({
   fullName: z.string().min(2, { message: "error_full_name" }),
   socialAccount: z.string().min(3, { message: "error_social_account" }),
+  email: z.string().email({ message: "error_email" }),
   country: z.string().min(2, { message: "error_country" }),
   height: z.string()
     .refine(val => !isNaN(Number(val)), { message: "error_height" })
@@ -118,6 +107,25 @@ type FormValues = z.infer<typeof bookingFormSchema>;
 export default function BookingPage() {
   const t = useTranslations("booking_form");
 
+  /**
+   * Handles checkbox change for payment types
+   * @param field - The form field from react-hook-form
+   * @param type - The payment type value
+   * @param checked - Whether the checkbox is checked or not
+   */
+  const handleCheckboxChange = (
+    field: { value: string[]; onChange: (value: string[]) => void },
+    type: string,
+    checked: boolean
+  ) => {
+    // If checked, add the type to the array; otherwise, remove it
+    const updatedValue = checked
+      ? [...field.value, type]
+      : field.value.filter((val: string) => val !== type);
+
+    field.onChange(updatedValue);
+  };
+
   const {
     register,
     handleSubmit,
@@ -129,6 +137,7 @@ export default function BookingPage() {
     defaultValues: {
       fullName: "",
       socialAccount: "",
+      email: "",
       country: "",
       height: "",
       chest: "",
@@ -230,6 +239,19 @@ export default function BookingPage() {
                 {...register("socialAccount")}
               />
               <ErrorMessage<FormValues> name="socialAccount" errors={errors}
+                                        t={t} />
+            </div>
+
+            <div>
+              <Label htmlFor="email">{t("email")} *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder={t("email")}
+                className={errors.email ? "border-red-500" : ""}
+                {...register("email")}
+              />
+              <ErrorMessage<FormValues> name="email" errors={errors}
                                         t={t} />
             </div>
 
@@ -465,12 +487,7 @@ export default function BookingPage() {
                             id={`payment-${type}`}
                             value={type}
                             checked={field.value.includes(type)}
-                            onCheckedChange={(checked) => {
-                              const updatedValue = checked
-                                ? [...field.value, type]
-                                : field.value.filter((val: string) => val !== type);
-                              field.onChange(updatedValue);
-                            }}
+                            onCheckedChange={(checked) => handleCheckboxChange(field, type, checked)}
                           />
                           <Label
                             htmlFor={`payment-${type}`}

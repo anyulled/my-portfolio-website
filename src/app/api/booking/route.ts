@@ -7,6 +7,7 @@ export async function POST(req: Request) {
 
     const fullName = formData.get("fullName")?.toString();
     const socialAccount = formData.get("socialAccount")?.toString();
+    const email = formData.get("email")?.toString();
     const country = formData.get("country")?.toString();
     const height = formData.get("height")?.toString();
     const chest = formData.get("chest")?.toString();
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     const modelRelease = formData.get("modelRelease")?.toString();
     const paymentTypes = formData.getAll("paymentTypes").map(type => type.toString());
 
-    if (!fullName || !socialAccount || !country || !height || !chest ||
+    if (!fullName || !socialAccount || !email || !country || !height || !chest ||
       !waist || !hips || !hairColor || !eyeColor || !implants ||
       !startDate || !endDate || !rates || !modelRelease || paymentTypes.length === 0) {
       return NextResponse.json({
@@ -37,6 +38,7 @@ New Booking Request from ${fullName}
 Personal Information:
 - Full Name: ${fullName}
 - Instagram/ModelMayhem: ${socialAccount}
+- Email: ${email}
 - Country of Origin: ${country}
 
 Physical Characteristics:
