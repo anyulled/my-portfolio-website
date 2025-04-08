@@ -12,21 +12,57 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEMail = async (
-  message: string,
-  sender: string,
-  name: string,
-): Promise<Promise<SMTPTransport.SentMessageInfo> | null> => {
+interface EmailOptions {
+  to?: string;
+  cc?: string;
+  subject: string;
+  text: string;
+}
+
+/**
+ * Sends an email with the provided options
+ * @param options Email options including recipient, subject, and message
+ * @returns Promise with the send result or null if there was an error
+ */
+export const sendEmail = async (
+  options: EmailOptions
+): Promise<SMTPTransport.SentMessageInfo | null> => {
   try {
     return await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      cc: sender,
-      subject: `Boudoir Barcelona - New Message from ${name}`,
-      text: message,
+      to: options.to ?? process.env.EMAIL_USER,
+      cc: options.cc,
+      subject: options.subject,
+      text: options.text
     });
   } catch (e) {
     console.error(e);
     return null;
   }
+};
+
+// Legacy function for backward compatibility
+export const sendEMail = async (
+  message: string,
+  sender: string,
+  name: string,
+): Promise<SMTPTransport.SentMessageInfo | null> => {
+  return sendEmail({
+    cc: sender,
+    subject: `Boudoir Barcelona - New Message from ${name}`,
+    text: message
+  });
+};
+
+// Legacy function for backward compatibility
+export const sendEmailToRecipient = async (
+  message: string,
+  recipient: string,
+  subject: string
+): Promise<SMTPTransport.SentMessageInfo | null> => {
+  return sendEmail({
+    to: recipient,
+    subject: subject,
+    text: message
+  });
 };

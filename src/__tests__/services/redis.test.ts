@@ -48,7 +48,6 @@ describe('Redis Service', () => {
         },
     ];
 
-    // Mock Redis client
     const mockRedisGet = jest.fn();
     const mockRedisSet = jest.fn();
     const mockRedis = {
@@ -90,7 +89,6 @@ describe('Redis Service', () => {
             // Check that Redis.get was called with the correct key
             expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
 
-            // Check the result
             expect(result).toEqual(mockPhotoFlickr);
         });
 
@@ -110,7 +108,6 @@ describe('Redis Service', () => {
             // Check that Redis.get was called with the correct key
             expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
 
-            // Check the result
             expect(result).toBeNull();
         });
 

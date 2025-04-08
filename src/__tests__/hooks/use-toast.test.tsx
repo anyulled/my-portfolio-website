@@ -1,8 +1,7 @@
-import {act, renderHook} from '@testing-library/react';
-import {toast as toastFunction, useToast} from '@/hooks/use-toast';
+import { act, renderHook } from "@testing-library/react";
+import { toast as toastFunction, useToast } from "@/hooks/use-toast";
 
 describe('useToast', () => {
-    // Reset the module before each test to clear the state
     beforeEach(() => {
         jest.resetModules();
     });
@@ -93,7 +92,6 @@ describe('useToast', () => {
             result.current.toast({title: 'Toast 2'});
         });
 
-        // Due to TOAST_LIMIT = 1, we should only have one toast
         expect(result.current.toasts).toHaveLength(1);
         expect(result.current.toasts[0].open).toBe(true);
 
@@ -114,7 +112,6 @@ describe('useToast', () => {
         expect(result.current.toasts[0].open).toBe(true);
 
         act(() => {
-            // Simulate the toast being closed via UI
             result.current.toasts[0].onOpenChange?.(false);
         });
 
@@ -122,9 +119,7 @@ describe('useToast', () => {
     });
 });
 
-// Test the exported toast function directly
 describe('toast function', () => {
-    // Reset the module before each test to clear the state
     beforeEach(() => {
         jest.resetModules();
     });

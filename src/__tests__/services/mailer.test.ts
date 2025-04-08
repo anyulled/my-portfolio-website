@@ -1,19 +1,14 @@
-import {sendEMail} from '@/services/mailer';
-import nodemailer from 'nodemailer';
-// Import test utilities
-import {commonAfterEach, commonBeforeEach} from '@/__tests__/utils/testUtils';
+import { sendEMail, sendEmail, sendEmailToRecipient } from "@/services/mailer";
+import nodemailer from "nodemailer";
+import { commonAfterEach, commonBeforeEach } from "@/__tests__/utils/testUtils";
 
-// Mock nodemailer
 jest.mock('nodemailer', () => {
-    // Create a mock for sendMail that can be configured in each test
     const mockSendMail = jest.fn();
 
-    // Create a mock transporter object with the sendMail mock
     const mockTransporter = {
         sendMail: mockSendMail,
     };
 
-    // Create a mock for createTransport that returns the mock transporter
     const mockCreateTransport = jest.fn().mockImplementation(() => {
         return mockTransporter;
     });
@@ -23,14 +18,12 @@ jest.mock('nodemailer', () => {
     };
 });
 
-// Mock environment variables
 const originalEnv = process.env;
 
 describe('Mailer Service', () => {
     beforeEach(() => {
         commonBeforeEach();
 
-        // Mock environment variables
         process.env = {
             ...originalEnv,
             EMAIL_USER: 'test@example.com',
@@ -41,16 +34,13 @@ describe('Mailer Service', () => {
     afterEach(() => {
         commonAfterEach();
 
-        // Restore environment variables
         process.env = originalEnv;
     });
 
     describe('sendEMail', () => {
         it('should send an email with the correct parameters', async () => {
-            // Get the mock transporter
             const mockTransporter = nodemailer.createTransport();
 
-            // Mock successful email sending
             mockTransporter.sendMail.mockResolvedValue({messageId: 'test-id'});
 
             const result = await sendEMail(
@@ -59,11 +49,6 @@ describe('Mailer Service', () => {
                 'Test User'
             );
 
-            // Since we're testing a module that uses nodemailer at the top level,
-            // we can't directly test the createTransport call.
-            // Instead, we'll just verify that sendMail was called with the correct parameters.
-
-            // Check that sendMail was called with the correct parameters
             expect(mockTransporter.sendMail).toHaveBeenCalledWith({
                 from: 'test@example.com',
                 to: 'test@example.com',
@@ -72,15 +57,12 @@ describe('Mailer Service', () => {
                 text: 'Test message',
             });
 
-            // Check the result
             expect(result).toEqual({messageId: 'test-id'});
         });
 
         it('should return null when email sending fails', async () => {
-            // Get the mock transporter
             const mockTransporter = nodemailer.createTransport();
 
-            // Mock failed email sending
             mockTransporter.sendMail.mockRejectedValue(new Error('Failed to send email'));
 
             const result = await sendEMail(
@@ -89,13 +71,116 @@ describe('Mailer Service', () => {
                 'Test User'
             );
 
-            // Check that sendMail was called
+          expect(mockTransporter.sendMail).toHaveBeenCalled();
+
+          expect(console.error).toHaveBeenCalled();
+
+          expect(result).toBeNull();
+        });
+    });
+
+  describe("sendEmail", () => {
+    it("should send an email with the correct parameters", async () => {
+      const mockTransporter = nodemailer.createTransport();
+
+      mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
+
+      const result = await sendEmail({
+        to: "recipient@example.com",
+        cc: "cc@example.com",
+        subject: "Test Subject",
+        text: "Test message"
+      });
+
+      expect(mockTransporter.sendMail).toHaveBeenCalledWith({
+        from: "test@example.com",
+        to: "recipient@example.com",
+        cc: "cc@example.com",
+        subject: "Test Subject",
+        text: "Test message"
+      });
+
+      expect(result).toEqual({ messageId: "test-id" });
+    });
+
+    it("should use default recipient when \"to\" is not provided", async () => {
+      const mockTransporter = nodemailer.createTransport();
+
+      mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
+
+      const result = await sendEmail({
+        subject: "Test Subject",
+        text: "Test message"
+      });
+
+      expect(mockTransporter.sendMail).toHaveBeenCalledWith({
+        from: "test@example.com",
+        to: "test@example.com",
+        cc: undefined,
+        subject: "Test Subject",
+        text: "Test message"
+      });
+
+      expect(result).toEqual({ messageId: "test-id" });
+    });
+
+    it("should return null when email sending fails", async () => {
+      const mockTransporter = nodemailer.createTransport();
+
+      mockTransporter.sendMail.mockRejectedValue(new Error("Failed to send email"));
+
+      const result = await sendEmail({
+        to: "recipient@example.com",
+        subject: "Test Subject",
+        text: "Test message"
+      });
+
+      expect(mockTransporter.sendMail).toHaveBeenCalled();
+
+      expect(console.error).toHaveBeenCalled();
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("sendEmailToRecipient", () => {
+    it("should send an email to the specified recipient", async () => {
+      const mockTransporter = nodemailer.createTransport();
+
+      mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
+
+      const result = await sendEmailToRecipient(
+        "Test message",
+        "recipient@example.com",
+        "Test Subject"
+      );
+
+      expect(mockTransporter.sendMail).toHaveBeenCalledWith({
+        from: "test@example.com",
+        to: "recipient@example.com",
+        cc: undefined,
+        subject: "Test Subject",
+        text: "Test message"
+      });
+
+      expect(result).toEqual({ messageId: "test-id" });
+    });
+
+    it("should return null when email sending fails", async () => {
+      const mockTransporter = nodemailer.createTransport();
+
+      mockTransporter.sendMail.mockRejectedValue(new Error("Failed to send email"));
+
+      const result = await sendEmailToRecipient(
+        "Test message",
+        "recipient@example.com",
+        "Test Subject"
+      );
+
             expect(mockTransporter.sendMail).toHaveBeenCalled();
 
-            // Check that the error was logged
             expect(console.error).toHaveBeenCalled();
 
-            // Check the result
             expect(result).toBeNull();
         });
     });
