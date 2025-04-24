@@ -37,19 +37,12 @@ export default async function HomePage() {
 
   return (
     <main>
-      {/* Hero Section with Parallax */}
       <Hero />
-
-      {/* Gallery Section with Pinterest-like layout */}
       <Suspense fallback={<Loading />}>
         <Gallery photos={res.photos} />
       </Suspense>
-
-      {/* Social Media Links */}
       <SocialMedia />
       <Separator className="my-4 bg-mocha-mousse-900 dark:bg-mocha-mousse-500" />
-
-      {/* Contact Form Section */}
       <Suspense fallback={<Loading />}>
         <ContactForm />
       </Suspense>
