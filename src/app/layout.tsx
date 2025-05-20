@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://boudoir.barcelona"),
   title: {
     template: "%s · Boudoir Photography in Barcelona",
-    default: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
+    default: "Sensuelle Boudoir · Boudoir Photography in Barcelona"
   },
   description: "Boudoir photography service in Barcelona.",
   openGraph: openGraph,
@@ -26,46 +26,46 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: {
       template: "%s · Boudoir Photography in Barcelona",
-      default: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
+      default: "Sensuelle Boudoir · Boudoir Photography in Barcelona"
     },
     description: "Boudoir photography service in Barcelona.",
     images: [
-      "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
+      "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg"
     ],
     site: "@anyulled",
-    creator: "@anyulled",
-  },
+    creator: "@anyulled"
+  }
 };
 
 export default async function RootLayout({
-  children,
-}: Readonly<{
+                                           children
+                                         }: Readonly<{
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-900"}>
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <ScrollProvider>
-              <div
-                className={`min-h-screen bg-mocha-mousse-50 text-mocha-mousse-800 dark:bg-mocha-mousse-900 dark:text-mocha-mousse-100`}
-              >
-                <NavBar />
-                {children}
-              </div>
-              <Toaster />
-              <CookieConsent />
-            </ScrollProvider>
-          </ThemeProvider>
-          <Footer />
-          <SpeedInsights />
-          <Analytics />
-          <GoogleAnalytics />
-        </NextIntlClientProvider>
-      </body>
+    <body className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-900"}>
+    <NextIntlClientProvider messages={messages}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ScrollProvider>
+          <div
+            className="min-h-screen bg-mocha-mousse-50 text-mocha-mousse-800 dark:bg-mocha-mousse-900 dark:text-mocha-mousse-100"
+          >
+            <NavBar />
+            {children}
+          </div>
+          <Toaster />
+          <CookieConsent />
+        </ScrollProvider>
+      </ThemeProvider>
+      <Footer />
+      <SpeedInsights />
+      <Analytics />
+      <GoogleAnalytics />
+    </NextIntlClientProvider>
+    </body>
     </html>
   );
 }

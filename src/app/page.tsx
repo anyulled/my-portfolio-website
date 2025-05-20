@@ -9,6 +9,13 @@ import { Suspense } from "react";
 import Loading from "@/app/loading";
 import { Separator } from "@/components/ui/separator";
 
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP);
+}
+
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
   description: "Boudoir photography service in Barcelona",
