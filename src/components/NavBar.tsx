@@ -14,7 +14,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from "@/components/ui/sheet";
 
 import { NavLinks } from "@/components/NavLinks";
@@ -76,7 +76,10 @@ export default function NavBar() {
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${scrollY > 50 ? "bg-opacity-50 backdrop-blur-md" : ""}`}
+      className={clsx(
+        "fixed w-full z-50 transition-all duration-300",
+        scrollY > 50 && "bg-opacity-50 backdrop-blur-md"
+      )}
     >
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         <Link
