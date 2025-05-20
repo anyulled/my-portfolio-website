@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { grantConsent } from "@/lib/gtag";
 import { useTranslations } from "next-intl";
+import { clsx } from "clsx";
 
 export default function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false);
@@ -28,7 +29,10 @@ export default function CookieConsent() {
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 p-2 dark:bg-mocha-mousse-800 bg-mocha-mousse-100 bg-opacity-75 backdrop-blur-sm z-50 text-sm transition-all duration-300 ${showConsent ? "block" : "hidden"}`}
+      className={clsx(
+        "fixed bottom-0 left-0 right-0 p-2 dark:bg-mocha-mousse-800 bg-mocha-mousse-100 bg-opacity-75 backdrop-blur-sm z-50 text-sm transition-all duration-300",
+        !showConsent && "hidden"
+      )}
     >
       <div className="container mx-auto flex justify-between items-center">
         <p className="dark:text-mocha-mousse-200 text-mocha-mousse-800">
