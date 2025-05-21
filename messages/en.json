@@ -87,7 +87,14 @@
     "photos_hd": "HD quality photos",
     "pricing": "Pricing",
     "professional_makeup": "Professional Makeup",
-    "video": "1 - 2min. video book included"
+    "video": "1 - 2min. video book included",
+    "general_conditions": "General Conditions",
+    "condition_release_form": "A release form must be signed by both part for proceeding. The customer is not allowed to make commercial profit of the photos unless explicitly granted.",
+    "condition_deposit": "A non-refundable deposit (via Paypal, Bizum, or bank transfer) must be made for confirming the session.",
+    "condition_payment": "The rest of the payment will be performed the day of the session before the session start.",
+    "condition_photos_sharing": "The photos and videos will be shared in a Google drive folder the next 15 days after the session.",
+    "condition_late_arrival": "If the customer doesn't arrive during the first 30 minutes of the session, it will be concluded and full payment must be done.",
+    "condition_additional_photos": "Additional photos can be retouched with an additional cost."
   },
   "social": {
     "connect": "Connect with us",

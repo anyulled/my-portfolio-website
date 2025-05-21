@@ -87,7 +87,14 @@
     "photos_hd": "fotos calidad HD",
     "pricing": "Precios",
     "professional_makeup": "Maquillaje profesional",
-    "video": "1 - 2min. video book incluido"
+    "video": "1 - 2min. video book incluido",
+    "general_conditions": "Condiciones Generales",
+    "condition_release_form": "Un formulario de cesión de derechos debe ser firmado por ambas partes para proceder. El cliente no está autorizado a obtener beneficios comerciales de las fotos a menos que se le conceda explícitamente.",
+    "condition_deposit": "Se debe realizar un depósito no reembolsable (vía Paypal, Bizum o transferencia bancaria) para confirmar la sesión.",
+    "condition_payment": "El resto del pago se realizará el día de la sesión antes del inicio de la misma.",
+    "condition_photos_sharing": "Las fotos y videos se compartirán en una carpeta de Google Drive los siguientes 15 días después de la sesión.",
+    "condition_late_arrival": "Si el cliente no llega durante los primeros 30 minutos de la sesión, se dará por concluida y se deberá realizar el pago completo.",
+    "condition_additional_photos": "Las fotos adicionales pueden ser retocadas con un costo adicional."
   },
   "social": {
     "connect": "Conecta con nosotros",

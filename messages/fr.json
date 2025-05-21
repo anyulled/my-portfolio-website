@@ -87,7 +87,14 @@
     "photos_hd": "Photos en qualité HD",
     "pricing": "Tarifs",
     "professional_makeup": "Maquillage professionnel",
-    "video": "Vidéo de 1-2 min. incluse"
+    "video": "Vidéo de 1-2 min. incluse",
+    "general_conditions": "Conditions Générales",
+    "condition_release_form": "Un formulaire de décharge doit être signé par les deux parties pour procéder. Le client n'est pas autorisé à tirer un profit commercial des photos sauf autorisation explicite.",
+    "condition_deposit": "Un acompte non remboursable (via Paypal, Bizum ou virement bancaire) doit être versé pour confirmer la séance.",
+    "condition_payment": "Le reste du paiement sera effectué le jour de la séance avant le début de celle-ci.",
+    "condition_photos_sharing": "Les photos et vidéos seront partagées dans un dossier Google Drive dans les 15 jours suivant la séance.",
+    "condition_late_arrival": "Si le client n'arrive pas dans les 30 premières minutes de la séance, celle-ci sera considérée comme terminée et le paiement intégral devra être effectué.",
+    "condition_additional_photos": "Des photos supplémentaires peuvent être retouchées moyennant un coût additionnel."
   },
   "social": {
     "connect": "Connectez-vous avec nous",

@@ -87,7 +87,14 @@
     "photos_hd": "Fotografies en qualitat HD",
     "pricing": "Preus",
     "professional_makeup": "Maquillatge professional",
-    "video": "Vídeo d'1-2 min. inclòs"
+    "video": "Vídeo d'1-2 min. inclòs",
+    "general_conditions": "Condicions Generals",
+    "condition_release_form": "Un formulari de cessió de drets ha de ser signat per ambdues parts per procedir. El client no està autoritzat a obtenir beneficis comercials de les fotos a menys que se li concedeixi explícitament.",
+    "condition_deposit": "S'ha de realitzar un dipòsit no reemborsable (via Paypal, Bizum o transferència bancària) per confirmar la sessió.",
+    "condition_payment": "La resta del pagament es realitzarà el dia de la sessió abans de l'inici d'aquesta.",
+    "condition_photos_sharing": "Les fotos i vídeos es compartiran en una carpeta de Google Drive els següents 15 dies després de la sessió.",
+    "condition_late_arrival": "Si el client no arriba durant els primers 30 minuts de la sessió, es donarà per conclosa i s'haurà de realitzar el pagament complet.",
+    "condition_additional_photos": "Les fotos addicionals poden ser retocades amb un cost addicional."
   },
   "social": {
     "connect": "Connecta amb nosaltres",

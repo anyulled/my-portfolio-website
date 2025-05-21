@@ -87,7 +87,14 @@
     "photos_hd": "Fotografie in qualità HD",
     "pricing": "Prezzi",
     "professional_makeup": "trucco professionale",
-    "video": "Video di 1-2 min. Incluso"
+    "video": "Video di 1-2 min. Incluso",
+    "general_conditions": "Condizioni Generali",
+    "condition_release_form": "Un modulo di liberatoria deve essere firmato da entrambe le parti per procedere. Il cliente non è autorizzato a trarre profitto commerciale dalle foto a meno che non sia esplicitamente concesso.",
+    "condition_deposit": "Un deposito non rimborsabile (tramite Paypal, Bizum o bonifico bancario) deve essere effettuato per confermare la sessione.",
+    "condition_payment": "Il resto del pagamento sarà effettuato il giorno della sessione prima dell'inizio della stessa.",
+    "condition_photos_sharing": "Le foto e i video saranno condivisi in una cartella Google Drive nei 15 giorni successivi alla sessione.",
+    "condition_late_arrival": "Se il cliente non arriva durante i primi 30 minuti della sessione, questa sarà considerata conclusa e dovrà essere effettuato il pagamento completo.",
+    "condition_additional_photos": "Foto aggiuntive possono essere ritoccate con un costo supplementare."
   },
   "social": {
     "connect": "Connettiti con noi",
