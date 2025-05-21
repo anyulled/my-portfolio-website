@@ -23,7 +23,7 @@ export default async function BoudoirStylePage() {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
   const { photos } = await getFlickrPhotos(flickr, "boudoir, model", 50);
   const randomPhotos = getRandomElements(photos ?? [], 10);
-  await getTranslations("what_is_boudoir"); // Pre-load translations for client component
+  await getTranslations("what_is_boudoir");
 
   return <BoudoirContent randomPhotos={randomPhotos}/>;
 }

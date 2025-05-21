@@ -1,14 +1,14 @@
 "use client";
 
-import {useTranslations} from "next-intl";
-import {Aref_Ruqaa} from "next/font/google";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa } from "next/font/google";
 import React from "react";
-import {Input} from "@/components/ui/input";
-import {Textarea} from "@/components/ui/textarea";
-import {Button} from "@/components/ui/button";
-import {toast} from "@/hooks/use-toast";
-import {Label} from "@/components/ui/label";
-import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import {Checkbox} from "@/components/ui/checkbox";
-import {z} from "zod";
+import { Checkbox } from "@/components/ui/checkbox";
+import { z } from "zod";
 import {
   Controller,
   FieldErrors,
@@ -25,8 +25,8 @@ import {
   SubmitHandler,
   useForm
 } from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {CheckedState} from "@radix-ui/react-checkbox";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckedState } from "@radix-ui/react-checkbox";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -160,7 +160,6 @@ export default function BookingPage() {
     try {
       const formData = new FormData();
 
-      // Add all form fields to FormData
       Object.entries(data).forEach(([key, value]) => {
         if (Array.isArray(value)) {
           value.forEach(item => formData.append(key, item));
@@ -187,7 +186,7 @@ export default function BookingPage() {
       } else {
         toast({
           title: "Error",
-          description: result.message || "There was an error submitting your booking request. Please try again.",
+          description: result.message ?? "There was an error submitting your booking request. Please try again.",
           variant: "destructive"
         });
       }
