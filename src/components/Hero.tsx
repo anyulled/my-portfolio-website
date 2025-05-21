@@ -56,7 +56,6 @@ export default function Hero() {
 
     useGSAP(() => {
         if (mounted) {
-            // Animate background
             if (backgroundRef.current) {
                 gsap.fromTo(backgroundRef.current,
                     {opacity: 0, scale: 1.1},
@@ -69,35 +68,32 @@ export default function Hero() {
                 );
             }
 
-            // Animate title
             if (titleRef.current) {
                 gsap.fromTo(titleRef.current,
                     {opacity: 0, y: -50},
                     {
                         opacity: 1,
                         y: 0,
-                        duration: 1,
+                        duration: 1.5,
                         delay: 0.5,
                         ease: "back.out(1.7)"
                     }
                 );
             }
 
-            // Animate subtitle
             if (subtitleRef.current) {
                 gsap.fromTo(subtitleRef.current,
                     {opacity: 0, y: 30},
                     {
                         opacity: 1,
                         y: 0,
-                        duration: 1,
+                        duration: 1.5,
                         delay: 1,
                         ease: "power3.out"
                     }
                 );
             }
 
-            // Optional: animate the whole container with a subtle reveal
             if (containerRef.current) {
                 gsap.fromTo(containerRef.current,
                     {autoAlpha: 0},

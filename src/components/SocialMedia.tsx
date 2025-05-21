@@ -5,7 +5,7 @@ import {
   Instagram,
   LayoutPanelTop,
   Twitter,
-  User,
+  User
 } from "lucide-react";
 import { Aref_Ruqaa } from "next/font/google";
 
@@ -13,9 +13,10 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
+  TooltipTrigger
 } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
+import FadeInTitle from "@/components/FadeInTitle";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -41,11 +42,13 @@ export default function SocialMedia() {
   return (
     <section className="my-6 bg-opacity-75 backdrop-blur-md">
       <div className="container mx-auto px-6">
+        <FadeInTitle>
         <h2
           className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
         >
           {t("connect")}
         </h2>
+        </FadeInTitle>
         <TooltipProvider>
           <div className="flex justify-center space-x-6">
             {socialLinks.map((social) => (

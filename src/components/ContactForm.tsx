@@ -9,6 +9,8 @@ import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import Link from "next/link";
 import { submitLeadForm } from "@/lib/gtag";
 import { useTranslations } from "next-intl";
+import FadeInTitle from "@/components/FadeInTitle";
+import * as Sentry from "@sentry/nextjs";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -23,14 +25,14 @@ export default function ContactForm() {
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        body: formData
       });
       const result = await res.json();
 
       if (result.success) {
         toast({
           title: "Success",
-          description: result.message,
+          description: result.message
         });
         setSendingForm(false);
         submitLeadForm();
@@ -40,7 +42,7 @@ export default function ContactForm() {
           title: "Error",
           description:
             "There was an error submitting your message. Please try again.",
-          variant: "destructive",
+          variant: "destructive"
         });
         setSendingForm(false);
         gaEventTracker("form_submit", "error");
@@ -49,20 +51,21 @@ export default function ContactForm() {
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again later.",
-        variant: "destructive",
+        variant: "destructive"
       });
       setSendingForm(false);
+      Sentry.captureException(error);
     }
   };
   const t = useTranslations("contact_form");
   return (
     <section id="book-session" className="py-2">
       <div className="container mx-auto px-6">
-        <h2
+        <FadeInTitle delay={1}><h2
           className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
         >
           {t("contact_us")}
-        </h2>
+        </h2></FadeInTitle>
         <form
           className="max-w-md mx-auto space-y-4"
           onSubmit={handleFormSubmit}
