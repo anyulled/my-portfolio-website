@@ -11,9 +11,10 @@ import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import { Image, RowsPhotoAlbum } from "react-photo-album";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import renderNextImage from "@/components/NextImage";
+import renderFadeInNextImage from "@/components/FadeInNextImage";
 import { useTranslations } from "next-intl";
 import { Photo } from "@/services/flickr/flickr.types";
+import FadeInTitle from "@/components/FadeInTitle";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -53,15 +54,22 @@ export default function Gallery({
       <section className="py-6 md:py-3 bg-mocha-mousse-50 dark:bg-mocha-mousse-900">
         <div className="container mx-auto px-6">
           {showTitle && (
-            <h2
-              className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
-            >
-              {t("title")}
-            </h2>
+            <FadeInTitle>
+              <h2
+                className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
+              >
+                {t("title")}
+              </h2>
+            </FadeInTitle>
           )}
           {convertedPhotos && convertedPhotos?.length > 0 ? (
             <RowsPhotoAlbum
-              render={{ image: renderNextImage }}
+              render={{
+                image: (props, context) => renderFadeInNextImage(
+                  { ...props, index: context.index },
+                  context
+                )
+              }}
               photos={convertedPhotos}
               defaultContainerWidth={1200}
               onClick={({ index }) => handleImageClick(index)}

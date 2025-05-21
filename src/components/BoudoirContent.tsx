@@ -4,7 +4,7 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Card, CardContent } from "@/components/ui/card";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useRef } from "react";
 import Loading from "@/app/loading";
 import { Photo } from "@/services/flickr/flickr.types";
 import { useTranslations } from "next-intl";
@@ -13,119 +13,40 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useScroll } from "@/contexts/ScrollContext";
+import { useFadeIn } from "@/hooks/useFadeIn";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-/*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-
+//region Fonts
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
+//endregion
 
 export default function BoudoirContent({ randomPhotos }: Readonly<{
   randomPhotos: Photo[]
 }>) {
   const t = useTranslations("what_is_boudoir");
-  const textRef1 = useRef<HTMLDivElement>(null);
-  const textRef2 = useRef<HTMLDivElement>(null);
-  const imageRef1 = useRef<HTMLDivElement>(null);
-  const imageRef2 = useRef<HTMLDivElement>(null);
+  const textRef1 = useFadeIn({ x: -50, y: 0, start: "top 80%" });
+  const textRef2 = useFadeIn({ x: 50, y: 0, start: "top 80%" });
+  const imageRef1 = useFadeIn({
+    scale: 0.8,
+    y: 0,
+    duration: 1,
+    start: "top 80%"
+  });
+  const imageRef2 = useFadeIn({
+    scale: 0.8,
+    y: 0,
+    duration: 1,
+    start: "top 80%"
+  });
   const listRef = useRef<HTMLUListElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useFadeIn({ y: 30, delay: 0.5, start: "top 90%" });
   const { lenis } = useScroll();
 
-  useEffect(() => {
-    if (lenis) {
-      // Tell ScrollTrigger to use these proxy methods for the document element
-      ScrollTrigger.scrollerProxy(document.documentElement, {
-        scrollTop(value) {
-          if (arguments.length) {
-            lenis.scrollTo(value);
-          }
-          return lenis.scroll;
-        },
-        getBoundingClientRect() {
-          return {
-            top: 0,
-            left: 0,
-            width: window.innerWidth,
-            height: window.innerHeight
-          };
-        }
-      });
-
-      // When Lenis updates, tell ScrollTrigger to update too
-      lenis.on("scroll", ScrollTrigger.update);
-    }
-
-    return () => {
-      if (lenis) {
-        lenis.off("scroll", ScrollTrigger.update);
-      }
-    };
-  }, [lenis]);
-
   useGSAP(() => {
-    // Animate text sections
-    if (textRef1.current) {
-      gsap.from(textRef1.current, {
-        opacity: 0,
-        x: -50,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: textRef1.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-          scroller: document.documentElement
-        }
-      });
-    }
-
-    if (textRef2.current) {
-      gsap.from(textRef2.current, {
-        opacity: 0,
-        x: 50,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: textRef2.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-          scroller: document.documentElement
-        }
-      });
-    }
-
-    // Animate images
-    if (imageRef1.current) {
-      gsap.from(imageRef1.current, {
-        opacity: 0,
-        scale: 0.8,
-        duration: 1,
-        scrollTrigger: {
-          trigger: imageRef1.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-          scroller: document.documentElement
-        }
-      });
-    }
-
-    if (imageRef2.current) {
-      gsap.from(imageRef2.current, {
-        opacity: 0,
-        scale: 0.8,
-        duration: 1,
-        scrollTrigger: {
-          trigger: imageRef2.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-          scroller: document.documentElement
-        }
-      });
-    }
-
-    // Animate list items
     if (listRef.current) {
       const listItems = listRef.current.querySelectorAll("li");
       gsap.from(listItems, {
@@ -136,22 +57,6 @@ export default function BoudoirContent({ randomPhotos }: Readonly<{
         scrollTrigger: {
           trigger: listRef.current,
           start: "top 80%",
-          toggleActions: "play none none none",
-          scroller: document.documentElement
-        }
-      });
-    }
-
-    // Animate CTA button
-    if (ctaRef.current) {
-      gsap.from(ctaRef.current, {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        delay: 0.5,
-        scrollTrigger: {
-          trigger: ctaRef.current,
-          start: "top 90%",
           toggleActions: "play none none none",
           scroller: document.documentElement
         }
