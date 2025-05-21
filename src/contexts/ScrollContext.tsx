@@ -7,8 +7,8 @@ import React, {
   useRef,
   useState
 } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {gsap} from "gsap";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 
 if (typeof window !== "undefined") {
@@ -33,7 +33,6 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({
   const [scrollY, setScrollY] = useState(0);
   const lenisRef = useRef<Lenis | null>(null);
 
-  // Initialize Lenis for smooth scrolling
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -43,20 +42,13 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({
       smoothWheel: true
     });
 
-    // Store lenis instance in ref
     lenisRef.current = lenis;
-
-    // Connect GSAP's ticker to Lenis
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
-
-    // Update scrollY for compatibility with existing code
     lenis.on("scroll", ({ scroll }: { scroll: number }) => {
       setScrollY(scroll);
     });
-
-    // Cleanup
     return () => {
       gsap.ticker.remove(lenis.raf);
       lenis.destroy();
