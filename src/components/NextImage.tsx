@@ -1,4 +1,4 @@
-import {RenderImageContext, RenderImageProps} from "react-photo-album";
+import { RenderImageContext, RenderImageProps } from "react-photo-album";
 import Image from "next/image";
 
 export default function renderNextImage(
@@ -18,7 +18,6 @@ export default function renderNextImage(
           fill
           src={photo.src}
           className={"rounded-lg"}
-          unoptimized
           alt={alt}
           title={title}
           sizes={sizes}
