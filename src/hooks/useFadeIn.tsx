@@ -1,9 +1,9 @@
 "use client";
-import {useEffect, useRef} from "react";
-import {useGSAP} from "@gsap/react";
-import gsap from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {useScroll} from "@/contexts/ScrollContext";
+import { useEffect, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap, { AnimationVars } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useScroll } from "@/contexts/ScrollContext";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -46,7 +46,7 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
             ScrollTrigger.scrollerProxy(document.documentElement, {
                 scrollTop(value) {
                     if (arguments.length) {
-                        lenis.scrollTo(value);
+                      lenis.scrollTo(value ?? 0);
                     }
                     return lenis.scroll;
                 },
@@ -74,14 +74,24 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
         const element = elementRef.current;
 
         if (element) {
-            const initialProps: any = {opacity: 0};
+          const initialProps: {
+            y: number;
+            x: number;
+            scale: number;
+            opacity: number
+          } = {
+            opacity: 0,
+            y: 0,
+            x: 0,
+            scale: 0
+          };
             if (y !== 0) initialProps.y = y;
             if (x !== 0) initialProps.x = x;
             if (scale !== 1) initialProps.scale = scale;
 
             gsap.set(element, initialProps);
 
-            const animationProps: any = {
+          const animationProps: AnimationVars = {
                 opacity: 1,
                 duration: duration,
                 delay: delay + (index * stagger),

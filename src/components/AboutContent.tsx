@@ -2,12 +2,12 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {Card, CardContent} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import FadeInTitle from "@/components/FadeInTitle";
 import FadeInImage from "@/components/FadeInImage";
-import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
-import {useTranslations} from "next-intl";
-import {Photo} from "@/services/flickr/flickr.types";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import { useTranslations } from "next-intl";
+import { FlickrResponse, Photo } from "@/services/flickr/flickr.types";
 
 //region Fonts
 const arefRuqaa = Aref_Ruqaa({subsets: ["latin"], weight: "400"});
@@ -16,7 +16,7 @@ const dancingScript = Dancing_Script({subsets: ["latin"]});
 //endregion
 
 interface AboutContentProps {
-    images: any;
+  images: FlickrResponse;
     profileImageUrl: string;
     imageThumbnail: string;
 }

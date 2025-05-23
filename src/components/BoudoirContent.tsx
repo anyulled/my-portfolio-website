@@ -24,6 +24,8 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 //endregion
 
+/* eslint-disable  @typescript-eslint/no-non-null-asserted-optional-chain */
+
 export default function BoudoirContent({ randomPhotos }: Readonly<{
   randomPhotos: Photo[]
 }>) {
