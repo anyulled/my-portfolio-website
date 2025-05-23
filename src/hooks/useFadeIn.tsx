@@ -83,7 +83,7 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
             opacity: 0,
             y: 0,
             x: 0,
-            scale: 0
+            scale: 1
           };
             if (y !== 0) initialProps.y = y;
             if (x !== 0) initialProps.x = x;
