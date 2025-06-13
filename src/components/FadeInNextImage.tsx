@@ -19,13 +19,14 @@ export default function renderFadeInNextImage(
           <Image
             fill
             src={photo.src}
-            className={"rounded-lg"}
-            unoptimized
+            className={"rounded-lg object-cover"}
             alt={alt}
             title={title}
             sizes={sizes}
             placeholder="blur"
             blurDataURL={photo.srcSet[0].src}
+            quality={85}
+            loading="lazy"
           />
         )}
       </div>
