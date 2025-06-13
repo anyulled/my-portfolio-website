@@ -1,8 +1,8 @@
-import {Redis} from '@upstash/redis';
-import {getCachedData, setCachedData} from '@/services/redis';
-import {PhotoFlickr} from '@/services/flickr/flickr.types';
-import {sanitizeKey} from '@/lib/sanitizer';
-import {commonAfterEach, commonBeforeEach} from '@/__tests__/utils/testUtils';
+import { Redis } from "@upstash/redis";
+import { getCachedData, setCachedData } from "@/services/redis";
+import { PhotoFlickr } from "@/services/flickr/flickr.types";
+import { sanitizeKey } from "@/lib/sanitizer";
+import { commonAfterEach, commonBeforeEach } from "@/__tests__/utils/testUtils";
 
 // Mock the dependencies
 jest.mock('@upstash/redis');
@@ -50,9 +50,11 @@ describe('Redis Service', () => {
 
     const mockRedisGet = jest.fn();
     const mockRedisSet = jest.fn();
+  const mockRedisTtl = jest.fn();
     const mockRedis = {
         get: mockRedisGet,
         set: mockRedisSet,
+      ttl: mockRedisTtl
     };
 
     beforeEach(() => {
@@ -74,8 +76,9 @@ describe('Redis Service', () => {
 
     describe('getCachedData', () => {
         it('should return cached data when available', async () => {
-            // Mock Redis.get to return data
+          // Mock Redis.get to return data and ttl to return expiry
             mockRedisGet.mockResolvedValue(mockPhotoFlickr);
+          mockRedisTtl.mockResolvedValue(3600);
 
             // Call the function
             const result = await getCachedData(mockKey);
@@ -86,15 +89,21 @@ describe('Redis Service', () => {
             // Check that sanitizeKey was called with the correct key
             expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
 
-            // Check that Redis.get was called with the correct key
+          // Check that Redis.get and ttl were called with the correct key
             expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
+          expect(mockRedisTtl).toHaveBeenCalledWith(mockKey);
 
-            expect(result).toEqual(mockPhotoFlickr);
+          // Check that the result includes the expiry time
+          expect(result).toEqual(mockPhotoFlickr.map(photo => ({
+            ...photo,
+            expiresAt: 3600
+          })));
         });
 
         it('should return null when cache is empty', async () => {
             // Mock Redis.get to return null
             mockRedisGet.mockResolvedValue(null);
+          mockRedisTtl.mockResolvedValue(0);
 
             // Call the function
             const result = await getCachedData(mockKey);
@@ -105,8 +114,9 @@ describe('Redis Service', () => {
             // Check that sanitizeKey was called with the correct key
             expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
 
-            // Check that Redis.get was called with the correct key
+          // Check that Redis.get and ttl were called with the correct key
             expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
+          expect(mockRedisTtl).toHaveBeenCalledWith(mockKey);
 
             expect(result).toBeNull();
         });
@@ -114,6 +124,7 @@ describe('Redis Service', () => {
         it('should handle errors from Redis', async () => {
             // Mock Redis.get to throw an error
             mockRedisGet.mockRejectedValue(new Error('Redis error'));
+          mockRedisTtl.mockResolvedValue(0);
 
             // Call the function and expect it to throw
             await expect(getCachedData(mockKey)).rejects.toThrow('Redis error');
@@ -124,8 +135,9 @@ describe('Redis Service', () => {
             // Check that sanitizeKey was called with the correct key
             expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
 
-            // Check that Redis.get was called with the correct key
+          // Check that Redis.get and ttl were called with the correct key
             expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
+          expect(mockRedisTtl).toHaveBeenCalledWith(mockKey);
         });
     });
 
