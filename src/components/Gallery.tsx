@@ -9,12 +9,13 @@ import Captions from "yet-another-react-lightbox/plugins/captions";
 import { Aref_Ruqaa } from "next/font/google";
 import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
-import { Image, RowsPhotoAlbum } from "react-photo-album";
+import { RowsPhotoAlbum } from "react-photo-album";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import renderFadeInNextImage from "@/components/FadeInNextImage";
 import { useTranslations } from "next-intl";
 import { Photo } from "@/services/flickr/flickr.types";
 import FadeInTitle from "@/components/FadeInTitle";
+import mapPhotosToGalleryImages from "@/lib/photoMapper";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -40,24 +41,7 @@ export default function Gallery({
   };
   //endregion
 
-  const galleryPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
-    src: photo.urlSmall,
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    blurDataURL: photo.urlThumbnail,
-    width: parseInt(photo.width),
-    height: parseInt(photo.height),
-  }));
-
-  const lightboxPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
-    src: photo.urlOriginal,
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: parseInt(photo.width),
-    height: parseInt(photo.height),
-    title: photo.title,
-    description: photo.description,
-  }));
+  const { galleryPhotos, lightboxPhotos } = mapPhotosToGalleryImages(photos);
 
   return (
     <>
