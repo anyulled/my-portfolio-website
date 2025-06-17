@@ -13,8 +13,8 @@ export async function getCachedData(
   const redis = Redis.fromEnv();
   const sanitizedKey = sanitizeKey(key);
   console.log(chalk.cyan(`- Getting Redis Cache for (${sanitizedKey}):`));
-  const expiryDate = await redis.ttl(key);
-  const data = await redis.get<Array<PhotoFlickr>>(key);
+  const expiryDate = await redis.ttl(sanitizedKey);
+  const data = await redis.get<Array<PhotoFlickr>>(sanitizedKey);
 
   if (data === null) {
     console.warn(chalk.red("- Redis Cache miss"));
@@ -35,7 +35,7 @@ export async function setCachedData(
 ): Promise<void> {
   const redis = Redis.fromEnv();
   const sanitizedKey = sanitizeKey(key);
-  const result = await redis.set(key, JSON.stringify(data), {ex: expiryInSeconds});
+  const result = await redis.set(sanitizedKey, JSON.stringify(data), {ex: expiryInSeconds});
   console.log(`- Redis Cache Write Success (${sanitizedKey}):`);
   console.log(chalk.cyan("- Redis Cache response"), result);
   return;

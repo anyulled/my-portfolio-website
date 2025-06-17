@@ -90,8 +90,8 @@ describe('Redis Service', () => {
             expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
 
           // Check that Redis.get and ttl were called with the correct key
-            expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
-          expect(mockRedisTtl).toHaveBeenCalledWith(mockKey);
+            expect(mockRedisGet).toHaveBeenCalledWith(mockSanitizedKey);
+          expect(mockRedisTtl).toHaveBeenCalledWith(mockSanitizedKey);
 
           // Check that the result includes the expiry time
           expect(result).toEqual(mockPhotoFlickr.map(photo => ({
@@ -115,8 +115,8 @@ describe('Redis Service', () => {
             expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
 
           // Check that Redis.get and ttl were called with the correct key
-            expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
-          expect(mockRedisTtl).toHaveBeenCalledWith(mockKey);
+            expect(mockRedisGet).toHaveBeenCalledWith(mockSanitizedKey);
+          expect(mockRedisTtl).toHaveBeenCalledWith(mockSanitizedKey);
 
             expect(result).toBeNull();
         });
@@ -136,8 +136,8 @@ describe('Redis Service', () => {
             expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
 
           // Check that Redis.get and ttl were called with the correct key
-            expect(mockRedisGet).toHaveBeenCalledWith(mockKey);
-          expect(mockRedisTtl).toHaveBeenCalledWith(mockKey);
+            expect(mockRedisGet).toHaveBeenCalledWith(mockSanitizedKey);
+          expect(mockRedisTtl).toHaveBeenCalledWith(mockSanitizedKey);
         });
     });
 
@@ -157,7 +157,7 @@ describe('Redis Service', () => {
 
             // Check that Redis.set was called with the correct parameters
             expect(mockRedisSet).toHaveBeenCalledWith(
-                mockKey,
+                mockSanitizedKey,
                 JSON.stringify(mockPhotoFlickr),
                 {ex: 3600}
             );
@@ -178,7 +178,7 @@ describe('Redis Service', () => {
 
             // Check that Redis.set was called with the correct parameters
             expect(mockRedisSet).toHaveBeenCalledWith(
-                mockKey,
+                mockSanitizedKey,
                 JSON.stringify(mockPhotoFlickr),
                 {ex: 3600}
             );
