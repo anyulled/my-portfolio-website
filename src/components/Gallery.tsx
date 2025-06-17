@@ -9,7 +9,7 @@ import Captions from "yet-another-react-lightbox/plugins/captions";
 import { Aref_Ruqaa } from "next/font/google";
 import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
-import { Image, RowsPhotoAlbum } from "react-photo-album";
+import { RowsPhotoAlbum } from "react-photo-album";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import renderFadeInNextImage from "@/components/FadeInNextImage";
 import { useTranslations } from "next-intl";
