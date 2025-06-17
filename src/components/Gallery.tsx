@@ -40,13 +40,23 @@ export default function Gallery({
   };
   //endregion
 
-  const convertedPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
+  const galleryPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
+    src: photo.urlSmall,
+    srcSet: photo.srcSet,
+    alt: photo.title,
+    blurDataURL: photo.urlThumbnail,
+    width: parseInt(photo.width),
+    height: parseInt(photo.height),
+  }));
+
+  const lightboxPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
     src: photo.urlOriginal,
     srcSet: photo.srcSet,
     alt: photo.title,
-    blurDataURL: photo.urlSmall,
     width: parseInt(photo.width),
     height: parseInt(photo.height),
+    title: photo.title,
+    description: photo.description,
   }));
 
   return (
@@ -62,7 +72,7 @@ export default function Gallery({
               </h2>
             </FadeInTitle>
           )}
-          {convertedPhotos && convertedPhotos?.length > 0 ? (
+          {galleryPhotos && galleryPhotos?.length > 0 ? (
             <RowsPhotoAlbum
               render={{
                 image: (props, context) => renderFadeInNextImage(
@@ -70,7 +80,7 @@ export default function Gallery({
                   context
                 )
               }}
-              photos={convertedPhotos}
+              photos={galleryPhotos}
               defaultContainerWidth={1200}
               onClick={({ index }) => handleImageClick(index)}
             />
@@ -85,7 +95,7 @@ export default function Gallery({
           )}
         </div>
       </section>
-      {convertedPhotos && lightboxOpen && (
+      {lightboxPhotos && lightboxOpen && (
         <Lightbox
           open={lightboxOpen}
           plugins={[Fullscreen, Zoom, Captions]}
@@ -96,7 +106,7 @@ export default function Gallery({
             descriptionMaxLines: 3,
             showToggle: true,
           }}
-          slides={convertedPhotos}
+          slides={lightboxPhotos}
         />
       )}
     </>
