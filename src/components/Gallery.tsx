@@ -15,6 +15,7 @@ import renderFadeInNextImage from "@/components/FadeInNextImage";
 import { useTranslations } from "next-intl";
 import { Photo } from "@/services/flickr/flickr.types";
 import FadeInTitle from "@/components/FadeInTitle";
+import mapPhotosToGalleryImages from "@/lib/photoMapper";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -40,14 +41,7 @@ export default function Gallery({
   };
   //endregion
 
-  const convertedPhotos: Image[] | undefined = photos?.map((photo: Photo) => ({
-    src: photo.urlOriginal,
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    blurDataURL: photo.urlSmall,
-    width: parseInt(photo.width),
-    height: parseInt(photo.height),
-  }));
+  const { galleryPhotos, lightboxPhotos } = mapPhotosToGalleryImages(photos);
 
   return (
     <>
@@ -62,7 +56,7 @@ export default function Gallery({
               </h2>
             </FadeInTitle>
           )}
-          {convertedPhotos && convertedPhotos?.length > 0 ? (
+          {galleryPhotos && galleryPhotos?.length > 0 ? (
             <RowsPhotoAlbum
               render={{
                 image: (props, context) => renderFadeInNextImage(
@@ -70,7 +64,7 @@ export default function Gallery({
                   context
                 )
               }}
-              photos={convertedPhotos}
+              photos={galleryPhotos}
               defaultContainerWidth={1200}
               onClick={({ index }) => handleImageClick(index)}
             />
@@ -85,7 +79,7 @@ export default function Gallery({
           )}
         </div>
       </section>
-      {convertedPhotos && lightboxOpen && (
+      {lightboxPhotos && lightboxOpen && (
         <Lightbox
           open={lightboxOpen}
           plugins={[Fullscreen, Zoom, Captions]}
@@ -96,7 +90,7 @@ export default function Gallery({
             descriptionMaxLines: 3,
             showToggle: true,
           }}
-          slides={convertedPhotos}
+          slides={lightboxPhotos}
         />
       )}
     </>
