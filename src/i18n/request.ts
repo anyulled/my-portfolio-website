@@ -24,10 +24,10 @@ export async function findMessagesDir(): Promise<{
     try {
       files = await fs.readdir(dir);
       messagesDir = dir;
-      console.log(`[ i18n ] Successfully found messages directory at: ${messagesDir}`);
+      console.info(`[ i18n ] Successfully found messages directory at: ${messagesDir}`);
       break;
     } catch (e) {
-      console.log(`[ i18n ] Directory not found: ${dir}`, e);
+      console.error(`[ i18n ] Directory not found: ${dir}`, e);
     }
   }
 
@@ -73,7 +73,7 @@ export default getRequestConfig(async () => {
       const filePath = path.join(messagesDir, `${locale}.json`);
       const fileContent = await fs.readFile(filePath, "utf8");
       messages = JSON.parse(fileContent);
-      console.log(`[ i18n ] Successfully loaded messages for locale: ${locale}`);
+      console.info(`[ i18n ] Successfully loaded messages for locale: ${locale}`);
     } catch (error) {
       console.error(`[ i18n ] Error loading messages for locale ${locale}:`, error);
       try {
@@ -85,7 +85,8 @@ export default getRequestConfig(async () => {
     }
   } else {
     try {
-      messages = (await import(`../../messages/${locale}.json`)).default;
+      console.warn("[ i18n ] Last resort");
+      messages = (await import(`@/messages/${locale}.json`)).default;
     } catch (importError) {
       console.error(`[ i18n ] Failed to import messages for locale ${locale}:`, importError);
       messages = {};
