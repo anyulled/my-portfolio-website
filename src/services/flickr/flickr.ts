@@ -1,12 +1,12 @@
 import chalk from "chalk";
-import {API, FetchTransport, Flickr} from "flickr-sdk";
+import { API, FetchTransport, Flickr } from "flickr-sdk";
 
-import {getCachedData, setCachedData} from "@/services/redis";
+import { getCachedData, setCachedData } from "@/services/redis";
 import * as Sentry from "@sentry/nextjs";
 import {
   FlickrResponse,
   Photo,
-  PhotoFlickr,
+  PhotoFlickr
 } from "@/services/flickr/flickr.types";
 
 const CACHE_EXPIRY = 60 * 60 * 24; // 24 hours
@@ -82,12 +82,12 @@ const getPhotosFromCache = async (
   try {
     const cachedPhotos = await getCachedData(tags);
     if (cachedPhotos) {
-      console.info(chalk.blue("Using cached photos."));
+      console.info(chalk.blue("[ FLickr ] Using cached photos."));
       return cachedPhotos;
     }
     return null;
   } catch (error) {
-    console.error(chalk.red("Failed to get cached data:", error));
+    console.error(chalk.red("[ FLickr ] Failed to get cached data:", error));
     Sentry.captureException(error);
     return null;
   }
@@ -104,14 +104,14 @@ const sortPhotos = (
   let sortedPhotos = [...photos];
 
   if (orderByDate) {
-    console.info(chalk.cyan("Sorting photos by date taken..."));
+    console.info(chalk.cyan("[ FLickr ] Sorting photos by date taken..."));
     sortedPhotos = sortedPhotos.toSorted(
       (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
     );
   }
 
   if (orderByViews) {
-    console.info(chalk.cyan("Sorting photos by views..."));
+    console.info(chalk.cyan("[ FLickr ] Sorting photos by views..."));
     sortedPhotos = sortedPhotos.toSorted(
       (a: Photo, b: Photo) => b.views - a.views,
     );
@@ -196,7 +196,7 @@ export const processFlickrPhotos = (
 
 /**
  * Fetches photos from Flickr based on the provided tags and options.
- * Returns cached photos immediately if available, and updates cache in the background.
+ * Returns cached photos immediately if available and updates the cache in the background.
  */
 
 /**
@@ -231,15 +231,14 @@ export async function getFlickrPhotos(
 
   const cachedPhotos = await getPhotosFromCache(tags);
 
-  // If we have cached data, trigger Flickr API call in the background and return cached data immediately
   if (cachedPhotos) {
-    console.info(chalk.blue("Returning cached photos while updating in background."));
+    console.info(chalk.blue("[ FLickr ] Returning cached photos while updating in background."));
 
     void (async function updateCacheInBackground() {
       try {
         console.info(
             chalk.blue(
-                `Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`,
+              `[ FLickr ] Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`
             ),
         );
         const flickrPhotos = await fetchFlickrPhotos(flickr, tags);
@@ -247,29 +246,23 @@ export async function getFlickrPhotos(
           await updatePhotoCache(tags, flickrPhotos);
         }
       } catch (error) {
-        console.error(chalk.red("Background cache update failed:", error));
+        console.error(chalk.red("[ FLickr ] Background cache update failed:", error));
         Sentry.captureException(error);
       }
     })();
 
-    // Process and return cached photos immediately
     return processAndSortPhotos(cachedPhotos, items, orderByDate, orderByViews);
   }
 
-  // If no cached data, we need to wait for Flickr API call
   const flickrPhotos = await fetchFlickrPhotos(flickr, tags);
 
   if (flickrPhotos) {
-    // Update cache with new photos
     await updatePhotoCache(tags, flickrPhotos);
-
-    // Process and return Flickr photos
     return processAndSortPhotos(flickrPhotos, items, orderByDate, orderByViews);
   }
 
-  // If we reach here, both Flickr API and cache failed
   return createErrorResponse(
-     `Failed to get photos from both Flickr API and cache for tags: ${tags}`,
+    `[ FLickr ] Failed to get photos from both Flickr API and cache for tags: ${tags}`
   );
 }
 
@@ -296,6 +289,6 @@ const splitTags = (
     includedTags: terms.filter((term) => !term.startsWith("-")).join(","),
     excludedTags: terms
       .filter((term) => term.startsWith("-"))
-      .map((term) => term.slice(1)), // Remove the '-' prefix
+      .map((term) => term.slice(1)),
   };
 };
