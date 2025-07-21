@@ -87,12 +87,12 @@ export default getRequestConfig(async () => {
     try {
       console.warn("[ i18n ] Last resort");
       messages = (await import(`@/messages/${locale}.json`)).default;
+      console.info(`[ i18n ] Successfully loaded messages for locale: ${locale}`);
     } catch (importError) {
       console.error(`[ i18n ] Failed to import messages for locale ${locale}:`, importError);
       messages = {};
     }
   }
-
   return {
     locale,
     messages
