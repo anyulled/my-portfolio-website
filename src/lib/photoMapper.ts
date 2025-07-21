@@ -14,7 +14,7 @@ export const mapPhotosToGalleryImages = (
   }
 
   const galleryPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.urlSmall,
+    src: photo.urlMedium,
     srcSet: photo.srcSet,
     alt: photo.title,
     blurDataURL: photo.urlThumbnail,
