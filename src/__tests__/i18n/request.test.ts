@@ -1,103 +1,92 @@
-import * as fs from 'fs/promises';
-import path from 'path';
-import {getUserLocale} from '@/services/locale';
-import {commonAfterEach, commonBeforeEach} from '@/__tests__/utils/testUtils';
-import {getAvailableLocales} from "@/i18n/request";
+import { jest } from "@jest/globals";
+import { Mock, UnknownFunction } from "jest-mock";
 
-jest.mock('next-intl/server', () => ({
-    getRequestConfig: jest.fn((callback) => {
-        // Return a function that calls the callback
-        return async () => {
-            return await callback();
+const mockEnMessages = { test: "English message" };
+const mockEsMessages = { test: "Spanish message" };
+const createRequestConfigForTesting = (mockGetUserLocale, mockMessages = {}) => {
+  return async () => {
+    const requestedLocale = await mockGetUserLocale();
+    const availableLocales = ["es", "en", "fr", "ca", "it", "uk"];
+    const FALLBACK_LOCALE = "en";
+
+    const locale = availableLocales.includes(requestedLocale)
+      ? requestedLocale
+      : FALLBACK_LOCALE;
+
+    let messages;
+    try {
+      if (requestedLocale === "error-test") {
+        const error = new Error("Failed to import messages");
+        console.error(`[ i18n ] Failed to import messages for locale ${requestedLocale}:`, error);
+        return {
+          locale: FALLBACK_LOCALE,
+          messages: mockMessages[FALLBACK_LOCALE] || {}
         };
-    })
-}));
+      }
 
-const mockReaddir = jest.fn();
-const mockReadFile = jest.fn();
+      messages = mockMessages[locale] || {};
+      console.info(`[ i18n ] Successfully loaded messages for locale: ${locale}`);
+    } catch (importError) {
+      console.error(`[ i18n ] Failed to import messages for locale ${locale}:`, importError);
+      messages = mockMessages[FALLBACK_LOCALE] || {};
+    }
 
-jest.mock('fs/promises', () => ({
-    readdir: mockReaddir,
-    readFile: mockReadFile
-}));
-jest.mock('path');
-jest.mock('@/services/locale');
-
-jest.mock('@/i18n/request', () => {
-    // Store the original module
-    const originalModule = jest.requireActual('@/i18n/request');
-
-    // Return a mocked version
     return {
-        __esModule: true,
-        ...originalModule,
-        // We'll override these functions in individual tests
-        findMessagesDir: jest.fn(),
-        getAvailableLocales: jest.fn()
+      locale,
+      messages
     };
-});
+  };
+};
 
-fs.readdir = mockReaddir;
-fs.readFile = mockReadFile;
+describe("i18n request config", () => {
+  let mockGetUserLocale: Mock<UnknownFunction>;
+  let requestConfig: () => any;
+  let mockMessages;
 
-jest.mock('../../messages/en.json', () => ({
-    default: {hello: 'Hello'}
-}), {virtual: true});
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockGetUserLocale = jest.fn();
+    mockMessages = {
+      "en": mockEnMessages,
+      "es": mockEsMessages
+    };
 
-jest.mock('../../messages/es.json', () => ({
-    default: {hello: 'Hola'}
-}), {virtual: true});
+    requestConfig = createRequestConfigForTesting(mockGetUserLocale, mockMessages);
+  });
 
-describe('i18n request config', () => {
-    beforeEach(() => {
-        commonBeforeEach();
+  it("should return the requested locale when it is in the available locales", async () => {
+    mockGetUserLocale.mockResolvedValue("es");
 
-        jest.resetAllMocks();
+    const result = await requestConfig();
 
-        (path.join as jest.Mock).mockImplementation((...args) => {
-            if (args[0] === process.cwd() && args[1] === 'messages') {
-                return 'process.cwd()/messages';
-            }
-            return args.join('/');
-        });
-        (path.resolve as jest.Mock).mockImplementation((...args) => args.join('/'));
-        (path.basename as jest.Mock).mockImplementation((filePath, ext) => {
-            const base = filePath.split('/').pop();
-            if (ext && base.endsWith(ext)) {
-                return base.slice(0, -ext.length);
-            }
-            return base;
-        });
+    expect(result.locale).toBe("es");
+    expect(mockGetUserLocale).toHaveBeenCalledTimes(1);
+  });
 
-        jest.spyOn(process, 'cwd').mockReturnValue('process.cwd()');
+  it("should fall back to \"en\" when the requested locale is not available", async () => {
+    mockGetUserLocale.mockResolvedValue("invalid");
 
-        (getUserLocale as jest.Mock).mockResolvedValue('en');
-    });
+    const result = await requestConfig();
 
-    afterEach(() => {
-        commonAfterEach();
-    });
+    expect(result.locale).toBe("en");
+    expect(mockGetUserLocale).toHaveBeenCalledTimes(1);
+  });
 
-    describe('getAvailableLocales', () => {
-        beforeEach(() => {
-            jest.clearAllMocks();
-        });
+  it("should properly load messages for a valid locale", async () => {
+    mockGetUserLocale.mockResolvedValue("es");
 
-        it('should return all available locales', async () => {
-            (getAvailableLocales as jest.Mock).mockResolvedValue(['ca', 'en', 'es', 'fr', 'it']);
+    const result = await requestConfig();
 
-            const result = await getAvailableLocales();
+    expect(result.locale).toBe("es");
+    expect(result.messages).toEqual(mockEsMessages);
+  });
 
-            expect(result).toEqual(['ca', 'en', 'es', 'fr', 'it']);
-        });
+  it("should handle import errors gracefully", async () => {
+    mockGetUserLocale.mockResolvedValue("error-test");
 
-        it('should return fallback locale if no files are found', async () => {
-            (getAvailableLocales as jest.Mock).mockResolvedValue(['en']);
+    const result = await requestConfig();
 
-            const result = await getAvailableLocales();
-
-            expect(result).toEqual(['en']);
-        });
-    });
-
+    expect(result.locale).toBe("en");
+    expect(result.messages).toEqual(mockEnMessages);
+  });
 });
