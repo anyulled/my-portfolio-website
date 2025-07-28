@@ -1,5 +1,8 @@
 import { jest } from "@jest/globals";
 import { Mock, UnknownFunction } from "jest-mock";
+import {
+  RequestConfig
+} from "next-intl/dist/types/src/server/react-server/getRequestConfig";
 
 const mockEnMessages = { test: "English message" };
 const mockEsMessages = { test: "Spanish message" };
@@ -40,7 +43,7 @@ const createRequestConfigForTesting = (mockGetUserLocale, mockMessages = {}) => 
 
 describe("i18n request config", () => {
   let mockGetUserLocale: Mock<UnknownFunction>;
-  let requestConfig: () => any;
+  let requestConfig: () => RequestConfig;
   let mockMessages;
 
   beforeEach(() => {
