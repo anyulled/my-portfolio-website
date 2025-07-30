@@ -68,7 +68,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vercel/toolbar": "^0.1.24",
-    "babel-jest": "^29.7.0",
+    "babel-jest": "^30.0.5",
     "eslint": "^8",
     "eslint-config-next": "15.2.0",
     "husky": "^9.1.6",
