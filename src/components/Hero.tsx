@@ -1,8 +1,8 @@
 "use client";
-import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
-import React, {useEffect, useRef, useState} from "react";
-import {useTranslations} from "next-intl";
-import {useGSAP} from "@gsap/react";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import React, { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 if (typeof window !== 'undefined') {
@@ -131,14 +131,14 @@ export default function Hero() {
         <h1
             ref={titleRef}
           className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-mocha-mousse-900 shadow-mocha-mousse-100 dark:shadow-mocha-mousse-200 dark:text-white text-shadow-default`}
-            style={{opacity: 0}} // Initial state for animation
+            style={{ opacity: 0 }}
         >
           Sensuelle Boudoir
         </h1>
         <p
             ref={subtitleRef}
           className={`${arefRuqaa.className} text-2xl md:text-3xl text-neutral-300 shadow-mocha-mousse-800 dark:text-neutral-200 dark:shadow-mocha-mousse-300 text-shadow-sm`}
-            style={{opacity: 0}} // Initial state for animation
+            style={{ opacity: 0 }}
         >
           {t("capture_your_essence")}
         </p>

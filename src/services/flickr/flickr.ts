@@ -195,11 +195,6 @@ export const processFlickrPhotos = (
 };
 
 /**
- * Fetches photos from Flickr based on the provided tags and options.
- * Returns cached photos immediately if available and updates the cache in the background.
- */
-
-/**
  * Processes and sorts photos from Flickr
  */
 const processAndSortPhotos = (

@@ -208,5 +208,21 @@
     "eye_violet": "Violeta",
     "eye_heterochromia": "Heterocromía",
     "eye_other": "Otro"
+  },
+  "testimonials": {
+    "what_our_clients_say": "Lo que dicen nuestras clientas",
+    "discover_transformative_experiences": "Descubre las experiencias transformativas de mujeres que eligen celebrar su belleza y su confianza a través de la fotografía boudoir.",
+    "more_client_stories": "Más testimonios de clientas",
+    "client_testimonials": "Testimonios de clientas",
+    "real_stories": "Historias reales de mujeres que descubrieron su diosa interior a través de la fotografía boudoir",
+    "join_hundreds": "Únete a decenas de mujeres que descubrieron su confianza y belleza a través de nuestras sesiones empoderadoras de fotografía boudoir.",
+    "ready_to_create": "¿Lista para crear tu propia historia?",
+    "book_your_session": "Reserva tu sesión hoy",
+    "empowering": "Empoderadora",
+    "professional": "Profesional",
+    "five-star": "Calificado con 5 estrellas"
+  },
+  "locale": {
+    "date": "es-ES"
   }
 }

@@ -27,7 +27,7 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
   { name: "menu_what_is_boudoir", href: "/what-is-boudoir" },
   { name: "menu_about", href: "/about" },
-  //{ name: "menu_testimonials", href: "/testimonials" },
+  { name: "menu_testimonials", href: "/testimonials" }
 ];
 
 export default function NavBar() {
