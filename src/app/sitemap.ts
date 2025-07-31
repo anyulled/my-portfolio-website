@@ -1,4 +1,4 @@
-import type {MetadataRoute} from "next";
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseURL = "https://boudoir.barcelona";
@@ -44,6 +44,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "never",
       priority: 0.3,
+    }, {
+      url: `${baseURL}/testimonials`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6
     },
   ];
 }
