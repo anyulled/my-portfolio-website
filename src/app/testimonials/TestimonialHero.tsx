@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 import Image from "next/image";
 
-import { gsap } from "gsap";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { useTranslations } from "next-intl";
+import {gsap} from "gsap";
+import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
+import {useTranslations} from "next-intl";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -68,7 +68,7 @@ export default function TestimonialsHero() {
           className={"object-cover h-full opacity-60"} />
       </div>
       <div
-        className="relative h-full flex flex-col items-center justify-center text-center px-4">
+          className="relative h-full flex flex-col items-center justify-center text-center px-4 pt-36">
         <h1 ref={titleRef}
             className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-mocha-mousse-900 shadow-mocha-mousse-100 dark:shadow-mocha-mousse-200 dark:text-white text-shadow-default mb-4`}>
           {t("client_testimonials")}
