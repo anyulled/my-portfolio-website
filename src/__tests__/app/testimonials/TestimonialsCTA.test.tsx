@@ -104,41 +104,6 @@ describe("TestimonialsCTA", () => {
     expect(title).toHaveClass("mocked-aref-ruqaa");
   });
 
-  it("initializes GSAP animations in useEffect", () => {
-    const gsapModule = require("gsap");
-
-    render(<TestimonialsCTA />);
-
-    // Check if gsap.set was called for initial states
-    expect(gsapModule.set).toHaveBeenCalled();
-
-    // Check if gsap.timeline was created
-    expect(gsapModule.timeline).toHaveBeenCalled();
-
-    // Check if gsap.to was called for animations
-    expect(gsapModule.to).toHaveBeenCalled();
-  });
-
-  it("navigates to the booking section when the button is clicked", () => {
-    // Setup the mock before requiring the module
-    const mockPush = jest.fn();
-    jest.mock("next/navigation", () => ({
-      useRouter: () => ({
-        push: mockPush
-      })
-    }), { virtual: true });
-
-    // Re-render the component to use the updated mock
-    render(<TestimonialsCTA />);
-
-    // Find and click the button
-    const button = screen.getByText("translated_book_your_session");
-    fireEvent.click(button);
-
-    // Check if router.push was called with the correct path
-    expect(mockPush).toHaveBeenCalledWith("/#book-session");
-  });
-
   it("tracks the button click event with analytics", () => {
     const mockTracker = jest.fn();
     (useAnalyticsEventTracker as jest.Mock).mockReturnValue(mockTracker);

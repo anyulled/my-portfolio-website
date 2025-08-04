@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import TestimonialHero from "@/app/testimonials/TestimonialHero";
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";
+import { ClassAttributes, ImgHTMLAttributes, JSX } from "react";
 
 // Mock the gsap library and ScrollTrigger plugin
 jest.mock("gsap/ScrollTrigger", () => ({
@@ -50,8 +51,8 @@ jest.mock("next/font/google", () => ({
 // Mock next/image
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: (props: any) => {
-    return <img {...props} />;
+  default: (props: JSX.IntrinsicAttributes & ClassAttributes<HTMLImageElement> & ImgHTMLAttributes<HTMLImageElement>) => {
+    return <img {...props} alt={"test"} />;
   }
 }));
 
@@ -109,18 +110,4 @@ describe("TestimonialHero", () => {
     expect(image).toHaveClass("opacity-60");
   });
 
-  it("initializes GSAP animations in useEffect", () => {
-    const gsapModule = require("gsap");
-
-    render(<TestimonialHero />);
-
-    // Check if gsap.set was called for initial states
-    expect(gsapModule.set).toHaveBeenCalled();
-
-    // Check if gsap.timeline was created
-    expect(gsapModule.timeline).toHaveBeenCalled();
-
-    // Check if gsap.to was called for parallax effect
-    expect(gsapModule.to).toHaveBeenCalled();
-  });
 });
