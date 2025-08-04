@@ -49,6 +49,7 @@
     "react-hook-form": "^7.55.0",
     "react-photo-album": "^3.0.2",
     "react-simple-icons": "^1.0.0-beta.5",
+    "schema-dts": "^1.1.5",
     "simple-icons": "^14.14.0",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",

@@ -5,6 +5,7 @@ import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialCard from "@/components/TestimonialCard";
 import { Aref_Ruqaa } from "next/font/google";
 import { getTranslations } from "next-intl/server";
+import { WebPage, WithContext } from "schema-dts";
 
 export const metadata: Metadata = {
   title: "Client Testimonials | Sensuelle Boudoir Photography",
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
   }
 };
 
-const structuredData = {
+const structuredData: WithContext<WebPage> = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "Client Testimonials",
@@ -46,7 +47,7 @@ const structuredData = {
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: "5",
-      reviewCount: "50+",
+      reviewCount: "50",
       bestRating: "5",
       worstRating: "4"
     }
