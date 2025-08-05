@@ -1,11 +1,11 @@
-import { Metadata } from "next";
-import { getTestimonials, Testimonial } from "@/lib/testimonials";
+import {Metadata} from "next";
+import {getTestimonials, Testimonial} from "@/lib/testimonials";
 import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialCard from "@/components/TestimonialCard";
-import { Aref_Ruqaa } from "next/font/google";
-import { getTranslations } from "next-intl/server";
-import { WebPage, WithContext } from "schema-dts";
+import {Aref_Ruqaa} from "next/font/google";
+import {getTranslations} from "next-intl/server";
+import {WebPage, WithContext} from "schema-dts";
 
 export const metadata: Metadata = {
   title: "Client Testimonials | Sensuelle Boudoir Photography",
@@ -20,10 +20,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://live.staticflickr.com/65535/54349881217_a687110589_k_m.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Boudoir Photography Testimonials"
+        url: "https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg",
+        width: 500,
+        height: 333,
+        alt: "Andrea Cano Montull"
       }
     ]
   },
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Client Testimonials | Sensuelle Boudoir · Boudoir Photography in Barcelona",
     description: "Read authentic testimonials from our boudoir photography clients.",
-    images: ["https://live.staticflickr.com/65535/54349881217_a687110589_k_m.jpg"]
+    images: ["https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg"]
   }
 };
 
