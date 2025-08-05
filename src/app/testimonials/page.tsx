@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   keywords:
     "boudoir photography testimonials, client reviews, empowering photography, confidence boost, feminine portraits",
   openGraph: {
+    url: "https://boudoir.barcelona/testimonials",
+    "siteName": "Sensuelle Boudoir Photography",
     title: "Client Testimonials | Sensuelle Boudoir Photography",
     description:
       "Read authentic testimonials from our boudoir photography clients. Discover transformative experiences.",
