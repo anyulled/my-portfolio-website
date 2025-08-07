@@ -104,7 +104,8 @@ export default function TestimonialCard({
         ))}
       </div>
 
-      <blockquote className="text-mocha-mousse-700 leading-relaxed italic">
+      <blockquote data-testid="testimonial-content"
+                  className="text-mocha-mousse-700 leading-relaxed italic">
         &quot; {testimonial.content} &quot;
       </blockquote>
 

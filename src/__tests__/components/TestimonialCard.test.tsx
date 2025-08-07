@@ -4,13 +4,11 @@ import { Testimonial } from "@/lib/testimonials";
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";
 import { ClassAttributes, ImgHTMLAttributes, JSX } from "react";
 
-// Mock the gsap library and ScrollTrigger plugin
 jest.mock("gsap/ScrollTrigger", () => ({
   __esModule: true,
   default: "mocked-scroll-trigger",
   getAll: jest.fn().mockReturnValue([{ kill: jest.fn() }])
 }));
-
 jest.mock("gsap", () => {
   return {
     __esModule: true,
@@ -38,13 +36,9 @@ jest.mock("gsap", () => {
     }))
   };
 });
-
-// Mock next-intl
 jest.mock("next-intl", () => ({
   useTranslations: jest.fn(() => (key: string) => key === "date" ? "en-US" : `translated_${key}`)
 }));
-
-// Mock next/image
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: JSX.IntrinsicAttributes & ClassAttributes<HTMLImageElement> & ImgHTMLAttributes<HTMLImageElement>) => {
