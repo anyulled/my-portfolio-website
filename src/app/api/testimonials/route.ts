@@ -1,9 +1,8 @@
 import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";
-import { fetchTestimonialsFromDb } from "@/lib/testimonials";
+import { getTestimonials } from "@/lib/testimonials";
 
-
-const getCachedTestimonials = unstable_cache(fetchTestimonialsFromDb, ["testimonials"], {
+const getCachedTestimonials = unstable_cache(getTestimonials, ["testimonials"], {
   revalidate: 3600, // 1 hour
   tags: ["testimonials"]
 });
