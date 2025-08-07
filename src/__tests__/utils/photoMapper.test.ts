@@ -1,5 +1,5 @@
-import { mapPhotosToGalleryImages } from '@/lib/photoMapper';
-import { Photo } from '@/services/flickr/flickr.types';
+import { mapPhotosToGalleryImages } from "@/lib/photoMapper";
+import { Photo } from "@/services/flickr/flickr.types";
 
 const mockPhotos: Photo[] = [
   {
@@ -33,7 +33,7 @@ describe('mapPhotosToGalleryImages', () => {
     expect(galleryPhotos).toHaveLength(1);
     expect(lightboxPhotos).toHaveLength(1);
 
-    expect(galleryPhotos![0].src).toBe('small.jpg');
+    expect(galleryPhotos![0].src).toBe("medium.jpg");
     expect(lightboxPhotos![0].src).toBe('original.jpg');
   });
 
