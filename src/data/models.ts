@@ -6,10 +6,14 @@ export type Model = {
 const models: Array<Model> = [
   { tag: "abigail-marsh", name: "Abigail Marsh" },
   { tag: "alba-sobrino", name: "Alba Sobrino" },
+  { tag: "alshira-alcibar", name: "Alshira Alcibar" },
   { tag: "alejandra-sojo", name: "Alejandra Sojo" },
   { tag: "alena-balashova", name: "Alena Balashova" },
   { tag: "anastasia-jadore", name: "Anastasia J'adore" },
-  { tag: "andrea-cano", name: "Andrea Cano" },
+  { tag: "ana-sweet", name: "Anastasiia" },
+  { tag: "ana-almeida", name: "Ana Almeida" },
+  { tag: "anastasiia-berlin", name: "Anastasiia Berlin" },
+  { tag: "andrea-cano", name: "Andrea Cano Montull" },
   { tag: "angelica-pizzi", name: "Angelica Pizzi" },
   { tag: "arianna-gray", name: "Arianna Gray" },
   { tag: "ariadna-munns", name: "Ariadna Munns" },
@@ -26,7 +30,10 @@ const models: Array<Model> = [
   { tag: "delaia-gonzalez", name: "Delaia González" },
   { tag: "dubis-venares", name: "Dubis Venares" },
   { tag: "francelys-flex", name: "Francelys Flex" },
+  { tag: "francesca-Rando", name: "Francesca Rando" },
+  { tag: "gabriela-serban", name: "Gabriela Serban" },
   { tag: "giulia-chiucchi", name: "Giulia Chiucchi" },
+  { tag: "inmaculada-infante", name: "Inmaculada Infante" },
   { tag: "jana", name: "Jana Model" },
   { tag: "julia-munns", name: "Julia Munns" },
   { tag: "karina-vasylyuk", name: "Karina Vasylyuk" },
@@ -36,6 +43,7 @@ const models: Array<Model> = [
   { tag: "laura-ribes", name: "Laura Ribes" },
   { tag: "leslie-meyer", name: "Leslie Meyer" },
   { tag: "lucy-sandoval", name: "Lucy Sandoval" },
+  { tag: "lydia-badic", name: "Lydia Badic" },
   { tag: "maria-albanell", name: "María Albanell" },
   { tag: "maria-tellis", name: "María Alejandra Tellis" },
   { tag: "mariana-cuns", name: "Mariana Cuns" },
@@ -48,6 +56,7 @@ const models: Array<Model> = [
   { tag: "ninette-shibara", name: "Ninette Shibara" },
   { tag: "noelia", name: "Noelia Mompó" },
   { tag: "patricia-martin", name: "Patricia Martín" },
+  { tag: "patricia-ortega", name: "Patricia Ortega" },
   { tag: "sadie-gray", name: "Sadie Gray" },
   { tag: "sandra-guerrero", name: "Sandra Guerrero" },
   { tag: "sandra-lyd", name: "Sandra Lyd" },
@@ -62,7 +71,7 @@ const models: Array<Model> = [
   { tag: "yusleibi-diaz", name: "Yusleibi Díaz" },
   { tag: "yulia-poddubnaya", name: "Yulia Poddubnaya" },
   { tag: "zasha-michelena", name: "Zasha Michelena" },
-  { tag: "zurine-aspiunza", name: "Zuriñe Aspiunza" },
+  { tag: "zurine-aspiunza", name: "Zuriñe Aspiunza" }
 ];
 
 export default models;
