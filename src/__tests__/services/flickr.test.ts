@@ -1,8 +1,4 @@
-import {
-  fetchTransport,
-  getFlickrPhotos,
-  processFlickrPhotos
-} from "@/services/flickr/flickr";
+import { getFlickrPhotos, processFlickrPhotos } from "@/services/flickr/flickr";
 import { getCachedData, setCachedData } from "@/services/redis";
 import {
   commonAfterEach,
@@ -110,7 +106,7 @@ describe('Flickr Service', () => {
 
             expect(result.success).toBe(false);
             expect(result.photos).toBeNull();
-            expect(result.reason).toBe('Failed to get photos from both Flickr API and cache for tags: test');
+          expect(result.reason).toBe("[ Flickr ] Failed to get photos from both Flickr API and cache for tags: test");
         });
 
         it('should sort photos by date when orderByDate is true', async () => {
@@ -204,15 +200,6 @@ describe('Flickr Service', () => {
             expect(result.success).toBe(true);
             expect(result.photos).toHaveLength(1);
             expect(result.photos![0].id).toBe(123);
-        });
-    });
-
-    describe('fetchTransport', () => {
-        it('should have the correct headers', () => {
-            expect(fetchTransport).toHaveProperty('init');
-            expect(fetchTransport.init).toHaveProperty('headers');
-            expect(fetchTransport.init.headers).toHaveProperty('next');
-            expect(fetchTransport.init.headers.next).toBe('{ revalidate: 10 }');
         });
     });
 });

@@ -82,12 +82,12 @@ const getPhotosFromCache = async (
   try {
     const cachedPhotos = await getCachedData(tags);
     if (cachedPhotos) {
-      console.info(chalk.blue("[ FLickr ] Using cached photos."));
+      console.info(chalk.gray("[ Flickr ] Using cached photos."));
       return cachedPhotos;
     }
     return null;
   } catch (error) {
-    console.error(chalk.red("[ FLickr ] Failed to get cached data:", error));
+    console.error(chalk.red("[ Flickr ] Failed to get cached data:", error));
     Sentry.captureException(error);
     return null;
   }
@@ -104,14 +104,14 @@ const sortPhotos = (
   let sortedPhotos = [...photos];
 
   if (orderByDate) {
-    console.info(chalk.cyan("[ FLickr ] Sorting photos by date taken..."));
+    console.info(chalk.gray("[ Flickr ] Sorting photos by date taken..."));
     sortedPhotos = sortedPhotos.toSorted(
       (a: Photo, b: Photo) => b.dateTaken.getTime() - a.dateTaken.getTime(),
     );
   }
 
   if (orderByViews) {
-    console.info(chalk.cyan("[ FLickr ] Sorting photos by views..."));
+    console.info(chalk.gray("[ Flickr ] Sorting photos by views..."));
     sortedPhotos = sortedPhotos.toSorted(
       (a: Photo, b: Photo) => b.views - a.views,
     );
@@ -227,13 +227,13 @@ export async function getFlickrPhotos(
   const cachedPhotos = await getPhotosFromCache(tags);
 
   if (cachedPhotos) {
-    console.info(chalk.blue("[ FLickr ] Returning cached photos while updating in background."));
+    console.info(chalk.gray("[ Flickr ] Returning cached photos while updating in background."));
 
     void (async function updateCacheInBackground() {
       try {
         console.info(
-            chalk.blue(
-              `[ FLickr ] Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`
+          chalk.gray(
+            `[ Flickr ] Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`
             ),
         );
         const flickrPhotos = await fetchFlickrPhotos(flickr, tags);
@@ -241,7 +241,7 @@ export async function getFlickrPhotos(
           await updatePhotoCache(tags, flickrPhotos);
         }
       } catch (error) {
-        console.error(chalk.red("[ FLickr ] Background cache update failed:", error));
+        console.error(chalk.red("[ Flickr ] Background cache update failed:", error));
         Sentry.captureException(error);
       }
     })();
@@ -257,7 +257,7 @@ export async function getFlickrPhotos(
   }
 
   return createErrorResponse(
-    `[ FLickr ] Failed to get photos from both Flickr API and cache for tags: ${tags}`
+    `[ Flickr ] Failed to get photos from both Flickr API and cache for tags: ${tags}`
   );
 }
 
