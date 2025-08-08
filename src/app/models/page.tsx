@@ -24,23 +24,33 @@ const batchModels = (models: Model[], batchSize: number) => {
   return batches;
 };
 
-export default async function ModelIndexPage() {
+const fetchPhotos = async (): Promise<Photo[]> => {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
   const modelBatches = batchModels(models, 20);
   const allPhotos: Photo[] = [];
 
   for (const batch of modelBatches) {
-    const res = await getFlickrPhotos(
-      flickr,
-      batch.map((style) => style.tag.replace("-", "")).join(", "),
-      100,
-      false,
-      true,
-    );
-    if (res.success && res.photos != null) {
-      allPhotos.push(...res.photos);
+    try {
+      const res = await getFlickrPhotos(
+        flickr,
+        batch.map((style) => style.tag.replace("-", "")).join(", "),
+        100,
+        false,
+        true
+      );
+      if (res.success && res.photos != null) {
+        allPhotos.push(...res.photos);
+      }
+    } catch (error) {
+      console.error("Error fetching Flickr photos:", error);
     }
   }
+
+  return allPhotos;
+};
+
+export default async function ModelIndexPage() {
+  const allPhotos = await fetchPhotos();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 text-neutral-100">
