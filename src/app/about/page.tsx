@@ -1,36 +1,54 @@
+export const dynamic = "force-dynamic";
+
 import { getFlickrPhotos } from "@/services/flickr/flickr";
 import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
 import { createFlickr } from "flickr-sdk";
 import AboutContent from "@/components/AboutContent";
 
+//region Images
 const profileImageUrl =
   "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg";
 
 const imageThumbnail =
   "https://live.staticflickr.com/65535/53985281833_769ef447ff_c_d.jpg";
+//endregion
 
 const metadataImages = [
   {
     alt: "Anyul Rivas",
-    url: profileImageUrl,
-  },
+    url: profileImageUrl
+  }
 ];
 export const metadata: Metadata = {
   title: "About Me",
   description: "Anyul Rivas — Boudoir photographer in Barcelona, Spain",
   twitter: {
-    images: metadataImages,
+    images: metadataImages
   },
   openGraph: {
     ...openGraph,
-    images: metadataImages,
-  },
+    images: metadataImages
+  }
+};
+
+const fetchCoverPhotos = async () => {
+  try {
+    const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+    return await getFlickrPhotos(flickr, "cover", 50);
+  } catch (error) {
+    console.error("Error fetching Flickr photos:", error);
+    return null;
+  }
 };
 
 export default async function BioPage() {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const images = await getFlickrPhotos(flickr, "cover", 50);
+  const images = await fetchCoverPhotos();
+
+  if (images == null) {
+    console.error("[ About ] Error fetching cover photos");
+  }
+
 
   return (
     <AboutContent
