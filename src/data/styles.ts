@@ -1,6 +1,6 @@
 export interface Style {
   name: string;
-  tag:string;
+  tag: string;
 }
 
 export const styles: Array<Style> = [

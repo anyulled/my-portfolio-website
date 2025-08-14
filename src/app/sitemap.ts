@@ -44,7 +44,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "never",
       priority: 0.3,
-    }, {
+    },
+    {
       url: `${baseURL}/testimonials`,
       lastModified: new Date(),
       changeFrequency: "weekly",

@@ -18,7 +18,7 @@ const metadataImages = [
   {
     alt: "Anyul Rivas",
     url: profileImageUrl
-  }
+  },
 ];
 export const metadata: Metadata = {
   title: "About Me",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     ...openGraph,
     images: metadataImages
-  }
+  },
 };
 
 const fetchCoverPhotos = async () => {
@@ -37,7 +37,7 @@ const fetchCoverPhotos = async () => {
     const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
     return await getFlickrPhotos(flickr, "cover", 50);
   } catch (error) {
-    console.error("Error fetching Flickr photos:", error);
+    console.error("[ About ] Error fetching Flickr photos:", error);
     return null;
   }
 };
@@ -48,7 +48,6 @@ export default async function BioPage() {
   if (images == null) {
     console.error("[ About ] Error fetching cover photos");
   }
-
 
   return (
     <AboutContent

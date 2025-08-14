@@ -40,7 +40,7 @@ export default function TestimonialsCTA() {
         start: "top 70%",
         end: "bottom 30%",
         toggleActions: "play none none reverse"
-      }
+      },
     });
 
     tl.to(content, {
@@ -76,26 +76,34 @@ export default function TestimonialsCTA() {
   }
 
   return (
-    <section ref={ctaRef}
-             className="bg-gradient-to-r from-mocha-mousse-800 to-mocha-mousse-900 py-20">
+    <section
+      ref={ctaRef}
+      className="bg-gradient-to-r from-mocha-mousse-800 to-mocha-mousse-900 py-20"
+    >
       <div className="max-w-4xl mx-auto px-4 text-center">
         <div ref={contentRef}>
           <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl font-serif text-white mb-6`}>{t("ready_to_create")}</h2>
+            className={`${arefRuqaa.className} text-3xl md:text-4xl font-serif text-white mb-6`}
+          >
+            {t("ready_to_create")}
+          </h2>
           <p className="text-mocha-mousse-100 text-lg mb-8 max-w-2xl mx-auto">
             {t("join_hundreds")}
           </p>
-          <Button onClick={handleClick}
-                  size="lg"
-                  className="bg-white text-mocha-mousse-200 hover:bg-mocha-mousse-100 px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+          <Button
+            onClick={handleClick}
+            size="lg"
+            className="bg-white text-mocha-mousse-200 hover:bg-mocha-mousse-100 px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
           >
             <Calendar className="mr-2 h-5 w-5" />
             {t("book_your_session")}
           </Button>
         </div>
 
-        <div ref={iconsRef}
-             className="flex justify-center items-center space-x-12 mt-12">
+        <div
+          ref={iconsRef}
+          className="flex justify-center items-center space-x-12 mt-12"
+        >
           <div className="text-center">
             <Heart className="h-12 w-12 text-white mx-auto mb-2" />
             <p className="text-mocha-mousse-100 text-sm">{t("empowering")}</p>

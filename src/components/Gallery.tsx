@@ -59,10 +59,11 @@ export default function Gallery({
           {galleryPhotos && galleryPhotos?.length > 0 ? (
             <RowsPhotoAlbum
               render={{
-                image: (props, context) => renderFadeInNextImage(
-                  { ...props, index: context.index },
-                  context
-                )
+                image: (props, context) =>
+                  renderFadeInNextImage(
+                    { ...props, index: context.index },
+                    context
+                  )
               }}
               photos={galleryPhotos}
               defaultContainerWidth={1200}

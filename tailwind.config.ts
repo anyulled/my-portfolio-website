@@ -35,6 +35,45 @@ const config: Config = {
           800: "#8a6453",
           900: "#705142",
         },
+        "cream-tan": {
+          default: "#E5D1C1",
+          50: "#FAF6F3",
+          100: "#F5EDE7",
+          200: "#EFDFD5",
+          300: "#E5D1C1",
+          400: "#D1B5A0",
+          500: "#BD9A80",
+          600: "#A98162",
+          700: "#8B6848",
+          800: "#6D4F32",
+          900: "#4F371E"
+        },
+        "chocolate-martini": {
+          default: "#5C4B51", // Base color
+          50: "#F2F0F0",
+          100: "#E5E1E2",
+          200: "#CCC5C7",
+          300: "#B2A8AC",
+          400: "#998C91",
+          500: "#7F6F75",
+          600: "#5C4B51", // Original
+          700: "#4A3B40",
+          800: "#372C30",
+          900: "#251D1F"
+        },
+        chanterelle: {
+          default: "#9F8570",
+          50: "#F7F4F2",
+          100: "#EFE9E4",
+          200: "#DFD3CA",
+          300: "#CFBDB0",
+          400: "#BFA696",
+          500: "#9F8570",
+          600: "#866D59",
+          700: "#6D5645",
+          800: "#544232",
+          900: "#3B2D21"
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

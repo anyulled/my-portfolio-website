@@ -26,8 +26,10 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 /* eslint-disable  @typescript-eslint/no-non-null-asserted-optional-chain */
 
-export default function BoudoirContent({ randomPhotos }: Readonly<{
-  randomPhotos: Photo[]
+export default function BoudoirContent({
+                                         randomPhotos
+                                       }: Readonly<{
+  randomPhotos: Photo[];
 }>) {
   const t = useTranslations("what_is_boudoir");
   const textRef1 = useFadeIn({ x: -50, y: 0, start: "top 80%" });
@@ -48,30 +50,34 @@ export default function BoudoirContent({ randomPhotos }: Readonly<{
   const ctaRef = useFadeIn({ y: 30, delay: 0.5, start: "top 90%" });
   const { lenis } = useScroll();
 
-  useGSAP(() => {
-    if (listRef.current) {
-      const listItems = listRef.current.querySelectorAll("li");
-      gsap.from(listItems, {
-        opacity: 0,
-        y: 20,
-        stagger: 0.2,
-        duration: 0.5,
-        scrollTrigger: {
-          trigger: listRef.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-          scroller: document.documentElement
-        }
-      });
-    }
-  }, { dependencies: [lenis] });
+  useGSAP(
+    () => {
+      if (listRef.current) {
+        const listItems = listRef.current.querySelectorAll("li");
+        gsap.from(listItems, {
+          opacity: 0,
+          y: 20,
+          stagger: 0.2,
+          duration: 0.5,
+          scrollTrigger: {
+            trigger: listRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+            scroller: document.documentElement
+          }
+        });
+      }
+    },
+    { dependencies: [lenis] }
+  );
 
   return (
     <>
       <header className="container mx-auto px-4 pt-24 pb-4 text-center">
         <FadeInTitle>
           <h1
-            className={`${dancingScript.className} text-5xl md:text-7xl mb-4`}>
+            className={`${dancingScript.className} text-5xl md:text-7xl mb-4`}
+          >
             {t("boudoir_photography")}
           </h1>
         </FadeInTitle>
@@ -146,7 +152,10 @@ export default function BoudoirContent({ randomPhotos }: Readonly<{
             <li>{t("l5")}.</li>
           </ul>
           <Card
-            className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-900 transform transition-all duration-500 hover:shadow-xl"}>
+            className={
+              "bg-mocha-mousse-50 dark:bg-mocha-mousse-900 transform transition-all duration-500 hover:shadow-xl"
+            }
+          >
             <CardContent>
               <Suspense fallback={<Loading />}>
                 <Gallery photos={randomPhotos} showTitle={false} />

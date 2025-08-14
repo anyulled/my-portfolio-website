@@ -44,7 +44,7 @@ const socialLinks: Array<SocialLinks> = [
     name: "Bluesky",
     icon: siBluesky,
     url: "https://bsky.app/profile/sensuelle-boudoir.bsky.social"
-  }
+  },
 ];
 
 export default function SocialMedia() {
@@ -72,13 +72,15 @@ export default function SocialMedia() {
                   >
                     <svg
                       className="fill-mocha-mousse-900 dark:fill-mocha-mousse-100"
-                      xmlns="http://www.w3.org/2000/svg" width={24} height={24}
-                      viewBox="0 0 24 24">
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                    >
                       <title>{social.name}</title>
                       <path d={social.icon.path} />
                     </svg>
-                    <span
-                      className="sr-only">{social.name}</span>
+                    <span className="sr-only">{social.name}</span>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>

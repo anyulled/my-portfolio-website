@@ -7,8 +7,8 @@ import React, {
   useRef,
   useState
 } from "react";
-import {gsap} from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 
 if (typeof window !== "undefined") {

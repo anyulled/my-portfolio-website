@@ -7,7 +7,7 @@ export const openGraph: OpenGraph = {
   },
   description: "Boudoir photography service in Barcelona.",
   url: "https://boudoir.barcelona",
-  siteName: "Boudoir photography service in Barcelona",
+  siteName: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
   images: [
     {
       url: "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",

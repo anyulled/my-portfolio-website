@@ -43,7 +43,7 @@ export default function TestimonialCard({
         start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play none none reverse"
-      }
+      },
     });
 
     const handleMouseEnter = () => {
@@ -90,22 +90,28 @@ export default function TestimonialCard({
           />
         )}
         <div>
-          <h3
-            className="font-semibold fill-mocha-mousse-700 text-lg">{testimonial.name}</h3>
-          <p
-            className="fill-mocha-mousse-600 text-sm">{testimonial.location}</p>
+          <h3 className="font-semibold fill-mocha-mousse-700 text-lg">
+            {testimonial.name}
+          </h3>
+          <p className="fill-mocha-mousse-600 text-sm">
+            {testimonial.location}
+          </p>
         </div>
       </div>
 
       <div className="flex mb-3">
         {[...Array(testimonial.rating)].map((_, i) => (
-          <Star key={i}
-                className="w-5 h-5 fill-mocha-mousse-900 text-mocha-mousse-900" />
+          <Star
+            key={i}
+            className="w-5 h-5 fill-mocha-mousse-900 text-mocha-mousse-900"
+          />
         ))}
       </div>
 
-      <blockquote data-testid="testimonial-content"
-                  className="text-mocha-mousse-700 leading-relaxed italic">
+      <blockquote
+        data-testid="testimonial-content"
+        className="text-mocha-mousse-700 leading-relaxed italic"
+      >
         &quot; {testimonial.content} &quot;
       </blockquote>
 

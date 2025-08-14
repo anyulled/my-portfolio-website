@@ -27,7 +27,7 @@ export const generateMetadata = async ({
       url: `/models/${modelName}/opengraph-image`,
       height: 1200,
       width: 630
-    }
+    },
   ];
 
   const description = `Photographies with Model ${modelName} for Boudoir Barcelona`;
@@ -44,12 +44,12 @@ export const generateMetadata = async ({
       title: title,
       description: description,
       images: images
-    }
+    },
   });
-
 };
 
-export const generateStaticParams = async () => models.map((model) => ({ modelName: model.tag }));
+export const generateStaticParams = async () =>
+  models.map((model) => ({ modelName: model.tag }));
 
 const fetchPhotos = async (modelName: string) => {
   const { flickr } = createFlickr(process.env.FLICKR_API_KEY!, fetchTransport);

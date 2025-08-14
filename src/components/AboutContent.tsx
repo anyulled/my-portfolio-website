@@ -58,8 +58,7 @@ export default function AboutContent({
           </Card>
 
           <div className="space-y-6 md:col-span-2 lg:col-auto">
-            <Card
-              className=" bg-mocha-mousse-50 dark:bg-mocha-mousse-50">
+            <Card className=" bg-mocha-mousse-50 dark:bg-mocha-mousse-50">
               <CardContent className="p-6">
                 <FadeInTitle delay={0.3}>
                   <h2 className={`${dancingScript.className} text-3xl mb-1`}>
@@ -74,8 +73,7 @@ export default function AboutContent({
                 <p className=" my-2">{t("p1")}</p>
                 <p className=" my-2">
                   {t("p2")}
-                  <Link href={"https://efacontigo.com/"}
-                        target={"_blank"}>
+                  <Link href={"https://efacontigo.com/"} target={"_blank"}>
                     {" "}
                     Escuela Foto Arte
                   </Link>{" "}
@@ -83,8 +81,7 @@ export default function AboutContent({
                 </p>
                 <p className=" my-2">
                   {t("p4")}
-                  <Link href={"https://www.malvie.fr/"}
-                        target={"_blank"}>
+                  <Link href={"https://www.malvie.fr/"} target={"_blank"}>
                     Malvie
                   </Link>
                   ,{" "}
@@ -101,9 +98,8 @@ export default function AboutContent({
                 <p className=" my-2">
                   {t("p8")}
                   <strong>
-                    Lindsay Adler, Jen Rozenbaum,
-                    Antonio
-                    Garci, Dan Hecho & Helmut Newton
+                    Lindsay Adler, Jen Rozenbaum, Antonio Garci, Dan Hecho &
+                    Helmut Newton
                   </strong>
                   .
                 </p>
@@ -121,8 +117,7 @@ export default function AboutContent({
                 {t("published_works")}
               </h2>
             </FadeInTitle>
-            <Card
-              className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-50 p-3"}>
+            <Card className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-50 p-3"}>
               <div
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
                 {images.photos.map((cover: Photo, index: number) => (
@@ -130,8 +125,7 @@ export default function AboutContent({
                     key={cover.id}
                     className="relative overflow-hidden group rounded-lg"
                   >
-                    <FadeInImage index={index}
-                                 stagger={0.05}>
+                    <FadeInImage index={index} stagger={0.05}>
                       <Image
                         src={cover.urlMedium}
                         blurDataURL={cover.urlSmall}
@@ -169,8 +163,7 @@ export default function AboutContent({
 
         <div className="grid md:grid-cols-3 gap-2">
           <Card
-            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0"
-          >
+            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={0} stagger={0.1}>
                 <Image
@@ -190,8 +183,7 @@ export default function AboutContent({
           </Card>
 
           <Card
-            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0"
-          >
+            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={1} stagger={0.1}>
                 <Image
@@ -211,8 +203,7 @@ export default function AboutContent({
           </Card>
 
           <Card
-            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0"
-          >
+            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={2} stagger={0.1}>
                 <Image

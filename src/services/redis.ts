@@ -22,8 +22,9 @@ export async function getCachedData(
   }
 
   console.log(chalk.green("- [ Redis ] Cache hit", data.length));
-  return data.map(photo => ({
-    ...photo, expiresAt: expiryDate
+  return data.map((photo) => ({
+    ...photo,
+    expiresAt: expiryDate
   }));
 }
 
@@ -34,7 +35,9 @@ export async function setCachedData(
 ): Promise<void> {
   const redis = Redis.fromEnv();
   const sanitizedKey = sanitizeKey(key);
-  const result = await redis.set(sanitizedKey, JSON.stringify(data), { ex: expiryInSeconds });
+  const result = await redis.set(sanitizedKey, JSON.stringify(data), {
+    ex: expiryInSeconds
+  });
   console.log(`[ Redis ]  Cache Write Success (${sanitizedKey}):`);
   console.log(chalk.cyan("[ Redis ] Cache response"), result);
   return;

@@ -1,7 +1,7 @@
-import {list, put} from "@vercel/blob";
+import { list, put } from "@vercel/blob";
 import chalk from "chalk";
-import {PhotoFlickr} from "@/services/flickr/flickr.types";
-import {sanitizeKey} from "@/lib/sanitizer";
+import { PhotoFlickr } from "@/services/flickr/flickr.types";
+import { sanitizeKey } from "@/lib/sanitizer";
 
 export async function getCachedData(
   key: string,

@@ -21,15 +21,35 @@ export async function POST(req: Request) {
     const endDate = formData.get("endDate")?.toString();
     const rates = formData.get("rates")?.toString();
     const modelRelease = formData.get("modelRelease")?.toString();
-    const paymentTypes = formData.getAll("paymentTypes").map(type => type.toString());
+    const paymentTypes = formData
+      .getAll("paymentTypes")
+      .map((type) => type.toString());
 
-    if (!fullName || !socialAccount || !email || !country || !height || !chest ||
-      !waist || !hips || !hairColor || !eyeColor || !implants ||
-      !startDate || !endDate || !rates || !modelRelease || paymentTypes.length === 0) {
-      return NextResponse.json({
-        success: false,
-        message: "Please fill in all required fields."
-      }, { status: 400 });
+    if (
+      !fullName ||
+      !socialAccount ||
+      !email ||
+      !country ||
+      !height ||
+      !chest ||
+      !waist ||
+      !hips ||
+      !hairColor ||
+      !eyeColor ||
+      !implants ||
+      !startDate ||
+      !endDate ||
+      !rates ||
+      !modelRelease ||
+      paymentTypes.length === 0
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Please fill in all required fields."
+        },
+        { status: 400 }
+      );
     }
 
     const message = `
@@ -69,13 +89,17 @@ Booking Details:
 
     return NextResponse.json({
       success: true,
-      message: "Thank you for your booking request. We will review your information and get back to you soon!"
+      message:
+        "Thank you for your booking request. We will review your information and get back to you soon!"
     });
   } catch (error) {
     console.error("Booking form error:", error);
-    return NextResponse.json({
-      success: false,
-      message: "An unexpected error occurred. Please try again later."
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "An unexpected error occurred. Please try again later."
+      },
+      { status: 500 }
+    );
   }
 }
