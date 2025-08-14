@@ -1,10 +1,5 @@
 // Import after mocking
-import {
-  fetchTestimonialsFromDb,
-  getTestimonials,
-  Testimonial
-} from "@/lib/testimonials";
-import { commonBeforeEach } from "@/__tests__/utils/testUtils";
+import { getTestimonials, Testimonial } from "@/lib/testimonials";
 
 // Mock the entire testimonials module
 jest.mock("@/lib/testimonials", () => {
@@ -26,22 +21,20 @@ jest.mock("@/lib/testimonials", () => {
       content: "Test content 2",
       date: "2024-02-05",
       featured: false
-    }
+    },
   ];
 
-  const fetchTestimonialsFromDb = jest.fn().mockResolvedValue(mockTestimonials);
+  const getTestimonials = jest.fn().mockResolvedValue(mockTestimonials);
   const cacheMock = jest.fn((fn) => fn);
 
   return {
-    fetchTestimonialsFromDb,
-    getTestimonials: cacheMock(async () => fetchTestimonialsFromDb()),
+    getTestimonials: cacheMock(async () => getTestimonials()),
     Testimonial: {}
   };
 });
 
 describe("testimonials", () => {
   beforeEach(() => {
-    commonBeforeEach();
     jest.clearAllMocks();
   });
 
@@ -53,7 +46,7 @@ describe("testimonials", () => {
         location: "Test Location",
         rating: 5,
         content: "Test content",
-        date: "2025-07-31",
+        date: new Date("2025-07-31"),
         featured: true,
         image: "/test-image.jpg"
       };
@@ -69,9 +62,9 @@ describe("testimonials", () => {
     });
   });
 
-  describe("fetchTestimonialsFromDb", () => {
+  describe("getTestimonials", () => {
     it("should return an array of testimonials", async () => {
-      const testimonials = await fetchTestimonialsFromDb();
+      const testimonials = await getTestimonials();
 
       expect(Array.isArray(testimonials)).toBe(true);
       expect(testimonials.length).toBeGreaterThan(0);
@@ -88,10 +81,10 @@ describe("testimonials", () => {
     });
 
     it("should include both featured and non-featured testimonials", async () => {
-      const testimonials = await fetchTestimonialsFromDb();
+      const testimonials = await getTestimonials();
 
-      const featuredTestimonials = testimonials.filter(t => t.featured);
-      const nonFeaturedTestimonials = testimonials.filter(t => !t.featured);
+      const featuredTestimonials = testimonials.filter((t) => t.featured);
+      const nonFeaturedTestimonials = testimonials.filter((t) => !t.featured);
 
       expect(featuredTestimonials.length).toBeGreaterThan(0);
       expect(nonFeaturedTestimonials.length).toBeGreaterThan(0);
@@ -99,15 +92,12 @@ describe("testimonials", () => {
   });
 
   describe("getTestimonials", () => {
-    it("should call fetchTestimonialsFromDb", async () => {
-      // Reset the mock to clear any previous calls
-      (fetchTestimonialsFromDb as jest.Mock).mockClear();
+    it("should call getTestimonials", async () => {
+      (getTestimonials as jest.Mock).mockClear();
 
-      // Call getTestimonials
       await getTestimonials();
 
-      // Verify fetchTestimonialsFromDb was called
-      expect(fetchTestimonialsFromDb).toHaveBeenCalled();
+      expect(getTestimonials).toHaveBeenCalled();
     });
 
     it("should be wrapped with cache", async () => {
@@ -119,7 +109,7 @@ describe("testimonials", () => {
     });
 
     it("should return the same data as fetchTestimonialsFromDb", async () => {
-      const directResult = await fetchTestimonialsFromDb();
+      const directResult = await getTestimonials();
       const cachedResult = await getTestimonials();
 
       expect(cachedResult).toEqual(directResult);

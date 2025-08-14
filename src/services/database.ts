@@ -9,24 +9,23 @@ import {
 function createDbCLient(cookies: ReadonlyRequestCookies) {
   return createServerClient(
     process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!, {
+    process.env.SUPABASE_ANON_KEY!,
+    {
       cookies: {
         getAll() {
           return cookies.getAll();
         },
         setAll(cookie) {
           try {
-            cookie.forEach(({
-                              name,
-                              value,
-                              options
-                            }) => cookies.set(name, value, options));
+            cookie.forEach(({ name, value, options }) =>
+              cookies.set(name, value, options)
+            );
           } catch {
             console.error("Error setting cookies");
           }
-        }
-      }
-    }
+        },
+      },
+    },
   );
 }
 
@@ -41,10 +40,14 @@ export async function Testimonials(): Promise<Array<Testimonial>> {
     .eq("status_id", "2");
 
   if (error) {
-    console.error(chalk.red("[ supabase ] Error retrieving testimonials:", error.message));
+    console.error(
+      chalk.red("[ supabase ] Error retrieving testimonials:", error.message)
+    );
     return [];
   }
-  console.log(chalk.green(`[ supabase ] retrieved ${testimonials?.length} testimonies`));
+  console.log(
+    chalk.green(`[ supabase ] retrieved ${testimonials?.length} testimonies`)
+  );
 
   return testimonials || [];
 }

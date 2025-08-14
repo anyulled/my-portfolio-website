@@ -50,7 +50,9 @@ const fetchFlickrPhotos = async (
 
     return result.photos.photo.length > 0 ? filteredPhotos : null;
   } catch (error) {
-    console.error(chalk.red("Failed to fetch from Flickr API:", error));
+    console.error(
+      chalk.red(`[ Flickr ] Failed to fetch "${tags}" from Flickr API:`, error)
+    );
     Sentry.captureException(error);
     return null;
   }
@@ -198,18 +200,18 @@ export const processFlickrPhotos = (
  * Processes and sorts photos from Flickr
  */
 const processAndSortPhotos = (
-    photosFlickr: Array<PhotoFlickr>,
-    items: number,
-    orderByDate: boolean,
-    orderByViews: boolean,
+  photosFlickr: Array<PhotoFlickr>,
+  items: number,
+  orderByDate: boolean,
+  orderByViews: boolean
 ): FlickrResponse => {
   const processedPhotos = processFlickrPhotos(photosFlickr);
 
   if (processedPhotos.photos) {
     processedPhotos.photos = sortPhotos(
-        processedPhotos.photos,
-        orderByDate,
-        orderByViews,
+      processedPhotos.photos,
+      orderByDate,
+      orderByViews
     ).slice(0, items);
   }
 
@@ -223,25 +225,30 @@ export async function getFlickrPhotos(
   orderByDate: boolean = false,
   orderByViews: boolean = false,
 ): Promise<FlickrResponse> {
-
   const cachedPhotos = await getPhotosFromCache(tags);
 
   if (cachedPhotos) {
-    console.info(chalk.gray("[ Flickr ] Returning cached photos while updating in background."));
+    console.info(
+      chalk.gray(
+        "[ Flickr ] Returning cached photos while updating in background."
+      )
+    );
 
     void (async function updateCacheInBackground() {
       try {
         console.info(
           chalk.gray(
             `[ Flickr ] Requesting ${chalk.bold(items)} photos from ${chalk.green.italic(tags)} on Flickr...`
-            ),
+          ),
         );
         const flickrPhotos = await fetchFlickrPhotos(flickr, tags);
         if (flickrPhotos) {
           await updatePhotoCache(tags, flickrPhotos);
         }
       } catch (error) {
-        console.error(chalk.red("[ Flickr ] Background cache update failed:", error));
+        console.error(
+          chalk.red("[ Flickr ] Background cache update failed:", error)
+        );
         Sentry.captureException(error);
       }
     })();

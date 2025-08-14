@@ -1,6 +1,5 @@
 import { POST } from "@/app/api/booking/route";
 import { sendEmailToRecipient } from "@/services/mailer";
-import { commonAfterEach, commonBeforeEach } from "@/__tests__/utils/testUtils";
 import { NextRequest } from "next/server";
 
 // Mock next/server
@@ -22,8 +21,8 @@ jest.mock("next/server", () => {
           status,
           json: jest.fn().mockResolvedValue(body)
         };
-      })
-    }
+      }),
+    },
   };
 });
 
@@ -33,11 +32,9 @@ jest.mock("@/services/mailer", () => ({
 
 describe("Booking API", () => {
   beforeEach(() => {
-    commonBeforeEach();
   });
 
   afterEach(() => {
-    commonAfterEach();
     jest.clearAllMocks();
   });
 
@@ -122,7 +119,9 @@ describe("Booking API", () => {
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(data.message).toBe("Thank you for your booking request. We will review your information and get back to you soon!");
+    expect(data.message).toBe(
+      "Thank you for your booking request. We will review your information and get back to you soon!"
+    );
 
     // In test environment, email is not actually sent
     expect(sendEmailToRecipient).not.toHaveBeenCalled();

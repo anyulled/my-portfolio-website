@@ -18,7 +18,7 @@ jest.mock("gsap", () => {
       to: jest.fn(),
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis()
-      }))
+      })),
     },
     default: {
       registerPlugin: jest.fn(),
@@ -26,14 +26,14 @@ jest.mock("gsap", () => {
       to: jest.fn(),
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis()
-      }))
+      })),
     },
     registerPlugin: jest.fn(),
     set: jest.fn(),
     to: jest.fn(),
     timeline: jest.fn(() => ({
       to: jest.fn().mockReturnThis()
-    }))
+    })),
   };
 });
 
@@ -51,9 +51,13 @@ jest.mock("next/font/google", () => ({
 // Mock next/image
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: (props: JSX.IntrinsicAttributes & ClassAttributes<HTMLImageElement> & ImgHTMLAttributes<HTMLImageElement>) => {
+  default: (
+    props: JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLImageElement> &
+      ImgHTMLAttributes<HTMLImageElement>
+  ) => {
     return <img {...props} alt={"test"} />;
-  }
+  },
 }));
 
 describe("TestimonialHero", () => {
@@ -78,7 +82,9 @@ describe("TestimonialHero", () => {
     render(<TestimonialHero />);
 
     // Check if the title is rendered with the correct translation
-    expect(screen.getByText("translated_client_testimonials")).toBeInTheDocument();
+    expect(
+      screen.getByText("translated_client_testimonials")
+    ).toBeInTheDocument();
 
     // Check if the subtitle is rendered with the correct translation
     expect(screen.getByText("translated_real_stories")).toBeInTheDocument();
@@ -102,12 +108,14 @@ describe("TestimonialHero", () => {
     // Check if the image is rendered with the correct props
     const image = screen.getByAltText("boudoir");
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute("src", "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg");
+    expect(image).toHaveAttribute(
+      "src",
+      "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg"
+    );
     expect(image).toHaveAttribute("width", "1920");
     expect(image).toHaveAttribute("height", "800");
     expect(image).toHaveClass("object-cover");
     expect(image).toHaveClass("h-full");
     expect(image).toHaveClass("opacity-60");
   });
-
 });

@@ -1,9 +1,9 @@
-import {getFlickrPhotos} from "@/services/flickr/flickr";
-import {createFlickr} from "flickr-sdk";
-import {Metadata} from "next";
-import {Photo} from "@/services/flickr/flickr.types";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
+import { createFlickr } from "flickr-sdk";
+import { Metadata } from "next";
+import { Photo } from "@/services/flickr/flickr.types";
 import BoudoirContent from "@/components/BoudoirContent";
-import {getTranslations} from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
@@ -25,5 +25,5 @@ export default async function BoudoirStylePage() {
   const randomPhotos = getRandomElements(photos ?? [], 10);
   await getTranslations("what_is_boudoir");
 
-  return <BoudoirContent randomPhotos={randomPhotos}/>;
+  return <BoudoirContent randomPhotos={randomPhotos} />;
 }

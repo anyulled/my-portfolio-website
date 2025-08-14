@@ -62,11 +62,13 @@ export default function ContactForm() {
   return (
     <section id="book-session" className="py-2">
       <div className="container mx-auto px-6">
-        <FadeInTitle delay={1}><h2
-          className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
-        >
-          {t("contact_us")}
-        </h2></FadeInTitle>
+        <FadeInTitle delay={1}>
+          <h2
+            className={`${arefRuqaa.className} text-3xl font-bold text-center mb-8`}
+          >
+            {t("contact_us")}
+          </h2>
+        </FadeInTitle>
         <form
           className="max-w-md mx-auto space-y-4"
           onSubmit={handleFormSubmit}
@@ -95,10 +97,7 @@ export default function ContactForm() {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <title>WhatsApp</title>
-                <path
-                  fill={"white"}
-                  d={siWhatsapp.path}
-                />
+                <path fill={"white"} d={siWhatsapp.path} />
               </svg>
               WhatsApp
             </Button>
@@ -115,10 +114,7 @@ export default function ContactForm() {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <title>Telegram</title>
-                <path
-                  fill={"white"}
-                  d={siTelegram.path}
-                />
+                <path fill={"white"} d={siTelegram.path} />
               </svg>
               Telegram
             </Button>

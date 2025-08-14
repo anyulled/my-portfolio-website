@@ -1,83 +1,80 @@
 import { sendEMail, sendEmail, sendEmailToRecipient } from "@/services/mailer";
 import nodemailer from "nodemailer";
-import { commonAfterEach, commonBeforeEach } from "@/__tests__/utils/testUtils";
 
-jest.mock('nodemailer', () => {
-    const mockSendMail = jest.fn();
+jest.mock("nodemailer", () => {
+  const mockSendMail = jest.fn();
 
-    const mockTransporter = {
-        sendMail: mockSendMail,
-    };
+  const mockTransporter = {
+    sendMail: mockSendMail
+  };
 
-    const mockCreateTransport = jest.fn().mockImplementation(() => {
-        return mockTransporter;
-    });
+  const mockCreateTransport = jest.fn().mockImplementation(() => {
+    return mockTransporter;
+  });
 
-    return {
-        createTransport: mockCreateTransport,
-    };
+  return {
+    createTransport: mockCreateTransport
+  };
 });
 
 const originalEnv = process.env;
 
-describe('Mailer Service', () => {
-    beforeEach(() => {
-        commonBeforeEach();
+describe("Mailer Service", () => {
+  beforeEach(() => {
+    process.env = {
+      ...originalEnv,
+      EMAIL_USER: "test@example.com",
+      EMAIL_PASS: "password123"
+    };
+  });
 
-        process.env = {
-            ...originalEnv,
-            EMAIL_USER: 'test@example.com',
-            EMAIL_PASS: 'password123',
-        };
+  afterEach(() => {
+    process.env = originalEnv;
+  });
+
+  describe("sendEMail", () => {
+    it("should send an email with the correct parameters", async () => {
+      const mockTransporter = nodemailer.createTransport();
+
+      mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
+
+      const result = await sendEMail(
+        "Test message",
+        "sender@example.com",
+        "Test User"
+      );
+
+      expect(mockTransporter.sendMail).toHaveBeenCalledWith({
+        from: "test@example.com",
+        to: "test@example.com",
+        cc: "sender@example.com",
+        subject: "Boudoir Barcelona - New Message from Test User",
+        text: "Test message"
+      });
+
+      expect(result).toEqual({ messageId: "test-id" });
     });
 
-    afterEach(() => {
-        commonAfterEach();
+    it("should return null when email sending fails", async () => {
+      const mockTransporter = nodemailer.createTransport();
 
-        process.env = originalEnv;
+      mockTransporter.sendMail.mockRejectedValue(
+        new Error("Failed to send email")
+      );
+
+      const result = await sendEMail(
+        "Test message",
+        "sender@example.com",
+        "Test User"
+      );
+
+      expect(mockTransporter.sendMail).toHaveBeenCalled();
+
+      expect(console.error).toHaveBeenCalled();
+
+      expect(result).toBeNull();
     });
-
-    describe('sendEMail', () => {
-        it('should send an email with the correct parameters', async () => {
-            const mockTransporter = nodemailer.createTransport();
-
-            mockTransporter.sendMail.mockResolvedValue({messageId: 'test-id'});
-
-            const result = await sendEMail(
-                'Test message',
-                'sender@example.com',
-                'Test User'
-            );
-
-            expect(mockTransporter.sendMail).toHaveBeenCalledWith({
-                from: 'test@example.com',
-                to: 'test@example.com',
-                cc: 'sender@example.com',
-                subject: 'Boudoir Barcelona - New Message from Test User',
-                text: 'Test message',
-            });
-
-            expect(result).toEqual({messageId: 'test-id'});
-        });
-
-        it('should return null when email sending fails', async () => {
-            const mockTransporter = nodemailer.createTransport();
-
-            mockTransporter.sendMail.mockRejectedValue(new Error('Failed to send email'));
-
-            const result = await sendEMail(
-                'Test message',
-                'sender@example.com',
-                'Test User'
-            );
-
-          expect(mockTransporter.sendMail).toHaveBeenCalled();
-
-          expect(console.error).toHaveBeenCalled();
-
-          expect(result).toBeNull();
-        });
-    });
+  });
 
   describe("sendEmail", () => {
     it("should send an email with the correct parameters", async () => {
@@ -127,7 +124,9 @@ describe('Mailer Service', () => {
     it("should return null when email sending fails", async () => {
       const mockTransporter = nodemailer.createTransport();
 
-      mockTransporter.sendMail.mockRejectedValue(new Error("Failed to send email"));
+      mockTransporter.sendMail.mockRejectedValue(
+        new Error("Failed to send email")
+      );
 
       const result = await sendEmail({
         to: "recipient@example.com",
@@ -169,7 +168,9 @@ describe('Mailer Service', () => {
     it("should return null when email sending fails", async () => {
       const mockTransporter = nodemailer.createTransport();
 
-      mockTransporter.sendMail.mockRejectedValue(new Error("Failed to send email"));
+      mockTransporter.sendMail.mockRejectedValue(
+        new Error("Failed to send email")
+      );
 
       const result = await sendEmailToRecipient(
         "Test message",
@@ -177,11 +178,11 @@ describe('Mailer Service', () => {
         "Test Subject"
       );
 
-            expect(mockTransporter.sendMail).toHaveBeenCalled();
+      expect(mockTransporter.sendMail).toHaveBeenCalled();
 
-            expect(console.error).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalled();
 
-            expect(result).toBeNull();
-        });
+      expect(result).toBeNull();
     });
+  });
 });
