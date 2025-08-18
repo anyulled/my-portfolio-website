@@ -1,19 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {useEffect, useRef} from "react";
+import {gsap} from "gsap";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { Check, X } from "lucide-react";
-import { Photo } from "@/services/flickr/flickr.types";
+import {Photo} from "@/services/flickr/flickr.types";
+import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const arefRuqaa = Aref_Ruqaa({subsets: ["latin"], weight: "400"});
+const dancingScript = Dancing_Script({subsets: ["latin"]});
 
 interface MythsHeroProps {
   heroImage: Photo;
 }
 
-export default function MythsHero({ heroImage }: MythsHeroProps) {
+export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -90,7 +93,7 @@ export default function MythsHero({ heroImage }: MythsHeroProps) {
       <div
         className="absolute inset-0 bg-gradient-to-br from-mocha-mousse-900/80 to-mocha-mousse-800/70">
         <Image
-          src={heroImage.urlMedium}
+            src={heroImage.urlLarge}
           alt="Confident woman breaking stereotypes about boudoir photography"
           width={1920}
           height={1080}
@@ -100,44 +103,25 @@ export default function MythsHero({ heroImage }: MythsHeroProps) {
       </div>
 
       <div
-        className="relative h-full flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto">
+          className="relative h-full flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto mt-28">
         <h1
           ref={titleRef}
-          className="text-4xl md:text-6xl font-serif text-white mb-6 leading-tight"
+          className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-white mb-6 leading-tight`}
         >
-          Busting Boudoir
-          <span className="block text-pantone-creamTan100">
+            Busting Boudoir{' '}
+            <span className="block text-cream-tan-100 text-shadow-lg">
             Photography Myths
           </span>
         </h1>
 
         <p
           ref={subtitleRef}
-          className="text-xl md:text-2xl text-pantone-creamTan100 font-light max-w-4xl mb-12"
+          className={`${arefRuqaa.className} text-xl md:text-2xl text-cream-tan-100 font-light max-w-4xl mb-12`}
         >
           Separate fact from fiction and discover the empowering truth about
           boudoir photography
         </p>
 
-        <div
-          ref={iconsRef}
-          className="flex justify-center items-center space-x-12"
-        >
-          <div className="text-center">
-            <div
-              className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <X className="h-8 w-8 text-red-300" />
-            </div>
-            <p className="text-pantone-creamTan200 text-sm">Myths</p>
-          </div>
-          <div className="text-center">
-            <div
-              className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Check className="h-8 w-8 text-green-300" />
-            </div>
-            <p className="text-pantone-creamTan200 text-sm">Truth</p>
-          </div>
-        </div>
       </div>
     </section>
   );

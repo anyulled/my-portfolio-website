@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Heart, Lightbulb, Users } from "lucide-react";
+import {useEffect, useRef} from "react";
+import {gsap} from "gsap";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
+import {Heart, Lightbulb, Users} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,7 +27,7 @@ export default function MythsIntro() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: "top 70%",
+          start: "top 30%",
         end: "bottom 30%",
         toggleActions: "play none none reverse"
       }

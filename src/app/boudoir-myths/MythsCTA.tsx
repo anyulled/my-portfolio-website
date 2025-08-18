@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Calendar, Camera, MessageCircle } from "lucide-react";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import {useEffect, useRef} from "react";
+import {gsap} from "gsap";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
+import {Button} from "@/components/ui/button";
+import {BookOpen, Calendar, Camera, MessageCircle} from "lucide-react";
+import {Aref_Ruqaa} from "next/font/google";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
-const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export default function MythsCTA() {
   const ctaRef = useRef<HTMLElement>(null);
@@ -68,15 +67,15 @@ export default function MythsCTA() {
   }, []);
 
   return (
-    <section ref={ctaRef} className="py-20 bg-pantone-creamTan100">
+      <section ref={ctaRef} className="py-20 bg-cream-tan-200">
       <div className="max-w-6xl mx-auto px-4">
         <div ref={contentRef} className="text-center mb-16">
           <h2
-            className={`${dancingScript.className} text-3xl md:text-5xl font-serif text-chocolate-martini-default mb-6`}
+              className={`${arefRuqaa.className} text-3xl md:text-5xl font-serif dark:text-chocolate-martini-800 text-chocolate-martini-800 mb-6`}
           >
             Don't Let Myths Hold You Back
           </h2>
-          <p className="text-xl text-chanterelle-700 max-w-4xl mx-auto mb-8">
+            <p className="text-xl dark:text-chanterelle-400 text-chanterelle-400 max-w-4xl mx-auto mb-8">
             Now that you know the truth about boudoir photography, take the next
             step toward your empowering experience. Every woman deserves to feel
             beautiful, confident, and celebrated.
