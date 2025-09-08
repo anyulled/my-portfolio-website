@@ -1,10 +1,11 @@
 "use client";
 
-import React, {useEffect, useRef} from "react";
-import {gsap} from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {Award, Shield, Sparkles, Users} from "lucide-react";
-import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Award, Shield, Sparkles, Users } from "lucide-react";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,6 +54,7 @@ export default function TruthSection() {
     const sectionRef = useRef<HTMLElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const truthsRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("myths.truth_section");
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -102,64 +104,59 @@ export default function TruthSection() {
                     ref={titleRef}
                     className={`${dancingScript.className} text-3xl md:text-5xl font-serif text-chocolate-martini-700 text-center mb-16`}
                 >
-                    The Beautiful Truth
+                  {t("title")}
                 </h2>
 
-                <div
-                    ref={truthsRef}
-                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
-                >
-                    {truths.map((truth) => {
-                        const IconComponent = truth.icon;
-                        return (
-                            <div
-                                key={truth.id}
-                                className="text-center p-6 bg-cream-tan-50 rounded-2xl hover:shadow-lg transition-shadow duration-300"
-                            >
-                                <div
-                                    className="w-16 h-16 bg-chanterelle-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <IconComponent
-                                        className="h-8 w-8 text-white"/>
-                                </div>
-                                <h3
-                                    className="text-xl font-semibold text-chocolate-martini-500 mb-4">
-                                    {truth.title}
-                                </h3>
-                                <p className="text-chanterelle-700 leading-relaxed">
-                                    {truth.description}
-                                </p>
-                            </div>
-                        );
-                    })}
-                </div>
+              <div
+                ref={truthsRef}
+                className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+              >
+                {truths.map((truth, index) => {
+                  const IconComponent = truth.icon;
+                  return (
+                    <div
+                      key={index}
+                      className="text-center p-6 bg-cream-tan-50 rounded-2xl hover:shadow-lg transition-shadow duration-300"
+                    >
+                      <div
+                        className="w-16 h-16 bg-chanterelle-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <IconComponent className="h-8 w-8 text-white" />
+                      </div>
+                      <h3
+                        className="text-xl font-semibold text-chocolate-martini-500 mb-4">
+                        {t(`cards.${index}.title`)}
+                      </h3>
+                      <p className="text-chanterelle-700 leading-relaxed">
+                        {t(`cards.${index}.description`)}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
 
                 <div
                     className="mt-16 bg-gradient-to-r from-chanterelle-500 to-chocolate-martini-500 rounded-3xl p-8 md:p-12 text-center">
                     <h3
                         className={`${dancingScript.className}  text-2xl md:text-3xl font-serif text-white mb-6`}
                     >
-                        Ready to Experience the Truth?
+                      {t("cta.title")}
                     </h3>
                     <p
                         className={`${arefRuqaa.className} text-cream-tan-100 text-lg mb-8 max-w-3xl mx-auto`}
                     >
-                        Don't let myths and misconceptions hold you back from an
-                        empowering,
-                        life-changing experience. Discover the beautiful truth
-                        about boudoir
-                        photography for yourself.
+                      {t("cta.paragraph")}
                     </p>
                     <div
                         className="flex flex-col sm:flex-row gap-4 justify-center">
                         <button
                             className={`${arefRuqaa.className} text-white hover:bg-cream-tan-600 px-8 py-4 rounded-full font-semibold transition-colors duration-300`}
                         >
-                            Learn More About Our Process
+                          {t("cta.learn_more")}
                         </button>
                         <button
                             className={`${arefRuqaa.className} border-2 border-white text-white hover:bg-white hover:text-chocolate-martini-500 px-8 py-4 rounded-full font-semibold transition-all duration-300`}
                         >
-                            View Our Portfolio
+                          {t("cta.view_portfolio")}
                         </button>
                     </div>
                 </div>

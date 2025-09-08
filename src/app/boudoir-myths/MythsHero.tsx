@@ -1,11 +1,13 @@
 "use client";
 
-import {useEffect, useRef} from "react";
-import {gsap} from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import {Photo} from "@/services/flickr/flickr.types";
-import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
+import { Check, X } from "lucide-react";
+import { Photo } from "@/services/flickr/flickr.types";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,6 +23,7 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const iconsRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("myths.hero");
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -94,7 +97,7 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
         className="absolute inset-0 bg-gradient-to-br from-mocha-mousse-900/80 to-mocha-mousse-800/70">
         <Image
             src={heroImage.urlLarge}
-          alt="Confident woman breaking stereotypes about boudoir photography"
+            alt={t("alt")}
           width={1920}
           height={1080}
           className="object-cover w-full h-full opacity-60"
@@ -108,9 +111,9 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
           ref={titleRef}
           className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-white mb-6 leading-tight`}
         >
-            Busting Boudoir{' '}
-            <span className="block text-cream-tan-100 text-shadow-lg">
-            Photography Myths
+          {t("title1")}
+          <span className="block text-cream-tan-100 text-shadow-lg">
+            {t("title2")}
           </span>
         </h1>
 
@@ -118,10 +121,28 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
           ref={subtitleRef}
           className={`${arefRuqaa.className} text-xl md:text-2xl text-cream-tan-100 font-light max-w-4xl mb-12`}
         >
-          Separate fact from fiction and discover the empowering truth about
-          boudoir photography
+          {t("subtitle")}
         </p>
 
+        <div
+          ref={iconsRef}
+          className="flex justify-center items-center space-x-12"
+        >
+          <div className="text-center">
+            <div
+              className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+              <X className="h-8 w-8 text-red-300" />
+            </div>
+            <p className="text-pantone-creamTan200 text-sm">{t("label_myths")}</p>
+          </div>
+          <div className="text-center">
+            <div
+              className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Check className="h-8 w-8 text-green-300" />
+            </div>
+            <p className="text-pantone-creamTan200 text-sm">{t("label_truth")}</p>
+          </div>
+        </div>
       </div>
     </section>
   );

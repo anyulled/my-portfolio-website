@@ -1,12 +1,12 @@
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import MythsHero from "./MythsHero";
 import MythsIntro from "./MythIntro";
 import MythsList from "./MythsList";
 import TruthSection from "./TruthSection";
 import MythsCTA from "./MythsCTA";
-import {Article, FAQPage, WithContext} from "schema-dts";
-import {getFlickrPhotos} from "@/services/flickr/flickr";
-import {createFlickr} from "flickr-sdk";
+import { Article, FAQPage, WithContext } from "schema-dts";
+import { getFlickrPhotos } from "@/services/flickr/flickr";
+import { createFlickr } from "flickr-sdk";
 
 export const metadata: Metadata = {
   title: "5 Common Boudoir Photography Myths Debunked",
@@ -139,7 +139,7 @@ export default async function BoudoirMythsPage() {
       />
 
         <div className="min-h-screen bg-cream-tan-50">
-            <MythsHero heroImage={photos.photos?.at(5)!}/>
+          {photos.photos?.at(6) && <MythsHero heroImage={photos.photos.at(5)} />}
         <MythsIntro />
         <MythsList photos={photos.photos!} />
         <TruthSection />

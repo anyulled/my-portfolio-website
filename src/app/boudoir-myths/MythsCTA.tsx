@@ -1,11 +1,12 @@
 "use client";
 
-import {useEffect, useRef} from "react";
-import {gsap} from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {Button} from "@/components/ui/button";
-import {BookOpen, Calendar, Camera, MessageCircle} from "lucide-react";
-import {Aref_Ruqaa} from "next/font/google";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Button } from "@/components/ui/button";
+import { BookOpen, Calendar, Camera, MessageCircle } from "lucide-react";
+import { Aref_Ruqaa } from "next/font/google";
+import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,6 +16,7 @@ export default function MythsCTA() {
   const ctaRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("myths.cta");
 
   useEffect(() => {
     const cta = ctaRef.current;
@@ -73,19 +75,17 @@ export default function MythsCTA() {
           <h2
               className={`${arefRuqaa.className} text-3xl md:text-5xl font-serif dark:text-chocolate-martini-800 text-chocolate-martini-800 mb-6`}
           >
-            Don't Let Myths Hold You Back
+            {t("heading")}
           </h2>
             <p className="text-xl dark:text-chanterelle-400 text-chanterelle-400 max-w-4xl mx-auto mb-8">
-            Now that you know the truth about boudoir photography, take the next
-            step toward your empowering experience. Every woman deserves to feel
-            beautiful, confident, and celebrated.
+              {t("paragraph")}
           </p>
           <Button
             size="lg"
             className="bg-chocolate-martini-default hover:bg-chanterelle-default text-white px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
           >
             <Calendar className="mr-2 h-5 w-5" />
-            Book Your Empowering Session
+            {t("book_button")}
           </Button>
         </div>
 
@@ -99,10 +99,10 @@ export default function MythsCTA() {
               className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
             <h3
               className="text-lg font-semibold text-chocolate-martini-default mb-2">
-              Free Consultation
+              {t("cards.0.title")}
             </h3>
             <p className="text-chanterelle-700 text-sm">
-              Discuss your concerns and learn about our process
+              {t("cards.0.text")}
             </p>
           </div>
 
@@ -111,10 +111,10 @@ export default function MythsCTA() {
             <BookOpen className="h-12 w-12 text-chanterelle- mx-auto mb-4" />
             <h3
               className="text-lg font-semibold text-chocolate-martini-default mb-2">
-              Style Guide
+              {t("cards.1.title")}
             </h3>
             <p className="text-chanterelle-700 text-sm">
-              Get our complete preparation and styling guide
+              {t("cards.1.text")}
             </p>
           </div>
 
@@ -124,10 +124,10 @@ export default function MythsCTA() {
               className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
             <h3
               className="text-lg font-semibold text-chocolate-martini-default mb-2">
-              View Portfolio
+              {t("cards.2.title")}
             </h3>
             <p className="text-chanterelle-700 text-sm">
-              See real examples of our tasteful, artistic work
+              {t("cards.2.text")}
             </p>
           </div>
 
@@ -139,18 +139,17 @@ export default function MythsCTA() {
             </div>
             <h3
               className="text-lg font-semibold text-chocolate-martini-default mb-2">
-              Read Reviews
+              {t("cards.3.title")}
             </h3>
             <p className="text-chanterelle-700 text-sm">
-              Hear from real women about their experiences
+              {t("cards.3.text")}
             </p>
           </div>
         </div>
 
         <div className="mt-12 text-center">
           <p className="text-chanterelle-600 text-sm">
-            Still have questions? We're here to help you feel confident and
-            informed about your decision.
+            {t("footer")}
           </p>
         </div>
       </div>

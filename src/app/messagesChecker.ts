@@ -4,8 +4,8 @@ import chalk from "chalk";
 
 /*eslint-disable @typescript-eslint/ban-ts-comment */
 
-const referenceFilePath = path.join("messages", "en.json");
-const messagesFolderPath = path.join("messages");
+const referenceFilePath = path.join("src/messages", "en.json");
+const messagesFolderPath = path.join("src/messages");
 
 const getKeysFromJsonFile = (filePath: string): string[] => {
   const data = fs.readFileSync(filePath, "utf-8");

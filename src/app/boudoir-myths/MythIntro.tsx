@@ -1,9 +1,10 @@
 "use client";
 
-import {useEffect, useRef} from "react";
-import {gsap} from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {Heart, Lightbulb, Users} from "lucide-react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Heart, Lightbulb, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,6 +12,7 @@ export default function MythsIntro() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("myths.intro");
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -60,15 +62,11 @@ export default function MythsIntro() {
           </div>
           <h2
             className="text-3xl md:text-4xl font-serif text-mocha-mousse-900 mb-6">
-            The Truth About Boudoir Photography
+            {t("title")}
           </h2>
           <p
             className="text-xl text-mocha-mousse-700 max-w-4xl mx-auto leading-relaxed">
-            Despite its growing popularity, boudoir photography is still
-            surrounded by misconceptions and myths. These false beliefs prevent
-            many women from experiencing the empowering and transformative
-            journey that boudoir photography offers. Let's set the record
-            straight and reveal the beautiful truth behind this art form.
+            {t("paragraph")}
           </p>
         </div>
 
@@ -76,31 +74,31 @@ export default function MythsIntro() {
           <div className="text-center p-6 bg-mocha-mousse-100 rounded-2xl">
             <Users className="h-12 w-12 text-mocha-mousse-800 mx-auto mb-4" />
             <div className="text-3xl font-bold text-mocha-mousse-900 mb-2">
-              85%
+              {t("stats.0.value")}
             </div>
             <p className="text-mocha-mousse-700">
-              of women report increased confidence after their boudoir session
+              {t("stats.0.text")}
             </p>
           </div>
           <div className="text-center p-6 bg-mocha-mousse-100 rounded-2xl">
             <Heart className="h-12 w-12 text-mocha-mousse-900 mx-auto mb-4" />
             <div className="text-3xl font-bold text-mocha-mousse-900 mb-2">
-              All Ages
+              {t("stats.1.value")}
             </div>
             <p className="text-mocha-mousse-700">
-              from 18 to 75+ celebrate their beauty through boudoir
+              {t("stats.1.text")}
             </p>
           </div>
           <div className="text-center p-6 bg-mocha-mousse-100 rounded-2xl">
             <div
               className="text-3xl font-bold text-mocha-mousse-800 mx-auto mb-4">
-              ★★★★★
+              {t("stats.2.stars")}
             </div>
             <div className="text-3xl font-bold text-mocha-mousse-900 mb-2">
-              98%
+              {t("stats.2.value")}
             </div>
             <p className="text-mocha-mousse-700">
-              of clients say they would recommend the experience
+              {t("stats.2.text")}
             </p>
           </div>
         </div>
