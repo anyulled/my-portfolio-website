@@ -146,8 +146,7 @@ export default function MythsList({photos}: Readonly<MythListProps>) {
                                         className="flex items-center space-x-4 mb-6">
                                         <div
                                             className="w-12 h-12 bg-mocha-mousse-600 rounded-full flex items-center justify-center">
-                                            <IconComponent
-                                                className="h-6 w-6 text-white"/>
+                                          <IconComponent />
                                         </div>
                                         <span
                                             className="text-2xl font-bold text-mocha-mousse-900">
