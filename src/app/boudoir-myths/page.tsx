@@ -139,7 +139,9 @@ export default async function BoudoirMythsPage() {
       />
 
         <div className="min-h-screen bg-cream-tan-50">
-          {photos.photos?.at(6) && <MythsHero heroImage={photos.photos.at(5)} />}
+          {photos.photos && photos.photos.length > 5 && (
+            <MythsHero heroImage={photos.photos[5]} />
+          )}
         <MythsIntro />
         <MythsList photos={photos.photos!} />
         <TruthSection />
