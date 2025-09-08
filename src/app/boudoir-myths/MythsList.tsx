@@ -10,8 +10,10 @@ import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type MythId = "1" | "2" | "3" | "4" | "5";
+
 interface MythsBase {
-    id: number;
+  id: MythId;
     icon: React.FC;
 }
 
@@ -26,13 +28,13 @@ interface MythsWithImages extends MythsBase, MythTexts {
     image: Photo;
 }
 
-const mythBases: Array<MythsBase> = [
-  { id: 1, icon: Users },
-  { id: 2, icon: Eye },
-  { id: 3, icon: Zap },
-  { id: 4, icon: Camera },
-  { id: 5, icon: Heart }
-];
+const mythBases = [
+  { id: "1", icon: Users },
+  { id: "2", icon: Eye },
+  { id: "3", icon: Zap },
+  { id: "4", icon: Camera },
+  { id: "5", icon: Heart }
+] as const satisfies ReadonlyArray<MythsBase>;
 
 interface MythListProps {
     photos: Array<Photo>;
@@ -47,11 +49,12 @@ export default function MythsList({photos}: Readonly<MythListProps>) {
     useEffect(() => {
         const section = sectionRef.current;
         const title = titleRef.current;
+      const itemKey = <K extends "myth" | "truth" | "explanation" | "stats">(id: MythId, key: K) => `items.${id}.${key}` as const;
       const mythsTexts: MythTexts[] = mythBases.map((base) => ({
-        myth: t(`items.${base.id}.myth`),
-        truth: t(`items.${base.id}.truth`),
-        explanation: t(`items.${base.id}.explanation`),
-        stats: t(`items.${base.id}.stats`)
+        myth: t(itemKey(base.id, "myth")),
+        truth: t(itemKey(base.id, "truth")),
+        explanation: t(itemKey(base.id, "explanation")),
+        stats: t(itemKey(base.id, "stats"))
       }));
 
       const mythsWithPhotos: Array<MythsWithImages> = mythBases.map((base, index) => ({
@@ -129,7 +132,7 @@ export default function MythsList({photos}: Readonly<MythListProps>) {
                                     className={isEven ? "lg:order-1" : "lg:order-2"}>
                                     <Image
                                         src={myth.image.urlMedium}
-                                        alt={t("image_alt", { id: myth.id, myth: myth.myth })}
+                                        alt={t("image_alt", { id: Number(myth.id), myth: myth.myth })}
                                         width={600}
                                         height={400}
                                         className="rounded-2xl shadow-xl object-cover w-full"
@@ -148,7 +151,7 @@ export default function MythsList({photos}: Readonly<MythListProps>) {
                                         </div>
                                         <span
                                             className="text-2xl font-bold text-mocha-mousse-900">
-                      {t("myth_number", { id: myth.id })}
+                      {t("myth_number", { id: Number(myth.id) })}
                     </span>
                                     </div>
 
