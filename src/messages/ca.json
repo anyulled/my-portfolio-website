@@ -62,6 +62,7 @@
     "menu_about": "Sobre mi",
     "menu_testimonials": "Testimonials",
     "menu_what_is_boudoir": "Què és Boudoir?",
+    "menu_myths": "Mites Boudoir",
     "models": "Models",
     "open_menu": "Obre Menú",
     "search_models": "Cerca Models...",
@@ -99,6 +100,128 @@
   "social": {
     "connect": "Connecta amb nosaltres",
     "follow_us": "Segueix-nos a"
+  },
+  "myths": {
+    "hero": {
+      "alt": "Dona segura trencant estereotips sobre la fotografia boudoir",
+      "title1": "Desmuntant els Mites del",
+      "title2": "Boudoir",
+      "subtitle": "Separa els fets de la ficció i descobreix la veritat empoderadora sobre la fotografia boudoir",
+      "label_myths": "Mites",
+      "label_truth": "Veritat"
+    },
+    "intro": {
+      "title": "La Veritat sobre la Fotografia Boudoir",
+      "paragraph": "Malgrat la seva creixent popularitat, la fotografia boudoir encara està envoltada de malentesos i mites. Aquestes creences falses impedeixen a moltes dones viure el viatge empoderador i transformador que ofereix el boudoir. Posem les coses al seu lloc i revelem la bella veritat d'aquest art.",
+      "stats": [
+        {
+          "value": "85%",
+          "text": "de dones informen d'un augment de confiança després de la sessió boudoir"
+        },
+        {
+          "value": "Totes les edats",
+          "text": "de 18 a 75+ celebren la seva bellesa a través del boudoir"
+        },
+        {
+          "stars": "★★★★★",
+          "value": "98%",
+          "text": "de les clientes diuen que recomanarien l'experiència"
+        }
+      ]
+    },
+    "list": {
+      "title": "5 Mites vs Realitat",
+      "image_alt": "Mite {id}: {myth}",
+      "myth_number": "Mite #{id}",
+      "labels": {
+        "myth": "MITE:",
+        "truth": "VERITAT:",
+        "reality_check": "Comprovació de la Realitat:"
+      },
+      "items": {
+        "1": {
+          "myth": "La fotografia boudoir és només per a dones joves i primes",
+          "truth": "El boudoir és per a TOTES les dones, sigui quina sigui l'edat, la talla o el tipus de cos",
+          "explanation": "La bellesa existeix en totes les formes, talles i edats. Les fotògrafes professionals de boudoir saben destacar la bellesa única de cada dona. Tant si tens 25 com 65 anys, tant si uses una talla com una altra, mereixes sentir-te bella i empoderada. Les imatges més impactants sovint provenen de dones que al principi dubtaven del seu cos.",
+          "stats": "Dones de 18 a 75+ reserven sessions boudoir"
+        },
+        "2": {
+          "myth": "La fotografia boudoir és inapropiada o massa reveladora",
+          "truth": "El boudoir és elegant, artístic i sempre respecta el teu nivell de comoditat",
+          "explanation": "La fotografia boudoir professional és un art que celebra la feminitat amb classe i elegància. Tu tens el control total: des de totalment vestida fins a poses més íntimes. Les fotògrafes expertes utilitzen la llum, els angles i la composició per crear imatges belles i amb bon gust de les quals et sentiràs orgullosa.",
+          "stats": "100% control de la clienta sobre el seu nivell de comoditat"
+        },
+        "3": {
+          "myth": "Cal ser molt segura per fer una sessió boudoir",
+          "truth": "El boudoir construeix la confiança — no cal portar-la",
+          "explanation": "La majoria arriba a la sessió nerviosa o cohibida. És totalment normal! La màgia passa durant la sessió: la guia professional, les poses afavoridores i veure't a través de l'objectiu van construint la confiança. Moltes clientes diuen que al final se sentien completament diferents.",
+          "stats": "El 90% comença nerviosa i marxa empoderada"
+        },
+        "4": {
+          "myth": "Les fotos boudoir són només per a la parella",
+          "truth": "La majoria fa sessions boudoir per a elles mateixes",
+          "explanation": "Encara que algunes regalen les seves imatges a la parella, la majoria reserven com a celebració personal. Es tracta d'amor propi, marcar fites, celebrar èxits o simplement abraçar la teva feminitat. L'empoderament i la confiança són regals per a tu.",
+          "stats": "El 70% de les sessions són per empoderament personal"
+        },
+        "5": {
+          "myth": "La fotografia boudoir és cara i no val la pena",
+          "truth": "És una inversió en tu que es tradueix en confiança",
+          "explanation": "Tot i ser una inversió, les clientes afirmen que l'augment de confiança, l'amor propi i l'empoderament superen amb escreix el cost. Moltes la descriuen com a transformadora. Per l'impacte durador en l'autoimatge, és una de les inversions més valuoses en tu mateixa.",
+          "stats": "Un impuls de confiança que dura tota la vida"
+        }
+      }
+    },
+    "truth_section": {
+      "title": "La Bella Veritat",
+      "cards": [
+        {
+          "title": "Empoderament per a Tothom",
+          "description": "Tota dona mereix sentir-se bella, segura i empoderada, sense importar l'edat, la talla o el passat."
+        },
+        {
+          "title": "Segur i Professional",
+          "description": "Les fotògrafes professionals creen un entorn segur i confortable on sempre tens el control."
+        },
+        {
+          "title": "Excel·lència Artística",
+          "description": "La fotografia boudoir és un art respectat que celebra la feminitat amb gust i elegància."
+        },
+        {
+          "title": "Una Experiència que Canvia la Vida",
+          "description": "Moltes clientes descriuen la seva sessió com a transformadora, amb un impuls de confiança que dura anys."
+        }
+      ],
+      "cta": {
+        "title": "Llesta per Viure la Veritat?",
+        "paragraph": "No deixis que els mites t'aturin d'una experiència empoderadora i transformadora. Descobreix per tu mateixa la bella veritat del boudoir.",
+        "learn_more": "Coneix el Nostre Procés",
+        "view_portfolio": "Veure el Nostre Portafolis"
+      }
+    },
+    "cta": {
+      "heading": "No Deixis que els Mites t'Aturin",
+      "paragraph": "Ara que coneixes la veritat sobre la fotografia boudoir, fes el següent pas cap a la teva experiència empoderadora. Tota dona mereix sentir-se bella, segura i celebrada.",
+      "book_button": "Reserva la Teva Sessió Empoderadora",
+      "cards": [
+        {
+          "title": "Assessoria Gratuïta",
+          "text": "Parla de les teves inquietuds i coneix el nostre procés"
+        },
+        {
+          "title": "Guia d'Estil",
+          "text": "Aconsegueix la nostra guia completa de preparació i estilisme"
+        },
+        {
+          "title": "Veure Portafolis",
+          "text": "Mira exemples reals del nostre treball artístic i amb bon gust"
+        },
+        {
+          "title": "Llegeix Ressenyes",
+          "text": "Coneix experiències reals d'altres dones"
+        }
+      ],
+      "footer": "Encara tens preguntes? Som aquí per ajudar-te a sentir-te segura i informada en la teva decisió."
+    }
   },
   "styles": {
     "artistic_nude": "Nu Artístic",
