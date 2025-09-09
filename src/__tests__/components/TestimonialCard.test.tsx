@@ -18,7 +18,7 @@ jest.mock("gsap", () => {
       to: jest.fn(),
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis()
-      }))
+      })),
     },
     default: {
       registerPlugin: jest.fn(),
@@ -26,24 +26,30 @@ jest.mock("gsap", () => {
       to: jest.fn(),
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis()
-      }))
+      })),
     },
     registerPlugin: jest.fn(),
     set: jest.fn(),
     to: jest.fn(),
     timeline: jest.fn(() => ({
       to: jest.fn().mockReturnThis()
-    }))
+    })),
   };
 });
 jest.mock("next-intl", () => ({
-  useTranslations: jest.fn(() => (key: string) => key === "date" ? "en-US" : `translated_${key}`)
+  useTranslations: jest.fn(
+    () => (key: string) => (key === "date" ? "en-US" : `translated_${key}`)
+  )
 }));
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: (props: JSX.IntrinsicAttributes & ClassAttributes<HTMLImageElement> & ImgHTMLAttributes<HTMLImageElement>) => {
+  default: (
+    props: JSX.IntrinsicAttributes &
+      ClassAttributes<HTMLImageElement> &
+      ImgHTMLAttributes<HTMLImageElement>
+  ) => {
     return <img {...props} alt={"test"} />;
-  }
+  },
 }));
 
 describe("TestimonialCard", () => {
@@ -80,7 +86,6 @@ describe("TestimonialCard", () => {
     expect(screen.getByText(mockTestimonial.name)).toBeInTheDocument();
     expect(screen.getByText(mockTestimonial.location)).toBeInTheDocument();
     expect(screen.getByTestId("testimonial-content")).toBeInTheDocument();
-
   });
 
   it("renders the image when provided", () => {
@@ -108,13 +113,15 @@ describe("TestimonialCard", () => {
 
     // The date should be formatted using toLocaleDateString
     // Since we mocked the date locale to 'en-US', we expect a formatted date
-    const formattedDate = new Date(mockTestimonial.date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
+    const formattedDate = new Date(mockTestimonial.date).toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }
+    );
 
     expect(screen.getByText(formattedDate)).toBeInTheDocument();
   });
-
 });

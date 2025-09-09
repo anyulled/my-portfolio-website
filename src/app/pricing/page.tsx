@@ -130,24 +130,31 @@ export default async function PricingPage() {
   return (
     <div className="min-h-screen pt-24">
       <div className="container mx-auto px-4 py-16">
-        <FadeInTitle><h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center`}
-        >
-          {t("pricing")}
-        </h1></FadeInTitle>
-        <FadeInTitle duration={2} delay={0.5}><h2
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-center mb-12`}
-        >
-          {t("discover_our_experiences")}
-        </h2></FadeInTitle>
+        <FadeInTitle>
+          <h1
+            className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center`}
+          >
+            {t("pricing")}
+          </h1>
+        </FadeInTitle>
+        <FadeInTitle duration={2} delay={0.5}>
+          <h2
+            className={`${arefRuqaa.className} text-xl md:text-2xl text-center mb-12`}
+          >
+            {t("discover_our_experiences")}
+          </h2>
+        </FadeInTitle>
 
         <AnimatedPackages packages={packages} bookNowText={t("book_now")} />
 
         <div className="mt-16">
-          <FadeInTitle><h2
-            className={`${arefRuqaa.className} text-2xl md:text-3xl mb-6 text-center`}>
-            {t("general_conditions")}
-          </h2></FadeInTitle>
+          <FadeInTitle>
+            <h2
+              className={`${arefRuqaa.className} text-2xl md:text-3xl mb-6 text-center`}
+            >
+              {t("general_conditions")}
+            </h2>
+          </FadeInTitle>
           <div
             className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg p-6">
             <ul className="space-y-4">

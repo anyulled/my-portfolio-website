@@ -51,57 +51,81 @@ const ErrorMessage = <T extends FieldValues>({
 
   // Directly use the error message as the translation key if it starts with "error_"
   // Otherwise, use the original error message
-  const translatedMessage = errorMessage.startsWith("error_") ? t(errorMessage) : errorMessage;
+  const translatedMessage = errorMessage.startsWith("error_")
+    ? t(errorMessage)
+    : errorMessage;
 
   return <p className="text-red-500 text-sm mt-1">{translatedMessage}</p>;
 };
 
 const COLORS = [
-  "brown", "black", "blue", "green", "red", "gray", "other"
+  "brown",
+  "black",
+  "blue",
+  "green",
+  "red",
+  "gray",
+  "other"
 ] as const;
 
 const PAYMENT_TYPES = ["cash", "bank", "bizum", "paypal", "other"] as const;
 
-const bookingFormSchema = z.object({
-  fullName: z.string().min(2, { message: "error_full_name" }),
-  socialAccount: z.string().min(3, { message: "error_social_account" }),
-  email: z.string().email({ message: "error_email" }),
-  country: z.string().min(2, { message: "error_country" }),
-  height: z.string()
-    .refine(val => !isNaN(Number(val)), { message: "error_height" })
-    .refine(val => Number(val) >= 100 && Number(val) <= 220, { message: "error_height" }),
-  chest: z.string()
-    .refine(val => !isNaN(Number(val)), { message: "error_chest" })
-    .refine(val => Number(val) >= 30 && Number(val) <= 150, { message: "error_chest" }),
-  waist: z.string()
-    .refine(val => !isNaN(Number(val)), { message: "error_waist" })
-    .refine(val => Number(val) >= 30 && Number(val) <= 150, { message: "error_waist" }),
-  hips: z.string()
-    .refine(val => !isNaN(Number(val)), { message: "error_hips" })
-    .refine(val => Number(val) >= 30 && Number(val) <= 150, { message: "error_hips" }),
-  tattoos: z.string().optional(),
-  hairColor: z.enum(COLORS, { message: "error_hair_color" }),
-  eyeColor: z.enum(COLORS, { message: "error_eye_color" }),
-  implants: z.enum(["yes", "no"]),
-  startDate: z.string().min(1, { message: "error_startDate" }),
-  endDate: z.string().min(1, { message: "error_endDate" }),
-  rates: z.string().min(5, { message: "error_rates" }),
-  modelRelease: z.enum(["yes", "no"]),
-  paymentTypes: z.array(z.enum(PAYMENT_TYPES)).min(1, { message: "error_payment_type" })
-}).refine(
-  (data) => {
-    if (data.startDate && data.endDate) {
-      const start = new Date(data.startDate);
-      const end = new Date(data.endDate);
-      return start <= end;
+const bookingFormSchema = z
+  .object({
+    fullName: z.string().min(2, { message: "error_full_name" }),
+    socialAccount: z.string().min(3, { message: "error_social_account" }),
+    email: z.string().email({ message: "error_email" }),
+    country: z.string().min(2, { message: "error_country" }),
+    height: z
+      .string()
+      .refine((val) => !isNaN(Number(val)), { message: "error_height" })
+      .refine((val) => Number(val) >= 100 && Number(val) <= 220, {
+        message: "error_height"
+      }),
+    chest: z
+      .string()
+      .refine((val) => !isNaN(Number(val)), { message: "error_chest" })
+      .refine((val) => Number(val) >= 30 && Number(val) <= 150, {
+        message: "error_chest"
+      }),
+    waist: z
+      .string()
+      .refine((val) => !isNaN(Number(val)), { message: "error_waist" })
+      .refine((val) => Number(val) >= 30 && Number(val) <= 150, {
+        message: "error_waist"
+      }),
+    hips: z
+      .string()
+      .refine((val) => !isNaN(Number(val)), { message: "error_hips" })
+      .refine((val) => Number(val) >= 30 && Number(val) <= 150, {
+        message: "error_hips"
+      }),
+    tattoos: z.string().optional(),
+    hairColor: z.enum(COLORS, { message: "error_hair_color" }),
+    eyeColor: z.enum(COLORS, { message: "error_eye_color" }),
+    implants: z.enum(["yes", "no"]),
+    startDate: z.string().min(1, { message: "error_startDate" }),
+    endDate: z.string().min(1, { message: "error_endDate" }),
+    rates: z.string().min(5, { message: "error_rates" }),
+    modelRelease: z.enum(["yes", "no"]),
+    paymentTypes: z
+      .array(z.enum(PAYMENT_TYPES))
+      .min(1, { message: "error_payment_type" })
+  })
+  .refine(
+    (data) => {
+      if (data.startDate && data.endDate) {
+        const start = new Date(data.startDate);
+        const end = new Date(data.endDate);
+        return start <= end;
+      }
+      return true;
+    },
+    {
+      message: "error_date_range",
+      path: ["endDate"]
     }
-    return true;
-  },
-  {
-    message: "error_date_range",
-    path: ["endDate"]
-  }
-);
+  );
 
 type FormValues = z.infer<typeof bookingFormSchema>;
 
@@ -115,9 +139,9 @@ export default function BookingPage() {
    * @param checked - Whether the checkbox is checked or not
    */
   const handleCheckboxChange = (
-      field: { value: string[]; onChange: (value: string[]) => void },
-      type: string,
-      checked: CheckedState
+    field: { value: string[]; onChange: (value: string[]) => void },
+    type: string,
+    checked: CheckedState
   ) => {
     // If checked, add the type to the array; otherwise, remove it
     const updatedValue = checked
@@ -153,7 +177,7 @@ export default function BookingPage() {
       rates: "",
       modelRelease: "yes",
       paymentTypes: []
-    }
+    },
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -162,7 +186,7 @@ export default function BookingPage() {
 
       Object.entries(data).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-          value.forEach(item => formData.append(key, item));
+          value.forEach((item) => formData.append(key, item));
         } else {
           formData.append(key, value);
         }
@@ -186,7 +210,9 @@ export default function BookingPage() {
       } else {
         toast({
           title: "Error",
-          description: result.message ?? "There was an error submitting your booking request. Please try again.",
+          description:
+            result.message ??
+            "There was an error submitting your booking request. Please try again.",
           variant: "destructive"
         });
       }
@@ -200,22 +226,22 @@ export default function BookingPage() {
     }
   };
 
-
   return (
     <section className="py-12">
       <div className="container mx-auto px-6">
         <h1
-          className={`${arefRuqaa.className} text-4xl font-bold text-center mb-8`}>
+          className={`${arefRuqaa.className} text-4xl font-bold text-center mb-8`}
+        >
           {t("title")}
         </h1>
         <div className="max-w-3xl mx-auto mb-8">
-          <p className="text-lg text-center mb-6">
-            {t("intro")}
-          </p>
+          <p className="text-lg text-center mb-6">{t("intro")}</p>
         </div>
 
-        <form className="max-w-2xl mx-auto space-y-6"
-              onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="max-w-2xl mx-auto space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">{t("personal_info")}</h2>
 
@@ -238,8 +264,11 @@ export default function BookingPage() {
                 className={errors.socialAccount ? "border-red-500" : ""}
                 {...register("socialAccount")}
               />
-              <ErrorMessage<FormValues> name="socialAccount" errors={errors}
-                                        t={t} />
+              <ErrorMessage<FormValues>
+                name="socialAccount"
+                errors={errors}
+                t={t}
+              />
             </div>
 
             <div>
@@ -251,8 +280,7 @@ export default function BookingPage() {
                 className={errors.email ? "border-red-500" : ""}
                 {...register("email")}
               />
-              <ErrorMessage<FormValues> name="email" errors={errors}
-                                        t={t} />
+              <ErrorMessage<FormValues> name="email" errors={errors} t={t} />
             </div>
 
             <div>
@@ -268,8 +296,9 @@ export default function BookingPage() {
           </div>
 
           <div className="space-y-4">
-            <h2
-              className="text-xl font-semibold">{t("physical_characteristics")}</h2>
+            <h2 className="text-xl font-semibold">
+              {t("physical_characteristics")}
+            </h2>
 
             <div>
               <Label htmlFor="height">{t("height")} *</Label>
@@ -334,26 +363,29 @@ export default function BookingPage() {
                 name="hairColor"
                 control={control}
                 render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
-                    <SelectTrigger id="hairColor"
-                                   className={errors.hairColor ? "border-red-500" : ""}>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger
+                      id="hairColor"
+                      className={errors.hairColor ? "border-red-500" : ""}
+                    >
                       <SelectValue placeholder={t("hair_color")} />
                     </SelectTrigger>
                     <SelectContent>
                       {COLORS.map((color) => (
                         <SelectItem key={color} value={color}>
-                          {t(`hair_${color}`) || color.charAt(0).toUpperCase() + color.slice(1)}
+                          {t(`hair_${color}`) ||
+                            color.charAt(0).toUpperCase() + color.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 )}
               />
-              <ErrorMessage<FormValues> name="hairColor" errors={errors}
-                                        t={t} />
+              <ErrorMessage<FormValues>
+                name="hairColor"
+                errors={errors}
+                t={t}
+              />
             </div>
 
             <div>
@@ -362,18 +394,18 @@ export default function BookingPage() {
                 name="eyeColor"
                 control={control}
                 render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
-                    <SelectTrigger id="eyeColor"
-                                   className={errors.eyeColor ? "border-red-500" : ""}>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger
+                      id="eyeColor"
+                      className={errors.eyeColor ? "border-red-500" : ""}
+                    >
                       <SelectValue placeholder={t("eye_color")} />
                     </SelectTrigger>
                     <SelectContent>
                       {COLORS.map((color) => (
                         <SelectItem key={color} value={color}>
-                          {t(`eye_${color}`) || color.charAt(0).toUpperCase() + color.slice(1)}
+                          {t(`eye_${color}`) ||
+                            color.charAt(0).toUpperCase() + color.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -420,8 +452,11 @@ export default function BookingPage() {
                   className={errors.startDate ? "border-red-500" : ""}
                   {...register("startDate")}
                 />
-                <ErrorMessage<FormValues> name="startDate" errors={errors}
-                                          t={t} />
+                <ErrorMessage<FormValues>
+                  name="startDate"
+                  errors={errors}
+                  t={t}
+                />
               </div>
               <div>
                 <Label htmlFor="endDate">{t("available_until")} *</Label>
@@ -431,8 +466,11 @@ export default function BookingPage() {
                   className={errors.endDate ? "border-red-500" : ""}
                   {...register("endDate")}
                 />
-                <ErrorMessage<FormValues> name="endDate" errors={errors}
-                                          t={t} />
+                <ErrorMessage<FormValues>
+                  name="endDate"
+                  errors={errors}
+                  t={t}
+                />
               </div>
             </div>
 
@@ -468,8 +506,11 @@ export default function BookingPage() {
                   </RadioGroup>
                 )}
               />
-              <ErrorMessage<FormValues> name="modelRelease" errors={errors}
-                                        t={t} />
+              <ErrorMessage<FormValues>
+                name="modelRelease"
+                errors={errors}
+                t={t}
+              />
             </div>
 
             <div>
@@ -481,13 +522,14 @@ export default function BookingPage() {
                   render={({ field }) => (
                     <>
                       {PAYMENT_TYPES.map((type) => (
-                        <div key={type}
-                             className="flex items-center space-x-2">
+                        <div key={type} className="flex items-center space-x-2">
                           <Checkbox
                             id={`payment-${type}`}
                             value={type}
                             checked={field.value.includes(type)}
-                            onCheckedChange={(checked) => handleCheckboxChange(field, type, checked)}
+                            onCheckedChange={(checked) =>
+                              handleCheckboxChange(field, type, checked)
+                            }
                           />
                           <Label
                             htmlFor={`payment-${type}`}
@@ -501,8 +543,11 @@ export default function BookingPage() {
                   )}
                 />
               </div>
-              <ErrorMessage<FormValues> name="paymentTypes" errors={errors}
-                                        t={t} />
+              <ErrorMessage<FormValues>
+                name="paymentTypes"
+                errors={errors}
+                t={t}
+              />
             </div>
           </div>
 

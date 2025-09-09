@@ -25,14 +25,17 @@ jest.mock("@/app/testimonials/TestimonialsCTA", () => ({
 
 jest.mock("@/components/TestimonialCard", () => ({
   __esModule: true,
-  default: ({ testimonial, index }: {
+  default: ({
+              testimonial,
+              index
+            }: {
     testimonial: Testimonial;
-    index: number
+    index: number;
   }) => (
     <div data-testid={`testimonial-card-${testimonial.id}`}>
       Mocked Card for {testimonial.name} (Index: {index})
     </div>
-  )
+  ),
 }));
 
 // Mock next/font/google
@@ -42,14 +45,16 @@ jest.mock("next/font/google", () => ({
 
 // Mock next-intl/server
 jest.mock("next-intl/server", () => ({
-  getTranslations: jest.fn(() => Promise.resolve((key: string) => {
-    const translations: Record<string, string> = {
-      what_our_clients_say: "Mocked What Our Clients Say",
-      discover_transformative_experiences: "Mocked Discover Experiences",
-      more_client_stories: "Mocked More Client Stories"
-    };
-    return translations[key] || key;
-  }))
+  getTranslations: jest.fn(() =>
+    Promise.resolve((key: string) => {
+      const translations: Record<string, string> = {
+        what_our_clients_say: "Mocked What Our Clients Say",
+        discover_transformative_experiences: "Mocked Discover Experiences",
+        more_client_stories: "Mocked More Client Stories"
+      };
+      return translations[key] || key;
+    })
+  )
 }));
 
 describe("TestimonialsPage", () => {
@@ -71,7 +76,7 @@ describe("TestimonialsPage", () => {
       content: "Featured content 2",
       date: "2025-07-30",
       featured: true
-    }
+    },
   ];
 
   const mockRegularTestimonials: Testimonial[] = [
@@ -83,10 +88,13 @@ describe("TestimonialsPage", () => {
       content: "Regular content 1",
       date: "2025-07-29",
       featured: false
-    }
+    },
   ];
 
-  const mockAllTestimonials = [...mockFeaturedTestimonials, ...mockRegularTestimonials];
+  const mockAllTestimonials = [
+    ...mockFeaturedTestimonials,
+    ...mockRegularTestimonials
+  ];
 
   beforeEach(() => {
     commonBeforeEach();
@@ -111,7 +119,9 @@ describe("TestimonialsPage", () => {
     expect(screen.getByText("Mocked More Client Stories")).toBeInTheDocument();
 
     // Check if the structured data is included
-    const scriptTag = container.querySelector("script[type=\"application/ld+json\"]");
+    const scriptTag = container.querySelector(
+      "script[type=\"application/ld+json\"]"
+    );
     expect(scriptTag).toBeInTheDocument();
 
     // Parse the structured data and check its content
@@ -126,13 +136,17 @@ describe("TestimonialsPage", () => {
     render(await TestimonialsPage());
 
     // Check if all featured testimonial cards are rendered
-    mockFeaturedTestimonials.forEach(testimonial => {
-      expect(screen.getByTestId(`testimonial-card-${testimonial.id}`)).toBeInTheDocument();
+    mockFeaturedTestimonials.forEach((testimonial) => {
+      expect(
+        screen.getByTestId(`testimonial-card-${testimonial.id}`)
+      ).toBeInTheDocument();
     });
 
     // Check if all regular testimonial cards are rendered
-    mockRegularTestimonials.forEach(testimonial => {
-      expect(screen.getByTestId(`testimonial-card-${testimonial.id}`)).toBeInTheDocument();
+    mockRegularTestimonials.forEach((testimonial) => {
+      expect(
+        screen.getByTestId(`testimonial-card-${testimonial.id}`)
+      ).toBeInTheDocument();
     });
   });
 
@@ -143,17 +157,31 @@ describe("TestimonialsPage", () => {
     render(await TestimonialsPage());
 
     // The "More Client Stories" heading should not be in the document
-    expect(screen.queryByText("Mocked More Client Stories")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Mocked More Client Stories")
+    ).not.toBeInTheDocument();
   });
 
   it("passes the correct indices to testimonial cards", async () => {
     render(await TestimonialsPage());
 
     // Featured testimonials should have indices starting from 0
-    expect(screen.getByText(`Mocked Card for ${mockFeaturedTestimonials[0].name} (Index: 0)`)).toBeInTheDocument();
-    expect(screen.getByText(`Mocked Card for ${mockFeaturedTestimonials[1].name} (Index: 1)`)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `Mocked Card for ${mockFeaturedTestimonials[0].name} (Index: 0)`
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `Mocked Card for ${mockFeaturedTestimonials[1].name} (Index: 1)`
+      )
+    ).toBeInTheDocument();
 
     // Regular testimonials should have indices continuing from featured testimonials
-    expect(screen.getByText(`Mocked Card for ${mockRegularTestimonials[0].name} (Index: 2)`)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `Mocked Card for ${mockRegularTestimonials[0].name} (Index: 2)`
+      )
+    ).toBeInTheDocument();
   });
 });

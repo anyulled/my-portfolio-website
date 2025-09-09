@@ -18,7 +18,7 @@ jest.mock("gsap", () => {
       to: jest.fn(),
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis()
-      }))
+      })),
     },
     default: {
       registerPlugin: jest.fn(),
@@ -26,14 +26,14 @@ jest.mock("gsap", () => {
       to: jest.fn(),
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis()
-      }))
+      })),
     },
     registerPlugin: jest.fn(),
     set: jest.fn(),
     to: jest.fn(),
     timeline: jest.fn(() => ({
       to: jest.fn().mockReturnThis()
-    }))
+    })),
   };
 });
 
@@ -51,7 +51,7 @@ jest.mock("next/font/google", () => ({
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn()
-  }))
+  })),
 }));
 
 // Mock the analytics event tracker
@@ -88,7 +88,9 @@ describe("TestimonialsCTA", () => {
     expect(screen.getByText("translated_join_hundreds")).toBeInTheDocument();
 
     // Check if the button text is rendered with the correct translation
-    expect(screen.getByText("translated_book_your_session")).toBeInTheDocument();
+    expect(
+      screen.getByText("translated_book_your_session")
+    ).toBeInTheDocument();
 
     // Check if the icon texts are rendered with the correct translations
     expect(screen.getByText("translated_empowering")).toBeInTheDocument();

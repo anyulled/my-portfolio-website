@@ -31,25 +31,28 @@ export default function AnimatedPackages({
                                          }: Readonly<AnimatedPackagesProps>) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    const packageElements = gsap.utils.toArray(".package-card");
+  useGSAP(
+    () => {
+      const packageElements = gsap.utils.toArray(".package-card");
 
-    gsap.fromTo(
-      packageElements,
-      {
-        opacity: 0,
-        y: 50
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power2.out",
-        delay: 0.5
-      }
-    );
-  }, { scope: containerRef });
+      gsap.fromTo(
+        packageElements,
+        {
+          opacity: 0,
+          y: 50
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power2.out",
+          delay: 0.5
+        }
+      );
+    },
+    { scope: containerRef }
+  );
 
   return (
     <div ref={containerRef} className="grid lg:grid-cols-3 gap-2">
@@ -69,14 +72,8 @@ export default function AnimatedPackages({
             <div
               className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
             <div className="absolute bottom-0 left-0 right-0 p-6">
-              <h2
-                className="text-2xl md:text-3xl mb-2"
-              >
-                {pkg.name}
-              </h2>
-              <p
-                className="text-4xl md:text-5xl text-mocha-mousse-200"
-              >
+              <h2 className="text-2xl md:text-3xl mb-2">{pkg.name}</h2>
+              <p className="text-4xl md:text-5xl text-mocha-mousse-200">
                 {pkg.price}
               </p>
             </div>

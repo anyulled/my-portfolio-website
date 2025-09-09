@@ -6,7 +6,10 @@ import {
 
 const mockEnMessages = { test: "English message" };
 const mockEsMessages = { test: "Spanish message" };
-const createRequestConfigForTesting = (mockGetUserLocale, mockMessages = {}) => {
+const createRequestConfigForTesting = (
+  mockGetUserLocale,
+  mockMessages = {}
+) => {
   return async () => {
     const requestedLocale = await mockGetUserLocale();
     const availableLocales = ["es", "en", "fr", "ca", "it", "uk"];
@@ -20,7 +23,10 @@ const createRequestConfigForTesting = (mockGetUserLocale, mockMessages = {}) => 
     try {
       if (requestedLocale === "error-test") {
         const error = new Error("Failed to import messages");
-        console.error(`[ i18n ] Failed to import messages for locale ${requestedLocale}:`, error);
+        console.error(
+          `[ i18n ] Failed to import messages for locale ${requestedLocale}:`,
+          error
+        );
         return {
           locale: FALLBACK_LOCALE,
           messages: mockMessages[FALLBACK_LOCALE] || {}
@@ -28,9 +34,14 @@ const createRequestConfigForTesting = (mockGetUserLocale, mockMessages = {}) => 
       }
 
       messages = mockMessages[locale] || {};
-      console.info(`[ i18n ] Successfully loaded messages for locale: ${locale}`);
+      console.info(
+        `[ i18n ] Successfully loaded messages for locale: ${locale}`
+      );
     } catch (importError) {
-      console.error(`[ i18n ] Failed to import messages for locale ${locale}:`, importError);
+      console.error(
+        `[ i18n ] Failed to import messages for locale ${locale}:`,
+        importError
+      );
       messages = mockMessages[FALLBACK_LOCALE] || {};
     }
 
@@ -50,11 +61,14 @@ describe("i18n request config", () => {
     jest.clearAllMocks();
     mockGetUserLocale = jest.fn();
     mockMessages = {
-      "en": mockEnMessages,
-      "es": mockEsMessages
+      en: mockEnMessages,
+      es: mockEsMessages
     };
 
-    requestConfig = createRequestConfigForTesting(mockGetUserLocale, mockMessages);
+    requestConfig = createRequestConfigForTesting(
+      mockGetUserLocale,
+      mockMessages
+    );
   });
 
   it("should return the requested locale when it is in the available locales", async () => {

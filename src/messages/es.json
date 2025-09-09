@@ -62,6 +62,7 @@
     "menu_about": "Acerca de mí",
     "menu_testimonials": "Testimonios",
     "menu_what_is_boudoir": "¿Qué es Boudoir?",
+    "menu_myths": "Mitos del Boudoir",
     "models": "Modelos",
     "open_menu": "Abrir Menú",
     "search_models": "Buscar Modelos...",
@@ -99,6 +100,128 @@
   "social": {
     "connect": "Conecta con nosotros",
     "follow_us": "Síguenos en"
+  },
+  "myths": {
+    "hero": {
+      "alt": "Mujer segura rompiendo estereotipos sobre la fotografía boudoir",
+      "title1": "Desmintiendo los Mitos del",
+      "title2": "Boudoir",
+      "subtitle": "Separa los hechos de la ficción y descubre la verdad empoderadora sobre la fotografía boudoir",
+      "label_myths": "Mitos",
+      "label_truth": "Verdad"
+    },
+    "intro": {
+      "title": "La Verdad sobre la Fotografía Boudoir",
+      "paragraph": "A pesar de su creciente popularidad, la fotografía boudoir todavía está rodeada de malentendidos y mitos. Estas creencias falsas impiden que muchas mujeres vivan el viaje empoderador y transformador que ofrece la fotografía boudoir. Pongamos las cosas en claro y revelemos la hermosa verdad detrás de este arte.",
+      "stats": [
+        {
+          "value": "85%",
+          "text": "de las mujeres reportan mayor confianza después de su sesión boudoir"
+        },
+        {
+          "value": "Todas las edades",
+          "text": "de 18 a 75+ celebran su belleza a través del boudoir"
+        },
+        {
+          "stars": "★★★★★",
+          "value": "98%",
+          "text": "de las clientas dicen que recomendarían la experiencia"
+        }
+      ]
+    },
+    "list": {
+      "title": "5 Mitos vs Realidad",
+      "image_alt": "Mito {id}: {myth}",
+      "myth_number": "Mito #{id}",
+      "labels": {
+        "myth": "MITO:",
+        "truth": "VERDAD:",
+        "reality_check": "Chequeo de Realidad:"
+      },
+      "items": {
+        "1": {
+          "myth": "La fotografía boudoir es solo para mujeres jóvenes y delgadas",
+          "truth": "El boudoir es para TODAS las mujeres, sin importar la edad, talla o tipo de cuerpo",
+          "explanation": "La belleza viene en todas las formas, tallas y edades. Las fotógrafas profesionales de boudoir destacan la belleza única de cada mujer. Tengas 25 o 65, uses talla 34 o 52, mereces sentirte hermosa y empoderada. Las imágenes más impactantes suelen venir de mujeres que al principio dudaban de su cuerpo.",
+          "stats": "Mujeres de 18 a 75+ reservan sesiones boudoir"
+        },
+        "2": {
+          "myth": "La fotografía boudoir es inapropiada o demasiado reveladora",
+          "truth": "El boudoir es elegante, artístico y siempre respeta tu nivel de comodidad",
+          "explanation": "La fotografía boudoir profesional es un arte que celebra la feminidad con clase y elegancia. Tú tienes el control total de tu comodidad: desde completamente vestida hasta poses más íntimas. Fotógrafas expertas usan luz, ángulos y composición para crear imágenes bellas y con buen gusto de las que te sentirás orgullosa.",
+          "stats": "100% control de la clienta sobre su nivel de comodidad"
+        },
+        "3": {
+          "myth": "Necesitas ser segura de ti misma para hacer una sesión boudoir",
+          "truth": "El boudoir construye la confianza: no necesitas traerla",
+          "explanation": "La mayoría llega a su sesión nerviosa o cohibida. ¡Es completamente normal! La magia ocurre durante la sesión: la guía profesional, las poses favorecedoras y verte a través del objetivo van construyendo tu confianza. Muchas clientas dicen que se sintieron una persona distinta al finalizar.",
+          "stats": "El 90% empieza nerviosa y termina empoderada"
+        },
+        "4": {
+          "myth": "Las fotos boudoir son solo para la pareja",
+          "truth": "La mayoría hace sesiones boudoir para sí mismas",
+          "explanation": "Aunque algunas regalan sus imágenes a su pareja, la mayoría reserva como celebración personal. Se trata de amor propio, marcar hitos, celebrar logros o simplemente abrazar tu feminidad. El empoderamiento y la confianza son regalos para ti misma.",
+          "stats": "El 70% de las sesiones son para empoderamiento personal"
+        },
+        "5": {
+          "myth": "La fotografía boudoir es cara y no vale la pena",
+          "truth": "Es una inversión en ti que multiplica tu confianza",
+          "explanation": "Aunque es una inversión, las clientas dicen que el aumento de confianza, amor propio y empoderamiento supera con creces el costo. Muchas la describen como transformadora. Por su efecto duradero en tu autoimagen, es de las inversiones más valiosas en ti misma.",
+          "stats": "Un impulso de confianza que dura toda la vida"
+        }
+      }
+    },
+    "truth_section": {
+      "title": "La Hermosa Verdad",
+      "cards": [
+        {
+          "title": "Empoderamiento para Todas",
+          "description": "Toda mujer merece sentirse bella, segura y empoderada, sin importar su edad, talla o historia."
+        },
+        {
+          "title": "Seguro y Profesional",
+          "description": "Las fotógrafas profesionales crean un entorno seguro y cómodo donde tú siempre tienes el control."
+        },
+        {
+          "title": "Excelencia Artística",
+          "description": "La fotografía boudoir es un arte respetado que celebra la feminidad con buen gusto y elegancia."
+        },
+        {
+          "title": "Una Experiencia que Cambia la Vida",
+          "description": "Muchas clientas describen su sesión como transformadora, con un impulso de confianza que perdura años."
+        }
+      ],
+      "cta": {
+        "title": "¿Lista para Vivir la Verdad?",
+        "paragraph": "No dejes que los mitos te frenen de una experiencia empoderadora y transformadora. Descubre por ti misma la hermosa verdad del boudoir.",
+        "learn_more": "Conoce Nuestro Proceso",
+        "view_portfolio": "Ver Nuestro Portafolio"
+      }
+    },
+    "cta": {
+      "heading": "No Dejes que los Mitos te Detengan",
+      "paragraph": "Ahora que conoces la verdad sobre la fotografía boudoir, da el siguiente paso hacia tu experiencia empoderadora. Toda mujer merece sentirse bella, segura y celebrada.",
+      "book_button": "Reserva tu Sesión Empoderadora",
+      "cards": [
+        {
+          "title": "Asesoría Gratuita",
+          "text": "Habla de tus inquietudes y conoce nuestro proceso"
+        },
+        {
+          "title": "Guía de Estilo",
+          "text": "Obtén nuestra guía completa de preparación y estilismo"
+        },
+        {
+          "title": "Ver Portafolio",
+          "text": "Mira ejemplos reales de nuestro trabajo artístico y con buen gusto"
+        },
+        {
+          "title": "Lee Reseñas",
+          "text": "Conoce experiencias reales de otras mujeres"
+        }
+      ],
+      "footer": "¿Aún tienes preguntas? Estamos aquí para ayudarte a sentirte segura e informada con tu decisión."
+    }
   },
   "styles": {
     "artistic_nude": "Desnudo Artístico",
