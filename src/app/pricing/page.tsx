@@ -1,16 +1,16 @@
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
 import {
-  Camera,
-  Check,
-  Clock,
-  Image as Photo,
-  Shirt,
-  UserRound,
-  Video
+    Camera,
+    Check,
+    Clock,
+    Image as Photo,
+    Shirt,
+    UserRound,
+    Video
 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
-import { Metadata } from "next";
-import { openGraph } from "@/lib/openGraph";
+import {getTranslations} from "next-intl/server";
+import {Metadata} from "next";
+import {openGraph} from "@/lib/openGraph";
 import AnimatedPackages from "@/components/AnimatedPackages";
 import FadeInTitle from "@/components/FadeInTitle";
 
@@ -19,7 +19,7 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: " Pricing ",
-  description: "Discover our pricing and book your experience today!",
+    description: "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
   twitter: {
     title: "Pricing",
     description: "Discover our pricing and book your experience today!",
