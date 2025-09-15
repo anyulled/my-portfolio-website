@@ -2,15 +2,15 @@ import Hero from "@/components/Hero";
 import SocialMedia from "@/components/SocialMedia";
 import Gallery from "@/components/Gallery";
 import ContactForm from "@/components/ContactForm";
-import type { Metadata } from "next";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
-import { createFlickr } from "flickr-sdk";
-import { Suspense } from "react";
+import type {Metadata} from "next";
+import {getFlickrPhotos} from "@/services/flickr/flickr";
+import {createFlickr} from "flickr-sdk";
+import {Suspense} from "react";
 import Loading from "@/app/loading";
-import { Separator } from "@/components/ui/separator";
+import {Separator} from "@/components/ui/separator";
 
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import {useGSAP} from "@gsap/react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -18,7 +18,7 @@ if (typeof window !== "undefined") {
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
-  description: "Boudoir photography service in Barcelona",
+    description: "Intimate, elegant boudoir photography in Barcelona. Empowering portraits with expert guidance, luxe styling, and a private experience. Book today.",
 };
 
 export default async function HomePage() {
