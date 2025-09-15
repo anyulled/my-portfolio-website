@@ -1,14 +1,14 @@
-import { Metadata } from "next";
-import { getTestimonials, Testimonial } from "@/lib/testimonials";
+import {Metadata} from "next";
+import {getTestimonials, Testimonial} from "@/lib/testimonials";
 import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialCard from "@/components/TestimonialCard";
-import { Aref_Ruqaa } from "next/font/google";
-import { getTranslations } from "next-intl/server";
-import { WebPage, WithContext } from "schema-dts";
+import {Aref_Ruqaa} from "next/font/google";
+import {getTranslations} from "next-intl/server";
+import {WebPage, WithContext} from "schema-dts";
 
 export const metadata: Metadata = {
-  title: "Client Testimonials | Sensuelle Boudoir Photography",
+    title: "Client Testimonials",
   description:
     "Read authentic testimonials from our boudoir photography clients. Discover how our empowering sessions boost confidence and celebrate feminine beauty.",
   keywords:
