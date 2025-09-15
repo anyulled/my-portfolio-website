@@ -1,9 +1,9 @@
 export const dynamic = "force-dynamic";
 
-import { getFlickrPhotos } from "@/services/flickr/flickr";
-import { Metadata } from "next";
-import { openGraph } from "@/lib/openGraph";
-import { createFlickr } from "flickr-sdk";
+import {getFlickrPhotos} from "@/services/flickr/flickr";
+import {Metadata} from "next";
+import {openGraph} from "@/lib/openGraph";
+import {createFlickr} from "flickr-sdk";
 import AboutContent from "@/components/AboutContent";
 
 //region Images
@@ -22,7 +22,7 @@ const metadataImages = [
 ];
 export const metadata: Metadata = {
   title: "About Me",
-  description: "Anyul Rivas — Boudoir photographer in Barcelona, Spain",
+    description: "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
   twitter: {
     images: metadataImages
   },
