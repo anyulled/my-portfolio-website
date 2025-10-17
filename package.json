@@ -1,19 +1,4 @@
 {
-  "name": "boudoir-barcelona",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "build": "npm run check-i18n && next build",
-    "check-i18n": "npx tsx src/app/messagesChecker.ts",
-    "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
-    "lint": "eslint .",
-    "prepare": "husky",
-    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
-    "start": "next start",
-    "test": "jest --config jest.config.ts",
-    "test:watch": "jest --watch",
-    "supabase:migrate": "supabase migration up"
-  },
   "dependencies": {
     "@google-cloud/storage": "^7.13.0",
     "@gsap/react": "^2.1.2",
@@ -70,7 +55,7 @@
     "@types/gsap": "^1.20.2",
     "@types/jest": "^29.5.12",
     "@types/node": "^22",
-    "@types/nodemailer": "^6.4.17",
+    "@types/nodemailer": "^7.0.2",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "@vercel/toolbar": "^0.1.24",
@@ -88,5 +73,20 @@
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
-  }
+  },
+  "name": "boudoir-barcelona",
+  "private": true,
+  "scripts": {
+    "build": "npm run check-i18n && next build",
+    "check-i18n": "npx tsx src/app/messagesChecker.ts",
+    "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
+    "lint": "eslint .",
+    "prepare": "husky",
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
+    "start": "next start",
+    "supabase:migrate": "supabase migration up",
+    "test": "jest --config jest.config.ts",
+    "test:watch": "jest --watch"
+  },
+  "version": "0.1.0"
 }
