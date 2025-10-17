@@ -14,6 +14,7 @@ import {openGraph} from "@/lib/openGraph";
 import {NextIntlClientProvider} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
 import {LocalBusiness, WithContext} from "schema-dts";
+import MixpanelLayout from "@/components/MixpanelLayout";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://boudoir.barcelona"),
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
         ],
         site: "@anyulled",
         creator: "@anyulled"
-    },
+    }
 };
 
 const structuredData: WithContext<LocalBusiness> = {
@@ -77,7 +78,7 @@ const structuredData: WithContext<LocalBusiness> = {
             ],
             opens: "09:00",
             closes: "20:00"
-        },
+        }
     ],
     sameAs: ["https://www.instagram.com/sensuelleboudoir"],
     priceRange: "$$$$",
@@ -87,7 +88,7 @@ const structuredData: WithContext<LocalBusiness> = {
             "@type": "PostalAddress",
             addressRegion: "Barcelona",
             addressCountry: "ES"
-        },
+        }
     },
     paymentAccepted: "Cash, Credit Card, Bank Transfer, Paypal, Bizum",
     hasMap:
@@ -106,7 +107,7 @@ const structuredData: WithContext<LocalBusiness> = {
                 name: "Boudoir Photography Session",
                 category: "Boudoir",
                 serviceType: "Photography"
-            },
+            }
         },
         {
             "@type": "Offer",
@@ -115,7 +116,7 @@ const structuredData: WithContext<LocalBusiness> = {
                 name: "Bridal Boudoir",
                 category: "Wedding",
                 serviceType: "Photography"
-            },
+            }
         },
         {
             "@type": "Offer",
@@ -124,9 +125,9 @@ const structuredData: WithContext<LocalBusiness> = {
                 name: "Couple Boudoir Session",
                 category: "Couples",
                 serviceType: "Photography"
-            },
-        },
-    ],
+            }
+        }
+    ]
 };
 
 export default async function RootLayout({
@@ -145,7 +146,9 @@ export default async function RootLayout({
                     <div
                         className="min-h-screen bg-mocha-mousse-50 text-mocha-mousse-800 dark:bg-mocha-mousse-900 dark:text-mocha-mousse-100">
                         <NavBar/>
-                        {children}
+                        <MixpanelLayout>
+              {children}
+            </MixpanelLayout>
                     </div>
                     <Toaster/>
                     <CookieConsent/>
