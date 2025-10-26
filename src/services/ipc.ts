@@ -13,7 +13,7 @@ function assertIsIpcResponse(payload: unknown): asserts payload is IpcResponse {
   }
 }
 
-export async function fetchLatestIpc(): Promise<number> {
+export const fetchLatestIpc = async (): Promise<number> => {
   const response = await fetch(IPC_ENDPOINT, {
     headers: { Accept: "application/json" },
     next: { revalidate: 3600 },
@@ -39,8 +39,8 @@ export async function fetchLatestIpc(): Promise<number> {
   const { Valor } = latestRecord ?? {};
 
   if (typeof Valor !== "number" || !Number.isFinite(Valor)) {
-    throw new Error("IPC response does not include a numeric Valor value");
+      throw new TypeError("IPC response does not include a numeric Valor value");
   }
 
   return Valor;
-}
+};

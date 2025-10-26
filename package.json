@@ -11,7 +11,8 @@
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
     "start": "next start",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "supabase:migrate": "supabase migration up"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

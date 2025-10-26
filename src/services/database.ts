@@ -1,35 +1,33 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { Testimonial } from "@/lib/testimonials";
+import {createServerClient} from "@supabase/ssr";
+import {cookies} from "next/headers";
+import {Testimonial} from "@/lib/testimonials";
 import chalk from "chalk";
 import {
-  ReadonlyRequestCookies
+    ReadonlyRequestCookies
 } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-function createDbClient(cookies: ReadonlyRequestCookies) {
-  return createServerClient(
+const createDbClient = (cookies: ReadonlyRequestCookies) => createServerClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
     {
-      cookies: {
-        getAll() {
-          return cookies.getAll();
+        cookies: {
+            getAll() {
+                return cookies.getAll();
+            },
+            setAll(cookie) {
+                try {
+                    for (const {name, value, options} of cookie) {
+                        cookies.set(name, value, options);
+                    }
+                } catch {
+                    console.error("Error setting cookies");
+                }
+            },
         },
-        setAll(cookie) {
-          try {
-            cookie.forEach(({ name, value, options }) =>
-              cookies.set(name, value, options)
-            );
-          } catch {
-            console.error("Error setting cookies");
-          }
-        },
-      },
     },
-  );
-}
+);
 
-export async function Testimonials(): Promise<Array<Testimonial>> {
+export const Testimonials = async (): Promise<Array<Testimonial>> => {
   const cookieStore = await cookies();
   const supabase = createDbClient(cookieStore);
 
@@ -50,7 +48,7 @@ export async function Testimonials(): Promise<Array<Testimonial>> {
   );
 
   return testimonials || [];
-}
+};
 
 export interface PricingPackageRecord {
   id: string;
@@ -66,7 +64,7 @@ export type PricingPackageInsert = {
   deluxe_price: number | null;
 };
 
-export async function getLatestPricing(): Promise<PricingPackageRecord | null> {
+export const getLatestPricing = async (): Promise<PricingPackageRecord | null> => {
   const cookieStore = await cookies();
   const supabase = createDbClient(cookieStore);
 
@@ -93,11 +91,11 @@ export async function getLatestPricing(): Promise<PricingPackageRecord | null> {
   }
 
   return data;
-}
+};
 
-export async function insertPricing(
+export const insertPricing = async (
   prices: PricingPackageInsert
-): Promise<PricingPackageRecord | null> {
+): Promise<PricingPackageRecord | null> => {
   const cookieStore = await cookies();
   const supabase = createDbClient(cookieStore);
 
@@ -116,4 +114,4 @@ export async function insertPricing(
   }
 
   return data;
-}
+};
