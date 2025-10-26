@@ -104,11 +104,7 @@ export async function insertPricing(
   console.log(chalk.gray("[ supabase ] inserting pricing packages"));
   const { data, error } = await supabase
     .from("pricing_packages")
-    .insert({
-      express_price: prices.express_price,
-      experience_price: prices.experience_price,
-      deluxe_price: prices.deluxe_price,
-    })
+    .insert(prices)
     .select("id, inserted_at, express_price, experience_price, deluxe_price")
     .single();
 
