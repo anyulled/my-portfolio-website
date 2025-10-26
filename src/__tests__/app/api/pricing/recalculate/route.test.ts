@@ -132,7 +132,7 @@ describe("GET /api/pricing/recalculate", () => {
       deluxe_price: 315,
     };
 
-    mockInsertPricing.mockResolvedValue(insertedRecord as never);
+    mockInsertPricing.mockResolvedValue(insertedRecord);
 
     const request = createRequest(
       "https://example.com/api/pricing/recalculate?token=top-secret",
