@@ -18,6 +18,28 @@ import { getPricing } from "@/lib/pricing";
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
+const defaultPricing = {
+  express: 200,
+  experience: 350,
+  deluxe: 600,
+} as const;
+
+const formatPrice = (
+  value: number | string | null | undefined,
+  fallback: number,
+) => {
+  if (value === null || value === undefined) {
+    return `${fallback} €`;
+  }
+
+  const parsed = typeof value === "string" ? Number(value) : value;
+  if (Number.isFinite(parsed)) {
+    return `${parsed} €`;
+  }
+
+  return `${fallback} €`;
+};
+
 export const metadata: Metadata = {
   title: " Pricing ",
     description: "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
@@ -38,28 +60,6 @@ export const metadata: Metadata = {
 export default async function PricingPage() {
   const t = await getTranslations("pricing");
   const latestPricing = await getPricing();
-
-  const defaultPricing = {
-    express: 200,
-    experience: 350,
-    deluxe: 600,
-  };
-
-  const formatPrice = (
-    value: number | string | null | undefined,
-    fallback: number,
-  ) => {
-    if (value === null || value === undefined) {
-      return `${fallback} €`;
-    }
-
-    const parsed = typeof value === "string" ? Number(value) : value;
-    if (Number.isFinite(parsed)) {
-      return `${parsed} €`;
-    }
-
-    return `${fallback} €`;
-  };
 
   const packages = [
     {
