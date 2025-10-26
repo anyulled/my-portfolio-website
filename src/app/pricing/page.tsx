@@ -13,6 +13,7 @@ import {Metadata} from "next";
 import {openGraph} from "@/lib/openGraph";
 import AnimatedPackages from "@/components/AnimatedPackages";
 import FadeInTitle from "@/components/FadeInTitle";
+import { getPricing } from "@/lib/pricing";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -36,10 +37,34 @@ export const metadata: Metadata = {
 
 export default async function PricingPage() {
   const t = await getTranslations("pricing");
+  const latestPricing = await getPricing();
+
+  const defaultPricing = {
+    express: 200,
+    experience: 350,
+    deluxe: 600,
+  };
+
+  const formatPrice = (
+    value: number | string | null | undefined,
+    fallback: number,
+  ) => {
+    if (value === null || value === undefined) {
+      return `${fallback} €`;
+    }
+
+    const parsed = typeof value === "string" ? Number(value) : value;
+    if (Number.isFinite(parsed)) {
+      return `${parsed} €`;
+    }
+
+    return `${fallback} €`;
+  };
+
   const packages = [
     {
       name: t("boudoir_express"),
-      price: "200 €",
+      price: formatPrice(latestPricing?.express_price, defaultPricing.express),
       image:
         "https://live.staticflickr.com/65535/53232949297_8eb88c70b6_c_d.jpg",
       features: [
@@ -67,7 +92,10 @@ export default async function PricingPage() {
     },
     {
       name: t("boudoir_experience"),
-      price: "350 €",
+      price: formatPrice(
+        latestPricing?.experience_price,
+        defaultPricing.experience,
+      ),
       image:
         "https://live.staticflickr.com/65535/54154502487_981fb48243_c_d.jpg",
       features: [
@@ -95,7 +123,7 @@ export default async function PricingPage() {
     },
     {
       name: t("deluxe_experience"),
-      price: "600 €",
+      price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
       image:
         "https://live.staticflickr.com/65535/53307099860_93b77dd6dc_k_d.jpg",
       features: [
