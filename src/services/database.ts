@@ -6,7 +6,7 @@ import {
   ReadonlyRequestCookies
 } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-function createDbCLient(cookies: ReadonlyRequestCookies) {
+function createDbClient(cookies: ReadonlyRequestCookies) {
   return createServerClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
@@ -31,7 +31,7 @@ function createDbCLient(cookies: ReadonlyRequestCookies) {
 
 export async function Testimonials(): Promise<Array<Testimonial>> {
   const cookieStore = await cookies();
-  const supabase = createDbCLient(cookieStore);
+  const supabase = createDbClient(cookieStore);
 
   console.log(chalk.gray("[ supabase ] retrieving testimonials from database"));
   const { data: testimonials, error } = await supabase
@@ -50,4 +50,70 @@ export async function Testimonials(): Promise<Array<Testimonial>> {
   );
 
   return testimonials || [];
+}
+
+export interface PricingPackageRecord {
+  id: string;
+  inserted_at: string;
+  express_price: number | null;
+  experience_price: number | null;
+  deluxe_price: number | null;
+}
+
+export type PricingPackageInsert = {
+  express_price: number | null;
+  experience_price: number | null;
+  deluxe_price: number | null;
+};
+
+export async function getLatestPricing(): Promise<PricingPackageRecord | null> {
+  const cookieStore = await cookies();
+  const supabase = createDbClient(cookieStore);
+
+  console.log(chalk.gray("[ supabase ] retrieving latest pricing from database"));
+  const { data, error } = await supabase
+    .from("pricing_packages")
+    .select(
+      "id, inserted_at, express_price, experience_price, deluxe_price"
+    )
+    .order("inserted_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error(
+      chalk.red("[ supabase ] Error retrieving latest pricing:", error.message)
+    );
+    return null;
+  }
+
+  if (!data) {
+    console.log(chalk.yellow("[ supabase ] No pricing packages found"));
+    return null;
+  }
+
+  return data;
+}
+
+export async function insertPricing(
+  prices: PricingPackageInsert
+): Promise<PricingPackageRecord | null> {
+  const cookieStore = await cookies();
+  const supabase = createDbClient(cookieStore);
+
+  console.log(chalk.gray("[ supabase ] inserting pricing packages"));
+  const { data, error } = await supabase
+    .from("pricing_packages")
+    .insert(prices)
+    .select("id, inserted_at, express_price, experience_price, deluxe_price")
+    .single();
+
+  if (error) {
+    console.error(
+      chalk.red("[ supabase ] Error inserting pricing packages:", error.message)
+    );
+    return null;
+  }
+
+  return data;
 }
