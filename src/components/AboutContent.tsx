@@ -7,7 +7,8 @@ import FadeInTitle from "@/components/FadeInTitle";
 import FadeInImage from "@/components/FadeInImage";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { useTranslations } from "next-intl";
-import { FlickrResponse, Photo } from "@/services/flickr/flickr.types";
+import type { FlickrResponse } from "@/services/flickr/flickr.types";
+import type { Photo } from "@/types/photos";
 
 //region Fonts
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });

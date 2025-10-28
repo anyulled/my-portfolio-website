@@ -1,7 +1,7 @@
 import {getFlickrPhotos} from "@/services/flickr/flickr";
 import {createFlickr} from "flickr-sdk";
 import {Metadata} from "next";
-import {Photo} from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 import BoudoirContent from "@/components/BoudoirContent";
 import {getTranslations} from "next-intl/server";
 

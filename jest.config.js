@@ -15,6 +15,7 @@ const customJestConfig = {
     "^@/hooks/(.*)$": "<rootDir>/src/hooks/$1",
     "^@/lib/(.*)$": "<rootDir>/src/lib/$1",
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^@google-cloud/storage$": "<rootDir>/src/__mocks__/googleCloudStorage.ts",
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
   transform: {
