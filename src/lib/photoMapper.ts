@@ -1,5 +1,5 @@
 import { Image } from "react-photo-album";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 
 export interface GalleryImages {
   galleryPhotos: Image[] | undefined;
