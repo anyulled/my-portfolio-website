@@ -21,6 +21,7 @@ type TestStorageFile = StorageFileLike & {
     updated?: string;
   };
   getSignedUrl: jest.Mock<Promise<[string]>>;
+  makePublic: jest.Mock<Promise<void>>;
 };
 
 const createMockFile = (overrides: Partial<TestStorageFile> = {}): TestStorageFile => {
@@ -71,6 +72,9 @@ const createMockFile = (overrides: Partial<TestStorageFile> = {}): TestStorageFi
         (jest.fn().mockResolvedValue([
           "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
         ]) as unknown as TestStorageFile["getSignedUrl"]),
+    makePublic:
+      overrides.makePublic ??
+        (jest.fn().mockResolvedValue(undefined) as unknown as TestStorageFile["makePublic"]),
   } as TestStorageFile;
 };
 
@@ -101,6 +105,7 @@ describe("homepage storage service", () => {
 
     expect(photo.id).toBe(101);
     expect(photo.title).toBe("Sunset Silhouette");
+    expect(photo.dateTaken).toEqual(photo.dateUpload);
     expect(photo.urlOriginal).toBe(
       "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
     );
@@ -201,11 +206,50 @@ describe("homepage storage service", () => {
     const photos = await listHomepagePhotos(storage);
 
     expect(mockFile.getSignedUrl).toHaveBeenCalled();
+    expect(mockFile.makePublic).toHaveBeenCalled();
     expect(photos?.[0]?.urlOriginal).toBe(
       "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
     );
     expect(warnSpy).toHaveBeenCalledWith(
       "[HomepageStorage] Failed to sign URL for gallery/photo-1.jpg",
+      expect.any(Error),
+    );
+
+    warnSpy.mockRestore();
+  });
+
+  it("logs when making the file public fails before falling back", async () => {
+    const mockFile = createMockFile({
+      getSignedUrl: jest
+        .fn()
+        .mockRejectedValue(new Error("signing failed")) as unknown as TestStorageFile["getSignedUrl"],
+      makePublic: jest
+        .fn()
+        .mockRejectedValue(new Error("public access denied")) as unknown as TestStorageFile["makePublic"],
+    });
+
+    const bucket = {
+      getFiles: jest.fn().mockResolvedValue([[mockFile]]),
+    };
+
+    const storage = {
+      bucket: jest.fn().mockReturnValue(bucket),
+    } as unknown as StorageClient;
+
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    const photos = await listHomepagePhotos(storage);
+
+    expect(mockFile.makePublic).toHaveBeenCalled();
+    expect(photos?.[0]?.urlOriginal).toBe(
+      "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
+    );
+    expect(warnSpy).toHaveBeenCalledWith(
+      "[HomepageStorage] Failed to sign URL for gallery/photo-1.jpg",
+      expect.any(Error),
+    );
+    expect(warnSpy).toHaveBeenCalledWith(
+      "[HomepageStorage] Failed to make gallery/photo-1.jpg public before falling back to public URL",
       expect.any(Error),
     );
 

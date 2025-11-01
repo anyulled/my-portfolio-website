@@ -20,6 +20,7 @@ export type StorageFileLike = {
   getSignedUrl(config: { action: "read"; expires: number | string | Date }):
     | Promise<SignedUrlResult>
     | SignedUrlResult;
+  makePublic?(): Promise<void> | void;
 };
 
 const sanitisePrivateKey = (key: string) => key.replace(/\\n/g, "\n");
@@ -66,6 +67,18 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
       `[HomepageStorage] Failed to sign URL for ${file.name}`,
       error,
     );
+
+    if (typeof file.makePublic === "function") {
+      try {
+        await file.makePublic();
+      } catch (makePublicError) {
+        console.warn(
+          `[HomepageStorage] Failed to make ${file.name} public before falling back to public URL`,
+          makePublicError,
+        );
+      }
+    }
+
     return file.publicUrl();
   }
 };
@@ -87,7 +100,6 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     customMetadata.dateUploaded ?? file.metadata?.updated,
     new Date(0),
   );
-  const dateTaken = parseDate(customMetadata.dateTaken, dateUpload);
   const id = parseNumber(customMetadata.id);
   if (!id) {
     console.warn(
@@ -104,7 +116,7 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const photo: Photo = {
     id,
     description,
-    dateTaken,
+    dateTaken: dateUpload,
     dateUpload,
     height,
     title,
