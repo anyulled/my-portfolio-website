@@ -1,35 +1,14 @@
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 
-import type { Photo, PhotoSource } from "@/types/photos";
+import type { Photo } from "@/types/photos";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
-
-const VARIANT_TO_FIELD: Record<
-  string,
-  keyof Pick<
-    Photo,
-    | "urlCrop"
-    | "urlLarge"
-    | "urlMedium"
-    | "urlNormal"
-    | "urlOriginal"
-    | "urlSmall"
-    | "urlThumbnail"
-    | "urlZoom"
-  >
-> = {
-  crop: "urlCrop",
-  large: "urlLarge",
-  medium: "urlMedium",
-  normal: "urlNormal",
-  original: "urlOriginal",
-  small: "urlSmall",
-  thumbnail: "urlThumbnail",
-  zoom: "urlZoom",
-};
+const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
 
 export type StorageClient = Pick<Storage, "bucket">;
+
+type SignedUrlResult = string | [string];
 
 export type StorageFileLike = {
   name: string;
@@ -38,12 +17,9 @@ export type StorageFileLike = {
     updated?: string;
   };
   publicUrl(): string;
-};
-
-type VariantMetadata = {
-  path?: string;
-  width?: number;
-  height?: number;
+  getSignedUrl(config: { action: "read"; expires: number | string | Date }):
+    | Promise<SignedUrlResult>
+    | SignedUrlResult;
 };
 
 const sanitisePrivateKey = (key: string) => key.replace(/\\n/g, "\n");
@@ -65,39 +41,6 @@ const createStorageClient = (): Storage => {
   });
 };
 
-const parseVariants = (
-  value?: string | null,
-): Record<string, VariantMetadata> | null => {
-  if (!value) return null;
-
-  try {
-    return JSON.parse(value) as Record<string, VariantMetadata>;
-  } catch (error) {
-    console.warn("[HomepageStorage] Failed to parse variants metadata", error);
-    captureException(error);
-    return null;
-  }
-};
-
-const normaliseBaseUrl = (input: string | undefined, fileUrl: string): string => {
-  const base = input ?? fileUrl.replace(/\/$/, "");
-  return base.replace(/\/$/, "");
-};
-
-const toAbsoluteUrl = (
-  path: string | undefined,
-  baseUrl: string,
-  fallback: string,
-): string => {
-  if (!path) return fallback;
-  if (/^https?:\/\//i.test(path)) {
-    return path;
-  }
-
-  const cleaned = path.replace(/^\//, "");
-  return `${baseUrl}/${cleaned}`;
-};
-
 const parseNumber = (value: string | undefined, fallback = 0): number => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -108,19 +51,30 @@ const parseDate = (value: string | undefined, fallback: Date): Date => {
   return Number.isNaN(date.getTime()) ? fallback : date;
 };
 
-const mapFileToPhoto = (
-  file: StorageFileLike,
-  baseUrl: string,
-): Photo | null => {
+const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
+  try {
+    const result = await file.getSignedUrl({
+      action: "read",
+      expires: Date.now() + SIGNED_URL_TTL_MS,
+    });
+
+    const [signedUrl] = Array.isArray(result) ? result : [result];
+
+    return signedUrl;
+  } catch (error) {
+    console.warn(
+      `[HomepageStorage] Failed to sign URL for ${file.name}`,
+      error,
+    );
+    return file.publicUrl();
+  }
+};
+
+const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const customMetadata = (file.metadata?.metadata ?? {}) as Record<
     string,
     string | undefined
   >;
-  const variants = parseVariants(customMetadata.variants);
-
-  if (!variants || Object.keys(variants).length === 0) {
-    return null;
-  }
 
   const description = customMetadata.description ?? customMetadata.caption ?? "";
   const title = customMetadata.title ?? file.name;
@@ -143,6 +97,10 @@ const mapFileToPhoto = (
   }
   const views = parseNumber(customMetadata.views);
 
+  const signedUrl = await getSignedUrlForFile(file);
+
+  const url = signedUrl || fallbackUrl;
+
   const photo: Photo = {
     id,
     description,
@@ -150,41 +108,27 @@ const mapFileToPhoto = (
     dateUpload,
     height,
     title,
-    urlCrop: fallbackUrl,
-    urlLarge: fallbackUrl,
-    urlMedium: fallbackUrl,
-    urlNormal: fallbackUrl,
-    urlOriginal: fallbackUrl,
-    urlSmall: fallbackUrl,
-    urlThumbnail: fallbackUrl,
-    urlZoom: fallbackUrl,
+    urlCrop: url,
+    urlLarge: url,
+    urlMedium: url,
+    urlNormal: url,
+    urlOriginal: url,
+    urlSmall: url,
+    urlThumbnail: url,
+    urlZoom: url,
     views,
     width,
     tags,
-    srcSet: [],
+    srcSet: [
+      {
+        src: url,
+        width: parseNumber(width, 0),
+        height: parseNumber(height, 0),
+        title,
+        description,
+      },
+    ],
   };
-
-  const srcSet: PhotoSource[] = [];
-
-  Object.entries(variants).forEach(([variantKey, variantData]) => {
-    const url = toAbsoluteUrl(variantData.path, baseUrl, fallbackUrl);
-    const variantWidth = variantData.width ?? parseNumber(customMetadata.width, 0);
-    const variantHeight = variantData.height ?? parseNumber(customMetadata.height, 0);
-
-    if (VARIANT_TO_FIELD[variantKey]) {
-      photo[VARIANT_TO_FIELD[variantKey]] = url;
-    }
-
-    srcSet.push({
-      src: url,
-      width: variantWidth,
-      height: variantHeight,
-      title,
-      description,
-    });
-  });
-
-  photo.srcSet = srcSet;
 
   return photo;
 };
@@ -193,10 +137,6 @@ export const listHomepagePhotos = async (
   storageClient?: StorageClient,
 ): Promise<Photo[] | null> => {
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
-  const baseUrl = normaliseBaseUrl(
-    undefined,
-    `https://storage.googleapis.com/${bucketName}`,
-  );
 
   try {
     const client = storageClient ?? createStorageClient();
@@ -207,9 +147,11 @@ export const listHomepagePhotos = async (
       return [];
     }
 
-    const photos = files
-      .map((file) => mapFileToPhoto(file, baseUrl))
-      .filter((photo): photo is Photo => photo !== null);
+    const mapped = await Promise.all(
+      files.map((file) => mapFileToPhoto(file as StorageFileLike)),
+    );
+
+    const photos = mapped.filter((photo): photo is Photo => photo !== null);
 
     return photos;
   } catch (error) {
