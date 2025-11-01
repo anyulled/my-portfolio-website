@@ -20,6 +20,7 @@ type TestStorageFile = StorageFileLike & {
     size?: string;
     updated?: string;
   };
+  getSignedUrl: jest.Mock<Promise<[string]>>;
 };
 
 const createMockFile = (overrides: Partial<TestStorageFile> = {}): TestStorageFile => {
@@ -65,7 +66,12 @@ const createMockFile = (overrides: Partial<TestStorageFile> = {}): TestStorageFi
       overrides.publicUrl ??
         (() =>
           "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg"),
-  };
+    getSignedUrl:
+      overrides.getSignedUrl ??
+        (jest.fn().mockResolvedValue([
+          "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
+        ]) as unknown as TestStorageFile["getSignedUrl"]),
+  } as TestStorageFile;
 };
 
 describe("homepage storage service", () => {
@@ -96,20 +102,15 @@ describe("homepage storage service", () => {
     expect(photo.id).toBe(101);
     expect(photo.title).toBe("Sunset Silhouette");
     expect(photo.urlOriginal).toBe(
-      "https://storage.googleapis.com/sensuelle-boudoir-homepage/original.jpg",
+      "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
     );
-    expect(photo.srcSet).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          src: "https://storage.googleapis.com/sensuelle-boudoir-homepage/original.jpg",
-          width: 4000,
-        }),
-        expect.objectContaining({
-          src: "https://storage.googleapis.com/sensuelle-boudoir-homepage/medium.jpg",
-          width: 640,
-        }),
-      ]),
-    );
+    expect(photo.srcSet).toEqual([
+      expect.objectContaining({
+        src: "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
+        width: 4000,
+        height: 3000,
+      }),
+    ]);
   });
 
   it("filters out photos missing an id", async () => {
@@ -133,9 +134,16 @@ describe("homepage storage service", () => {
       bucket: jest.fn().mockReturnValue(bucket),
     } as unknown as StorageClient;
 
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+
     const photos = await listHomepagePhotos(storage);
 
     expect(photos).toEqual([]);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("missing a valid 'id'"),
+    );
+
+    warnSpy.mockRestore();
   });
 
   it("returns an empty array when files do not include gallery metadata", async () => {
@@ -171,5 +179,36 @@ describe("homepage storage service", () => {
 
     expect(photos).toBeNull();
     expect(captureException).toHaveBeenCalledWith(expect.any(Error));
+  });
+
+  it("falls back to the public URL when a signed URL cannot be generated", async () => {
+    const mockFile = createMockFile({
+      getSignedUrl: jest
+        .fn()
+        .mockRejectedValue(new Error("signing failed")) as unknown as TestStorageFile["getSignedUrl"],
+    });
+
+    const bucket = {
+      getFiles: jest.fn().mockResolvedValue([[mockFile]]),
+    };
+
+    const storage = {
+      bucket: jest.fn().mockReturnValue(bucket),
+    } as unknown as StorageClient;
+
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    const photos = await listHomepagePhotos(storage);
+
+    expect(mockFile.getSignedUrl).toHaveBeenCalled();
+    expect(photos?.[0]?.urlOriginal).toBe(
+      "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
+    );
+    expect(warnSpy).toHaveBeenCalledWith(
+      "[HomepageStorage] Failed to sign URL for gallery/photo-1.jpg",
+      expect.any(Error),
+    );
+
+    warnSpy.mockRestore();
   });
 });
