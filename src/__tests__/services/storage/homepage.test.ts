@@ -62,14 +62,16 @@ const createMockFile = (overrides: Partial<TestStorageFile> = {}): TestStorageFi
     name: overrides.name ?? "gallery/photo-1.jpg",
     metadata,
     publicUrl:
-      overrides.publicUrl ?? (() => "https://cdn.example.com/gallery/photo-1.jpg"),
+      overrides.publicUrl ??
+        (() =>
+          "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg"),
   };
 };
 
 describe("homepage storage service", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.GCP_HOMEPAGE_CDN_URL = "https://cdn.example.com";
+    delete process.env.GCP_HOMEPAGE_CDN_URL;
     process.env.GCP_HOMEPAGE_BUCKET = "sensuelle-boudoir-homepage";
   });
 
@@ -93,13 +95,47 @@ describe("homepage storage service", () => {
 
     expect(photo.id).toBe(101);
     expect(photo.title).toBe("Sunset Silhouette");
-    expect(photo.urlOriginal).toBe("https://cdn.example.com/original.jpg");
+    expect(photo.urlOriginal).toBe(
+      "https://storage.googleapis.com/sensuelle-boudoir-homepage/original.jpg",
+    );
     expect(photo.srcSet).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ src: "https://cdn.example.com/original.jpg", width: 4000 }),
-        expect.objectContaining({ src: "https://cdn.example.com/medium.jpg", width: 640 }),
+        expect.objectContaining({
+          src: "https://storage.googleapis.com/sensuelle-boudoir-homepage/original.jpg",
+          width: 4000,
+        }),
+        expect.objectContaining({
+          src: "https://storage.googleapis.com/sensuelle-boudoir-homepage/medium.jpg",
+          width: 640,
+        }),
       ]),
     );
+  });
+
+  it("filters out photos missing an id", async () => {
+    const baseMetadata = createMockFile().metadata.metadata;
+    const mockFiles = [
+      createMockFile({
+        metadata: {
+          metadata: {
+            ...baseMetadata,
+            id: undefined,
+          },
+        },
+      }),
+    ];
+
+    const bucket = {
+      getFiles: jest.fn().mockResolvedValue([mockFiles]),
+    };
+
+    const storage = {
+      bucket: jest.fn().mockReturnValue(bucket),
+    } as unknown as StorageClient;
+
+    const photos = await listHomepagePhotos(storage);
+
+    expect(photos).toEqual([]);
   });
 
   it("returns an empty array when files do not include gallery metadata", async () => {

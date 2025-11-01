@@ -134,7 +134,13 @@ const mapFileToPhoto = (
     new Date(0),
   );
   const dateTaken = parseDate(customMetadata.dateTaken, dateUpload);
-  const id = parseNumber(customMetadata.id, Number(Date.now()));
+  const id = parseNumber(customMetadata.id);
+  if (!id) {
+    console.warn(
+      `[HomepageStorage] File ${file.name} is missing a valid 'id' in metadata. Skipping.`,
+    );
+    return null;
+  }
   const views = parseNumber(customMetadata.views);
 
   const photo: Photo = {
@@ -188,7 +194,7 @@ export const listHomepagePhotos = async (
 ): Promise<Photo[] | null> => {
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
   const baseUrl = normaliseBaseUrl(
-    process.env.GCP_HOMEPAGE_CDN_URL,
+    undefined,
     `https://storage.googleapis.com/${bucketName}`,
   );
 
