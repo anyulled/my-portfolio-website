@@ -118,6 +118,29 @@ describe("homepage storage service", () => {
     ]);
   });
 
+  it("extracts the numeric identifier from complex metadata ids", async () => {
+    const mockFile = createMockFile({
+      metadata: {
+        metadata: {
+          ...createMockFile().metadata.metadata,
+          id: "sensuelle-boudoir-homepage/abigail-marsh_53963952034_o.jpg/1762023460195821",
+        },
+      },
+    });
+
+    const bucket = {
+      getFiles: jest.fn().mockResolvedValue([[mockFile]]),
+    };
+
+    const storage = {
+      bucket: jest.fn().mockReturnValue(bucket),
+    } as unknown as StorageClient;
+
+    const photos = await listHomepagePhotos(storage);
+
+    expect(photos?.[0]?.id).toBe(1762023460195821);
+  });
+
   it("filters out photos missing an id", async () => {
     const baseMetadata = createMockFile().metadata.metadata;
     const mockFiles = [

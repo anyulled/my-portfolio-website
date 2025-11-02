@@ -52,6 +52,32 @@ const parseDate = (value: string | undefined, fallback: Date): Date => {
   return Number.isNaN(date.getTime()) ? fallback : date;
 };
 
+const extractTrailingDigits = (value: string): string | null => {
+  const matches = value.match(/(\d+)/g);
+  if (!matches || matches.length === 0) {
+    return null;
+  }
+
+  return matches[matches.length - 1] ?? null;
+};
+
+const parsePhotoId = (value: string | undefined): number | null => {
+  if (!value) return null;
+
+  const direct = Number(value);
+  if (Number.isFinite(direct)) {
+    return direct;
+  }
+
+  const trailingDigits = extractTrailingDigits(value);
+  if (!trailingDigits) {
+    return null;
+  }
+
+  const parsed = Number(trailingDigits);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
 const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
   try {
     const result = await file.getSignedUrl({
@@ -100,8 +126,8 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     customMetadata.dateUploaded ?? file.metadata?.updated,
     new Date(0),
   );
-  const id = parseNumber(customMetadata.id);
-  if (!id) {
+  const id = parsePhotoId(customMetadata.id);
+  if (id === null) {
     console.warn(
       `[HomepageStorage] File ${file.name} is missing a valid 'id' in metadata. Skipping.`,
     );
