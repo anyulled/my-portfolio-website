@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Camera, Check, Eye, Heart, Users, X, Zap } from "lucide-react";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);

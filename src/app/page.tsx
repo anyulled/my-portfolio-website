@@ -3,8 +3,7 @@ import SocialMedia from "@/components/SocialMedia";
 import Gallery from "@/components/Gallery";
 import ContactForm from "@/components/ContactForm";
 import type {Metadata} from "next";
-import {getFlickrPhotos} from "@/services/flickr/flickr";
-import {createFlickr} from "flickr-sdk";
+import { listHomepagePhotos } from "@/services/storage/homepage";
 import {Suspense} from "react";
 import Loading from "@/app/loading";
 import {Separator} from "@/components/ui/separator";
@@ -22,22 +21,15 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const res = await getFlickrPhotos(
-    flickr,
-    "model, boudoir, -cover, woman",
-    15,
-    false,
-    true,
-  );
+  const galleryPhotos = await listHomepagePhotos();
 
-  if (!res.success) {
+  if (!galleryPhotos || galleryPhotos.length === 0) {
     return (
       <>
         <h1 className={"text-2xl font-bold text-mocha-mousse-400"}>
           Sensuelle Boudoir
         </h1>
-        Error: {res.reason}
+        Error: Unable to load gallery
       </>
     );
   }
@@ -46,7 +38,7 @@ export default async function HomePage() {
     <main>
       <Hero />
       <Suspense fallback={<Loading />}>
-        <Gallery photos={res.photos} />
+        <Gallery photos={galleryPhotos} />
       </Suspense>
       <SocialMedia />
       <Separator className="my-4 bg-mocha-mousse-900 dark:bg-mocha-mousse-500" />

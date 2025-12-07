@@ -6,7 +6,7 @@ import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import { Suspense, useRef } from "react";
 import Loading from "@/app/loading";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 import FadeInTitle from "@/components/FadeInTitle";
 import { useGSAP } from "@gsap/react";

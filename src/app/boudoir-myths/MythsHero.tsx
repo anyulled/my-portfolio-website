@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Check, X } from "lucide-react";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 
