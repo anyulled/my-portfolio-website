@@ -8,25 +8,15 @@ jest.mock("@/services/photos/GCSPhotoProvider", () => ({
     })),
 }));
 
-jest.mock("flickr-sdk", () => ({
-    createFlickr: jest.fn().mockReturnValue({ flickr: {} }),
-}));
-
-jest.mock("@/services/flickr/flickr", () => ({
-    getFlickrPhotos: jest.fn(),
-}));
-
 jest.mock("@sentry/nextjs", () => ({
     captureException: jest.fn(),
 }));
 
 import { PhotoService, getPhotoService, tagToPrefix, tagsToPrefix } from "@/services/photos/PhotoServiceFacade";
 import { GCSPhotoProvider } from "@/services/photos/GCSPhotoProvider";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
 import type { Photo } from "@/types/photos";
 
 const mockGCSProvider = GCSPhotoProvider as jest.MockedClass<typeof GCSPhotoProvider>;
-const mockGetFlickrPhotos = getFlickrPhotos as jest.MockedFunction<typeof getFlickrPhotos>;
 
 const createMockPhoto = (id: number, tags = ""): Photo => ({
     id,
@@ -84,57 +74,15 @@ describe("PhotoServiceFacade", () => {
                 const photos = await service.fetchPhotos({ tag: "boudoir" });
 
                 expect(photos).toEqual(gcsPhotos);
-                expect(mockGetFlickrPhotos).not.toHaveBeenCalled();
             });
 
-            it("falls back to Flickr when GCS returns empty", async () => {
+            it("returns empty array when GCS returns no results", async () => {
                 mockListPhotos.mockResolvedValue([]);
-                const flickrPhotos = [createMockPhoto(3), createMockPhoto(4)];
-                mockGetFlickrPhotos.mockResolvedValue({
-                    success: true,
-                    photos: flickrPhotos,
-                    reason: null,
-                });
-
-                // Set env var for Flickr
-                const originalKey = process.env.FLICKR_API_KEY;
-                process.env.FLICKR_API_KEY = "test-key";
-
-                const service = new PhotoService();
-                const photos = await service.fetchPhotos({ tag: "boudoir" });
-
-                expect(photos).toEqual(flickrPhotos);
-
-                process.env.FLICKR_API_KEY = originalKey;
-            });
-
-            it("returns empty array when both fail", async () => {
-                mockListPhotos.mockResolvedValue([]);
-                mockGetFlickrPhotos.mockResolvedValue({
-                    success: false,
-                    photos: null,
-                    reason: "No results",
-                });
-
-                const originalKey = process.env.FLICKR_API_KEY;
-                process.env.FLICKR_API_KEY = "test-key";
 
                 const service = new PhotoService();
                 const photos = await service.fetchPhotos({ tag: "boudoir" });
 
                 expect(photos).toEqual([]);
-
-                process.env.FLICKR_API_KEY = originalKey;
-            });
-
-            it("respects enableFlickrFallback option", async () => {
-                mockListPhotos.mockResolvedValue([]);
-
-                const service = new PhotoService({ enableFlickrFallback: false });
-                const photos = await service.fetchPhotos({ tag: "boudoir" });
-
-                expect(photos).toEqual([]);
-                expect(mockGetFlickrPhotos).not.toHaveBeenCalled();
             });
         });
 

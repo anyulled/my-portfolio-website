@@ -1,21 +1,17 @@
 /**
  * Photo Service
  * 
- * Unified photo fetching service that uses GCS as primary storage
- * with Flickr as fallback for gradual migration.
+ * Unified photo fetching service using GCS as storage.
  */
 
 import { GCSPhotoProvider } from "./GCSPhotoProvider";
 import type { PhotoProvider, ListPhotosOptions } from "./PhotoService";
 import type { Photo } from "@/types/photos";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
-import { createFlickr } from "flickr-sdk";
 
 const DEFAULT_BUCKET = "sensuelle-boudoir-website";
 
 /**
- * Maps a Flickr tag to a GCS prefix
- * Tags are used in Flickr, prefixes are used in GCS
+ * Maps a tag to a GCS prefix
  */
 export const tagToPrefix = (tag: string): string => {
     // Normalize the tag: remove dashes, lowercase
@@ -35,33 +31,29 @@ export const tagsToPrefix = (tags: string[]): string => {
 interface PhotoServiceOptions {
     /** GCS bucket name */
     bucketName?: string;
-    /** Whether to enable Flickr fallback */
-    enableFlickrFallback?: boolean;
 }
 
 interface FetchPhotosOptions extends ListPhotosOptions {
-    /** Tags for Flickr fallback (if GCS returns no results) */
+    /** Tags for backwards compatibility (mapped to prefix) */
     tags?: string[];
     /** Single tag (convenience for single-tag queries) */
     tag?: string;
 }
 
 /**
- * Photo Service with GCS primary and Flickr fallback
+ * Photo Service using GCS storage
  */
 export class PhotoService {
     private gcsProvider: PhotoProvider;
-    private enableFlickrFallback: boolean;
 
     constructor(options: PhotoServiceOptions = {}) {
         this.gcsProvider = new GCSPhotoProvider({
             bucketName: options.bucketName ?? DEFAULT_BUCKET,
         });
-        this.enableFlickrFallback = options.enableFlickrFallback ?? true;
     }
 
     /**
-     * Fetches photos from GCS, falling back to Flickr if needed
+     * Fetches photos from GCS
      */
     async fetchPhotos(options: FetchPhotosOptions = {}): Promise<Photo[]> {
         const { tag, tags: providedTags = [], ...listOptions } = options;
@@ -70,7 +62,7 @@ export class PhotoService {
         // Determine GCS prefix from tags
         const prefix = listOptions.prefix ?? (allTags.length > 0 ? tagToPrefix(allTags[0]) : undefined);
 
-        // Try GCS first
+        // Fetch from GCS
         const gcsPhotos = await this.gcsProvider.listPhotos({
             ...listOptions,
             prefix,
@@ -81,12 +73,7 @@ export class PhotoService {
             return gcsPhotos;
         }
 
-        // Fallback to Flickr if enabled
-        if (this.enableFlickrFallback && allTags.length > 0) {
-            console.log(`[PhotoService] GCS returned no results, falling back to Flickr for tags: ${allTags.join(", ")}`);
-            return this.fetchFromFlickr(allTags, listOptions.limit);
-        }
-
+        console.warn(`[PhotoService] No photos found in GCS for prefix: ${prefix}`);
         return [];
     }
 
@@ -132,29 +119,6 @@ export class PhotoService {
             tag: "boudoir",
             limit,
         });
-    }
-
-    private async fetchFromFlickr(tags: string[], limit?: number): Promise<Photo[]> {
-        try {
-            if (!process.env.FLICKR_API_KEY) {
-                console.warn("[PhotoService] Flickr fallback requested but FLICKR_API_KEY not set");
-                return [];
-            }
-
-            const { flickr } = createFlickr(process.env.FLICKR_API_KEY);
-            const tagString = tags.join(", ");
-            const result = await getFlickrPhotos(flickr, tagString, limit ?? 100);
-
-            if (result.success && result.photos) {
-                console.log(`[PhotoService] Loaded ${result.photos.length} photos from Flickr`);
-                return result.photos;
-            }
-
-            return [];
-        } catch (error) {
-            console.error("[PhotoService] Flickr fallback failed:", error);
-            return [];
-        }
     }
 }
 
