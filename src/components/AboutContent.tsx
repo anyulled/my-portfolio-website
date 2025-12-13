@@ -7,7 +7,6 @@ import FadeInTitle from "@/components/FadeInTitle";
 import FadeInImage from "@/components/FadeInImage";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { useTranslations } from "next-intl";
-import type { FlickrResponse } from "@/services/flickr/flickr.types";
 import type { Photo } from "@/types/photos";
 
 //region Fonts
@@ -17,16 +16,16 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 //endregion
 
 interface AboutContentProps {
-  images: FlickrResponse | null;
+  images: Photo[] | null;
   profileImageUrl: string;
   imageThumbnail: string;
 }
 
 export default function AboutContent({
-                                       images,
-                                       profileImageUrl,
-                                       imageThumbnail
-                                     }: Readonly<AboutContentProps>) {
+  images,
+  profileImageUrl,
+  imageThumbnail
+}: Readonly<AboutContentProps>) {
   const t = useTranslations("about");
   return (
     <div className="min-h-screen pt-20">
@@ -109,7 +108,7 @@ export default function AboutContent({
           </div>
         </div>
 
-        {images?.photos && (
+        {images && images.length > 0 && (
           <>
             <FadeInTitle>
               <h2
@@ -121,7 +120,7 @@ export default function AboutContent({
             <Card className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-50 p-3"}>
               <div
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
-                {images.photos.map((cover: Photo, index: number) => (
+                {images.map((cover: Photo, index: number) => (
                   <div
                     key={cover.id}
                     className="relative overflow-hidden group rounded-lg"

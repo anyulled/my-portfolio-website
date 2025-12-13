@@ -1,9 +1,8 @@
 export const dynamic = "force-dynamic";
 
-import {getFlickrPhotos} from "@/services/flickr/flickr";
-import {Metadata} from "next";
-import {openGraph} from "@/lib/openGraph";
-import {createFlickr} from "flickr-sdk";
+import { fetchCoverPhotos as fetchCover } from "@/services/photos";
+import { Metadata } from "next";
+import { openGraph } from "@/lib/openGraph";
 import AboutContent from "@/components/AboutContent";
 
 //region Images
@@ -22,7 +21,7 @@ const metadataImages = [
 ];
 export const metadata: Metadata = {
   title: "About Me",
-    description: "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
+  description: "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
   twitter: {
     images: metadataImages
   },
@@ -34,10 +33,10 @@ export const metadata: Metadata = {
 
 const fetchCoverPhotos = async () => {
   try {
-    const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-    return await getFlickrPhotos(flickr, "cover", 50);
+    // Uses GCS primary with Flickr fallback
+    return await fetchCover(50);
   } catch (error) {
-    console.error("[ About ] Error fetching Flickr photos:", error);
+    console.error("[ About ] Error fetching cover photos:", error);
     return null;
   }
 };

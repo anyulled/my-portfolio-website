@@ -10,3 +10,15 @@ export { DEFAULT_LIST_OPTIONS } from "./PhotoService";
 
 // Providers
 export { GCSPhotoProvider, createGCSPhotoProvider } from "./GCSPhotoProvider";
+
+// Unified service with Flickr fallback
+export {
+    PhotoService,
+    getPhotoService,
+    fetchStylePhotos,
+    fetchModelPhotos,
+    fetchCoverPhotos,
+    fetchBoudoirPhotos,
+    tagToPrefix,
+    tagsToPrefix,
+} from "./PhotoServiceFacade";
