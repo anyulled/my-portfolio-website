@@ -13,14 +13,15 @@ type SignedUrlResult = string | [string];
 export type StorageFileLike = {
   name: string;
   metadata?: {
-    metadata?: Record<string, string | undefined>;
+    size?: string | number;
     updated?: string;
+    timeCreated?: string;
+    contentType?: string;
   };
   publicUrl(): string;
   getSignedUrl(config: { action: "read"; expires: number | string | Date }):
     | Promise<SignedUrlResult>
     | SignedUrlResult;
-  makePublic?(): Promise<void> | void;
 };
 
 const sanitisePrivateKey = (key: string) => key.replace(/\\n/g, "\n");
@@ -42,109 +43,99 @@ const createStorageClient = (): Storage => {
   });
 };
 
-const parseNumber = (value: string | undefined, fallback = 0): number => {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-};
-
 const parseDate = (value: string | undefined, fallback: Date): Date => {
   const date = value ? new Date(value) : fallback;
   return Number.isNaN(date.getTime()) ? fallback : date;
 };
 
-const extractTrailingDigits = (value: string): string | null => {
-  const matches = value.match(/(\d+)/g);
-  if (!matches || matches.length === 0) {
-    return null;
+/**
+ * Extracts the photo ID from a filename.
+ * Expected format: "name_flickrid_o.jpg" (e.g., "andrea-cano-montull_54701383010_o.jpg")
+ * Returns the numeric ID (e.g., 54701383010)
+ */
+const extractIdFromFilename = (filename: string): number | null => {
+  // Remove file extension
+  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+
+  // Match pattern: anything_NUMBER_o (where NUMBER is the Flickr ID)
+  const match = nameWithoutExt.match(/_(\d+)_o$/);
+  if (match && match[1]) {
+    const parsed = Number(match[1]);
+    return Number.isFinite(parsed) ? parsed : null;
   }
 
-  return matches[matches.length - 1] ?? null;
+  // Fallback: try to find any trailing number sequence
+  const fallbackMatch = nameWithoutExt.match(/(\d+)$/);
+  if (fallbackMatch && fallbackMatch[1]) {
+    const parsed = Number(fallbackMatch[1]);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
 };
 
-const parsePhotoId = (value: string | undefined): number | null => {
-  if (!value) return null;
+/**
+ * Extracts and formats a title from a filename.
+ * Expected format: "name-with-dashes_flickrid_o.jpg"
+ * Returns formatted title (e.g., "Andrea Cano Montull")
+ */
+const extractTitleFromFilename = (filename: string): string => {
+  // Remove file extension
+  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
 
-  const direct = Number(value);
-  if (Number.isFinite(direct)) {
-    return direct;
-  }
+  // Remove the _NUMBER_o suffix
+  const nameWithoutSuffix = nameWithoutExt.replace(/_\d+_o$/, "");
 
-  const trailingDigits = extractTrailingDigits(value);
-  if (!trailingDigits) {
-    return null;
-  }
+  // Convert dashes/underscores to spaces and capitalize each word
+  const title = nameWithoutSuffix
+    .replace(/[-_]/g, " ")
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 
-  const parsed = Number(trailingDigits);
-  return Number.isFinite(parsed) ? parsed : null;
+  return title || filename;
 };
 
-const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
+const getUrlForFile = async (file: StorageFileLike): Promise<string> => {
   try {
     const result = await file.getSignedUrl({
       action: "read",
       expires: Date.now() + SIGNED_URL_TTL_MS,
     });
-
     const [signedUrl] = Array.isArray(result) ? result : [result];
-
     return signedUrl;
   } catch (error) {
     console.warn(
-      `[HomepageStorage] Failed to sign URL for ${file.name}`,
-      error,
+      `[HomepageStorage] Failed to sign URL for ${file.name}, using public URL`,
     );
-
-    if (typeof file.makePublic === "function") {
-      try {
-        await file.makePublic();
-      } catch (makePublicError) {
-        console.warn(
-          `[HomepageStorage] Failed to make ${file.name} public before falling back to public URL`,
-          makePublicError,
-        );
-      }
-    }
-
+    // Bucket has public read access via IAM, so publicUrl() will work
     return file.publicUrl();
   }
 };
 
 const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
-  const customMetadata = (file.metadata?.metadata ?? {}) as Record<
-    string,
-    string | undefined
-  >;
-
-  const description = customMetadata.description ?? customMetadata.caption ?? "";
-  const title = customMetadata.title ?? file.name;
-  const tags = customMetadata.tags ?? "";
-  const width = customMetadata.width ?? "0";
-  const height = customMetadata.height ?? "0";
-  const fallbackUrl = file.publicUrl();
-
-  const dateUpload = parseDate(
-    customMetadata.dateUploaded ?? file.metadata?.updated,
-    new Date(0),
-  );
-  const id = parsePhotoId(customMetadata.id);
+  const id = extractIdFromFilename(file.name);
   if (id === null) {
     console.warn(
-      `[HomepageStorage] File ${file.name} is missing a valid 'id' in metadata. Skipping.`,
+      `[HomepageStorage] Could not extract ID from filename: ${file.name}. Skipping.`,
     );
     return null;
   }
-  const views = parseNumber(customMetadata.views);
 
-  const signedUrl = await getSignedUrlForFile(file);
+  const title = extractTitleFromFilename(file.name);
+  const dateUpload = parseDate(
+    file.metadata?.updated ?? file.metadata?.timeCreated,
+    new Date(0),
+  );
 
-  const url = signedUrl || fallbackUrl;
+  const url = await getUrlForFile(file);
 
   const photo: Photo = {
     id,
-    description,
+    description: "",
     dateTaken: dateUpload,
     dateUpload,
-    height,
+    height: "0",
     title,
     urlCrop: url,
     urlLarge: url,
@@ -154,16 +145,16 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     urlSmall: url,
     urlThumbnail: url,
     urlZoom: url,
-    views,
-    width,
-    tags,
+    views: 0,
+    width: "0",
+    tags: "",
     srcSet: [
       {
         src: url,
-        width: parseNumber(width, 0),
-        height: parseNumber(height, 0),
+        width: 0,
+        height: 0,
         title,
-        description,
+        description: "",
       },
     ],
   };

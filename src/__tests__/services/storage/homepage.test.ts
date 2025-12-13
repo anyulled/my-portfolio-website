@@ -16,266 +16,301 @@ jest.mock("@sentry/nextjs", () => ({
 
 type TestStorageFile = StorageFileLike & {
   metadata: {
-    metadata: Record<string, string | undefined>;
-    size?: string;
+    size?: string | number;
     updated?: string;
+    timeCreated?: string;
+    contentType?: string;
   };
   getSignedUrl: jest.Mock<Promise<[string]>>;
-  makePublic: jest.Mock<Promise<void>>;
 };
 
-const createMockFile = (overrides: Partial<TestStorageFile> = {}): TestStorageFile => {
-  const baseMetadata = {
-    metadata: {
-      width: "4000",
-      height: "3000",
-      title: "Sunset Silhouette",
-      description: "A dramatic sunset silhouette",
-      caption: "Sunset",
-      views: "42",
-      id: "101",
-      dateTaken: "2024-01-15T17:30:00Z",
-      dateUploaded: "2024-01-16T10:00:00Z",
-      variants: JSON.stringify({
-        thumbnail: { path: "thumb.jpg", width: 150, height: 150 },
-        small: { path: "small.jpg", width: 320, height: 240 },
-        medium: { path: "medium.jpg", width: 640, height: 480 },
-        normal: { path: "normal.jpg", width: 1024, height: 768 },
-        large: { path: "large.jpg", width: 1600, height: 1200 },
-        crop: { path: "crop.jpg", width: 800, height: 600 },
-        zoom: { path: "zoom.jpg", width: 2048, height: 1536 },
-        original: { path: "original.jpg", width: 4000, height: 3000 },
-      }),
-    },
-    size: "12345",
-    updated: "2024-01-16T10:00:00Z",
-  } satisfies TestStorageFile["metadata"];
-
-  const metadata = {
-    ...baseMetadata,
-    ...(overrides.metadata ?? {}),
-    metadata:
-      overrides.metadata && "metadata" in overrides.metadata
-        ? (overrides.metadata.metadata ?? {})
-        : baseMetadata.metadata,
-  } satisfies TestStorageFile["metadata"];
+/**
+ * Creates a mock GCS file object for testing.
+ * @param name - Filename in format "name_flickrid_o.jpg"
+ * @param overrides - Optional overrides for the mock
+ */
+const createMockFile = (
+  name: string = "andrea-cano-montull_54701383010_o.jpg",
+  overrides: Partial<TestStorageFile> = {}
+): TestStorageFile => {
+  // Only use base metadata if no metadata override is provided
+  const metadata = overrides.metadata ?? {
+    size: 2915154,
+    updated: "2025-12-01T19:24:04.154Z",
+    timeCreated: "2025-11-01T18:56:28.500Z",
+    contentType: "image/jpeg",
+  };
 
   return {
-    name: overrides.name ?? "gallery/photo-1.jpg",
+    name,
     metadata,
     publicUrl:
       overrides.publicUrl ??
-        (() =>
-          "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg"),
+      (() => `https://storage.googleapis.com/sensuelle-boudoir-homepage/${name}`),
     getSignedUrl:
       overrides.getSignedUrl ??
-        (jest.fn().mockResolvedValue([
-          "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
-        ]) as unknown as TestStorageFile["getSignedUrl"]),
-    makePublic:
-      overrides.makePublic ??
-        (jest.fn().mockResolvedValue(undefined) as unknown as TestStorageFile["makePublic"]),
+      (jest.fn().mockResolvedValue([
+        `https://signed.example.com/sensuelle-boudoir-homepage/${name}`,
+      ]) as unknown as TestStorageFile["getSignedUrl"]),
   } as TestStorageFile;
 };
 
 describe("homepage storage service", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    delete process.env.GCP_HOMEPAGE_CDN_URL;
     process.env.GCP_HOMEPAGE_BUCKET = "sensuelle-boudoir-homepage";
   });
 
-  it("maps storage files to the gallery photo shape", async () => {
-    const mockFiles = [createMockFile()];
-    const bucket = {
-      getFiles: jest.fn().mockResolvedValue([mockFiles]),
-    };
+  describe("filename parsing", () => {
+    it("extracts ID and title from standard filename format", async () => {
+      const mockFiles = [createMockFile("andrea-cano-montull_54701383010_o.jpg")];
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([mockFiles]),
+      };
 
-    const storage = {
-      bucket: jest.fn().mockReturnValue(bucket),
-    } as unknown as StorageClient;
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
 
-    const photos = await listHomepagePhotos(storage);
+      const photos = await listHomepagePhotos(storage);
 
-    expect(storage.bucket).toHaveBeenCalledWith("sensuelle-boudoir-homepage");
-    expect(bucket.getFiles).toHaveBeenCalledWith({ autoPaginate: false });
-    expect(photos).toHaveLength(1);
+      expect(photos).toHaveLength(1);
+      const [photo] = photos as Photo[];
 
-    const [photo] = photos as Photo[];
+      expect(photo.id).toBe(54701383010);
+      expect(photo.title).toBe("Andrea Cano Montull");
+    });
 
-    expect(photo.id).toBe(101);
-    expect(photo.title).toBe("Sunset Silhouette");
-    expect(photo.dateTaken).toEqual(photo.dateUpload);
-    expect(photo.urlOriginal).toBe(
-      "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
-    );
-    expect(photo.srcSet).toEqual([
-      expect.objectContaining({
-        src: "https://signed.example.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
-        width: 4000,
-        height: 3000,
-      }),
-    ]);
+    it("extracts ID from filename with compound name", async () => {
+      const mockFiles = [createMockFile("sadie-gray-in-the-bedroom_54755963626_o.jpg")];
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([mockFiles]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      const photos = await listHomepagePhotos(storage);
+
+      expect(photos).toHaveLength(1);
+      const [photo] = photos as Photo[];
+
+      expect(photo.id).toBe(54755963626);
+      expect(photo.title).toBe("Sadie Gray In The Bedroom");
+    });
+
+    it("extracts ID using fallback pattern when _o suffix is missing", async () => {
+      const mockFiles = [createMockFile("photo_12345.jpg")];
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([mockFiles]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      const photos = await listHomepagePhotos(storage);
+
+      expect(photos).toHaveLength(1);
+      expect(photos![0].id).toBe(12345);
+    });
+
+    it("skips files that cannot have an ID extracted", async () => {
+      const mockFiles = [createMockFile("no-id-here.jpg")];
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([mockFiles]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => { });
+
+      const photos = await listHomepagePhotos(storage);
+
+      expect(photos).toEqual([]);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Could not extract ID from filename"),
+      );
+
+      warnSpy.mockRestore();
+    });
   });
 
-  it("extracts the numeric identifier from complex metadata ids", async () => {
-    const mockFile = createMockFile({
-      metadata: {
+  describe("URL handling", () => {
+    it("uses signed URLs when available", async () => {
+      const mockFile = createMockFile();
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([[mockFile]]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      const photos = await listHomepagePhotos(storage);
+
+      expect(mockFile.getSignedUrl).toHaveBeenCalled();
+      expect(photos?.[0]?.urlOriginal).toBe(
+        "https://signed.example.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
+      );
+    });
+
+    it("falls back to public URL when signed URL generation fails", async () => {
+      const mockFile = createMockFile("andrea-cano-montull_54701383010_o.jpg", {
+        getSignedUrl: jest
+          .fn()
+          .mockRejectedValue(new Error("signing failed")) as unknown as TestStorageFile["getSignedUrl"],
+      });
+
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([[mockFile]]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => { });
+
+      const photos = await listHomepagePhotos(storage);
+
+      expect(mockFile.getSignedUrl).toHaveBeenCalled();
+      expect(photos?.[0]?.urlOriginal).toBe(
+        "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Failed to sign URL"),
+      );
+
+      warnSpy.mockRestore();
+    });
+  });
+
+  describe("metadata handling", () => {
+    it("uses updated date from GCS metadata", async () => {
+      const mockFiles = [createMockFile("test_123_o.jpg", {
         metadata: {
-          ...createMockFile().metadata.metadata,
-          id: "sensuelle-boudoir-homepage/abigail-marsh_53963952034_o.jpg/1762023460195821",
+          updated: "2025-06-15T12:00:00Z",
         },
-      },
+      })];
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([mockFiles]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      const photos = await listHomepagePhotos(storage);
+
+      expect(photos?.[0]?.dateUpload).toEqual(new Date("2025-06-15T12:00:00Z"));
     });
 
-    const bucket = {
-      getFiles: jest.fn().mockResolvedValue([[mockFile]]),
-    };
-
-    const storage = {
-      bucket: jest.fn().mockReturnValue(bucket),
-    } as unknown as StorageClient;
-
-    const photos = await listHomepagePhotos(storage);
-
-    expect(photos?.[0]?.id).toBe(1762023460195821);
-  });
-
-  it("filters out photos missing an id", async () => {
-    const baseMetadata = createMockFile().metadata.metadata;
-    const mockFiles = [
-      createMockFile({
+    it("falls back to timeCreated when updated is not available", async () => {
+      const mockFiles = [createMockFile("test_456_o.jpg", {
         metadata: {
-          metadata: {
-            ...baseMetadata,
-            id: undefined,
-          },
+          timeCreated: "2025-01-01T00:00:00Z",
         },
-      }),
-    ];
+      })];
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([mockFiles]),
+      };
 
-    const bucket = {
-      getFiles: jest.fn().mockResolvedValue([mockFiles]),
-    };
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
 
-    const storage = {
-      bucket: jest.fn().mockReturnValue(bucket),
-    } as unknown as StorageClient;
+      const photos = await listHomepagePhotos(storage);
 
-    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
-
-    const photos = await listHomepagePhotos(storage);
-
-    expect(photos).toEqual([]);
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("missing a valid 'id'"),
-    );
-
-    warnSpy.mockRestore();
-  });
-
-  it("returns an empty array when files do not include gallery metadata", async () => {
-    const mockFiles = [
-      createMockFile({
-        metadata: { metadata: {} },
-      }),
-    ];
-
-    const bucket = {
-      getFiles: jest.fn().mockResolvedValue([mockFiles]),
-    };
-
-    const storage = {
-      bucket: jest.fn().mockReturnValue(bucket),
-    } as unknown as StorageClient;
-
-    const photos = await listHomepagePhotos(storage);
-
-    expect(photos).toEqual([]);
-  });
-
-  it("captures errors and returns null when the storage request fails", async () => {
-    const bucket = {
-      getFiles: jest.fn().mockRejectedValue(new Error("boom")),
-    };
-
-    const storage = {
-      bucket: jest.fn().mockReturnValue(bucket),
-    } as unknown as StorageClient;
-
-    const photos = await listHomepagePhotos(storage);
-
-    expect(photos).toBeNull();
-    expect(captureException).toHaveBeenCalledWith(expect.any(Error));
-  });
-
-  it("falls back to the public URL when a signed URL cannot be generated", async () => {
-    const mockFile = createMockFile({
-      getSignedUrl: jest
-        .fn()
-        .mockRejectedValue(new Error("signing failed")) as unknown as TestStorageFile["getSignedUrl"],
+      expect(photos?.[0]?.dateUpload).toEqual(new Date("2025-01-01T00:00:00Z"));
     });
 
-    const bucket = {
-      getFiles: jest.fn().mockResolvedValue([[mockFile]]),
-    };
+    it("sets default values for unavailable metadata fields", async () => {
+      const mockFiles = [createMockFile()];
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([mockFiles]),
+      };
 
-    const storage = {
-      bucket: jest.fn().mockReturnValue(bucket),
-    } as unknown as StorageClient;
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
 
-    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+      const photos = await listHomepagePhotos(storage);
 
-    const photos = await listHomepagePhotos(storage);
-
-    expect(mockFile.getSignedUrl).toHaveBeenCalled();
-    expect(mockFile.makePublic).toHaveBeenCalled();
-    expect(photos?.[0]?.urlOriginal).toBe(
-      "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
-    );
-    expect(warnSpy).toHaveBeenCalledWith(
-      "[HomepageStorage] Failed to sign URL for gallery/photo-1.jpg",
-      expect.any(Error),
-    );
-
-    warnSpy.mockRestore();
+      const photo = photos![0];
+      expect(photo.description).toBe("");
+      expect(photo.width).toBe("0");
+      expect(photo.height).toBe("0");
+      expect(photo.views).toBe(0);
+      expect(photo.tags).toBe("");
+    });
   });
 
-  it("logs when making the file public fails before falling back", async () => {
-    const mockFile = createMockFile({
-      getSignedUrl: jest
-        .fn()
-        .mockRejectedValue(new Error("signing failed")) as unknown as TestStorageFile["getSignedUrl"],
-      makePublic: jest
-        .fn()
-        .mockRejectedValue(new Error("public access denied")) as unknown as TestStorageFile["makePublic"],
+  describe("error handling", () => {
+    it("captures errors and returns null when the storage request fails", async () => {
+      const bucket = {
+        getFiles: jest.fn().mockRejectedValue(new Error("boom")),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      const photos = await listHomepagePhotos(storage);
+
+      expect(photos).toBeNull();
+      expect(captureException).toHaveBeenCalledWith(expect.any(Error));
     });
 
-    const bucket = {
-      getFiles: jest.fn().mockResolvedValue([[mockFile]]),
-    };
+    it("returns empty array when bucket has no files", async () => {
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([[]]),
+      };
 
-    const storage = {
-      bucket: jest.fn().mockReturnValue(bucket),
-    } as unknown as StorageClient;
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
 
-    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+      const photos = await listHomepagePhotos(storage);
 
-    const photos = await listHomepagePhotos(storage);
+      expect(photos).toEqual([]);
+    });
+  });
 
-    expect(mockFile.makePublic).toHaveBeenCalled();
-    expect(photos?.[0]?.urlOriginal).toBe(
-      "https://storage.googleapis.com/sensuelle-boudoir-homepage/gallery/photo-1.jpg",
-    );
-    expect(warnSpy).toHaveBeenCalledWith(
-      "[HomepageStorage] Failed to sign URL for gallery/photo-1.jpg",
-      expect.any(Error),
-    );
-    expect(warnSpy).toHaveBeenCalledWith(
-      "[HomepageStorage] Failed to make gallery/photo-1.jpg public before falling back to public URL",
-      expect.any(Error),
-    );
+  describe("bucket configuration", () => {
+    it("uses the bucket name from environment variable", async () => {
+      process.env.GCP_HOMEPAGE_BUCKET = "custom-bucket-name";
 
-    warnSpy.mockRestore();
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([[]]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      await listHomepagePhotos(storage);
+
+      expect(storage.bucket).toHaveBeenCalledWith("custom-bucket-name");
+    });
+
+    it("uses default bucket name when env var is not set", async () => {
+      delete process.env.GCP_HOMEPAGE_BUCKET;
+
+      const bucket = {
+        getFiles: jest.fn().mockResolvedValue([[]]),
+      };
+
+      const storage = {
+        bucket: jest.fn().mockReturnValue(bucket),
+      } as unknown as StorageClient;
+
+      await listHomepagePhotos(storage);
+
+      expect(storage.bucket).toHaveBeenCalledWith("sensuelle-boudoir-homepage");
+    });
   });
 });
