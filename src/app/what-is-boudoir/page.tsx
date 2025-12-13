@@ -1,15 +1,14 @@
-import {getFlickrPhotos} from "@/services/flickr/flickr";
-import {createFlickr} from "flickr-sdk";
-import {Metadata} from "next";
+import { fetchBoudoirPhotos } from "@/services/photos";
+import { Metadata } from "next";
 import { Photo } from "@/types/photos";
 import BoudoirContent from "@/components/BoudoirContent";
-import {getTranslations} from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 /*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 
 export const metadata: Metadata = {
   title: "What is Boudoir?",
-    description: "What is Boudoir? Uncover the magic of sensuality in our boudoir photography service based in Barcelona, Spain.",
+  description: "What is Boudoir? Uncover the magic of sensuality in our boudoir photography service based in Barcelona, Spain.",
 };
 
 function getRandomElements(arr: Photo[], num: number) {
@@ -21,8 +20,8 @@ function getRandomElements(arr: Photo[], num: number) {
 }
 
 export default async function BoudoirStylePage() {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const { photos } = await getFlickrPhotos(flickr, "boudoir, model", 50);
+  // Uses GCS primary with Flickr fallback
+  const photos = await fetchBoudoirPhotos(50);
   const randomPhotos = getRandomElements(photos ?? [], 10);
   await getTranslations("what_is_boudoir");
 

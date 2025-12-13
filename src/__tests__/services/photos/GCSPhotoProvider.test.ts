@@ -19,7 +19,7 @@ jest.mock("@sentry/nextjs", () => ({
 }));
 
 // Import after mocking
-import { GCSPhotoProvider, createGCSPhotoProvider } from "@/services/photos";
+import { GCSPhotoProvider, createGCSPhotoProvider } from "@/services/photos/GCSPhotoProvider";
 
 type MockFile = {
     name: string;

@@ -1,9 +1,10 @@
-import { PhotoService, getPhotoService, tagToPrefix, tagsToPrefix } from "@/services/photos";
+// Mock dependencies BEFORE imports
+let mockListPhotos = jest.fn();
 
-// Mock dependencies
 jest.mock("@/services/photos/GCSPhotoProvider", () => ({
     GCSPhotoProvider: jest.fn().mockImplementation(() => ({
-        listPhotos: jest.fn(),
+        name: "GCS",
+        listPhotos: mockListPhotos,
     })),
 }));
 
@@ -15,6 +16,11 @@ jest.mock("@/services/flickr/flickr", () => ({
     getFlickrPhotos: jest.fn(),
 }));
 
+jest.mock("@sentry/nextjs", () => ({
+    captureException: jest.fn(),
+}));
+
+import { PhotoService, getPhotoService, tagToPrefix, tagsToPrefix } from "@/services/photos/PhotoServiceFacade";
 import { GCSPhotoProvider } from "@/services/photos/GCSPhotoProvider";
 import { getFlickrPhotos } from "@/services/flickr/flickr";
 import type { Photo } from "@/types/photos";
@@ -44,15 +50,10 @@ const createMockPhoto = (id: number, tags = ""): Photo => ({
 });
 
 describe("PhotoServiceFacade", () => {
-    let mockListPhotos: jest.Mock;
-
     beforeEach(() => {
         jest.clearAllMocks();
-        mockListPhotos = jest.fn();
-        mockGCSProvider.mockImplementation(() => ({
-            name: "GCS",
-            listPhotos: mockListPhotos,
-        }) as unknown as InstanceType<typeof GCSPhotoProvider>);
+        // Reset the mock function for each test
+        mockListPhotos.mockReset();
     });
 
     describe("tagToPrefix", () => {
@@ -92,6 +93,7 @@ describe("PhotoServiceFacade", () => {
                 mockGetFlickrPhotos.mockResolvedValue({
                     success: true,
                     photos: flickrPhotos,
+                    reason: null,
                 });
 
                 // Set env var for Flickr
@@ -111,6 +113,7 @@ describe("PhotoServiceFacade", () => {
                 mockGetFlickrPhotos.mockResolvedValue({
                     success: false,
                     photos: null,
+                    reason: "No results",
                 });
 
                 const originalKey = process.env.FLICKR_API_KEY;
