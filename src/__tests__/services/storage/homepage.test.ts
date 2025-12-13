@@ -46,11 +46,11 @@ const createMockFile = (
     metadata,
     publicUrl:
       overrides.publicUrl ??
-      (() => `https://storage.googleapis.com/sensuelle-boudoir-homepage/${name}`),
+      (() => `https://storage.googleapis.com/sensuelle-boudoir-website/${name}`),
     getSignedUrl:
       overrides.getSignedUrl ??
       (jest.fn().mockResolvedValue([
-        `https://signed.example.com/sensuelle-boudoir-homepage/${name}`,
+        `https://signed.example.com/sensuelle-boudoir-website/${name}`,
       ]) as unknown as TestStorageFile["getSignedUrl"]),
   } as TestStorageFile;
 };
@@ -58,7 +58,7 @@ const createMockFile = (
 describe("homepage storage service", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.GCP_HOMEPAGE_BUCKET = "sensuelle-boudoir-homepage";
+    process.env.GCP_HOMEPAGE_BUCKET = "sensuelle-boudoir-website";
   });
 
   describe("filename parsing", () => {
@@ -154,7 +154,7 @@ describe("homepage storage service", () => {
 
       expect(mockFile.getSignedUrl).toHaveBeenCalled();
       expect(photos?.[0]?.urlOriginal).toBe(
-        "https://signed.example.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
+        "https://signed.example.com/sensuelle-boudoir-website/andrea-cano-montull_54701383010_o.jpg",
       );
     });
 
@@ -179,7 +179,7 @@ describe("homepage storage service", () => {
 
       expect(mockFile.getSignedUrl).toHaveBeenCalled();
       expect(photos?.[0]?.urlOriginal).toBe(
-        "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
+        "https://storage.googleapis.com/sensuelle-boudoir-website/andrea-cano-montull_54701383010_o.jpg",
       );
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining("Failed to sign URL"),
@@ -310,7 +310,7 @@ describe("homepage storage service", () => {
 
       await listHomepagePhotos(storage);
 
-      expect(storage.bucket).toHaveBeenCalledWith("sensuelle-boudoir-homepage");
+      expect(storage.bucket).toHaveBeenCalledWith("sensuelle-boudoir-website");
     });
   });
 });

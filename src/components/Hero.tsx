@@ -14,7 +14,7 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 // Hero background images from GCS bucket
 // Format: https://storage.googleapis.com/{bucket}/{object}
-const GCS_BUCKET_URL = "https://storage.googleapis.com/sensuelle-boudoir-homepage";
+const GCS_BUCKET_URL = "https://storage.googleapis.com/sensuelle-boudoir-website";
 
 const images = [
   {

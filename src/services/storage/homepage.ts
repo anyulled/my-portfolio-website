@@ -3,7 +3,7 @@ import { captureException } from "@sentry/nextjs";
 
 import type { Photo } from "@/types/photos";
 
-const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
+const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-website";
 const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
 
 export type StorageClient = Pick<Storage, "bucket">;

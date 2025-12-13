@@ -11,7 +11,7 @@ import type { Photo } from "@/types/photos";
 import { getFlickrPhotos } from "@/services/flickr/flickr";
 import { createFlickr } from "flickr-sdk";
 
-const DEFAULT_BUCKET = "sensuelle-boudoir-homepage";
+const DEFAULT_BUCKET = "sensuelle-boudoir-website";
 
 /**
  * Maps a Flickr tag to a GCS prefix
