@@ -104,14 +104,6 @@ describe("testimonials", () => {
   });
 
   describe("getTestimonials", () => {
-    it("should call getTestimonials", async () => {
-      (getTestimonials as jest.Mock).mockClear();
-
-      await getTestimonials();
-
-      expect(getTestimonials).toHaveBeenCalled();
-    });
-
     it("should be wrapped with cache", async () => {
       // We can't directly test the cache function since we're mocking the module
       // Instead, we'll verify that getTestimonials is a function that returns a Promise

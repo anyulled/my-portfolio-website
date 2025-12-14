@@ -10,7 +10,7 @@
     "prepare": "husky",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
     "start": "next start",
-    "test": "jest",
+    "test": "jest --config jest.config.ts",
     "test:watch": "jest --watch",
     "supabase:migrate": "supabase migration up"
   },
