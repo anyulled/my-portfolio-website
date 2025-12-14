@@ -5,7 +5,7 @@
  * Supports prefix-based organization for multiple galleries within a single bucket.
  */
 
-import { Storage, File } from "@google-cloud/storage";
+import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 
 import type { Photo } from "@/types/photos";
