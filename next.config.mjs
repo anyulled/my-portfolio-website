@@ -14,10 +14,6 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "live.staticflickr.com",
-      },
-      {
-        protocol: "https",
         hostname: "storage.googleapis.com",
       },
     ],

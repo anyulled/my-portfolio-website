@@ -69,11 +69,9 @@ export class PhotoService {
         });
 
         if (gcsPhotos && gcsPhotos.length > 0) {
-            console.log(`[PhotoService] Loaded ${gcsPhotos.length} photos from GCS (prefix: ${prefix})`);
             return gcsPhotos;
         }
 
-        console.warn(`[PhotoService] No photos found in GCS for prefix: ${prefix}`);
         return [];
     }
 

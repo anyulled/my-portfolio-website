@@ -253,9 +253,7 @@ export class GCSPhotoProvider implements PhotoProvider {
                 });
                 return signedUrl;
             } catch (error) {
-                console.warn(
-                    `[${this.name}] Failed to sign URL for ${file.name}, using public URL`
-                );
+                // Silently fall back to public URL
             }
         }
 
