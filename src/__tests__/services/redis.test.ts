@@ -25,8 +25,8 @@ describe.skip("Redis Service", () => {
       urlCrop: "http://example.com/crop.jpg",
       width: "2048",
       height: "1536",
-      srcSet: []
-    }
+      srcSet: [],
+    },
   ];
 
   const mockRedisGet = jest.fn();
@@ -35,7 +35,7 @@ describe.skip("Redis Service", () => {
   const mockRedis = {
     get: mockRedisGet,
     set: mockRedisSet,
-    ttl: mockRedisTtl
+    ttl: mockRedisTtl,
   };
 
   beforeEach(() => {
@@ -72,8 +72,8 @@ describe.skip("Redis Service", () => {
       expect(result).toEqual(
         mockPhotos.map((photo) => ({
           ...photo,
-          expiresAt: 3600
-        }))
+          expiresAt: 3600,
+        })),
       );
     });
 
@@ -136,7 +136,7 @@ describe.skip("Redis Service", () => {
       expect(mockRedisSet).toHaveBeenCalledWith(
         mockSanitizedKey,
         JSON.stringify(mockPhotos),
-        { ex: 3600 }
+        { ex: 3600 },
       );
     });
 
@@ -145,9 +145,9 @@ describe.skip("Redis Service", () => {
       mockRedisSet.mockRejectedValue(new Error("Redis error"));
 
       // Call the function and expect it to throw
-      await expect(
-        setCachedData(mockKey, mockPhotos, 3600)
-      ).rejects.toThrow("Redis error");
+      await expect(setCachedData(mockKey, mockPhotos, 3600)).rejects.toThrow(
+        "Redis error",
+      );
 
       // Check that Redis.fromEnv was called
       expect(Redis.fromEnv).toHaveBeenCalled();
@@ -159,7 +159,7 @@ describe.skip("Redis Service", () => {
       expect(mockRedisSet).toHaveBeenCalledWith(
         mockSanitizedKey,
         JSON.stringify(mockPhotos),
-        { ex: 3600 }
+        { ex: 3600 },
       );
     });
   });

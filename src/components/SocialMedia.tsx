@@ -6,14 +6,14 @@ import {
   siInstagram,
   siKeras,
   siThemodelsresource,
-  siX
+  siX,
 } from "simple-icons";
 import { Aref_Ruqaa } from "next/font/google";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
 import FadeInTitle from "@/components/FadeInTitle";
@@ -31,19 +31,19 @@ const socialLinks: Array<SocialLinks> = [
   {
     name: "Instagram",
     icon: siInstagram,
-    url: "https://instagram.com/sensuelleboudoir"
+    url: "https://instagram.com/sensuelleboudoir",
   },
   { name: "Flickr", icon: siFlickr, url: "https://flickr.com/people/anyulled" },
   { name: "Kavyar", icon: siKeras, url: "https://kavyar.com/anyulled" },
   {
     name: "Model Mayhem",
     icon: siThemodelsresource,
-    url: "https://modelmayhem.com/anyulled"
+    url: "https://modelmayhem.com/anyulled",
   },
   {
     name: "Bluesky",
     icon: siBluesky,
-    url: "https://bsky.app/profile/sensuelle-boudoir.bsky.social"
+    url: "https://bsky.app/profile/sensuelle-boudoir.bsky.social",
   },
 ];
 

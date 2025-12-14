@@ -26,8 +26,8 @@ const mockPhotos: Photo[] = [
         width: 300,
         height: 200,
         title: "Title",
-        description: "desc"
-      }
+        description: "desc",
+      },
     ],
   },
 ];

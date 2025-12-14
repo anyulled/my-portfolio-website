@@ -1,4 +1,8 @@
-import { getLatestPricing, insertPricing, PricingPackageInsert } from "@/services/database";
+import {
+  getLatestPricing,
+  insertPricing,
+  PricingPackageInsert,
+} from "@/services/database";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
@@ -41,8 +45,12 @@ describe("pricing database helpers", () => {
         deluxe_price: 599,
       };
 
-      const mockMaybeSingle = jest.fn().mockResolvedValue({ data: record, error: null });
-      const mockLimit = jest.fn().mockReturnValue({ maybeSingle: mockMaybeSingle });
+      const mockMaybeSingle = jest
+        .fn()
+        .mockResolvedValue({ data: record, error: null });
+      const mockLimit = jest
+        .fn()
+        .mockReturnValue({ maybeSingle: mockMaybeSingle });
       const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
       const mockSelect = jest.fn().mockReturnValue({ order: mockOrder });
       const mockFrom = jest.fn().mockReturnValue({ select: mockSelect });
@@ -59,7 +67,9 @@ describe("pricing database helpers", () => {
       expect(mockSelect).toHaveBeenCalledWith(
         "id, inserted_at, express_price, experience_price, deluxe_price",
       );
-      expect(mockOrder).toHaveBeenCalledWith("inserted_at", { ascending: false });
+      expect(mockOrder).toHaveBeenCalledWith("inserted_at", {
+        ascending: false,
+      });
       expect(mockLimit).toHaveBeenCalledWith(1);
       expect(mockMaybeSingle).toHaveBeenCalledTimes(1);
       expect(result).toEqual(record);
@@ -69,7 +79,9 @@ describe("pricing database helpers", () => {
       const mockMaybeSingle = jest
         .fn()
         .mockResolvedValue({ data: null, error: { message: "failure" } });
-      const mockLimit = jest.fn().mockReturnValue({ maybeSingle: mockMaybeSingle });
+      const mockLimit = jest
+        .fn()
+        .mockReturnValue({ maybeSingle: mockMaybeSingle });
       const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
       const mockSelect = jest.fn().mockReturnValue({ order: mockOrder });
       const mockFrom = jest.fn().mockReturnValue({ select: mockSelect });
@@ -84,8 +96,12 @@ describe("pricing database helpers", () => {
     });
 
     it("returns null when no pricing record is found", async () => {
-      const mockMaybeSingle = jest.fn().mockResolvedValue({ data: null, error: null });
-      const mockLimit = jest.fn().mockReturnValue({ maybeSingle: mockMaybeSingle });
+      const mockMaybeSingle = jest
+        .fn()
+        .mockResolvedValue({ data: null, error: null });
+      const mockLimit = jest
+        .fn()
+        .mockReturnValue({ maybeSingle: mockMaybeSingle });
       const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
       const mockSelect = jest.fn().mockReturnValue({ order: mockOrder });
       const mockFrom = jest.fn().mockReturnValue({ select: mockSelect });
@@ -116,7 +132,9 @@ describe("pricing database helpers", () => {
         deluxe_price: input.deluxe_price,
       };
 
-      const mockSingle = jest.fn().mockResolvedValue({ data: insertedRecord, error: null });
+      const mockSingle = jest
+        .fn()
+        .mockResolvedValue({ data: insertedRecord, error: null });
       const mockSelect = jest.fn().mockReturnValue({ single: mockSingle });
       const mockInsert = jest.fn().mockReturnValue({ select: mockSelect });
       const mockFrom = jest.fn().mockReturnValue({ insert: mockInsert });

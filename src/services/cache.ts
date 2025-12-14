@@ -3,9 +3,7 @@ import chalk from "chalk";
 import type { Photo } from "@/types/photos";
 import { sanitizeKey } from "@/lib/sanitizer";
 
-export async function getCachedData(
-  key: string,
-): Promise<Photo[] | null> {
+export async function getCachedData(key: string): Promise<Photo[] | null> {
   const sanitizedKey = sanitizeKey(key);
   const response = await list();
   console.log(chalk.cyan(`Getting Cache for (${sanitizedKey}):`));

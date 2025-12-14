@@ -7,7 +7,7 @@ import { list, put } from "@vercel/blob";
 // Mock the dependencies
 jest.mock("@vercel/blob", () => ({
   list: jest.fn(),
-  put: jest.fn()
+  put: jest.fn(),
 }));
 jest.mock("@/lib/sanitizer");
 
@@ -34,8 +34,8 @@ describe("Cache Service", () => {
       urlCrop: "http://example.com/crop.jpg",
       width: "2048",
       height: "1536",
-      srcSet: []
-    }
+      srcSet: [],
+    },
   ];
 
   // Mock Vercel Blob response
@@ -44,13 +44,13 @@ describe("Cache Service", () => {
     downloadUrl: "https://example.com/download",
     contentType: "application/json",
     contentLength: 1000,
-    uploadedAt: new Date().toISOString()
+    uploadedAt: new Date().toISOString(),
   };
 
   // Mock put response
   const mockPutResponse = {
     url: "https://example.com/upload",
-    pathname: mockSanitizedKey
+    pathname: mockSanitizedKey,
   };
 
   beforeEach(() => {
@@ -63,8 +63,8 @@ describe("Cache Service", () => {
     // Mock global fetch
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
-        json: () => Promise.resolve(mockPhotos)
-      })
+        json: () => Promise.resolve(mockPhotos),
+      }),
     );
   });
 
@@ -76,7 +76,7 @@ describe("Cache Service", () => {
     it("should return cached data when available", async () => {
       // Mock list to return a blob that matches our key
       (list as jest.Mock).mockResolvedValue({
-        blobs: [mockBlob]
+        blobs: [mockBlob],
       });
 
       // Call the function
@@ -101,9 +101,9 @@ describe("Cache Service", () => {
         blobs: [
           {
             ...mockBlob,
-            pathname: "different-key"
-          }
-        ]
+            pathname: "different-key",
+          },
+        ],
       });
 
       // Call the function
@@ -125,7 +125,7 @@ describe("Cache Service", () => {
     it("should return null when list returns empty array", async () => {
       // Mock list to return empty array
       (list as jest.Mock).mockResolvedValue({
-        blobs: []
+        blobs: [],
       });
 
       // Call the function
@@ -161,7 +161,7 @@ describe("Cache Service", () => {
     it("should handle errors from fetch", async () => {
       // Mock list to return a blob that matches our key
       (list as jest.Mock).mockResolvedValue({
-        blobs: [mockBlob]
+        blobs: [mockBlob],
       });
 
       // Mock fetch to throw an error
@@ -201,8 +201,8 @@ describe("Cache Service", () => {
           access: "public",
           cacheControlMaxAge: 3600,
           addRandomSuffix: false,
-          multipart: false
-        }
+          multipart: false,
+        },
       );
     });
 
@@ -211,9 +211,9 @@ describe("Cache Service", () => {
       (put as jest.Mock).mockRejectedValue(new Error("Put error"));
 
       // Call the function and expect it to throw
-      await expect(
-        setCachedData(mockKey, mockPhotos, 3600)
-      ).rejects.toThrow("Put error");
+      await expect(setCachedData(mockKey, mockPhotos, 3600)).rejects.toThrow(
+        "Put error",
+      );
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
@@ -227,8 +227,8 @@ describe("Cache Service", () => {
           access: "public",
           cacheControlMaxAge: 3600,
           addRandomSuffix: false,
-          multipart: false
-        }
+          multipart: false,
+        },
       );
     });
   });

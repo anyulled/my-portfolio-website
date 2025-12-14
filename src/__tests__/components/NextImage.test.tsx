@@ -8,7 +8,7 @@ jest.mock("next/image", () => ({
   default: (props: { alt: string }) => {
     // eslint-disable-next-line @next/next/no-img-element
     return <img {...props} alt={props.alt || ""} />;
-  }
+  },
 }));
 
 describe("renderNextImage", () => {
@@ -17,7 +17,7 @@ describe("renderNextImage", () => {
       alt: "Test image",
       title: "Test title",
       sizes: "(max-width: 768px) 100vw, 50vw",
-      src: "test-image.jpg"
+      src: "test-image.jpg",
     };
 
     const context: RenderImageContext = {
@@ -27,15 +27,15 @@ describe("renderNextImage", () => {
           {
             src: "test-image-small.jpg",
             width: 100,
-            height: 100
-          }
+            height: 100,
+          },
         ],
         width: 800,
-        height: 600
+        height: 600,
       },
       index: 0,
       width: 800,
-      height: 600
+      height: 600,
     };
 
     render(renderNextImage(props, context));
@@ -52,18 +52,18 @@ describe("renderNextImage", () => {
       alt: "Test image",
       title: "Test title",
       sizes: "(max-width: 768px) 100vw, 50vw",
-      src: "test-image.jpg"
+      src: "test-image.jpg",
     };
 
     const context: RenderImageContext = {
       photo: {
         src: "test-image.jpg",
         width: 800,
-        height: 600
+        height: 600,
       },
       index: 0,
       width: 800,
-      height: 600
+      height: 600,
     };
 
     const { container } = render(renderNextImage(props, context));
@@ -72,7 +72,7 @@ describe("renderNextImage", () => {
     expect(container.firstChild).toBeInTheDocument();
     expect(container.firstChild).toHaveStyle({
       width: "100%",
-      position: "relative"
+      position: "relative",
     });
   });
 
@@ -80,7 +80,7 @@ describe("renderNextImage", () => {
     const props: RenderImageProps = {
       title: "Test title",
       sizes: "(max-width: 768px) 100vw, 50vw",
-      src: "test-image.jpg"
+      src: "test-image.jpg",
     };
 
     const context: RenderImageContext = {
@@ -90,15 +90,15 @@ describe("renderNextImage", () => {
           {
             src: "test-image-small.jpg",
             width: 100,
-            height: 100
-          }
+            height: 100,
+          },
         ],
         width: 800,
-        height: 600
+        height: 600,
       },
       index: 0,
       width: 800,
-      height: 600
+      height: 600,
     };
 
     render(renderNextImage(props, context));
@@ -112,7 +112,7 @@ describe("renderNextImage", () => {
       alt: "Test image",
       title: "Test title",
       sizes: "(max-width: 768px) 100vw, 50vw",
-      src: "test-image.jpg"
+      src: "test-image.jpg",
     };
 
     const context: RenderImageContext = {
@@ -122,15 +122,15 @@ describe("renderNextImage", () => {
           {
             src: "test-image-small.jpg",
             width: 100,
-            height: 100
-          }
+            height: 100,
+          },
         ],
         width: 800,
-        height: 600
+        height: 600,
       },
       index: 0,
       width: 800,
-      height: 600
+      height: 600,
     };
 
     render(renderNextImage(props, context));

@@ -71,7 +71,7 @@ const models: Array<Model> = [
   { tag: "yusleibi-diaz", name: "Yusleibi Díaz" },
   { tag: "yulia-poddubnaya", name: "Yulia Poddubnaya" },
   { tag: "zasha-michelena", name: "Zasha Michelena" },
-  { tag: "zurine-aspiunza", name: "Zuriñe Aspiunza" }
+  { tag: "zurine-aspiunza", name: "Zuriñe Aspiunza" },
 ];
 
 export default models;

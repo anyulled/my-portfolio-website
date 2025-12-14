@@ -5,7 +5,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -22,7 +22,7 @@ type ScrollContextType = {
 
 const ScrollContext = createContext<ScrollContextType>({
   scrollY: 0,
-  lenis: null
+  lenis: null,
 });
 
 export const useScroll = () => useContext(ScrollContext);
@@ -39,7 +39,7 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       touchMultiplier: 2,
-      smoothWheel: true
+      smoothWheel: true,
     });
 
     lenisRef.current = lenis;

@@ -31,7 +31,7 @@ type TestStorageFile = StorageFileLike & {
  */
 const createMockFile = (
   name: string = "andrea-cano-montull_54701383010_o.jpg",
-  overrides: Partial<TestStorageFile> = {}
+  overrides: Partial<TestStorageFile> = {},
 ): TestStorageFile => {
   // Only use base metadata if no metadata override is provided
   const metadata = overrides.metadata ?? {
@@ -46,12 +46,15 @@ const createMockFile = (
     metadata,
     publicUrl:
       overrides.publicUrl ??
-      (() => `https://storage.googleapis.com/sensuelle-boudoir-website/${name}`),
+      (() =>
+        `https://storage.googleapis.com/sensuelle-boudoir-website/${name}`),
     getSignedUrl:
       overrides.getSignedUrl ??
-      (jest.fn().mockResolvedValue([
-        `https://signed.example.com/sensuelle-boudoir-website/${name}`,
-      ]) as unknown as TestStorageFile["getSignedUrl"]),
+      (jest
+        .fn()
+        .mockResolvedValue([
+          `https://signed.example.com/sensuelle-boudoir-website/${name}`,
+        ]) as unknown as TestStorageFile["getSignedUrl"]),
   } as TestStorageFile;
 };
 
@@ -63,7 +66,9 @@ describe("homepage storage service", () => {
 
   describe("filename parsing", () => {
     it("extracts ID and title from standard filename format", async () => {
-      const mockFiles = [createMockFile("andrea-cano-montull_54701383010_o.jpg")];
+      const mockFiles = [
+        createMockFile("andrea-cano-montull_54701383010_o.jpg"),
+      ];
       const bucket = {
         getFiles: jest.fn().mockResolvedValue([mockFiles]),
       };
@@ -82,7 +87,9 @@ describe("homepage storage service", () => {
     });
 
     it("extracts ID from filename with compound name", async () => {
-      const mockFiles = [createMockFile("sadie-gray-in-the-bedroom_54755963626_o.jpg")];
+      const mockFiles = [
+        createMockFile("sadie-gray-in-the-bedroom_54755963626_o.jpg"),
+      ];
       const bucket = {
         getFiles: jest.fn().mockResolvedValue([mockFiles]),
       };
@@ -126,7 +133,7 @@ describe("homepage storage service", () => {
         bucket: jest.fn().mockReturnValue(bucket),
       } as unknown as StorageClient;
 
-      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => { });
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
 
       const photos = await listHomepagePhotos(storage);
 
@@ -162,7 +169,9 @@ describe("homepage storage service", () => {
       const mockFile = createMockFile("andrea-cano-montull_54701383010_o.jpg", {
         getSignedUrl: jest
           .fn()
-          .mockRejectedValue(new Error("signing failed")) as unknown as TestStorageFile["getSignedUrl"],
+          .mockRejectedValue(
+            new Error("signing failed"),
+          ) as unknown as TestStorageFile["getSignedUrl"],
       });
 
       const bucket = {
@@ -173,7 +182,7 @@ describe("homepage storage service", () => {
         bucket: jest.fn().mockReturnValue(bucket),
       } as unknown as StorageClient;
 
-      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => { });
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
 
       const photos = await listHomepagePhotos(storage);
 
@@ -191,11 +200,13 @@ describe("homepage storage service", () => {
 
   describe("metadata handling", () => {
     it("uses updated date from GCS metadata", async () => {
-      const mockFiles = [createMockFile("test_123_o.jpg", {
-        metadata: {
-          updated: "2025-06-15T12:00:00Z",
-        },
-      })];
+      const mockFiles = [
+        createMockFile("test_123_o.jpg", {
+          metadata: {
+            updated: "2025-06-15T12:00:00Z",
+          },
+        }),
+      ];
       const bucket = {
         getFiles: jest.fn().mockResolvedValue([mockFiles]),
       };
@@ -210,11 +221,13 @@ describe("homepage storage service", () => {
     });
 
     it("falls back to timeCreated when updated is not available", async () => {
-      const mockFiles = [createMockFile("test_456_o.jpg", {
-        metadata: {
-          timeCreated: "2025-01-01T00:00:00Z",
-        },
-      })];
+      const mockFiles = [
+        createMockFile("test_456_o.jpg", {
+          metadata: {
+            timeCreated: "2025-01-01T00:00:00Z",
+          },
+        }),
+      ];
       const bucket = {
         getFiles: jest.fn().mockResolvedValue([mockFiles]),
       };

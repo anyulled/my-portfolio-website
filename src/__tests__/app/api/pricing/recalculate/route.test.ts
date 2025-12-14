@@ -33,10 +33,9 @@ function createRequest(
   url: string,
   init?: { headers?: Record<string, string> },
 ): Request {
-  const headerEntries = Object.entries(init?.headers ?? {}).map(([key, value]) => [
-    key.toLowerCase(),
-    value,
-  ]);
+  const headerEntries = Object.entries(init?.headers ?? {}).map(
+    ([key, value]) => [key.toLowerCase(), value],
+  );
 
   const headerMap = new Map(headerEntries);
 
@@ -69,7 +68,9 @@ describe("GET /api/pricing/recalculate", () => {
   });
 
   it("rejects manual invocations when the secret is not configured", async () => {
-    const request = createRequest("https://example.com/api/pricing/recalculate");
+    const request = createRequest(
+      "https://example.com/api/pricing/recalculate",
+    );
 
     const response = await GET(request);
     const payload = await response.json();
@@ -77,7 +78,8 @@ describe("GET /api/pricing/recalculate", () => {
     expect(response.status).toBe(503);
     expect(payload).toEqual({
       success: false,
-      error: "Manual recalculation is disabled. Configure PRICING_RECALC_SECRET to enable it.",
+      error:
+        "Manual recalculation is disabled. Configure PRICING_RECALC_SECRET to enable it.",
     });
   });
 
@@ -188,12 +190,15 @@ describe("GET /api/pricing/recalculate", () => {
   it("validates cron invocations against the configured secret when provided", async () => {
     process.env.PRICING_RECALC_SECRET = "top-secret";
 
-    const request = createRequest("https://example.com/api/pricing/recalculate", {
-      headers: {
-        "x-vercel-cron": "1",
-        "x-cron-secret": "invalid",
+    const request = createRequest(
+      "https://example.com/api/pricing/recalculate",
+      {
+        headers: {
+          "x-vercel-cron": "1",
+          "x-cron-secret": "invalid",
+        },
       },
-    });
+    );
 
     const response = await GET(request);
     const payload = await response.json();

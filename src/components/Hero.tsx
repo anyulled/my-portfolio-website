@@ -14,7 +14,8 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 // Hero background images from GCS bucket
 // Format: https://storage.googleapis.com/{bucket}/{object}
-const GCS_BUCKET_URL = "https://storage.googleapis.com/sensuelle-boudoir-website";
+const GCS_BUCKET_URL =
+  "https://storage.googleapis.com/sensuelle-boudoir-website";
 
 const images = [
   {
@@ -69,8 +70,8 @@ export default function Hero() {
             opacity: 1,
             scale: 1,
             duration: 1.5,
-            ease: "power2.out"
-          }
+            ease: "power2.out",
+          },
         );
       }
 
@@ -83,8 +84,8 @@ export default function Hero() {
             y: 0,
             duration: 1.5,
             delay: 0.5,
-            ease: "back.out(1.7)"
-          }
+            ease: "back.out(1.7)",
+          },
         );
       }
 
@@ -97,8 +98,8 @@ export default function Hero() {
             y: 0,
             duration: 1.5,
             delay: 1,
-            ease: "power3.out"
-          }
+            ease: "power3.out",
+          },
         );
       }
 
@@ -108,8 +109,8 @@ export default function Hero() {
           { autoAlpha: 0 },
           {
             autoAlpha: 1,
-            duration: 0.5
-          }
+            duration: 0.5,
+          },
         );
       }
     }
@@ -133,7 +134,7 @@ export default function Hero() {
           backgroundPosition: randomImage.position,
           backgroundSize: "cover",
           mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
-          opacity: 0 // Initial state for animation
+          opacity: 0, // Initial state for animation
         }}
       />
       <div className="relative z-10 text-center">

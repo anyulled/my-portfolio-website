@@ -16,18 +16,19 @@ const imageThumbnail =
 const metadataImages = [
   {
     alt: "Anyul Rivas",
-    url: profileImageUrl
+    url: profileImageUrl,
   },
 ];
 export const metadata: Metadata = {
   title: "About Me",
-  description: "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
+  description:
+    "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
   twitter: {
-    images: metadataImages
+    images: metadataImages,
   },
   openGraph: {
     ...openGraph,
-    images: metadataImages
+    images: metadataImages,
   },
 };
 

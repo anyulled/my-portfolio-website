@@ -14,15 +14,15 @@ interface FadeInImageProps {
 }
 
 export default function FadeInImage({
-                                      children,
-                                      delay = 0.2,
-                                      duration = 1.2,
-                                      ease = "power2.out",
-                                      className = "",
-                                      threshold = 0.3,
-                                      stagger = 0.1,
-                                      index = 0
-                                    }: Readonly<FadeInImageProps>) {
+  children,
+  delay = 0.2,
+  duration = 1.2,
+  ease = "power2.out",
+  className = "",
+  threshold = 0.3,
+  stagger = 0.1,
+  index = 0,
+}: Readonly<FadeInImageProps>) {
   const containerRef = useFadeIn({
     delay,
     duration,
@@ -31,7 +31,7 @@ export default function FadeInImage({
     stagger,
     index,
     y: 20,
-    start: `top bottom-=${threshold * 50}%`
+    start: `top bottom-=${threshold * 50}%`,
   });
 
   return (

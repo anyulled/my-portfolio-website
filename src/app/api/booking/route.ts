@@ -46,9 +46,9 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Please fill in all required fields."
+          message: "Please fill in all required fields.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -81,7 +81,7 @@ Booking Details:
       await sendEmailToRecipient(
         message,
         "info@boudoir.barcelona",
-        `Boudoir Barcelona - New Booking Request from ${fullName}`
+        `Boudoir Barcelona - New Booking Request from ${fullName}`,
       );
     } else {
       console.log(message);
@@ -90,16 +90,16 @@ Booking Details:
     return NextResponse.json({
       success: true,
       message:
-        "Thank you for your booking request. We will review your information and get back to you soon!"
+        "Thank you for your booking request. We will review your information and get back to you soon!",
     });
   } catch (error) {
     console.error("Booking form error:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "An unexpected error occurred. Please try again later."
+        message: "An unexpected error occurred. Please try again later.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

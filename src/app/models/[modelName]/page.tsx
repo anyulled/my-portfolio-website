@@ -15,7 +15,7 @@ type Params = Promise<{ modelName: string }>;
 export type Props = { params: Params };
 export const revalidate = 43200;
 export const generateMetadata = async ({
-  params
+  params,
 }: {
   params: Params;
 }): Promise<Metadata> => {
@@ -25,7 +25,7 @@ export const generateMetadata = async ({
     {
       url: `/models/${modelName}/opengraph-image`,
       height: 1200,
-      width: 630
+      width: 630,
     },
   ];
 
@@ -35,14 +35,14 @@ export const generateMetadata = async ({
     twitter: {
       title: title,
       description: description,
-      images: images
+      images: images,
     },
     openGraph: {
       ...openGraph,
       type: "article",
       title: title,
       description: description,
-      images: images
+      images: images,
     },
   });
 };

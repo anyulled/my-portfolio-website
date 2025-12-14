@@ -8,7 +8,7 @@ export interface CachedPhoto extends Photo {
 }
 
 export async function getCachedData(
-  key: string
+  key: string,
 ): Promise<CachedPhoto[] | null> {
   const redis = Redis.fromEnv();
   const sanitizedKey = sanitizeKey(key);
@@ -24,19 +24,19 @@ export async function getCachedData(
   console.log(chalk.green("- [ Redis ] Cache hit", data.length));
   return data.map((photo) => ({
     ...photo,
-    expiresAt: expiryDate
+    expiresAt: expiryDate,
   }));
 }
 
 export async function setCachedData(
   key: string,
   data: Array<Photo>,
-  expiryInSeconds: number
+  expiryInSeconds: number,
 ): Promise<void> {
   const redis = Redis.fromEnv();
   const sanitizedKey = sanitizeKey(key);
   const result = await redis.set(sanitizedKey, JSON.stringify(data), {
-    ex: expiryInSeconds
+    ex: expiryInSeconds,
   });
   console.log(`[ Redis ]  Cache Write Success (${sanitizedKey}):`);
   console.log(chalk.cyan("[ Redis ] Cache response"), result);

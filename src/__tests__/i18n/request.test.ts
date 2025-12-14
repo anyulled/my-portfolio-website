@@ -1,14 +1,12 @@
 import { jest } from "@jest/globals";
 import { Mock, UnknownFunction } from "jest-mock";
-import {
-  RequestConfig
-} from "next-intl/dist/types/src/server/react-server/getRequestConfig";
+import { RequestConfig } from "next-intl/dist/types/src/server/react-server/getRequestConfig";
 
 const mockEnMessages = { test: "English message" };
 const mockEsMessages = { test: "Spanish message" };
 const createRequestConfigForTesting = (
   mockGetUserLocale,
-  mockMessages = {}
+  mockMessages = {},
 ) => {
   return async () => {
     const requestedLocale = await mockGetUserLocale();
@@ -25,29 +23,29 @@ const createRequestConfigForTesting = (
         const error = new Error("Failed to import messages");
         console.error(
           `[ i18n ] Failed to import messages for locale ${requestedLocale}:`,
-          error
+          error,
         );
         return {
           locale: FALLBACK_LOCALE,
-          messages: mockMessages[FALLBACK_LOCALE] || {}
+          messages: mockMessages[FALLBACK_LOCALE] || {},
         };
       }
 
       messages = mockMessages[locale] || {};
       console.info(
-        `[ i18n ] Successfully loaded messages for locale: ${locale}`
+        `[ i18n ] Successfully loaded messages for locale: ${locale}`,
       );
     } catch (importError) {
       console.error(
         `[ i18n ] Failed to import messages for locale ${locale}:`,
-        importError
+        importError,
       );
       messages = mockMessages[FALLBACK_LOCALE] || {};
     }
 
     return {
       locale,
-      messages
+      messages,
     };
   };
 };
@@ -62,12 +60,12 @@ describe("i18n request config", () => {
     mockGetUserLocale = jest.fn();
     mockMessages = {
       en: mockEnMessages,
-      es: mockEsMessages
+      es: mockEsMessages,
     };
 
     requestConfig = createRequestConfigForTesting(
       mockGetUserLocale,
-      mockMessages
+      mockMessages,
     );
   });
 
@@ -80,7 +78,7 @@ describe("i18n request config", () => {
     expect(mockGetUserLocale).toHaveBeenCalledTimes(1);
   });
 
-  it("should fall back to \"en\" when the requested locale is not available", async () => {
+  it('should fall back to "en" when the requested locale is not available', async () => {
     mockGetUserLocale.mockResolvedValue("invalid");
 
     const result = await requestConfig();

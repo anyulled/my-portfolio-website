@@ -2,8 +2,9 @@ export const commonBeforeEach = (): void => {
   jest.clearAllMocks();
 
   if (typeof window !== "undefined") {
-    window.matchMedia = window.matchMedia
-      || ((query: string) => ({
+    window.matchMedia =
+      window.matchMedia ||
+      (((query: string) => ({
         matches: false,
         media: query,
         onchange: null,
@@ -12,7 +13,7 @@ export const commonBeforeEach = (): void => {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
         dispatchEvent: jest.fn(),
-      })) as unknown as typeof window.matchMedia;
+      })) as unknown as typeof window.matchMedia);
   }
 
   const IntersectionObserverMock = class {

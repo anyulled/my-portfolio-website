@@ -1,4 +1,4 @@
 module.exports = {
-    getNativeWebSocket: () => null,
-    WebSocket: class WebSocket { },
+  getNativeWebSocket: () => null,
+  WebSocket: class WebSocket {},
 };

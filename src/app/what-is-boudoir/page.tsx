@@ -8,7 +8,8 @@ import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "What is Boudoir?",
-  description: "What is Boudoir? Uncover the magic of sensuality in our boudoir photography service based in Barcelona, Spain.",
+  description:
+    "What is Boudoir? Uncover the magic of sensuality in our boudoir photography service based in Barcelona, Spain.",
 };
 
 function getRandomElements(arr: Photo[], num: number) {

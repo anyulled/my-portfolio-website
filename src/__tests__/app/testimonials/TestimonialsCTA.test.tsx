@@ -6,7 +6,7 @@ import useAnalyticsEventTracker from "@/hooks/eventTracker";
 // Mock the gsap library and ScrollTrigger plugin
 jest.mock("gsap/ScrollTrigger", () => ({
   __esModule: true,
-  default: "mocked-scroll-trigger"
+  default: "mocked-scroll-trigger",
 }));
 
 jest.mock("gsap", () => {
@@ -17,7 +17,7 @@ jest.mock("gsap", () => {
       set: jest.fn(),
       to: jest.fn(),
       timeline: jest.fn(() => ({
-        to: jest.fn().mockReturnThis()
+        to: jest.fn().mockReturnThis(),
       })),
     },
     default: {
@@ -25,39 +25,39 @@ jest.mock("gsap", () => {
       set: jest.fn(),
       to: jest.fn(),
       timeline: jest.fn(() => ({
-        to: jest.fn().mockReturnThis()
+        to: jest.fn().mockReturnThis(),
       })),
     },
     registerPlugin: jest.fn(),
     set: jest.fn(),
     to: jest.fn(),
     timeline: jest.fn(() => ({
-      to: jest.fn().mockReturnThis()
+      to: jest.fn().mockReturnThis(),
     })),
   };
 });
 
 // Mock next-intl
 jest.mock("next-intl", () => ({
-  useTranslations: jest.fn(() => (key: string) => `translated_${key}`)
+  useTranslations: jest.fn(() => (key: string) => `translated_${key}`),
 }));
 
 // Mock next/font/google
 jest.mock("next/font/google", () => ({
-  Aref_Ruqaa: jest.fn(() => ({ className: "mocked-aref-ruqaa" }))
+  Aref_Ruqaa: jest.fn(() => ({ className: "mocked-aref-ruqaa" })),
 }));
 
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
-    push: jest.fn()
+    push: jest.fn(),
   })),
 }));
 
 // Mock the analytics event tracker
 jest.mock("@/hooks/eventTracker", () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn())
+  default: jest.fn(() => jest.fn()),
 }));
 
 describe("TestimonialsCTA", () => {
@@ -74,7 +74,7 @@ describe("TestimonialsCTA", () => {
       height: 0,
       x: 0,
       y: 0,
-      toJSON: jest.fn()
+      toJSON: jest.fn(),
     }));
   });
 
@@ -89,7 +89,7 @@ describe("TestimonialsCTA", () => {
 
     // Check if the button text is rendered with the correct translation
     expect(
-      screen.getByText("translated_book_your_session")
+      screen.getByText("translated_book_your_session"),
     ).toBeInTheDocument();
 
     // Check if the icon texts are rendered with the correct translations

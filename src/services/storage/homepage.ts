@@ -19,9 +19,10 @@ export type StorageFileLike = {
     contentType?: string;
   };
   publicUrl(): string;
-  getSignedUrl(config: { action: "read"; expires: number | string | Date }):
-    | Promise<SignedUrlResult>
-    | SignedUrlResult;
+  getSignedUrl(config: {
+    action: "read";
+    expires: number | string | Date;
+  }): Promise<SignedUrlResult> | SignedUrlResult;
 };
 
 const sanitisePrivateKey = (key: string) => key.replace(/\\n/g, "\n");
@@ -90,7 +91,7 @@ const extractTitleFromFilename = (filename: string): string => {
   const title = nameWithoutSuffix
     .replace(/[-_]/g, " ")
     .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
 
   return title || filename;

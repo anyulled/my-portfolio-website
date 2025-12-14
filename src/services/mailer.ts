@@ -25,7 +25,7 @@ interface EmailOptions {
  * @returns Promise with the send result or null if there was an error
  */
 export const sendEmail = async (
-  options: EmailOptions
+  options: EmailOptions,
 ): Promise<SMTPTransport.SentMessageInfo | null> => {
   try {
     return await transporter.sendMail({
@@ -33,7 +33,7 @@ export const sendEmail = async (
       to: options.to ?? process.env.EMAIL_USER,
       cc: options.cc,
       subject: options.subject,
-      text: options.text
+      text: options.text,
     });
   } catch (e) {
     console.error(e);
@@ -50,7 +50,7 @@ export const sendEMail = async (
   return sendEmail({
     cc: sender,
     subject: `Boudoir Barcelona - New Message from ${name}`,
-    text: message
+    text: message,
   });
 };
 
@@ -58,11 +58,11 @@ export const sendEMail = async (
 export const sendEmailToRecipient = async (
   message: string,
   recipient: string,
-  subject: string
+  subject: string,
 ): Promise<SMTPTransport.SentMessageInfo | null> => {
   return sendEmail({
     to: recipient,
     subject: subject,
-    text: message
+    text: message,
   });
 };

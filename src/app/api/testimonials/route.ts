@@ -7,8 +7,8 @@ const getCachedTestimonials = unstable_cache(
   ["testimonials"],
   {
     revalidate: 3600, // 1 hour
-    tags: ["testimonials"]
-  }
+    tags: ["testimonials"],
+  },
 );
 
 export async function GET() {
@@ -19,7 +19,7 @@ export async function GET() {
     console.error("Error fetching testimonials:", error);
     return NextResponse.json(
       { error: "Failed to fetch testimonials" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
