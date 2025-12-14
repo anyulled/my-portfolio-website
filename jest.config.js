@@ -15,6 +15,8 @@ const customJestConfig = {
     "^@/hooks/(.*)$": "<rootDir>/src/hooks/$1",
     "^@/lib/(.*)$": "<rootDir>/src/lib/$1",
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^isows$": "<rootDir>/src/__mocks__/isows.js",
+    "^uncrypto$": "<rootDir>/src/__mocks__/uncrypto.js",
     "^@google-cloud/storage$": "<rootDir>/src/__mocks__/googleCloudStorage.ts",
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
@@ -23,7 +25,7 @@ const customJestConfig = {
     "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },
   transformIgnorePatterns: [
-    "/node_modules/(?!(chalk|@upstash|@sentry|next-intl)/)",
+    "/node_modules/(?!(chalk|@upstash|@sentry|next-intl|uncrypto|isows|@supabase)/)",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
   collectCoverage: true,

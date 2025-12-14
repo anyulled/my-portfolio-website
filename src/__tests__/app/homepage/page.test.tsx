@@ -10,21 +10,21 @@ jest.mock("@/components/Gallery", () => ({
 
 jest.mock("@/components/Hero", () => ({
   __esModule: true,
-  default: () => <div data-testid="hero" />, 
+  default: () => <div data-testid="hero" />,
 }));
 
 jest.mock("@/components/SocialMedia", () => ({
   __esModule: true,
-  default: () => <div data-testid="social-media" />, 
+  default: () => <div data-testid="social-media" />,
 }));
 
 jest.mock("@/components/ContactForm", () => ({
   __esModule: true,
-  default: () => <div data-testid="contact-form" />, 
+  default: () => <div data-testid="contact-form" />,
 }));
 
 jest.mock("@/components/ui/separator", () => ({
-  Separator: () => <hr data-testid="separator" />, 
+  Separator: () => <hr data-testid="separator" />,
 }));
 
 jest.mock("gsap", () => ({
@@ -57,17 +57,7 @@ jest.mock("@/services/storage/homepage", () => {
   };
 });
 
-jest.mock("@/services/flickr/flickr", () => ({
-  getFlickrPhotos: jest.fn().mockResolvedValue({
-    success: true,
-    photos: [],
-    reason: null,
-  }),
-}));
 
-jest.mock("flickr-sdk", () => ({
-  createFlickr: jest.fn().mockReturnValue({ flickr: {} }),
-}));
 
 const createPhoto = (overrides: Partial<Photo> = {}): Photo => ({
   id: overrides.id ?? 1,

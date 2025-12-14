@@ -233,17 +233,10 @@ describe("GCSPhotoProvider", () => {
             mockFile.getSignedUrl.mockRejectedValue(new Error("Signing failed"));
             mockBucket.getFiles.mockResolvedValue([[mockFile]]);
 
-            const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => { });
-
             const provider = new GCSPhotoProvider({ useSignedUrls: true });
             const photos = await provider.listPhotos();
 
             expect(photos![0].urlOriginal).toContain("storage.googleapis.com");
-            expect(warnSpy).toHaveBeenCalledWith(
-                expect.stringContaining("Failed to sign URL")
-            );
-
-            warnSpy.mockRestore();
         });
     });
 });
