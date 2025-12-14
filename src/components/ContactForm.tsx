@@ -26,14 +26,14 @@ export default function ContactForm() {
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
-        body: formData
+        body: formData,
       });
       const result = await res.json();
 
       if (result.success) {
         toast({
           title: "Success",
-          description: result.message
+          description: result.message,
         });
         setSendingForm(false);
         submitLeadForm();
@@ -43,7 +43,7 @@ export default function ContactForm() {
           title: "Error",
           description:
             "There was an error submitting your message. Please try again.",
-          variant: "destructive"
+          variant: "destructive",
         });
         setSendingForm(false);
         gaEventTracker("form_submit", "error");
@@ -52,7 +52,7 @@ export default function ContactForm() {
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again later.",
-        variant: "destructive"
+        variant: "destructive",
       });
       setSendingForm(false);
       Sentry.captureException(error);

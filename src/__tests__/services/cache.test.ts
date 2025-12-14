@@ -1,5 +1,5 @@
 import { getCachedData, setCachedData } from "@/services/cache";
-import { PhotoFlickr } from "@/services/flickr/flickr.types";
+import type { Photo } from "@/types/photos";
 import { sanitizeKey } from "@/lib/sanitizer";
 // Import the mocked functions after mocking
 import { list, put } from "@vercel/blob";
@@ -7,7 +7,7 @@ import { list, put } from "@vercel/blob";
 // Mock the dependencies
 jest.mock("@vercel/blob", () => ({
   list: jest.fn(),
-  put: jest.fn()
+  put: jest.fn(),
 }));
 jest.mock("@/lib/sanitizer");
 
@@ -15,40 +15,27 @@ describe("Cache Service", () => {
   // Mock data
   const mockKey = "test-key";
   const mockSanitizedKey = "test_key";
-  const mockPhotoFlickr: PhotoFlickr[] = [
+  const mockPhotos: Photo[] = [
     {
       id: 123,
       title: "Test Photo",
-      description: { _content: "Test Description" },
-      datetaken: "2023-01-01 12:00:00",
-      dateupload: "1672531200",
+      description: "Test Description",
+      dateTaken: new Date("2023-01-01T12:00:00"),
+      dateUpload: new Date("2023-01-01T00:00:00"),
       tags: "test",
-      views: "100",
-      url_s: "http://example.com/small.jpg",
-      url_m: "http://example.com/medium.jpg",
-      url_n: "http://example.com/normal.jpg",
-      url_l: "http://example.com/large.jpg",
-      url_o: "http://example.com/original.jpg",
-      url_t: "http://example.com/thumbnail.jpg",
-      url_z: "http://example.com/zoom.jpg",
-      url_c: "http://example.com/crop.jpg",
-      width_s: "240",
-      width_m: "500",
-      width_n: "320",
-      width_l: "1024",
-      width_o: "2048",
-      width_t: "100",
-      width_z: "640",
-      width_c: "800",
-      height_s: "180",
-      height_m: "375",
-      height_n: "240",
-      height_l: "768",
-      height_o: "1536",
-      height_t: "75",
-      height_z: "480",
-      height_c: "600"
-    }
+      views: 100,
+      urlSmall: "http://example.com/small.jpg",
+      urlMedium: "http://example.com/medium.jpg",
+      urlNormal: "http://example.com/normal.jpg",
+      urlLarge: "http://example.com/large.jpg",
+      urlOriginal: "http://example.com/original.jpg",
+      urlThumbnail: "http://example.com/thumbnail.jpg",
+      urlZoom: "http://example.com/zoom.jpg",
+      urlCrop: "http://example.com/crop.jpg",
+      width: "2048",
+      height: "1536",
+      srcSet: [],
+    },
   ];
 
   // Mock Vercel Blob response
@@ -57,13 +44,13 @@ describe("Cache Service", () => {
     downloadUrl: "https://example.com/download",
     contentType: "application/json",
     contentLength: 1000,
-    uploadedAt: new Date().toISOString()
+    uploadedAt: new Date().toISOString(),
   };
 
   // Mock put response
   const mockPutResponse = {
     url: "https://example.com/upload",
-    pathname: mockSanitizedKey
+    pathname: mockSanitizedKey,
   };
 
   beforeEach(() => {
@@ -76,8 +63,8 @@ describe("Cache Service", () => {
     // Mock global fetch
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
-        json: () => Promise.resolve(mockPhotoFlickr)
-      })
+        json: () => Promise.resolve(mockPhotos),
+      }),
     );
   });
 
@@ -89,7 +76,7 @@ describe("Cache Service", () => {
     it("should return cached data when available", async () => {
       // Mock list to return a blob that matches our key
       (list as jest.Mock).mockResolvedValue({
-        blobs: [mockBlob]
+        blobs: [mockBlob],
       });
 
       // Call the function
@@ -105,7 +92,7 @@ describe("Cache Service", () => {
       expect(global.fetch).toHaveBeenCalledWith(mockBlob.downloadUrl);
 
       // Check the result
-      expect(result).toEqual(mockPhotoFlickr);
+      expect(result).toEqual(mockPhotos);
     });
 
     it("should return null when no matching blob is found", async () => {
@@ -114,9 +101,9 @@ describe("Cache Service", () => {
         blobs: [
           {
             ...mockBlob,
-            pathname: "different-key"
-          }
-        ]
+            pathname: "different-key",
+          },
+        ],
       });
 
       // Call the function
@@ -138,7 +125,7 @@ describe("Cache Service", () => {
     it("should return null when list returns empty array", async () => {
       // Mock list to return empty array
       (list as jest.Mock).mockResolvedValue({
-        blobs: []
+        blobs: [],
       });
 
       // Call the function
@@ -174,7 +161,7 @@ describe("Cache Service", () => {
     it("should handle errors from fetch", async () => {
       // Mock list to return a blob that matches our key
       (list as jest.Mock).mockResolvedValue({
-        blobs: [mockBlob]
+        blobs: [mockBlob],
       });
 
       // Mock fetch to throw an error
@@ -200,7 +187,7 @@ describe("Cache Service", () => {
       (put as jest.Mock).mockResolvedValue(mockPutResponse);
 
       // Call the function
-      await setCachedData(mockKey, mockPhotoFlickr, 3600);
+      await setCachedData(mockKey, mockPhotos, 3600);
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
@@ -208,14 +195,14 @@ describe("Cache Service", () => {
       // Check that put was called with the correct parameters
       expect(put).toHaveBeenCalledWith(
         mockSanitizedKey,
-        JSON.stringify(mockPhotoFlickr),
+        JSON.stringify(mockPhotos),
         {
           contentType: "application/json",
           access: "public",
           cacheControlMaxAge: 3600,
           addRandomSuffix: false,
-          multipart: false
-        }
+          multipart: false,
+        },
       );
     });
 
@@ -224,9 +211,9 @@ describe("Cache Service", () => {
       (put as jest.Mock).mockRejectedValue(new Error("Put error"));
 
       // Call the function and expect it to throw
-      await expect(
-        setCachedData(mockKey, mockPhotoFlickr, 3600)
-      ).rejects.toThrow("Put error");
+      await expect(setCachedData(mockKey, mockPhotos, 3600)).rejects.toThrow(
+        "Put error",
+      );
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
@@ -234,14 +221,14 @@ describe("Cache Service", () => {
       // Check that put was called with the correct parameters
       expect(put).toHaveBeenCalledWith(
         mockSanitizedKey,
-        JSON.stringify(mockPhotoFlickr),
+        JSON.stringify(mockPhotos),
         {
           contentType: "application/json",
           access: "public",
           cacheControlMaxAge: 3600,
           addRandomSuffix: false,
-          multipart: false
-        }
+          multipart: false,
+        },
       );
     });
   });

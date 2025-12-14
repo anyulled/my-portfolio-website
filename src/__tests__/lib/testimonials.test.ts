@@ -1,3 +1,15 @@
+// Mock database before any imports
+jest.mock("@/services/database", () => ({
+  createClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
+        order: jest.fn(() => Promise.resolve({ data: [], error: null })),
+      })),
+    })),
+  })),
+}));
+
 // Import after mocking
 import { getTestimonials, Testimonial } from "@/lib/testimonials";
 
@@ -11,7 +23,7 @@ jest.mock("@/lib/testimonials", () => {
       rating: 4,
       content: "Test content 1",
       date: "2025-07-19",
-      featured: true
+      featured: true,
     },
     {
       id: "3",
@@ -20,7 +32,7 @@ jest.mock("@/lib/testimonials", () => {
       rating: 4,
       content: "Test content 2",
       date: "2024-02-05",
-      featured: false
+      featured: false,
     },
   ];
 
@@ -29,7 +41,7 @@ jest.mock("@/lib/testimonials", () => {
 
   return {
     getTestimonials: cacheMock(async () => getTestimonials()),
-    Testimonial: {}
+    Testimonial: {},
   };
 });
 
@@ -48,7 +60,7 @@ describe("testimonials", () => {
         content: "Test content",
         date: new Date("2025-07-31"),
         featured: true,
-        image: "/test-image.jpg"
+        image: "/test-image.jpg",
       };
 
       expect(testimonial).toHaveProperty("id");
@@ -92,14 +104,6 @@ describe("testimonials", () => {
   });
 
   describe("getTestimonials", () => {
-    it("should call getTestimonials", async () => {
-      (getTestimonials as jest.Mock).mockClear();
-
-      await getTestimonials();
-
-      expect(getTestimonials).toHaveBeenCalled();
-    });
-
     it("should be wrapped with cache", async () => {
       // We can't directly test the cache function since we're mocking the module
       // Instead, we'll verify that getTestimonials is a function that returns a Promise

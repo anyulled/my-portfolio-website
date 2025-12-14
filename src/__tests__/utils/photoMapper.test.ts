@@ -1,5 +1,5 @@
 import { mapPhotosToGalleryImages } from "@/lib/photoMapper";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 
 const mockPhotos: Photo[] = [
   {
@@ -26,8 +26,8 @@ const mockPhotos: Photo[] = [
         width: 300,
         height: 200,
         title: "Title",
-        description: "desc"
-      }
+        description: "desc",
+      },
     ],
   },
 ];

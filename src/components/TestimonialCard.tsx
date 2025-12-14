@@ -16,9 +16,9 @@ interface TestimonialCardProps {
 }
 
 export default function TestimonialCard({
-                                          testimonial,
-                                          index
-                                        }: TestimonialCardProps) {
+  testimonial,
+  index,
+}: TestimonialCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("locale");
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function TestimonialCard({
     gsap.set(card, {
       opacity: 0,
       y: 50,
-      scale: 0.95
+      scale: 0.95,
     });
 
     gsap.to(card, {
@@ -42,7 +42,7 @@ export default function TestimonialCard({
         trigger: card,
         start: "top 80%",
         end: "bottom 20%",
-        toggleActions: "play none none reverse"
+        toggleActions: "play none none reverse",
       },
     });
 
@@ -51,7 +51,7 @@ export default function TestimonialCard({
         scale: 1.02,
         y: -5,
         duration: 0.3,
-        ease: "power2.out"
+        ease: "power2.out",
       });
     };
 
@@ -60,7 +60,7 @@ export default function TestimonialCard({
         scale: 1,
         y: 0,
         duration: 0.3,
-        ease: "power2.out"
+        ease: "power2.out",
       });
     };
 
@@ -119,7 +119,7 @@ export default function TestimonialCard({
         {new Date(testimonial.date).toLocaleDateString(t("date"), {
           year: "numeric",
           month: "long",
-          day: "numeric"
+          day: "numeric",
         })}
       </div>
     </div>

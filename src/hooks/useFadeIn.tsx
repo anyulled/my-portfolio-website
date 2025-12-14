@@ -35,7 +35,7 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
     y = 20,
     scale = 1,
     start = `top bottom-=${threshold * 100}%`,
-    toggleActions = "play none none none"
+    toggleActions = "play none none none",
   } = options;
 
   const elementRef = useRef<HTMLDivElement>(null);
@@ -55,9 +55,9 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
             top: 0,
             left: 0,
             width: window.innerWidth,
-            height: window.innerHeight
+            height: window.innerHeight,
           };
-        }
+        },
       });
 
       lenis.on("scroll", ScrollTrigger.update);
@@ -84,7 +84,7 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
           opacity: 0,
           y: 0,
           x: 0,
-          scale: 1
+          scale: 1,
         };
         if (y !== 0) initialProps.y = y;
         if (x !== 0) initialProps.x = x;
@@ -101,8 +101,8 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
             trigger: element,
             start: start,
             toggleActions: toggleActions,
-            scroller: document.documentElement
-          }
+            scroller: document.documentElement,
+          },
         };
 
         if (y !== 0) animationProps.y = 0;
@@ -112,7 +112,7 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
         gsap.to(element, animationProps);
       }
     },
-    { scope: elementRef, dependencies: [lenis, index] }
+    { scope: elementRef, dependencies: [lenis, index] },
   );
 
   return elementRef;

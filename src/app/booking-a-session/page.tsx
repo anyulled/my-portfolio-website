@@ -14,7 +14,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { z } from "zod";
@@ -23,7 +23,7 @@ import {
   FieldErrors,
   FieldValues,
   SubmitHandler,
-  useForm
+  useForm,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckedState } from "@radix-ui/react-checkbox";
@@ -40,10 +40,10 @@ interface ErrorMessageProps<T extends FieldValues> {
 }
 
 const ErrorMessage = <T extends FieldValues>({
-                                               name,
-                                               errors,
-                                               t
-                                             }: ErrorMessageProps<T>) => {
+  name,
+  errors,
+  t,
+}: ErrorMessageProps<T>) => {
   const error = errors[name];
   if (!error) return null;
 
@@ -65,7 +65,7 @@ const COLORS = [
   "green",
   "red",
   "gray",
-  "other"
+  "other",
 ] as const;
 
 const PAYMENT_TYPES = ["cash", "bank", "bizum", "paypal", "other"] as const;
@@ -80,25 +80,25 @@ const bookingFormSchema = z
       .string()
       .refine((val) => !isNaN(Number(val)), { message: "error_height" })
       .refine((val) => Number(val) >= 100 && Number(val) <= 220, {
-        message: "error_height"
+        message: "error_height",
       }),
     chest: z
       .string()
       .refine((val) => !isNaN(Number(val)), { message: "error_chest" })
       .refine((val) => Number(val) >= 30 && Number(val) <= 150, {
-        message: "error_chest"
+        message: "error_chest",
       }),
     waist: z
       .string()
       .refine((val) => !isNaN(Number(val)), { message: "error_waist" })
       .refine((val) => Number(val) >= 30 && Number(val) <= 150, {
-        message: "error_waist"
+        message: "error_waist",
       }),
     hips: z
       .string()
       .refine((val) => !isNaN(Number(val)), { message: "error_hips" })
       .refine((val) => Number(val) >= 30 && Number(val) <= 150, {
-        message: "error_hips"
+        message: "error_hips",
       }),
     tattoos: z.string().optional(),
     hairColor: z.enum(COLORS, { message: "error_hair_color" }),
@@ -110,7 +110,7 @@ const bookingFormSchema = z
     modelRelease: z.enum(["yes", "no"]),
     paymentTypes: z
       .array(z.enum(PAYMENT_TYPES))
-      .min(1, { message: "error_payment_type" })
+      .min(1, { message: "error_payment_type" }),
   })
   .refine(
     (data) => {
@@ -123,8 +123,8 @@ const bookingFormSchema = z
     },
     {
       message: "error_date_range",
-      path: ["endDate"]
-    }
+      path: ["endDate"],
+    },
   );
 
 type FormValues = z.infer<typeof bookingFormSchema>;
@@ -141,7 +141,7 @@ export default function BookingPage() {
   const handleCheckboxChange = (
     field: { value: string[]; onChange: (value: string[]) => void },
     type: string,
-    checked: CheckedState
+    checked: CheckedState,
   ) => {
     // If checked, add the type to the array; otherwise, remove it
     const updatedValue = checked
@@ -156,7 +156,7 @@ export default function BookingPage() {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-    reset
+    reset,
   } = useForm<FormValues>({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
@@ -176,7 +176,7 @@ export default function BookingPage() {
       endDate: "",
       rates: "",
       modelRelease: "yes",
-      paymentTypes: []
+      paymentTypes: [],
     },
   });
 
@@ -194,7 +194,7 @@ export default function BookingPage() {
 
       const res = await fetch("/api/booking", {
         method: "POST",
-        body: formData
+        body: formData,
       });
 
       const result = await res.json();
@@ -204,7 +204,7 @@ export default function BookingPage() {
       if (result.success) {
         toast({
           title: "Success",
-          description: result.message
+          description: result.message,
         });
         reset();
       } else {
@@ -213,7 +213,7 @@ export default function BookingPage() {
           description:
             result.message ??
             "There was an error submitting your booking request. Please try again.",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -221,7 +221,7 @@ export default function BookingPage() {
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again later.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };

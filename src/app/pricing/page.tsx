@@ -1,16 +1,16 @@
-import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import {
-    Camera,
-    Check,
-    Clock,
-    Image as Photo,
-    Shirt,
-    UserRound,
-    Video
+  Camera,
+  Check,
+  Clock,
+  Image as Photo,
+  Shirt,
+  UserRound,
+  Video,
 } from "lucide-react";
-import {getTranslations} from "next-intl/server";
-import {Metadata} from "next";
-import {openGraph} from "@/lib/openGraph";
+import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { openGraph } from "@/lib/openGraph";
 import AnimatedPackages from "@/components/AnimatedPackages";
 import FadeInTitle from "@/components/FadeInTitle";
 import { getPricing } from "@/lib/pricing";
@@ -42,7 +42,8 @@ const formatPrice = (
 
 export const metadata: Metadata = {
   title: " Pricing ",
-    description: "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
+  description:
+    "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
   twitter: {
     title: "Pricing",
     description: "Discover our pricing and book your experience today!",
@@ -183,8 +184,7 @@ export default async function PricingPage() {
               {t("general_conditions")}
             </h2>
           </FadeInTitle>
-          <div
-            className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg p-6">
+          <div className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg p-6">
             <ul className="space-y-4">
               <li className="flex items-start">
                 <span className="mr-2 text-mocha-mousse-500 mt-1">

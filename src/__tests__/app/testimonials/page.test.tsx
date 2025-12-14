@@ -8,27 +8,27 @@ jest.mock("@/lib/testimonials", () => {
   const originalModule = jest.requireActual("@/lib/testimonials");
   return {
     ...originalModule,
-    getTestimonials: jest.fn()
+    getTestimonials: jest.fn(),
   };
 });
 
 // Mock the components
 jest.mock("@/app/testimonials/TestimonialHero", () => ({
   __esModule: true,
-  default: () => <div data-testid="testimonial-hero">Mocked Hero</div>
+  default: () => <div data-testid="testimonial-hero">Mocked Hero</div>,
 }));
 
 jest.mock("@/app/testimonials/TestimonialsCTA", () => ({
   __esModule: true,
-  default: () => <div data-testid="testimonials-cta">Mocked CTA</div>
+  default: () => <div data-testid="testimonials-cta">Mocked CTA</div>,
 }));
 
 jest.mock("@/components/TestimonialCard", () => ({
   __esModule: true,
   default: ({
-              testimonial,
-              index
-            }: {
+    testimonial,
+    index,
+  }: {
     testimonial: Testimonial;
     index: number;
   }) => (
@@ -40,7 +40,7 @@ jest.mock("@/components/TestimonialCard", () => ({
 
 // Mock next/font/google
 jest.mock("next/font/google", () => ({
-  Aref_Ruqaa: jest.fn(() => ({ className: "mocked-aref-ruqaa" }))
+  Aref_Ruqaa: jest.fn(() => ({ className: "mocked-aref-ruqaa" })),
 }));
 
 // Mock next-intl/server
@@ -50,11 +50,11 @@ jest.mock("next-intl/server", () => ({
       const translations: Record<string, string> = {
         what_our_clients_say: "Mocked What Our Clients Say",
         discover_transformative_experiences: "Mocked Discover Experiences",
-        more_client_stories: "Mocked More Client Stories"
+        more_client_stories: "Mocked More Client Stories",
       };
       return translations[key] || key;
-    })
-  )
+    }),
+  ),
 }));
 
 describe("TestimonialsPage", () => {
@@ -66,7 +66,7 @@ describe("TestimonialsPage", () => {
       rating: 5,
       content: "Featured content 1",
       date: "2025-07-31",
-      featured: true
+      featured: true,
     },
     {
       id: "2",
@@ -75,7 +75,7 @@ describe("TestimonialsPage", () => {
       rating: 4,
       content: "Featured content 2",
       date: "2025-07-30",
-      featured: true
+      featured: true,
     },
   ];
 
@@ -87,13 +87,13 @@ describe("TestimonialsPage", () => {
       rating: 4,
       content: "Regular content 1",
       date: "2025-07-29",
-      featured: false
+      featured: false,
     },
   ];
 
   const mockAllTestimonials = [
     ...mockFeaturedTestimonials,
-    ...mockRegularTestimonials
+    ...mockRegularTestimonials,
   ];
 
   beforeEach(() => {
@@ -120,7 +120,7 @@ describe("TestimonialsPage", () => {
 
     // Check if the structured data is included
     const scriptTag = container.querySelector(
-      "script[type=\"application/ld+json\"]"
+      'script[type="application/ld+json"]',
     );
     expect(scriptTag).toBeInTheDocument();
 
@@ -138,14 +138,14 @@ describe("TestimonialsPage", () => {
     // Check if all featured testimonial cards are rendered
     mockFeaturedTestimonials.forEach((testimonial) => {
       expect(
-        screen.getByTestId(`testimonial-card-${testimonial.id}`)
+        screen.getByTestId(`testimonial-card-${testimonial.id}`),
       ).toBeInTheDocument();
     });
 
     // Check if all regular testimonial cards are rendered
     mockRegularTestimonials.forEach((testimonial) => {
       expect(
-        screen.getByTestId(`testimonial-card-${testimonial.id}`)
+        screen.getByTestId(`testimonial-card-${testimonial.id}`),
       ).toBeInTheDocument();
     });
   });
@@ -158,7 +158,7 @@ describe("TestimonialsPage", () => {
 
     // The "More Client Stories" heading should not be in the document
     expect(
-      screen.queryByText("Mocked More Client Stories")
+      screen.queryByText("Mocked More Client Stories"),
     ).not.toBeInTheDocument();
   });
 
@@ -168,20 +168,20 @@ describe("TestimonialsPage", () => {
     // Featured testimonials should have indices starting from 0
     expect(
       screen.getByText(
-        `Mocked Card for ${mockFeaturedTestimonials[0].name} (Index: 0)`
-      )
+        `Mocked Card for ${mockFeaturedTestimonials[0].name} (Index: 0)`,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        `Mocked Card for ${mockFeaturedTestimonials[1].name} (Index: 1)`
-      )
+        `Mocked Card for ${mockFeaturedTestimonials[1].name} (Index: 1)`,
+      ),
     ).toBeInTheDocument();
 
     // Regular testimonials should have indices continuing from featured testimonials
     expect(
       screen.getByText(
-        `Mocked Card for ${mockRegularTestimonials[0].name} (Index: 2)`
-      )
+        `Mocked Card for ${mockRegularTestimonials[0].name} (Index: 2)`,
+      ),
     ).toBeInTheDocument();
   });
 });

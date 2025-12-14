@@ -10,11 +10,12 @@
     "prepare": "husky",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
     "start": "next start",
-    "test": "jest",
+    "test": "jest --config jest.config.ts",
     "test:watch": "jest --watch",
     "supabase:migrate": "supabase migration up"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.13.0",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.0.1",
     "@opentelemetry/api": "^1.9.0",
@@ -37,7 +38,6 @@
     "chalk": "^5.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "flickr-sdk": "^7.0.0-beta.7",
     "framer-motion": "^12.6.2",
     "gsap": "^3.13.0",
     "lenis": "latest",
@@ -90,5 +90,8 @@
     "**/*.{js,ts,jsx,tsx,md,json,css,scss,html}": [
       "prettier --write"
     ]
+  },
+  "jest": {
+    "modulePath": "./jest.config.ts"
   }
 }

@@ -11,17 +11,17 @@ interface FadeInTitleProps {
 }
 
 export default function FadeInTitle({
-                                      children,
-                                      delay = 0.2,
-                                      duration = 0.8,
-                                      className = "",
-                                      threshold = 0.3
-                                    }: Readonly<FadeInTitleProps>) {
+  children,
+  delay = 0.2,
+  duration = 0.8,
+  className = "",
+  threshold = 0.3,
+}: Readonly<FadeInTitleProps>) {
   const containerRef = useFadeIn({
     delay,
     duration,
     threshold,
-    y: 20
+    y: 20,
   });
 
   return (

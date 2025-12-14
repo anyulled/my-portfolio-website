@@ -4,7 +4,7 @@ import { defaultLocale } from "@/i18n/config";
 
 jest.mock("next/headers", () => ({
   cookies: jest.fn(),
-  headers: jest.fn()
+  headers: jest.fn(),
 }));
 
 jest.mock("@/i18n/config", () => ({
@@ -13,18 +13,18 @@ jest.mock("@/i18n/config", () => ({
   Locale: {
     EN: "en",
     ES: "es",
-    FR: "fr"
-  }
+    FR: "fr",
+  },
 }));
 
 describe("Locale Service", () => {
   const mockCookies = {
     get: jest.fn(),
-    set: jest.fn()
+    set: jest.fn(),
   };
 
   const mockHeaders = {
-    get: jest.fn()
+    get: jest.fn(),
   };
 
   beforeEach(() => {

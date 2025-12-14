@@ -5,7 +5,7 @@ export const initMixpanel = () => {
   if (MIXPANEL_TOKEN) {
     mixpanel.init(MIXPANEL_TOKEN, {
       autocapture: true,
-      debug: process.env.NODE_ENV !== "production"
+      debug: process.env.NODE_ENV !== "production",
     });
   } else if (process.env.NODE_ENV !== "production") {
     console.warn("Mixpanel token is missing! Check your .env file.");

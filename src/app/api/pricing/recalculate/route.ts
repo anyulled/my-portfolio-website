@@ -10,7 +10,7 @@ import { fetchLatestIpc } from "@/services/ipc";
 
 function adjustPrice(
   value: number | null,
-  adjustmentFactor: number
+  adjustmentFactor: number,
 ): number | null {
   if (typeof value !== "number" || Number.isNaN(value)) {
     return null;
@@ -28,7 +28,7 @@ function buildUnauthorizedResponse() {
       success: false,
       error: "Unauthorized",
     },
-    { status: 401 }
+    { status: 401 },
   );
 }
 
@@ -43,8 +43,8 @@ export async function GET(req: Request) {
     if (!requiredSecret) {
       console.warn(
         chalk.yellow(
-          "[ pricing:recalculate ] Manual invocation attempted without PRICING_RECALC_SECRET configured"
-        )
+          "[ pricing:recalculate ] Manual invocation attempted without PRICING_RECALC_SECRET configured",
+        ),
       );
       return NextResponse.json(
         {
@@ -52,50 +52,54 @@ export async function GET(req: Request) {
           error:
             "Manual recalculation is disabled. Configure PRICING_RECALC_SECRET to enable it.",
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
     if (providedToken !== requiredSecret) {
       console.warn(
         chalk.red(
-          "[ pricing:recalculate ] Manual invocation rejected due to invalid token"
-        )
+          "[ pricing:recalculate ] Manual invocation rejected due to invalid token",
+        ),
       );
       return buildUnauthorizedResponse();
     }
-  } else if (requiredSecret && providedToken && providedToken !== requiredSecret) {
+  } else if (
+    requiredSecret &&
+    providedToken &&
+    providedToken !== requiredSecret
+  ) {
     console.warn(
       chalk.red(
-        "[ pricing:recalculate ] Cron invocation provided invalid token"
-      )
+        "[ pricing:recalculate ] Cron invocation provided invalid token",
+      ),
     );
     return buildUnauthorizedResponse();
   }
 
   try {
     console.log(
-      chalk.gray("[ pricing:recalculate ] Fetching latest stored pricing")
+      chalk.gray("[ pricing:recalculate ] Fetching latest stored pricing"),
     );
     const latestPricing = await getLatestPricing();
 
     if (!latestPricing) {
       console.warn(
         chalk.yellow(
-          "[ pricing:recalculate ] No pricing data available to recalculate"
-        )
+          "[ pricing:recalculate ] No pricing data available to recalculate",
+        ),
       );
       return NextResponse.json(
         {
           success: false,
           error: "No pricing data available to recalculate.",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     console.log(
-      chalk.gray("[ pricing:recalculate ] Fetching latest IPC percentage")
+      chalk.gray("[ pricing:recalculate ] Fetching latest IPC percentage"),
     );
     const ipcPercentage = await fetchLatestIpc();
     const adjustmentFactor = 1 + ipcPercentage / 100;
@@ -104,13 +108,13 @@ export async function GET(req: Request) {
       express_price: adjustPrice(latestPricing.express_price, adjustmentFactor),
       experience_price: adjustPrice(
         latestPricing.experience_price,
-        adjustmentFactor
+        adjustmentFactor,
       ),
       deluxe_price: adjustPrice(latestPricing.deluxe_price, adjustmentFactor),
     };
 
     console.log(
-      chalk.gray("[ pricing:recalculate ] Persisting recalculated pricing")
+      chalk.gray("[ pricing:recalculate ] Persisting recalculated pricing"),
     );
     const inserted = await insertPricing(recalculated);
 
@@ -131,14 +135,14 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error(
       chalk.red("[ pricing:recalculate ] Error recalculating pricing"),
-      error
+      error,
     );
     return NextResponse.json(
       {
         success: false,
         error: "Failed to recalculate pricing. Check server logs for details.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

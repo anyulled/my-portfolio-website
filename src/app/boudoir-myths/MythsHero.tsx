@@ -5,20 +5,20 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Check, X } from "lucide-react";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const arefRuqaa = Aref_Ruqaa({subsets: ["latin"], weight: "400"});
-const dancingScript = Dancing_Script({subsets: ["latin"]});
+const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
+const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 interface MythsHeroProps {
   heroImage: Photo;
 }
 
-export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
+export default function MythsHero({ heroImage }: Readonly<MythsHeroProps>) {
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -35,7 +35,7 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
 
     gsap.set([title, subtitle, icons], {
       opacity: 0,
-      y: 50
+      y: 50,
     });
 
     const tl = gsap.timeline({ delay: 0.5 });
@@ -44,7 +44,7 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
       opacity: 1,
       y: 0,
       duration: 1.2,
-      ease: "power2.out"
+      ease: "power2.out",
     })
       .to(
         subtitle,
@@ -52,9 +52,9 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
           opacity: 1,
           y: 0,
           duration: 1,
-          ease: "power2.out"
+          ease: "power2.out",
         },
-        "-=0.8"
+        "-=0.8",
       )
       .to(
         icons,
@@ -62,9 +62,9 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
           opacity: 1,
           y: 0,
           duration: 0.8,
-          ease: "power2.out"
+          ease: "power2.out",
         },
-        "-=0.4"
+        "-=0.4",
       );
 
     gsap.to(hero, {
@@ -74,8 +74,8 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
         trigger: hero,
         start: "top bottom",
         end: "bottom top",
-        scrub: true
-      }
+        scrub: true,
+      },
     });
 
     gsap.to(icons.children, {
@@ -84,7 +84,7 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
       ease: "power2.inOut",
       stagger: 0.5,
       repeat: -1,
-      yoyo: true
+      yoyo: true,
     });
   }, []);
 
@@ -93,11 +93,10 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
       ref={heroRef}
       className="relative h-[70vh] min-h-[600px] w-full overflow-hidden"
     >
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-mocha-mousse-900/80 to-mocha-mousse-800/70">
+      <div className="absolute inset-0 bg-gradient-to-br from-mocha-mousse-900/80 to-mocha-mousse-800/70">
         <Image
-            src={heroImage.urlLarge}
-            alt={t("alt")}
+          src={heroImage.urlLarge}
+          alt={t("alt")}
           width={1920}
           height={1080}
           className="object-cover w-full h-full opacity-60"
@@ -105,8 +104,7 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
         />
       </div>
 
-      <div
-          className="relative h-full flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto mt-28">
+      <div className="relative h-full flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto mt-28">
         <h1
           ref={titleRef}
           className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-white mb-6 leading-tight`}
@@ -129,18 +127,20 @@ export default function MythsHero({heroImage}: Readonly<MythsHeroProps>) {
           className="flex justify-center items-center space-x-12"
         >
           <div className="text-center">
-            <div
-              className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
               <X className="h-8 w-8 text-red-300" />
             </div>
-            <p className="text-pantone-creamTan200 text-sm">{t("label_myths")}</p>
+            <p className="text-pantone-creamTan200 text-sm">
+              {t("label_myths")}
+            </p>
           </div>
           <div className="text-center">
-            <div
-              className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
               <Check className="h-8 w-8 text-green-300" />
             </div>
-            <p className="text-pantone-creamTan200 text-sm">{t("label_truth")}</p>
+            <p className="text-pantone-creamTan200 text-sm">
+              {t("label_truth")}
+            </p>
           </div>
         </div>
       </div>

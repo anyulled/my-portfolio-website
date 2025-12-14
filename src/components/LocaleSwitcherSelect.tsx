@@ -5,7 +5,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectTrigger
+  SelectTrigger,
 } from "@/components/ui/select";
 import clsx from "clsx";
 import { useTransition } from "react";
@@ -15,7 +15,7 @@ import {
   SelectArrow,
   SelectIcon,
   SelectPortal,
-  SelectViewport
+  SelectViewport,
 } from "@radix-ui/react-select";
 import { usePathname } from "next/navigation";
 
@@ -56,8 +56,7 @@ export default function LocaleSwitcherSelect({
           )}
         >
           <SelectIcon>
-            <LanguageIcon
-              className="h-6 w-6 dark:text-mocha-mousse-100 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900" />
+            <LanguageIcon className="h-6 w-6 dark:text-mocha-mousse-100 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900" />
           </SelectIcon>
         </SelectTrigger>
         <SelectPortal>

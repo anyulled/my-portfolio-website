@@ -1,11 +1,10 @@
 import { Metadata } from "next";
-import { fetchTransport, getFlickrPhotos } from "@/services/flickr/flickr";
+import { fetchModelPhotos } from "@/services/photos";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
 import { extractNameFromTag } from "@/lib/extractName";
 import models from "@/data/models";
-import { createFlickr } from "flickr-sdk";
 import Loading from "@/app/loading";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
@@ -16,8 +15,8 @@ type Params = Promise<{ modelName: string }>;
 export type Props = { params: Params };
 export const revalidate = 43200;
 export const generateMetadata = async ({
-                                         params
-                                       }: {
+  params,
+}: {
   params: Params;
 }): Promise<Metadata> => {
   const { modelName } = await params;
@@ -26,7 +25,7 @@ export const generateMetadata = async ({
     {
       url: `/models/${modelName}/opengraph-image`,
       height: 1200,
-      width: 630
+      width: 630,
     },
   ];
 
@@ -36,14 +35,14 @@ export const generateMetadata = async ({
     twitter: {
       title: title,
       description: description,
-      images: images
+      images: images,
     },
     openGraph: {
       ...openGraph,
       type: "article",
       title: title,
       description: description,
-      images: images
+      images: images,
     },
   });
 };
@@ -52,14 +51,11 @@ export const generateStaticParams = async () =>
   models.map((model) => ({ modelName: model.tag }));
 
 const fetchPhotos = async (modelName: string) => {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!, fetchTransport);
   try {
-    const result = await getFlickrPhotos(flickr, modelName, 100);
-    if (result.success) {
-      return result.photos;
-    }
+    // Uses GCS primary with Flickr fallback
+    return await fetchModelPhotos(modelName, 100);
   } catch (error) {
-    console.error("Error fetching Flickr photos:", error);
+    console.error("Error fetching photos:", error);
   }
   return [];
 };

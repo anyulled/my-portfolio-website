@@ -13,7 +13,7 @@ import { RowsPhotoAlbum } from "react-photo-album";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
 import renderFadeInNextImage from "@/components/FadeInNextImage";
 import { useTranslations } from "next-intl";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 import FadeInTitle from "@/components/FadeInTitle";
 import mapPhotosToGalleryImages from "@/lib/photoMapper";
 
@@ -62,8 +62,8 @@ export default function Gallery({
                 image: (props, context) =>
                   renderFadeInNextImage(
                     { ...props, index: context.index },
-                    context
-                  )
+                    context,
+                  ),
               }}
               photos={galleryPhotos}
               defaultContainerWidth={1200}

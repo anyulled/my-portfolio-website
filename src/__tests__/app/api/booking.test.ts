@@ -11,7 +11,7 @@ jest.mock("next/server", () => {
         method: options.method || "GET",
         formData: jest.fn().mockResolvedValue(options.body),
         body: options.body,
-        json: jest.fn().mockResolvedValue({})
+        json: jest.fn().mockResolvedValue({}),
       };
     }),
     NextResponse: {
@@ -19,7 +19,7 @@ jest.mock("next/server", () => {
         const status = options?.status || 200;
         return {
           status,
-          json: jest.fn().mockResolvedValue(body)
+          json: jest.fn().mockResolvedValue(body),
         };
       }),
     },
@@ -27,12 +27,11 @@ jest.mock("next/server", () => {
 });
 
 jest.mock("@/services/mailer", () => ({
-  sendEmailToRecipient: jest.fn()
+  sendEmailToRecipient: jest.fn(),
 }));
 
 describe("Booking API", () => {
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -44,7 +43,7 @@ describe("Booking API", () => {
 
     const req = new NextRequest("http://localhost:3000/api/booking", {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
     const response = await POST(req);
@@ -77,7 +76,7 @@ describe("Booking API", () => {
 
     const req = new NextRequest("http://localhost:3000/api/booking", {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
     const response = await POST(req);
@@ -111,7 +110,7 @@ describe("Booking API", () => {
 
     const req = new NextRequest("http://localhost:3000/api/booking", {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
     const response = await POST(req);
@@ -120,7 +119,7 @@ describe("Booking API", () => {
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
     expect(data.message).toBe(
-      "Thank you for your booking request. We will review your information and get back to you soon!"
+      "Thank you for your booking request. We will review your information and get back to you soon!",
     );
 
     // In test environment, email is not actually sent

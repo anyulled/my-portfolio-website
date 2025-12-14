@@ -7,7 +7,7 @@ import FadeInTitle from "@/components/FadeInTitle";
 import FadeInImage from "@/components/FadeInImage";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { useTranslations } from "next-intl";
-import { FlickrResponse, Photo } from "@/services/flickr/flickr.types";
+import type { Photo } from "@/types/photos";
 
 //region Fonts
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -16,16 +16,16 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 //endregion
 
 interface AboutContentProps {
-  images: FlickrResponse | null;
+  images: Photo[] | null;
   profileImageUrl: string;
   imageThumbnail: string;
 }
 
 export default function AboutContent({
-                                       images,
-                                       profileImageUrl,
-                                       imageThumbnail
-                                     }: Readonly<AboutContentProps>) {
+  images,
+  profileImageUrl,
+  imageThumbnail,
+}: Readonly<AboutContentProps>) {
   const t = useTranslations("about");
   return (
     <div className="min-h-screen pt-20">
@@ -38,8 +38,7 @@ export default function AboutContent({
           </h1>
         </FadeInTitle>
 
-        <div
-          className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-[auto_1fr] gap-8 md:gap-6 lg:gap-8 items-start">
+        <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-[auto_1fr] gap-8 md:gap-6 lg:gap-8 items-start">
           <Card className="overflow-hidden md:col-span-1 lg:col-auto">
             <CardContent className="p-0">
               <FadeInImage ease={"power1.in"} duration={0.5}>
@@ -108,7 +107,7 @@ export default function AboutContent({
           </div>
         </div>
 
-        {images?.photos && (
+        {images && images.length > 0 && (
           <>
             <FadeInTitle>
               <h2
@@ -118,9 +117,8 @@ export default function AboutContent({
               </h2>
             </FadeInTitle>
             <Card className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-50 p-3"}>
-              <div
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
-                {images.photos.map((cover: Photo, index: number) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
+                {images.map((cover: Photo, index: number) => (
                   <div
                     key={cover.id}
                     className="relative overflow-hidden group rounded-lg"
@@ -135,10 +133,8 @@ export default function AboutContent({
                         height={400}
                         className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105 rounded-lg"
                       />
-                      <div
-                        className="absolute inset-0 flex items-end justify-center">
-                        <div
-                          className="w-full bg-black bg-opacity-50 backdrop-blur-md rounded-b-lg">
+                      <div className="absolute inset-0 flex items-end justify-center">
+                        <div className="w-full bg-black bg-opacity-50 backdrop-blur-md rounded-b-lg">
                           <p
                             className={`${arefRuqaa.className} text-xs sm:text-xs md:text-sm text-white text-center py-2`}
                           >
@@ -162,8 +158,7 @@ export default function AboutContent({
         </FadeInTitle>
 
         <div className="grid md:grid-cols-3 gap-2">
-          <Card
-            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={0} stagger={0.1}>
                 <Image
@@ -182,8 +177,7 @@ export default function AboutContent({
             </CardContent>
           </Card>
 
-          <Card
-            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={1} stagger={0.1}>
                 <Image
@@ -202,8 +196,7 @@ export default function AboutContent({
             </CardContent>
           </Card>
 
-          <Card
-            className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={2} stagger={0.1}>
                 <Image
@@ -222,8 +215,7 @@ export default function AboutContent({
             </CardContent>
           </Card>
 
-          <Card
-            className="my-1 bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="my-1 bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={3} stagger={0.1}>
                 <Image

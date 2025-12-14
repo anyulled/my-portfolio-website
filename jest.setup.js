@@ -11,6 +11,14 @@ jest.mock("@/lib/gtag", () => ({
   event: jest.fn(),
 }));
 
+jest.mock("gsap/ScrollTrigger", () => ({
+  ScrollTrigger: {
+    scrollerProxy: jest.fn(),
+    update: jest.fn(),
+    getAll: jest.fn(() => []),
+  },
+}));
+
 // Create a mock for next/navigation
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({

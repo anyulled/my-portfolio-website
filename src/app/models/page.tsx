@@ -3,9 +3,8 @@ import Link from "next/link";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import models, { Model } from "@/data/models";
 import { Metadata } from "next";
-import { createFlickr } from "flickr-sdk";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
-import { Photo } from "@/services/flickr/flickr.types";
+import { getPhotoService } from "@/services/photos";
+import { Photo } from "@/types/photos";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -25,24 +24,20 @@ const batchModels = (models: Model[], batchSize: number) => {
 };
 
 const fetchPhotos = async (): Promise<Photo[]> => {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
+  const photoService = getPhotoService();
   const modelBatches = batchModels(models, 20);
   const allPhotos: Photo[] = [];
 
   for (const batch of modelBatches) {
     try {
-      const res = await getFlickrPhotos(
-        flickr,
-        batch.map((style) => style.tag.replace("-", "")).join(", "),
-        100,
-        false,
-        true
-      );
-      if (res.success && res.photos != null) {
-        allPhotos.push(...res.photos);
-      }
+      // Uses GCS primary with Flickr fallback
+      const photos = await photoService.fetchPhotos({
+        tags: batch.map((model) => model.tag.replace("-", "")),
+        limit: 100,
+      });
+      allPhotos.push(...photos);
     } catch (error) {
-      console.error("Error fetching Flickr photos:", error);
+      console.error("Error fetching photos:", error);
     }
   }
 

@@ -1,14 +1,14 @@
-import {Metadata} from "next";
-import {getTestimonials, Testimonial} from "@/lib/testimonials";
+import { Metadata } from "next";
+import { getTestimonials, Testimonial } from "@/lib/testimonials";
 import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialCard from "@/components/TestimonialCard";
-import {Aref_Ruqaa} from "next/font/google";
-import {getTranslations} from "next-intl/server";
-import {WebPage, WithContext} from "schema-dts";
+import { Aref_Ruqaa } from "next/font/google";
+import { getTranslations } from "next-intl/server";
+import { WebPage, WithContext } from "schema-dts";
 
 export const metadata: Metadata = {
-    title: "Client Testimonials",
+  title: "Client Testimonials",
   description:
     "Read authentic testimonials from our boudoir photography clients. Discover how our empowering sessions boost confidence and celebrate feminine beauty.",
   keywords:
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         url: "https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg",
         width: 500,
         height: 333,
-        alt: "Andrea Cano Montull"
+        alt: "Andrea Cano Montull",
       },
     ],
   },
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
       "Client Testimonials | Sensuelle Boudoir · Boudoir Photography in Barcelona",
     description:
       "Read authentic testimonials from our boudoir photography clients.",
-    images: ["https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg"]
+    images: ["https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg"],
   },
 };
 
@@ -53,7 +53,7 @@ const structuredData: WithContext<WebPage> = {
       ratingValue: "5",
       reviewCount: "50",
       bestRating: "5",
-      worstRating: "4"
+      worstRating: "4",
     },
   },
 };

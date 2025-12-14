@@ -1,3 +1,14 @@
+// Mock database before any imports
+jest.mock("@/services/database", () => ({
+  createClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
+      })),
+    })),
+  })),
+}));
+
 import { sendEMail, sendEmail, sendEmailToRecipient } from "@/services/mailer";
 import nodemailer from "nodemailer";
 
@@ -5,7 +16,7 @@ jest.mock("nodemailer", () => {
   const mockSendMail = jest.fn();
 
   const mockTransporter = {
-    sendMail: mockSendMail
+    sendMail: mockSendMail,
   };
 
   const mockCreateTransport = jest.fn().mockImplementation(() => {
@@ -13,23 +24,27 @@ jest.mock("nodemailer", () => {
   });
 
   return {
-    createTransport: mockCreateTransport
+    createTransport: mockCreateTransport,
   };
 });
 
 const originalEnv = process.env;
 
 describe("Mailer Service", () => {
+  let consoleErrorSpy: jest.SpyInstance;
+
   beforeEach(() => {
     process.env = {
       ...originalEnv,
       EMAIL_USER: "test@example.com",
-      EMAIL_PASS: "password123"
+      EMAIL_PASS: "password123",
     };
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
     process.env = originalEnv;
+    consoleErrorSpy.mockRestore();
   });
 
   describe("sendEMail", () => {
@@ -41,7 +56,7 @@ describe("Mailer Service", () => {
       const result = await sendEMail(
         "Test message",
         "sender@example.com",
-        "Test User"
+        "Test User",
       );
 
       expect(mockTransporter.sendMail).toHaveBeenCalledWith({
@@ -49,7 +64,7 @@ describe("Mailer Service", () => {
         to: "test@example.com",
         cc: "sender@example.com",
         subject: "Boudoir Barcelona - New Message from Test User",
-        text: "Test message"
+        text: "Test message",
       });
 
       expect(result).toEqual({ messageId: "test-id" });
@@ -59,13 +74,13 @@ describe("Mailer Service", () => {
       const mockTransporter = nodemailer.createTransport();
 
       mockTransporter.sendMail.mockRejectedValue(
-        new Error("Failed to send email")
+        new Error("Failed to send email"),
       );
 
       const result = await sendEMail(
         "Test message",
         "sender@example.com",
-        "Test User"
+        "Test User",
       );
 
       expect(mockTransporter.sendMail).toHaveBeenCalled();
@@ -86,7 +101,7 @@ describe("Mailer Service", () => {
         to: "recipient@example.com",
         cc: "cc@example.com",
         subject: "Test Subject",
-        text: "Test message"
+        text: "Test message",
       });
 
       expect(mockTransporter.sendMail).toHaveBeenCalledWith({
@@ -94,20 +109,20 @@ describe("Mailer Service", () => {
         to: "recipient@example.com",
         cc: "cc@example.com",
         subject: "Test Subject",
-        text: "Test message"
+        text: "Test message",
       });
 
       expect(result).toEqual({ messageId: "test-id" });
     });
 
-    it("should use default recipient when \"to\" is not provided", async () => {
+    it('should use default recipient when "to" is not provided', async () => {
       const mockTransporter = nodemailer.createTransport();
 
       mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
 
       const result = await sendEmail({
         subject: "Test Subject",
-        text: "Test message"
+        text: "Test message",
       });
 
       expect(mockTransporter.sendMail).toHaveBeenCalledWith({
@@ -115,7 +130,7 @@ describe("Mailer Service", () => {
         to: "test@example.com",
         cc: undefined,
         subject: "Test Subject",
-        text: "Test message"
+        text: "Test message",
       });
 
       expect(result).toEqual({ messageId: "test-id" });
@@ -125,13 +140,13 @@ describe("Mailer Service", () => {
       const mockTransporter = nodemailer.createTransport();
 
       mockTransporter.sendMail.mockRejectedValue(
-        new Error("Failed to send email")
+        new Error("Failed to send email"),
       );
 
       const result = await sendEmail({
         to: "recipient@example.com",
         subject: "Test Subject",
-        text: "Test message"
+        text: "Test message",
       });
 
       expect(mockTransporter.sendMail).toHaveBeenCalled();
@@ -151,7 +166,7 @@ describe("Mailer Service", () => {
       const result = await sendEmailToRecipient(
         "Test message",
         "recipient@example.com",
-        "Test Subject"
+        "Test Subject",
       );
 
       expect(mockTransporter.sendMail).toHaveBeenCalledWith({
@@ -159,7 +174,7 @@ describe("Mailer Service", () => {
         to: "recipient@example.com",
         cc: undefined,
         subject: "Test Subject",
-        text: "Test message"
+        text: "Test message",
       });
 
       expect(result).toEqual({ messageId: "test-id" });
@@ -169,13 +184,13 @@ describe("Mailer Service", () => {
       const mockTransporter = nodemailer.createTransport();
 
       mockTransporter.sendMail.mockRejectedValue(
-        new Error("Failed to send email")
+        new Error("Failed to send email"),
       );
 
       const result = await sendEmailToRecipient(
         "Test message",
         "recipient@example.com",
-        "Test Subject"
+        "Test Subject",
       );
 
       expect(mockTransporter.sendMail).toHaveBeenCalled();

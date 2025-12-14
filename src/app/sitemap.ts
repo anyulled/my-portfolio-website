@@ -49,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseURL}/testimonials`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.6
+      priority: 0.6,
     },
   ];
 }

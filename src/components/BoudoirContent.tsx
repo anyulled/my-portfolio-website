@@ -6,7 +6,7 @@ import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import { Suspense, useRef } from "react";
 import Loading from "@/app/loading";
-import { Photo } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 import FadeInTitle from "@/components/FadeInTitle";
 import { useGSAP } from "@gsap/react";
@@ -27,8 +27,8 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 /* eslint-disable  @typescript-eslint/no-non-null-asserted-optional-chain */
 
 export default function BoudoirContent({
-                                         randomPhotos
-                                       }: Readonly<{
+  randomPhotos,
+}: Readonly<{
   randomPhotos: Photo[];
 }>) {
   const t = useTranslations("what_is_boudoir");
@@ -38,13 +38,13 @@ export default function BoudoirContent({
     scale: 0.8,
     y: 0,
     duration: 1,
-    start: "top 80%"
+    start: "top 80%",
   });
   const imageRef2 = useFadeIn({
     scale: 0.8,
     y: 0,
     duration: 1,
-    start: "top 80%"
+    start: "top 80%",
   });
   const listRef = useRef<HTMLUListElement>(null);
   const ctaRef = useFadeIn({ y: 30, delay: 0.5, start: "top 90%" });
@@ -63,12 +63,12 @@ export default function BoudoirContent({
             trigger: listRef.current,
             start: "top 80%",
             toggleActions: "play none none none",
-            scroller: document.documentElement
-          }
+            scroller: document.documentElement,
+          },
         });
       }
     },
-    { dependencies: [lenis] }
+    { dependencies: [lenis] },
   );
 
   return (
