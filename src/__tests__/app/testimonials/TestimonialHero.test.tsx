@@ -1,3 +1,14 @@
+// Mock database before any imports
+jest.mock("@/services/database", () => ({
+  createClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
+      })),
+    })),
+  })),
+}));
+
 import { render, screen } from "@testing-library/react";
 import TestimonialHero from "@/app/testimonials/TestimonialHero";
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";

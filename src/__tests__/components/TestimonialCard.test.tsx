@@ -6,8 +6,14 @@ import { ClassAttributes, ImgHTMLAttributes, JSX } from "react";
 
 jest.mock("gsap/ScrollTrigger", () => ({
   __esModule: true,
-  default: "mocked-scroll-trigger",
-  getAll: jest.fn().mockReturnValue([{ kill: jest.fn() }])
+  ScrollTrigger: {
+    getAll: jest.fn(() => []),
+    scrollerProxy: jest.fn(),
+    update: jest.fn(),
+  },
+  default: {
+    getAll: jest.fn(() => []),
+  },
 }));
 jest.mock("gsap", () => {
   return {

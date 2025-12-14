@@ -1,3 +1,15 @@
+// Mock database before any imports
+jest.mock("@/services/database", () => ({
+  createClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
+        order: jest.fn(() => Promise.resolve({ data: [], error: null })),
+      })),
+    })),
+  })),
+}));
+
 // Import after mocking
 import { getTestimonials, Testimonial } from "@/lib/testimonials";
 
