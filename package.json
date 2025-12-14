@@ -90,5 +90,8 @@
     "**/*.{js,ts,jsx,tsx,md,json,css,scss,html}": [
       "prettier --write"
     ]
+  },
+  "jest": {
+    "modulePath": "./jest.config.ts"
   }
 }
