@@ -1,5 +1,3 @@
-import type { Photo } from "@/types/photos";
-
 // Store the mock bucket for test access
 let mockBucket: {
     getFiles: jest.Mock;

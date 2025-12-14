@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 // Mock database before any imports
 jest.mock("@/services/database", () => ({
   createClient: jest.fn(() => ({

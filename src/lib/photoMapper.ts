@@ -12,7 +12,7 @@ const DEFAULT_WIDTH = 1200;
 const DEFAULT_HEIGHT = 800;
 
 const parseDimension = (value: string, fallback: number): number => {
-  const parsed = parseInt(value, 10);
+  const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 };
 

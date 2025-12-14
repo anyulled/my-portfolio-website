@@ -1,5 +1,5 @@
 // Mock dependencies BEFORE imports
-let mockListPhotos = jest.fn();
+const mockListPhotos = jest.fn();
 
 jest.mock("@/services/photos/GCSPhotoProvider", () => ({
     GCSPhotoProvider: jest.fn().mockImplementation(() => ({
@@ -13,10 +13,8 @@ jest.mock("@sentry/nextjs", () => ({
 }));
 
 import { PhotoService, getPhotoService, tagToPrefix, tagsToPrefix } from "@/services/photos/PhotoServiceFacade";
-import { GCSPhotoProvider } from "@/services/photos/GCSPhotoProvider";
 import type { Photo } from "@/types/photos";
 
-const mockGCSProvider = GCSPhotoProvider as jest.MockedClass<typeof GCSPhotoProvider>;
 
 const createMockPhoto = (id: number, tags = ""): Photo => ({
     id,
