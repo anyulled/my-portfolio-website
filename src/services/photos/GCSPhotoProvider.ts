@@ -29,6 +29,24 @@ interface GCSPhotoProviderOptions {
 }
 
 /**
+ * Type representing a Google Cloud Storage file object
+ */
+interface GCSFile {
+  name: string;
+  metadata?: {
+    metadata?: Record<string, string | undefined>;
+    updated?: string;
+    timeCreated?: string;
+  };
+  publicUrl(): string;
+  getSignedUrl?(config: {
+    action: string;
+    expires: number;
+  }): Promise<[string]>;
+}
+
+
+/**
  * Extracts the photo ID from a filename.
  * Expected format: "name_flickrid_o.jpg" (e.g., "andrea-cano-montull_54701383010_o.jpg")
  */
@@ -193,7 +211,7 @@ export class GCSPhotoProvider implements PhotoProvider {
     }
   }
 
-  private async mapFileToPhoto(file: File): Promise<Photo | null> {
+  private async mapFileToPhoto(file: GCSFile): Promise<Photo | null> {
     const id = extractIdFromFilename(file.name);
     if (id === null) {
       console.warn(
@@ -241,8 +259,8 @@ export class GCSPhotoProvider implements PhotoProvider {
     };
   }
 
-  private async getUrlForFile(file: File): Promise<string> {
-    if (this.useSignedUrls) {
+  private async getUrlForFile(file: GCSFile): Promise<string> {
+    if (this.useSignedUrls && file.getSignedUrl) {
       try {
         const [signedUrl] = await file.getSignedUrl({
           action: "read",

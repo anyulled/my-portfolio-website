@@ -39,7 +39,7 @@ describe("Mailer Service", () => {
       EMAIL_USER: "test@example.com",
       EMAIL_PASS: "password123",
     };
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
