@@ -1,8 +1,7 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
+import { fetchModelPhotos } from "@/services/photos";
 import modelData from "@/data/models";
-import { createFlickr } from "flickr-sdk";
 /*eslint-disable @next/next/no-img-element */
 
 export const contentType = "image/png";
@@ -18,8 +17,7 @@ export default async function OpengraphImage({
   params: { modelName: string };
 }) {
   const modelName = extractNameFromTag(modelData, params.modelName);
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const result = await getFlickrPhotos(flickr, params.modelName, 1);
+  const photos = await fetchModelPhotos(params.modelName, 1);
 
   return new ImageResponse(
     (
@@ -27,7 +25,7 @@ export default async function OpengraphImage({
         <div tw="bg-neutral-800 flex flex-row w-full h-full">
           <div tw="w-2/5 py-12 px-4 p-8 flex ">
             <img
-              src={result.photos?.at(0)?.urlZoom}
+              src={photos?.at(0)?.urlZoom}
               alt={modelName}
               tw="w-full h-auto rounded-md"
             />

@@ -1,8 +1,7 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
 import { styles } from "@/data/styles";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
-import { createFlickr } from "flickr-sdk";
+import { fetchStylePhotos } from "@/services/photos";
 /*eslint-disable @next/next/no-img-element */
 
 export const contentType = "image/png";
@@ -19,15 +18,14 @@ export default async function OpengraphImage({
 }) {
   const styleName = extractNameFromTag(styles, params.styleName);
   const convertedStyleName = styleName ?? "boudoir";
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const result = await getFlickrPhotos(flickr, convertedStyleName, 1);
+  const photos = await fetchStylePhotos(convertedStyleName, 1);
   return new ImageResponse(
     (
       <div tw="flex flex-col w-full h-full items-center justify-center bg-black">
         <div tw="bg-neutral-800 flex flex-row w-full h-full">
           <div tw="w-2/5 py-12 px-4 p-8 flex ">
             <img
-              src={result.photos?.at(0)?.urlZoom}
+              src={photos?.at(0)?.urlZoom}
               alt={styleName}
               tw="w-full h-auto rounded-md"
             />
