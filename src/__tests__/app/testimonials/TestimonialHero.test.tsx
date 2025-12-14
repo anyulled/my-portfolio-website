@@ -68,7 +68,7 @@ jest.mock("next/image", () => ({
       ClassAttributes<HTMLImageElement> &
       ImgHTMLAttributes<HTMLImageElement>
   ) => {
-    return <img {...props} alt={"test"} />;
+    return <img {...props} alt={"Test User"} />;
   },
 }));
 
@@ -118,7 +118,7 @@ describe("TestimonialHero", () => {
     render(<TestimonialHero />);
 
     // Check if the image is rendered with the correct props
-    const image = screen.getByAltText("boudoir");
+    const image = screen.getByAltText("Test User");
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute(
       "src",

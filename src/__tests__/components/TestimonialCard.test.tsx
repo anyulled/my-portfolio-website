@@ -55,7 +55,7 @@ jest.mock("next/image", () => ({
       ClassAttributes<HTMLImageElement> &
       ImgHTMLAttributes<HTMLImageElement>
   ) => {
-    return <img {...props} alt={"test"} />;
+    return <img {...props} alt={"Test User"} />;
   },
 }));
 
