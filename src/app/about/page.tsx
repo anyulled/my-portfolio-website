@@ -1,9 +1,6 @@
-export const dynamic = "force-dynamic";
-
-import {getFlickrPhotos} from "@/services/flickr/flickr";
-import {Metadata} from "next";
-import {openGraph} from "@/lib/openGraph";
-import {createFlickr} from "flickr-sdk";
+import { getPhotosFromStorage } from "@/services/storage/photos";
+import { Metadata } from "next";
+import { openGraph } from "@/lib/openGraph";
 import AboutContent from "@/components/AboutContent";
 
 //region Images
@@ -22,7 +19,7 @@ const metadataImages = [
 ];
 export const metadata: Metadata = {
   title: "About Me",
-    description: "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
+  description: "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
   twitter: {
     images: metadataImages
   },
@@ -34,16 +31,28 @@ export const metadata: Metadata = {
 
 const fetchCoverPhotos = async () => {
   try {
-    const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-    return await getFlickrPhotos(flickr, "cover", 50);
+    return await getPhotosFromStorage("cover", 50);
   } catch (error) {
-    console.error("[ About ] Error fetching Flickr photos:", error);
+    console.error("[ About ] Error fetching photos from storage:", error);
+    return null;
+  }
+};
+
+const fetchCollaborationPhotos = async () => {
+  try {
+    return await getPhotosFromStorage("collaboration", 4);
+  } catch (error) {
+    console.error(
+      "[ About ] Error fetching collaboration photos from storage:",
+      error
+    );
     return null;
   }
 };
 
 export default async function BioPage() {
   const images = await fetchCoverPhotos();
+  const collaborationImages = await fetchCollaborationPhotos();
 
   if (images == null) {
     console.error("[ About ] Error fetching cover photos");
@@ -54,6 +63,7 @@ export default async function BioPage() {
       images={images}
       profileImageUrl={profileImageUrl}
       imageThumbnail={imageThumbnail}
+      collaborationImages={collaborationImages}
     />
   );
 }

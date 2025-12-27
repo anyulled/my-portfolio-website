@@ -10,7 +10,11 @@ import { useTranslations } from "next-intl";
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
-export default function TestimonialsHero() {
+interface TestimonialsHeroProps {
+  image: string;
+}
+
+export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -66,7 +70,7 @@ export default function TestimonialsHero() {
       <div className="absolute inset-0 bg-mocha-mousse-300/80">
         <Image
           src={
-            "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg"
+            image
           }
           alt={"boudoir"}
           width={1920}

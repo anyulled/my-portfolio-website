@@ -1,10 +1,12 @@
+import { getCachedData, setCachedData } from "@/services/cache";
+import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
-
 import type { Photo } from "@/types/photos";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
 const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
+const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24 hours
 
 export type StorageClient = Pick<Storage, "bucket">;
 
@@ -31,7 +33,6 @@ const hasCredentials = () =>
     Boolean(process.env.GCP_CLIENT_EMAIL && process.env.GCP_PRIVATE_KEY);
 
 const createStorageClient = (): Storage => {
-    console.log("Creating storage client", process.env.GCP_SERVICE_ACCOUNT_EMAIL);
     if (!hasCredentials()) {
         return new Storage();
     }
@@ -92,7 +93,7 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
         return signedUrl;
     } catch (error) {
         console.warn(
-            `[HomepageStorage] Failed to sign URL for ${file.name}`,
+            `[PhotosStorage] Failed to sign URL for ${file.name}`,
             error,
         );
 
@@ -102,7 +103,7 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
                 await file.makePublic();
             } catch (makePublicError) {
                 console.warn(
-                    `[HomepageStorage] Failed to make ${file.name} public before falling back to public URL`,
+                    `[PhotosStorage] Failed to make ${file.name} public before falling back to public URL`,
                     makePublicError,
                 );
             }
@@ -113,30 +114,39 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
 };
 
 const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
-    const customMetadata = (file.metadata ?? {}) as Record<
-        string,
-        string | undefined
-    >;
+    const resourceMetadata = file.metadata ?? {};
+    const userMetadata = resourceMetadata.metadata ?? {};
 
-    const description = customMetadata.description ?? customMetadata.caption ?? "";
-    const title = customMetadata.title ?? file.name;
-    const tags = customMetadata.tags ?? "";
-    const width = customMetadata.width ?? "0";
-    const height = customMetadata.height ?? "0";
+    const description = userMetadata.description ?? userMetadata.caption ?? "";
+    const title = userMetadata.title ?? file.name;
+    const tags = userMetadata.tags ?? "";
+    const width = userMetadata.width ?? "0";
+    const height = userMetadata.height ?? "0";
     const fallbackUrl = file.publicUrl();
 
+    // Use user-provided date, or fallback to file update time
     const dateUpload = parseDate(
-        customMetadata.dateUploaded ?? file.metadata?.updated,
+        userMetadata.dateUploaded ?? resourceMetadata.updated,
         new Date(0),
     );
-    const id = parsePhotoId(customMetadata.id);
+
+    // Prefer user-provided ID (e.g. from Flickr), fallback to parsing GCS ID/Name not recommended for stability but as last resort? 
+    // Actually the previous code was using resourceMetadata.id (GCS ID).
+    // context: we populated GCS with metadata.id = flickr_id. so we MUST use userMetadata.id.
+
+    // Check user metadata id first
+    let id = parsePhotoId(userMetadata.id);
+
+    // If not found, log warning? OR fallback?
+    // User requirement: "Verified GCS metadata (id...)" implies we rely on it.
     if (id === null) {
         console.warn(
-            `[HomepageStorage] File ${file.name} is missing a valid 'id' in metadata. Skipping.`,
+            `[PhotosStorage] File ${file.name} is missing a valid 'id' in metadata. Skipping.`,
         );
         return null;
     }
-    const views = parseNumber(customMetadata.views);
+
+    const views = parseNumber(userMetadata.views);
 
     const signedUrl = await getSignedUrlForFile(file);
 
@@ -154,8 +164,8 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
         urlMedium: url,
         urlNormal: url,
         urlOriginal: url,
-        urlSmall: url,
         urlThumbnail: url,
+        urlSmall: url,
         urlZoom: url,
         views,
         width,
@@ -174,10 +184,38 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     return photo;
 };
 
-export const listHomepagePhotos = async (
+export const getPhotosFromStorage = async (
+    prefix: string,
+    limit?: number,
     storageClient?: StorageClient,
-    prefix?: string,
 ): Promise<Photo[] | null> => {
+    const cacheKey = `photos-${prefix}`;
+
+    // 1. Try to get from Redis (Metadata Cache)
+    try {
+        const cachedPhotos = await getRedisCachedData<Photo[]>(cacheKey);
+        if (cachedPhotos) {
+            console.log(`[PhotosStorage] Redis hit for ${prefix}`);
+            return cachedPhotos;
+        }
+    } catch (error) {
+        console.warn(`[PhotosStorage] Failed to read from Redis for ${prefix}:`, error);
+    }
+
+    // 2. Try to get from Vercel Blob Cache (Second Layer)
+    try {
+        const cachedPhotos = await getCachedData<Photo[]>(cacheKey);
+        if (cachedPhotos) {
+            console.log(`[PhotosStorage] Vercel Blob hit for ${prefix}`);
+            // Hydrate Redis
+            setRedisCachedData(cacheKey, cachedPhotos, CACHE_TTL_SECONDS);
+            return cachedPhotos;
+        }
+    } catch (error) {
+        console.warn(`[PhotosStorage] Failed to read from cache for ${prefix}:`, error);
+    }
+
+    // 3. Fetch from GCS
     const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
 
     try {
@@ -185,7 +223,7 @@ export const listHomepagePhotos = async (
         const bucket = client.bucket(bucketName);
         const options = {
             autoPaginate: false,
-            ...(prefix && { prefix }),
+            prefix,
         };
         const [files] = await bucket.getFiles(options);
 
@@ -197,17 +235,31 @@ export const listHomepagePhotos = async (
             files.map((file) => mapFileToPhoto(file as StorageFileLike)),
         );
 
-        const photos = mapped.filter((photo): photo is Photo => photo !== null);
+        let photos = mapped.filter((photo): photo is Photo => photo !== null);
+
+        if (limit && limit > 0) {
+            photos = photos.slice(0, limit);
+        }
+
+        // 4. Store in cache (Redis and Vercel Blob)
+        try {
+            if (photos.length > 0) {
+                // Write to Redis (Fast access)
+                await setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
+                // Write to Vercel Blob (Persistence)
+                await setCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
+            }
+        } catch (error) {
+            console.warn(`[PhotosStorage] Failed to write to cache for ${prefix}:`, error);
+        }
 
         return photos;
     } catch (error) {
         captureException(error);
         console.error(
-            `[HomepageStorage] Failed to list objects from bucket ${bucketName}:`,
+            `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
             error,
         );
         return null;
     }
 };
-
-export default listHomepagePhotos;

@@ -1,11 +1,11 @@
 import { Metadata } from "next";
-import { fetchTransport, getFlickrPhotos } from "@/services/flickr/flickr";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
 import { extractNameFromTag } from "@/lib/extractName";
 import models from "@/data/models";
-import { createFlickr } from "flickr-sdk";
+
 import Loading from "@/app/loading";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
@@ -14,10 +14,11 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ modelName: string }>;
 
 export type Props = { params: Params };
-export const revalidate = 43200;
+export const dynamic = "force-dynamic";
+
 export const generateMetadata = async ({
-                                         params
-                                       }: {
+  params
+}: {
   params: Params;
 }): Promise<Metadata> => {
   const { modelName } = await params;
@@ -48,20 +49,13 @@ export const generateMetadata = async ({
   });
 };
 
-export const generateStaticParams = async () =>
-  models.map((model) => ({ modelName: model.tag }));
-
 const fetchPhotos = async (modelName: string) => {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!, fetchTransport);
   try {
-    const result = await getFlickrPhotos(flickr, modelName, 100);
-    if (result.success) {
-      return result.photos;
-    }
+    return await getPhotosFromStorage(`models/${modelName}`, 100) || [];
   } catch (error) {
-    console.error("Error fetching Flickr photos:", error);
+    console.error("Error fetching photos from storage:", error);
+    return [];
   }
-  return [];
 };
 
 export default async function ModelPage({ params }: Readonly<Props>) {

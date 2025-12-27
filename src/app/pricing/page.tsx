@@ -1,19 +1,20 @@
-import {Aref_Ruqaa, Dancing_Script} from "next/font/google";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import {
-    Camera,
-    Check,
-    Clock,
-    Image as Photo,
-    Shirt,
-    UserRound,
-    Video
+  Camera,
+  Check,
+  Clock,
+  Image as Photo,
+  Shirt,
+  UserRound,
+  Video
 } from "lucide-react";
-import {getTranslations} from "next-intl/server";
-import {Metadata} from "next";
-import {openGraph} from "@/lib/openGraph";
+import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { openGraph } from "@/lib/openGraph";
 import AnimatedPackages from "@/components/AnimatedPackages";
 import FadeInTitle from "@/components/FadeInTitle";
 import { getPricing } from "@/lib/pricing";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -42,7 +43,7 @@ const formatPrice = (
 
 export const metadata: Metadata = {
   title: " Pricing ",
-    description: "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
+  description: "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
   twitter: {
     title: "Pricing",
     description: "Discover our pricing and book your experience today!",
@@ -60,13 +61,19 @@ export const metadata: Metadata = {
 export default async function PricingPage() {
   const t = await getTranslations("pricing");
   const latestPricing = await getPricing();
+  const pricingPhotos = await getPhotosFromStorage("pricing") || [];
+
+  const getPhotoByTag = (tag: string, fallbackIndex: number) => {
+    return pricingPhotos.find(p => p.tags.includes(tag))?.urlLarge ||
+      pricingPhotos[fallbackIndex]?.urlLarge ||
+      "";
+  };
 
   const packages = [
     {
       name: t("boudoir_express"),
       price: formatPrice(latestPricing?.express_price, defaultPricing.express),
-      image:
-        "https://live.staticflickr.com/65535/53232949297_8eb88c70b6_c_d.jpg",
+      image: getPhotoByTag("express", 0),
       features: [
         {
           icon: <Photo className="w-5 h-5" />,
@@ -96,8 +103,7 @@ export default async function PricingPage() {
         latestPricing?.experience_price,
         defaultPricing.experience,
       ),
-      image:
-        "https://live.staticflickr.com/65535/54154502487_981fb48243_c_d.jpg",
+      image: getPhotoByTag("experience", 1),
       features: [
         {
           icon: <Photo className="w-5 h-5" />,
@@ -124,8 +130,7 @@ export default async function PricingPage() {
     {
       name: t("deluxe_experience"),
       price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
-      image:
-        "https://live.staticflickr.com/65535/53307099860_93b77dd6dc_k_d.jpg",
+      image: getPhotoByTag("deluxe", 2),
       features: [
         {
           icon: <Photo className="w-5 h-5" />,

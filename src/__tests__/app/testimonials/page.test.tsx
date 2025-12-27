@@ -3,6 +3,12 @@ import TestimonialsPage from "@/app/testimonials/page";
 import { getTestimonials, Testimonial } from "@/lib/testimonials";
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";
 
+// Mock the database service to avoid Supabase ESM issues
+jest.mock("@/services/database", () => ({
+  __esModule: true,
+  supabase: {}
+}));
+
 // Mock the testimonials data
 jest.mock("@/lib/testimonials", () => {
   const originalModule = jest.requireActual("@/lib/testimonials");
@@ -26,9 +32,9 @@ jest.mock("@/app/testimonials/TestimonialsCTA", () => ({
 jest.mock("@/components/TestimonialCard", () => ({
   __esModule: true,
   default: ({
-              testimonial,
-              index
-            }: {
+    testimonial,
+    index
+  }: {
     testimonial: Testimonial;
     index: number;
   }) => (
@@ -55,6 +61,13 @@ jest.mock("next-intl/server", () => ({
       return translations[key] || key;
     })
   )
+}));
+
+jest.mock("@/services/storage/photos", () => ({
+  getPhotosFromStorage: jest.fn().mockResolvedValue([{
+    urlLarge: "https://example.com/mock-hero.jpg",
+    id: 123
+  }])
 }));
 
 describe("TestimonialsPage", () => {

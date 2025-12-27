@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import models, { Model } from "@/data/models";
+import models from "@/data/models";
 import { Metadata } from "next";
-import { createFlickr } from "flickr-sdk";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Photo } from "@/types/photos";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -16,37 +15,13 @@ export const metadata: Metadata = {
   twitter: { title: "Models" },
 };
 
-const batchModels = (models: Model[], batchSize: number) => {
-  const batches = [];
-  for (let i = 0; i < models.length; i += batchSize) {
-    batches.push(models.slice(i, i + batchSize));
-  }
-  return batches;
-};
-
 const fetchPhotos = async (): Promise<Photo[]> => {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const modelBatches = batchModels(models, 20);
-  const allPhotos: Photo[] = [];
-
-  for (const batch of modelBatches) {
-    try {
-      const res = await getFlickrPhotos(
-        flickr,
-        batch.map((style) => style.tag.replace("-", "")).join(", "),
-        100,
-        false,
-        true
-      );
-      if (res.success && res.photos != null) {
-        allPhotos.push(...res.photos);
-      }
-    } catch (error) {
-      console.error("Error fetching Flickr photos:", error);
-    }
+  try {
+    return await getPhotosFromStorage("models", 200) || [];
+  } catch (error) {
+    console.error("Error fetching photos from storage:", error);
+    return [];
   }
-
-  return allPhotos;
 };
 
 export default async function ModelIndexPage() {

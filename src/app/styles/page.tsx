@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Dancing_Script, Playfair_Display } from "next/font/google";
 import { styles } from "@/data/styles";
-import { createFlickr } from "flickr-sdk";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -16,14 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PhotographyStylesPage() {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  const res = await getFlickrPhotos(
-    flickr,
-    styles.map((style) => style.tag.replace("-", "")).join(", "),
-    500,
-    false,
-    true,
-  );
+  const res = await getPhotosFromStorage("styles", 500);
   const t = await getTranslations("styles-index");
 
   const photoStyles: Array<{
@@ -33,7 +25,7 @@ export default async function PhotographyStylesPage() {
   }> = styles.map((style) => ({
     name: style.tag.replace("-", " "),
     image:
-      res.photos?.filter((photo) =>
+      res?.filter((photo) =>
         photo.tags.split(" ").includes(style.tag.replace("-", "")),
       )[0]?.urlLarge ?? "",
     link: `styles/${style.name}`,

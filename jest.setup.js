@@ -45,3 +45,16 @@ jest.mock("chalk", () => {
 });
 
 // Create any other global mocks here
+
+// Polyfill TextEncoder/TextDecoder for Node environments (needed by @vercel/blob)
+const { TextEncoder, TextDecoder } = require("util");
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
+// Mock @upstash/redis to avoid ESM issues with uncrypto
+jest.mock("@upstash/redis", () => ({
+  Redis: jest.fn().mockImplementation(() => ({
+    get: jest.fn(),
+    set: jest.fn(),
+  })),
+}));

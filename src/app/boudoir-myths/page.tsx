@@ -5,8 +5,7 @@ import MythsList from "./MythsList";
 import TruthSection from "./TruthSection";
 import MythsCTA from "./MythsCTA";
 import { Article, FAQPage, WithContext } from "schema-dts";
-import { getFlickrPhotos } from "@/services/flickr/flickr";
-import { createFlickr } from "flickr-sdk";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 
 export const metadata: Metadata = {
   title: "5 Common Boudoir Photography Myths Debunked",
@@ -119,13 +118,14 @@ const faqStructuredData: WithContext<FAQPage> = {
   ]
 };
 
-async function fetchFlickrPhotos() {
-  const { flickr } = createFlickr(process.env.FLICKR_API_KEY!);
-  return await getFlickrPhotos(flickr, "boudoir", 6);
+async function fetchPhotos() {
+  return await getPhotosFromStorage("boudoir", 6);
 }
 
 export default async function BoudoirMythsPage() {
-  const photos = await fetchFlickrPhotos();
+  const photos = await fetchPhotos();
+
+  if (!photos) return null;
 
   return (
     <>
@@ -138,12 +138,12 @@ export default async function BoudoirMythsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
 
-        <div className="min-h-screen bg-cream-tan-50">
-          {photos.photos && photos.photos.length > 5 && (
-            <MythsHero heroImage={photos.photos[5]} />
-          )}
+      <div className="min-h-screen bg-cream-tan-50">
+        {photos && photos.length > 5 && (
+          <MythsHero heroImage={photos[5]} />
+        )}
         <MythsIntro />
-        <MythsList photos={photos.photos!} />
+        <MythsList photos={photos} />
         <TruthSection />
         <MythsCTA />
       </div>

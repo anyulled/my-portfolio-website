@@ -1,4 +1,4 @@
-import { listHomepagePhotos } from "@/services/storage/homepage";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Metadata } from "next";
 import { Photo } from "@/types/photos";
 import BoudoirContent from "@/components/BoudoirContent";
@@ -21,7 +21,7 @@ function getRandomElements(arr: Photo[], num: number) {
 }
 
 export default async function BoudoirStylePage() {
-  const photos = await listHomepagePhotos(undefined, "boudoir/");
+  const photos = await getPhotosFromStorage("boudoir/");
   const randomPhotos = getRandomElements(photos ?? [], 10);
   await getTranslations("what_is_boudoir");
 

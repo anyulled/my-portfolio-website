@@ -11,34 +11,14 @@ if (typeof window !== "undefined") {
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
-const images = [
-  {
-    image: "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg",
-    position: "left top",
-  },
-  {
-    image: "https://live.staticflickr.com/65535/53564630658_b2aeab68f2_h.jpg",
-    position: "37% top",
-  },
-  {
-    image: "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
-    position: "25% top",
-  },
-  {
-    image: "https://live.staticflickr.com/65535/53923428207_dc41871f93_h.jpg",
-    position: "25% top",
-  },
-  {
-    image: "https://live.staticflickr.com/65535/53564630648_06aa8a167d_h.jpg",
-    position: "37% top",
-  },
-  {
-    image: "https://live.staticflickr.com/65535/53963952034_7372534fc0_h.jpg",
-    position: "75% top",
-  },
-];
+interface HeroProps {
+  images: {
+    image: string;
+    position: string;
+  }[];
+}
 
-export default function Hero() {
+export default function Hero({ images }: HeroProps) {
   const t = useTranslations("home");
   const [mounted, setMounted] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
@@ -52,7 +32,7 @@ export default function Hero() {
 
   const randomImage = React.useMemo(() => {
     return images[Math.floor(Math.random() * images.length)];
-  }, []);
+  }, [images]);
 
   useGSAP(() => {
     if (mounted) {

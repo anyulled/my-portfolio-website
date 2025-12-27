@@ -26,10 +26,12 @@ describe("Mailer Service", () => {
       EMAIL_USER: "test@example.com",
       EMAIL_PASS: "password123"
     };
+    jest.spyOn(console, "error").mockImplementation(() => { });
   });
 
   afterEach(() => {
     process.env = originalEnv;
+    jest.restoreAllMocks();
   });
 
   describe("sendEMail", () => {

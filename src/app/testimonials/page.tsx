@@ -1,14 +1,15 @@
-import {Metadata} from "next";
-import {getTestimonials, Testimonial} from "@/lib/testimonials";
+import { Metadata } from "next";
+import { getTestimonials, Testimonial } from "@/lib/testimonials";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialCard from "@/components/TestimonialCard";
-import {Aref_Ruqaa} from "next/font/google";
-import {getTranslations} from "next-intl/server";
-import {WebPage, WithContext} from "schema-dts";
+import { Aref_Ruqaa } from "next/font/google";
+import { getTranslations } from "next-intl/server";
+import { WebPage, WithContext } from "schema-dts";
 
 export const metadata: Metadata = {
-    title: "Client Testimonials",
+  title: "Client Testimonials",
   description:
     "Read authentic testimonials from our boudoir photography clients. Discover how our empowering sessions boost confidence and celebrate feminine beauty.",
   keywords:
@@ -62,6 +63,9 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
 export default async function TestimonialsPage() {
   const testimonials: Testimonial[] = await getTestimonials();
+  const heroPhotos = await getPhotosFromStorage("hero");
+  const heroImage = heroPhotos?.[0]?.urlLarge || "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg";
+
   const t = await getTranslations("testimonials");
 
   const featuredTestimonials = testimonials.filter((t) => t.featured);
@@ -74,7 +78,7 @@ export default async function TestimonialsPage() {
       />
 
       <div className="min-h-screen bg-mocha-mousse-50">
-        <TestimonialsHero />
+        <TestimonialsHero image={heroImage} />
 
         <section className="max-w-7xl mx-auto px-4 py-16">
           <div className="text-center mb-12">

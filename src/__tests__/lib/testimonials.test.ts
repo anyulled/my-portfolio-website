@@ -25,10 +25,9 @@ jest.mock("@/lib/testimonials", () => {
   ];
 
   const getTestimonials = jest.fn().mockResolvedValue(mockTestimonials);
-  const cacheMock = jest.fn((fn) => fn);
 
   return {
-    getTestimonials: cacheMock(async () => getTestimonials()),
+    getTestimonials,
     Testimonial: {}
   };
 });

@@ -1,4 +1,4 @@
-import { PhotoFlickr } from "@/services/flickr/flickr.types";
+import { Photo } from "@/types/photos";
 
 export const commonBeforeEach = (): void => {
   jest.clearAllMocks();
@@ -48,48 +48,42 @@ export const commonBeforeEach = (): void => {
   });
 };
 
-export const mockPhotoFlickr: PhotoFlickr[] = [
+export const mockPhotos: Photo[] = [
   {
     id: 123,
     title: "Test Photo",
-    description: { _content: "Test Description" },
-    datetaken: "2023-01-01 12:00:00",
-    dateupload: "1672531200",
+    description: "Test Description",
+    dateTaken: new Date("2023-01-01T12:00:00Z"),
+    dateUpload: new Date(1672531200 * 1000),
     tags: "test",
-    views: "100",
-    url_s: "http://example.com/small.jpg",
-    url_m: "http://example.com/medium.jpg",
-    url_n: "http://example.com/normal.jpg",
-    url_l: "http://example.com/large.jpg",
-    url_o: "http://example.com/original.jpg",
-    url_t: "http://example.com/thumbnail.jpg",
-    url_z: "http://example.com/zoom.jpg",
-    url_c: "http://example.com/crop.jpg",
-    width_s: "240",
-    width_m: "500",
-    width_n: "320",
-    width_l: "1024",
-    width_o: "2048",
-    width_t: "100",
-    width_z: "640",
-    width_c: "800",
-    height_s: "180",
-    height_m: "375",
-    height_n: "240",
-    height_l: "768",
-    height_o: "1536",
-    height_t: "75",
-    height_z: "480",
-    height_c: "600"
+    views: 100,
+    urlSmall: "http://example.com/small.jpg",
+    urlMedium: "http://example.com/medium.jpg",
+    urlNormal: "http://example.com/normal.jpg",
+    urlLarge: "http://example.com/large.jpg",
+    urlOriginal: "http://example.com/original.jpg",
+    urlThumbnail: "http://example.com/thumbnail.jpg",
+    urlZoom: "http://example.com/zoom.jpg",
+    urlCrop: "http://example.com/crop.jpg",
+    width: "1024",
+    height: "768",
+    srcSet: [
+      {
+        src: "http://example.com/large.jpg",
+        width: 1024,
+        height: 768,
+        title: "Test Photo"
+      }
+    ]
   }
 ];
 
 describe("Test Utilities", () => {
   describe("Mock Data", () => {
-    it("should provide mock Flickr photo data", () => {
-      expect(mockPhotoFlickr).toHaveLength(1);
-      expect(mockPhotoFlickr[0].id).toBe(123);
-      expect(mockPhotoFlickr[0].title).toBe("Test Photo");
+    it("should provide mock photo data", () => {
+      expect(mockPhotos).toHaveLength(1);
+      expect(mockPhotos[0].id).toBe(123);
+      expect(mockPhotos[0].title).toBe("Test Photo");
     });
   });
 });
