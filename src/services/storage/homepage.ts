@@ -1,8 +1,7 @@
-import {Storage} from "@google-cloud/storage";
-import {captureException} from "@sentry/nextjs";
+import { Storage } from "@google-cloud/storage";
+import { captureException } from "@sentry/nextjs";
 
-import type {Photo} from "@/types/photos";
-import {IsPublicResponse} from "@google-cloud/storage/build/cjs/src/file";
+import type { Photo } from "@/types/photos";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
 const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
@@ -18,11 +17,12 @@ export type StorageFileLike = {
         updated?: string;
     };
     publicUrl(): string;
-    getSignedUrl(config: { action: "read"; expires: number | string | Date }):
-        | Promise<SignedUrlResult>
-        | SignedUrlResult;
+    getSignedUrl(config: {
+        action: "read";
+        expires: number | string | Date;
+    }): Promise<SignedUrlResult> | SignedUrlResult;
     makePublic?(): Promise<void> | void;
-    isPublic(): Promise<IsPublicResponse>;
+    isPublic(): Promise<[boolean]>;
 };
 
 const sanitisePrivateKey = (key: string) => key.replace(/\\n/g, "\n");
@@ -96,7 +96,8 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
             error,
         );
 
-        if ( !await file.isPublic() && typeof file.makePublic === "function") {
+        const [isPublic] = await file.isPublic();
+        if (!isPublic && typeof file.makePublic === "function") {
             try {
                 await file.makePublic();
             } catch (makePublicError) {
@@ -175,13 +176,18 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
 
 export const listHomepagePhotos = async (
     storageClient?: StorageClient,
+    prefix?: string,
 ): Promise<Photo[] | null> => {
     const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
 
     try {
         const client = storageClient ?? createStorageClient();
         const bucket = client.bucket(bucketName);
-        const [files] = await bucket.getFiles({autoPaginate: false});
+        const options = {
+            autoPaginate: false,
+            ...(prefix && { prefix }),
+        };
+        const [files] = await bucket.getFiles(options);
 
         if (!files || files.length === 0) {
             return [];
