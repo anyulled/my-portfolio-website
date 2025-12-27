@@ -8,12 +8,7 @@ import { Suspense } from "react";
 import Loading from "@/app/loading";
 import { Separator } from "@/components/ui/separator";
 
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(useGSAP);
-}
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
@@ -28,16 +23,16 @@ export default async function HomePage() {
   const formattedHeroImages =
     heroPhotos.length > 0
       ? heroPhotos.map((p) => ({
-          image: p.urlLarge,
-          position: "center center", // Default position as GCS doesn't store position data yet
-        }))
+        image: p.urlLarge,
+        position: "center center", // Default position as GCS doesn't store position data yet
+      }))
       : [
-          {
-            image:
-              "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg", // Fallback if no images found
-            position: "left top",
-          },
-        ];
+        {
+          image:
+            "/images/DSC_7028.jpg", // Fallback if no images found
+          position: "left top",
+        },
+      ];
 
   if (!galleryPhotos || galleryPhotos.length === 0) {
     return (

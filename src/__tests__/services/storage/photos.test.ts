@@ -16,8 +16,8 @@ describe("Photos Storage Service", () => {
     id: 1,
     title: "Test Photo",
     urlMedium: "https://example.com/photo.jpg",
-    width: "800",
-    height: "600",
+    width: 800,
+    height: 600,
   };
 
   const mockFile = {

@@ -32,8 +32,8 @@ describe("Cache Service", () => {
       urlThumbnail: "http://example.com/thumbnail.jpg",
       urlZoom: "http://example.com/zoom.jpg",
       urlCrop: "http://example.com/crop.jpg",
-      width: "1024",
-      height: "768",
+      width: 1024,
+      height: 768,
       srcSet: [
         {
           src: "http://example.com/large.jpg",

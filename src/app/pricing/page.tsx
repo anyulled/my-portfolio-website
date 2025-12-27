@@ -13,7 +13,9 @@ import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
 import AnimatedPackages from "@/components/AnimatedPackages";
 import FadeInTitle from "@/components/FadeInTitle";
-import { getPricing } from "@/lib/pricing";
+import { Offer, WithContext } from "schema-dts";
+
+import { getPricing, PricingPackageRecord } from "@/lib/pricing";
 import { getPhotosFromStorage } from "@/services/storage/photos";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -59,24 +61,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function PricingPage() {
-  const t = await getTranslations("pricing");
-  const latestPricing = await getPricing();
-  const pricingPhotos = (await getPhotosFromStorage("pricing")) || [];
-
-  const getPhotoByTag = (tag: string, fallbackIndex: number) => {
-    return (
-      pricingPhotos.find((p) => p.tags.includes(tag))?.urlLarge ||
-      pricingPhotos[fallbackIndex]?.urlLarge ||
-      ""
-    );
-  };
-
-  const packages = [
+const getPackages = (
+  t: (key: string) => string,
+  latestPricing: PricingPackageRecord | null,
+  images: [string, string, string],
+) => [
     {
       name: t("boudoir_express"),
       price: formatPrice(latestPricing?.express_price, defaultPricing.express),
-      image: getPhotoByTag("express", 0),
+      image: images[0],
       features: [
         {
           icon: <Photo className="w-5 h-5" />,
@@ -102,11 +95,8 @@ export default async function PricingPage() {
     },
     {
       name: t("boudoir_experience"),
-      price: formatPrice(
-        latestPricing?.experience_price,
-        defaultPricing.experience,
-      ),
-      image: getPhotoByTag("experience", 1),
+      price: formatPrice(latestPricing?.experience_price, defaultPricing.experience),
+      image: images[1],
       features: [
         {
           icon: <Photo className="w-5 h-5" />,
@@ -133,7 +123,7 @@ export default async function PricingPage() {
     {
       name: t("deluxe_experience"),
       price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
-      image: getPhotoByTag("deluxe", 2),
+      image: images[2],
       features: [
         {
           icon: <Photo className="w-5 h-5" />,
@@ -163,6 +153,45 @@ export default async function PricingPage() {
       ],
     },
   ];
+
+export default async function PricingPage() {
+  const t = await getTranslations("pricing");
+  const latestPricing = await getPricing();
+  const pricingPhotos = (await getPhotosFromStorage("pricing")) || [];
+
+  // Shuffle photos to get random selection
+  const shuffledPhotos = [...pricingPhotos].sort(() => 0.5 - Math.random());
+
+  // Ensure we have at least 3 photos
+  const getPhotoUrl = (index: number) => {
+    if (shuffledPhotos.length === 0) return "";
+    return shuffledPhotos[index % shuffledPhotos.length]?.urlLarge || "";
+  };
+
+  const images: [string, string, string] = [
+    getPhotoUrl(0),
+    getPhotoUrl(1),
+    getPhotoUrl(2),
+  ];
+
+  const packages = getPackages(
+    t as unknown as (key: string) => string,
+    latestPricing,
+    images,
+  );
+
+  const structuredData: WithContext<Offer>[] = packages.map((pkg) => ({
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    name: pkg.name,
+    price: pkg.price.replace(" €", ""),
+    priceCurrency: "EUR",
+    image: pkg.image,
+    description: pkg.features.map((f) => f.text).join(", "),
+    availability: "https://schema.org/InStock",
+    url: "https://boudoir.barcelona/pricing",
+  }));
+
   return (
     <div className="min-h-screen pt-24">
       <div className="container mx-auto px-4 py-16">
@@ -233,6 +262,11 @@ export default async function PricingPage() {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
     </div>
+
   );
 }

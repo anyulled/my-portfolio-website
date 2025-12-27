@@ -117,8 +117,8 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const description = userMetadata.description ?? userMetadata.caption ?? "";
   const title = userMetadata.title ?? file.name;
   const tags = userMetadata.tags ?? "";
-  const width = userMetadata.width ?? "0";
-  const height = userMetadata.height ?? "0";
+  const width = parseNumber(userMetadata.width, 0);
+  const height = parseNumber(userMetadata.height, 0);
   const fallbackUrl = file.publicUrl();
 
   // Use user-provided date, or fallback to file update time
@@ -127,7 +127,7 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     new Date(0),
   );
 
-  // Prefer user-provided ID (e.g. from Flickr), fallback to parsing GCS ID/Name not recommended for stability but as last resort?
+  // Consider user-provided ID (e.g. from Flickr), fallback to parsing GCS ID/Name not recommended for stability but as last resort?
   // Actually the previous code was using resourceMetadata.id (GCS ID).
   // context: we populated GCS with metadata.id = flickr_id. so we MUST use userMetadata.id.
 
@@ -170,8 +170,8 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     srcSet: [
       {
         src: url,
-        width: parseNumber(width, 0),
-        height: parseNumber(height, 0),
+        width,
+        height,
         title,
         description,
       },

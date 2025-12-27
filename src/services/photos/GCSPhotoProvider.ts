@@ -230,7 +230,7 @@ export class GCSPhotoProvider implements PhotoProvider {
       description: "",
       dateTaken: dateUpload,
       dateUpload,
-      height: "0",
+      height: 0,
       title,
       urlCrop: url,
       urlLarge: url,
@@ -241,7 +241,7 @@ export class GCSPhotoProvider implements PhotoProvider {
       urlThumbnail: url,
       urlZoom: url,
       views: 0,
-      width: "0",
+      width: 0,
       tags: "",
       srcSet: [
         {

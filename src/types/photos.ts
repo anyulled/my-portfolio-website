@@ -11,7 +11,7 @@ export interface Photo {
   description: string;
   dateTaken: Date;
   dateUpload: Date;
-  height: string;
+  height: number;
   title: string;
   urlCrop: string;
   urlLarge: string;
@@ -22,7 +22,7 @@ export interface Photo {
   urlSmall: string;
   urlZoom: string;
   views: number;
-  width: string;
+  width: number;
   tags: string;
   srcSet: Array<PhotoSource>;
 }
