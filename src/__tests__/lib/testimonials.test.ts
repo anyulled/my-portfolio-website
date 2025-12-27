@@ -11,7 +11,7 @@ jest.mock("@/lib/testimonials", () => {
       rating: 4,
       content: "Test content 1",
       date: "2025-07-19",
-      featured: true
+      featured: true,
     },
     {
       id: "3",
@@ -20,7 +20,7 @@ jest.mock("@/lib/testimonials", () => {
       rating: 4,
       content: "Test content 2",
       date: "2024-02-05",
-      featured: false
+      featured: false,
     },
   ];
 
@@ -28,7 +28,7 @@ jest.mock("@/lib/testimonials", () => {
 
   return {
     getTestimonials,
-    Testimonial: {}
+    Testimonial: {},
   };
 });
 
@@ -47,7 +47,7 @@ describe("testimonials", () => {
         content: "Test content",
         date: new Date("2025-07-31"),
         featured: true,
-        image: "/test-image.jpg"
+        image: "/test-image.jpg",
       };
 
       expect(testimonial).toHaveProperty("id");

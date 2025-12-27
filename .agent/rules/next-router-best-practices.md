@@ -37,6 +37,6 @@ Data Fetching:
 Best Practices:
 
 - Colocate components with routes when specific
-- Use private folders (_folder) for internal organization
+- Use private folders (\_folder) for internal organization
 - Use route groups ((folder)) for layout organization without URL changes
 - Optimize metadata for SEO

@@ -17,7 +17,7 @@ export type Props = { params: Params };
 export const dynamic = "force-dynamic";
 
 export const generateMetadata = async ({
-  params
+  params,
 }: {
   params: Params;
 }): Promise<Metadata> => {
@@ -27,7 +27,7 @@ export const generateMetadata = async ({
     {
       url: `/models/${modelName}/opengraph-image`,
       height: 1200,
-      width: 630
+      width: 630,
     },
   ];
 
@@ -37,21 +37,21 @@ export const generateMetadata = async ({
     twitter: {
       title: title,
       description: description,
-      images: images
+      images: images,
     },
     openGraph: {
       ...openGraph,
       type: "article",
       title: title,
       description: description,
-      images: images
+      images: images,
     },
   });
 };
 
 const fetchPhotos = async (modelName: string) => {
   try {
-    return await getPhotosFromStorage(`models/${modelName}`, 100) || [];
+    return (await getPhotosFromStorage(`models/${modelName}`, 100)) || [];
   } catch (error) {
     console.error("Error fetching photos from storage:", error);
     return [];

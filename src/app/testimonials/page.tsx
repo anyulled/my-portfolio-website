@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         url: "https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg",
         width: 500,
         height: 333,
-        alt: "Andrea Cano Montull"
+        alt: "Andrea Cano Montull",
       },
     ],
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
       "Client Testimonials | Sensuelle Boudoir · Boudoir Photography in Barcelona",
     description:
       "Read authentic testimonials from our boudoir photography clients.",
-    images: ["https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg"]
+    images: ["https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg"],
   },
 };
 
@@ -54,7 +54,7 @@ const structuredData: WithContext<WebPage> = {
       ratingValue: "5",
       reviewCount: "50",
       bestRating: "5",
-      worstRating: "4"
+      worstRating: "4",
     },
   },
 };
@@ -64,7 +64,9 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 export default async function TestimonialsPage() {
   const testimonials: Testimonial[] = await getTestimonials();
   const heroPhotos = await getPhotosFromStorage("hero");
-  const heroImage = heroPhotos?.[0]?.urlLarge || "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg";
+  const heroImage =
+    heroPhotos?.[0]?.urlLarge ||
+    "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg";
 
   const t = await getTranslations("testimonials");
 

@@ -75,17 +75,15 @@ const createPhoto = (overrides: Partial<Photo> = {}): Photo => ({
   views: overrides.views ?? 10,
   width: overrides.width ?? "300",
   tags: overrides.tags ?? "tag1",
-  srcSet:
-    overrides.srcSet ??
-    [
-      {
-        src: "https://example.com/small.jpg",
-        width: 300,
-        height: 200,
-        title: "Title",
-        description: "desc",
-      },
-    ],
+  srcSet: overrides.srcSet ?? [
+    {
+      src: "https://example.com/small.jpg",
+      width: 300,
+      height: 200,
+      title: "Title",
+      description: "desc",
+    },
+  ],
 });
 
 const renderHomePage = async () => {
@@ -125,9 +123,7 @@ describe("HomePage", () => {
     await renderHomePage();
 
     expect(getPhotosFromStorageMock).toHaveBeenCalled();
-    expect(
-      screen.getByText(/unable to load gallery/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/unable to load gallery/i)).toBeInTheDocument();
   });
 
   it("shows an error message when the bucket is empty", async () => {
@@ -136,8 +132,6 @@ describe("HomePage", () => {
     await renderHomePage();
 
     expect(getPhotosFromStorageMock).toHaveBeenCalled();
-    expect(
-      screen.getByText(/unable to load gallery/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/unable to load gallery/i)).toBeInTheDocument();
   });
 });

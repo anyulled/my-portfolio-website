@@ -26,9 +26,9 @@ export const metadata: Metadata = {
         url: "/placeholder.svg?height=630&width=1200&text=Boudoir+Myths+Debunked",
         width: 1200,
         height: 630,
-        alt: "Boudoir Photography Myths Debunked"
-      }
-    ]
+        alt: "Boudoir Photography Myths Debunked",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -36,11 +36,11 @@ export const metadata: Metadata = {
     description:
       "Learn the truth about boudoir photography and debunk common misconceptions.",
     images: [
-      "/placeholder.svg?height=630&width=1200&text=Boudoir+Myths+Debunked"
-    ]
+      "/placeholder.svg?height=630&width=1200&text=Boudoir+Myths+Debunked",
+    ],
   },
   alternates: {
-    canonical: "https://boudoir.barcelona/boudoir-myths"
+    canonical: "https://boudoir.barcelona/boudoir-myths",
   },
   robots: {
     index: true,
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
       follow: true,
       "max-video-preview": -1,
       "max-image-preview": "large",
-      "max-snippet": -1
-    }
-  }
+      "max-snippet": -1,
+    },
+  },
 };
 
 const structuredData: WithContext<Article> = {
@@ -63,28 +63,28 @@ const structuredData: WithContext<Article> = {
     "Discover the truth about boudoir photography by debunking 5 common myths and misconceptions",
   author: {
     "@type": "Organization",
-    name: "Sensuelle Boudoir Photography"
+    name: "Sensuelle Boudoir Photography",
   },
   publisher: {
     "@type": "Organization",
     name: "Sensuelle Boudoir Photography",
     logo: {
       "@type": "ImageObject",
-      url: "https://boudoir.barcelona/logo.png"
-    }
+      url: "https://boudoir.barcelona/logo.png",
+    },
   },
   datePublished: "2025-08-15",
   dateModified: "2025-08-15",
   mainEntityOfPage: {
     "@type": "WebPage",
-    "@id": "https://boudoir.barcelona/boudoir-myths"
+    "@id": "https://boudoir.barcelona/boudoir-myths",
   },
   image: {
     "@type": "ImageObject",
     url: "/placeholder.svg?height=630&width=1200&text=Boudoir+Myths+Debunked",
     width: "1200",
-    height: "630"
-  }
+    height: "630",
+  },
 };
 
 const faqStructuredData: WithContext<FAQPage> = {
@@ -96,26 +96,26 @@ const faqStructuredData: WithContext<FAQPage> = {
       name: "Is boudoir photography only for young, thin women?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Absolutely not! Boudoir photography is for every woman, regardless of age, size, or body type. Every body is beautiful and deserves to be celebrated."
-      }
+        text: "Absolutely not! Boudoir photography is for every woman, regardless of age, size, or body type. Every body is beautiful and deserves to be celebrated.",
+      },
     },
     {
       "@type": "Question",
       name: "Is boudoir photography inappropriate or too revealing?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Boudoir photography is tasteful, artistic, and always respects your comfort level. You control how much or how little you reveal, and professional photographers ensure elegant, classy results."
-      }
+        text: "Boudoir photography is tasteful, artistic, and always respects your comfort level. You control how much or how little you reveal, and professional photographers ensure elegant, classy results.",
+      },
     },
     {
       "@type": "Question",
       name: "Do I need to be confident to do a boudoir shoot?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Not at all! Many clients start their session feeling nervous or self-conscious. The boudoir experience is designed to build confidence, not require it from the start."
-      }
-    }
-  ]
+        text: "Not at all! Many clients start their session feeling nervous or self-conscious. The boudoir experience is designed to build confidence, not require it from the start.",
+      },
+    },
+  ],
 };
 
 async function fetchPhotos() {
@@ -139,9 +139,7 @@ export default async function BoudoirMythsPage() {
       />
 
       <div className="min-h-screen bg-cream-tan-50">
-        {photos && photos.length > 5 && (
-          <MythsHero heroImage={photos[5]} />
-        )}
+        {photos && photos.length > 5 && <MythsHero heroImage={photos[5]} />}
         <MythsIntro />
         <MythsList photos={photos} />
         <TruthSection />

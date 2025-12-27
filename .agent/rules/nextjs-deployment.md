@@ -24,7 +24,7 @@ Vercel Deployment:
 
 Environment Variables:
 
-- Use NEXT_PUBLIC_ prefix for client vars
+- Use NEXT*PUBLIC* prefix for client vars
 - Store secrets in Vercel dashboard
 - Use .env.local for development
 - Never commit secrets to git

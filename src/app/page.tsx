@@ -17,22 +17,27 @@ if (typeof window !== "undefined") {
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
-  description: "Intimate, elegant boudoir photography in Barcelona. Empowering portraits with expert guidance, luxe styling, and a private experience. Book today.",
+  description:
+    "Intimate, elegant boudoir photography in Barcelona. Empowering portraits with expert guidance, luxe styling, and a private experience. Book today.",
 };
 
 export default async function HomePage() {
   const galleryPhotos = await getPhotosFromStorage("portfolio");
-  const heroPhotos = await getPhotosFromStorage("hero") || [];
+  const heroPhotos = (await getPhotosFromStorage("hero")) || [];
 
-  const formattedHeroImages = heroPhotos.length > 0 ? heroPhotos.map(p => ({
-    image: p.urlLarge,
-    position: "center center" // Default position as GCS doesn't store position data yet
-  })) : [
-    {
-      image: "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg", // Fallback if no images found
-      position: "left top"
-    }
-  ];
+  const formattedHeroImages =
+    heroPhotos.length > 0
+      ? heroPhotos.map((p) => ({
+          image: p.urlLarge,
+          position: "center center", // Default position as GCS doesn't store position data yet
+        }))
+      : [
+          {
+            image:
+              "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg", // Fallback if no images found
+            position: "left top",
+          },
+        ];
 
   if (!galleryPhotos || galleryPhotos.length === 0) {
     return (

@@ -39,12 +39,8 @@ interface GCSFile {
     timeCreated?: string;
   };
   publicUrl(): string;
-  getSignedUrl?(config: {
-    action: string;
-    expires: number;
-  }): Promise<[string]>;
+  getSignedUrl?(config: { action: string; expires: number }): Promise<[string]>;
 }
-
 
 /**
  * Extracts the photo ID from a filename.

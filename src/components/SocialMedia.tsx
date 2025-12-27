@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { SimpleIcon } from "simple-icons";
 import {
   siBluesky,
-
   siInstagram,
   siKeras,
   siThemodelsresource,

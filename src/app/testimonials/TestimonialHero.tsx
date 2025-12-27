@@ -69,9 +69,7 @@ export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
     >
       <div className="absolute inset-0 bg-mocha-mousse-300/80">
         <Image
-          src={
-            image
-          }
+          src={image}
           alt={"boudoir"}
           width={1920}
           height={800}

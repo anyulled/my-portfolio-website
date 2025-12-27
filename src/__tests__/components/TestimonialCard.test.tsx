@@ -9,8 +9,8 @@ jest.mock("gsap/ScrollTrigger", () => ({
   __esModule: true,
   default: "mocked-scroll-trigger",
   ScrollTrigger: {
-    getAll: jest.fn().mockReturnValue([{ kill: jest.fn() }])
-  }
+    getAll: jest.fn().mockReturnValue([{ kill: jest.fn() }]),
+  },
 }));
 jest.mock("gsap", () => {
   return {
@@ -20,7 +20,7 @@ jest.mock("gsap", () => {
       set: jest.fn(),
       to: jest.fn(),
       timeline: jest.fn(() => ({
-        to: jest.fn().mockReturnThis()
+        to: jest.fn().mockReturnThis(),
       })),
     },
     default: {
@@ -28,28 +28,28 @@ jest.mock("gsap", () => {
       set: jest.fn(),
       to: jest.fn(),
       timeline: jest.fn(() => ({
-        to: jest.fn().mockReturnThis()
+        to: jest.fn().mockReturnThis(),
       })),
     },
     registerPlugin: jest.fn(),
     set: jest.fn(),
     to: jest.fn(),
     timeline: jest.fn(() => ({
-      to: jest.fn().mockReturnThis()
+      to: jest.fn().mockReturnThis(),
     })),
   };
 });
 jest.mock("next-intl", () => ({
   useTranslations: jest.fn(
-    () => (key: string) => (key === "date" ? "en-US" : `translated_${key}`)
-  )
+    () => (key: string) => (key === "date" ? "en-US" : `translated_${key}`),
+  ),
 }));
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (
     props: JSX.IntrinsicAttributes &
       ClassAttributes<HTMLImageElement> &
-      ImgHTMLAttributes<HTMLImageElement>
+      ImgHTMLAttributes<HTMLImageElement>,
   ) => {
     return <img {...props} alt={props.alt || "test"} />;
   },
@@ -63,7 +63,7 @@ describe("TestimonialCard", () => {
     rating: 4,
     content: "This is a test testimonial content",
     date: "2025-07-31",
-    featured: true
+    featured: true,
   };
 
   beforeEach(() => {
@@ -79,7 +79,7 @@ describe("TestimonialCard", () => {
       height: 0,
       x: 0,
       y: 0,
-      toJSON: jest.fn()
+      toJSON: jest.fn(),
     }));
   });
 
@@ -94,7 +94,7 @@ describe("TestimonialCard", () => {
   it("renders the image when provided", () => {
     const testimonialWithImage = {
       ...mockTestimonial,
-      image: "/test-image.jpg"
+      image: "/test-image.jpg",
     };
 
     render(<TestimonialCard testimonial={testimonialWithImage} index={0} />);
@@ -121,8 +121,8 @@ describe("TestimonialCard", () => {
       {
         year: "numeric",
         month: "long",
-        day: "numeric"
-      }
+        day: "numeric",
+      },
     );
 
     expect(screen.getByText(formattedDate)).toBeInTheDocument();

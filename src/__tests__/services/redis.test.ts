@@ -1,8 +1,6 @@
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { Redis } from "@upstash/redis";
 
-
-
 // Mock the dependencies
 jest.mock("@upstash/redis", () => ({
   Redis: {

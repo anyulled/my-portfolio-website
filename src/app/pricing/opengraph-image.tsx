@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 /*eslint-disable @next/next/no-img-element */
 
-
 export const contentType = "image/png";
 export const alt = "Sensuelle Boudoir";
 export const size = {
@@ -33,7 +32,7 @@ async function fetchAndEncodeImage(url: string) {
     return `data:${contentType};base64,${base64}`;
   } catch (error) {
     console.error(`Error fetching image from ${url}:`, error);
-    // Don't throw, return null so Promise.allSettled or similar can handle it, 
+    // Don't throw, return null so Promise.allSettled or similar can handle it,
     // or just return null to filter out.
     return null;
   }
@@ -42,13 +41,13 @@ async function fetchAndEncodeImage(url: string) {
 export default async function PricingImage() {
   try {
     console.log("Fetching Images");
-    const photos = await getPhotosFromStorage("pricing") || [];
+    const photos = (await getPhotosFromStorage("pricing")) || [];
 
     // Use first 3 photos or fallback
-    const pricingImages = photos.slice(0, 3).map(p => p.urlMedium);
+    const pricingImages = photos.slice(0, 3).map((p) => p.urlMedium);
 
     const validImages = await Promise.all(
-      pricingImages.map(url => fetchAndEncodeImage(url))
+      pricingImages.map((url) => fetchAndEncodeImage(url)),
     );
 
     const images = validImages.filter((img): img is string => img !== null);

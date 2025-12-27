@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const fetchPhotos = async (): Promise<Photo[]> => {
   try {
-    return await getPhotosFromStorage("models", 200) || [];
+    return (await getPhotosFromStorage("models", 200)) || [];
   } catch (error) {
     console.error("Error fetching photos from storage:", error);
     return [];

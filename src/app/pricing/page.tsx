@@ -6,7 +6,7 @@ import {
   Image as Photo,
   Shirt,
   UserRound,
-  Video
+  Video,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Metadata } from "next";
@@ -43,7 +43,8 @@ const formatPrice = (
 
 export const metadata: Metadata = {
   title: " Pricing ",
-  description: "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
+  description:
+    "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
   twitter: {
     title: "Pricing",
     description: "Discover our pricing and book your experience today!",
@@ -61,12 +62,14 @@ export const metadata: Metadata = {
 export default async function PricingPage() {
   const t = await getTranslations("pricing");
   const latestPricing = await getPricing();
-  const pricingPhotos = await getPhotosFromStorage("pricing") || [];
+  const pricingPhotos = (await getPhotosFromStorage("pricing")) || [];
 
   const getPhotoByTag = (tag: string, fallbackIndex: number) => {
-    return pricingPhotos.find(p => p.tags.includes(tag))?.urlLarge ||
+    return (
+      pricingPhotos.find((p) => p.tags.includes(tag))?.urlLarge ||
       pricingPhotos[fallbackIndex]?.urlLarge ||
-      "";
+      ""
+    );
   };
 
   const packages = [
@@ -188,8 +191,7 @@ export default async function PricingPage() {
               {t("general_conditions")}
             </h2>
           </FadeInTitle>
-          <div
-            className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg p-6">
+          <div className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg p-6">
             <ul className="space-y-4">
               <li className="flex items-start">
                 <span className="mr-2 text-mocha-mousse-500 mt-1">
