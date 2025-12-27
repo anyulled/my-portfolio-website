@@ -26,9 +26,9 @@ interface AnimatedPackagesProps {
 }
 
 export default function AnimatedPackages({
-                                           packages,
-                                           bookNowText
-                                         }: Readonly<AnimatedPackagesProps>) {
+  packages,
+  bookNowText,
+}: Readonly<AnimatedPackagesProps>) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -39,7 +39,7 @@ export default function AnimatedPackages({
         packageElements,
         {
           opacity: 0,
-          y: 50
+          y: 50,
         },
         {
           opacity: 1,
@@ -47,11 +47,11 @@ export default function AnimatedPackages({
           duration: 0.8,
           stagger: 0.2,
           ease: "power2.out",
-          delay: 0.5
-        }
+          delay: 0.5,
+        },
       );
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   return (
@@ -69,8 +69,7 @@ export default function AnimatedPackages({
               height={400}
               className="object-cover w-full h-full"
             />
-            <div
-              className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
             <div className="absolute bottom-0 left-0 right-0 p-6">
               <h2 className="text-2xl md:text-3xl mb-2">{pkg.name}</h2>
               <p className="text-4xl md:text-5xl text-mocha-mousse-200">
@@ -95,13 +94,11 @@ export default function AnimatedPackages({
 
             <Dialog>
               <DialogTrigger asChild>
-                <Button
-                  className="w-full bg-mocha-mousse-600 hover:bg-mocha-mousse-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                <Button className="w-full bg-mocha-mousse-600 hover:bg-mocha-mousse-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                   {bookNowText}
                 </Button>
               </DialogTrigger>
-              <DialogContent
-                className="sm:max-w-[425px] bg-neutral-800 text-neutral-100">
+              <DialogContent className="sm:max-w-[425px] bg-neutral-800 text-neutral-100">
                 <ContactForm />
               </DialogContent>
             </Dialog>

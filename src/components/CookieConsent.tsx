@@ -31,7 +31,7 @@ export default function CookieConsent() {
     <div
       className={clsx(
         "fixed bottom-0 left-0 right-0 p-2 dark:bg-mocha-mousse-800 bg-mocha-mousse-100 bg-opacity-75 backdrop-blur-sm z-50 text-sm transition-all duration-300",
-        !showConsent && "hidden"
+        !showConsent && "hidden",
       )}
     >
       <div className="container mx-auto flex justify-between items-center">

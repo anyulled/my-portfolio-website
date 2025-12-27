@@ -10,11 +10,12 @@
     "prepare": "husky",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
     "start": "next start",
-    "test": "jest",
+    "test": "jest --config jest.config.ts",
     "test:watch": "jest --watch",
     "supabase:migrate": "supabase migration up"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.13.0",
     "@gsap/react": "^2.1.2",
     "@google-cloud/storage": "^7.13.0",
     "@hookform/resolvers": "^5.0.1",
@@ -38,18 +39,17 @@
     "chalk": "^5.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "flickr-sdk": "^7.0.0-beta.7",
     "framer-motion": "^12.6.2",
     "gsap": "^3.13.0",
     "lenis": "latest",
     "lucide-react": "^0.516.0",
     "mixpanel-browser": "^2.71.0",
-    "next": "15.5.9",
+    "next": "^15.5.9",
     "next-intl": "^3.26.3",
     "next-themes": "^0.4.3",
-    "nodemailer": "^7.0.7",
-    "react": "^19",
-    "react-dom": "^19",
+    "nodemailer": "^7.0.11",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
     "react-hook-form": "^7.55.0",
     "react-photo-album": "^3.0.2",
     "react-simple-icons": "^1.0.0-beta.5",
@@ -70,8 +70,8 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^22",
     "@types/nodemailer": "^6.4.17",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
     "@vercel/toolbar": "^0.1.24",
     "babel-jest": "^30.0.5",
     "eslint": "^8",
@@ -81,7 +81,7 @@
     "jest-environment-jsdom": "^30.0.5",
     "postcss": "^8",
     "prettier": "^3.5.0",
-    "supabase": "^2.53.6",
+    "supabase": "^2.67.1",
     "tailwindcss": "^3.4.14",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
@@ -91,5 +91,8 @@
     "**/*.{js,ts,jsx,tsx,md,json,css,scss,html}": [
       "prettier --write"
     ]
+  },
+  "jest": {
+    "modulePath": "./jest.config.ts"
   }
 }

@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function renderNextImage(
   { alt = "", title, sizes }: RenderImageProps,
-  { photo, width, height }: RenderImageContext
+  { photo, width, height }: RenderImageContext,
 ) {
   return (
     <div

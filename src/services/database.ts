@@ -1,31 +1,30 @@
-import {createServerClient} from "@supabase/ssr";
-import {cookies} from "next/headers";
-import {Testimonial} from "@/lib/testimonials";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { Testimonial } from "@/lib/testimonials";
 import chalk from "chalk";
-import {
-    ReadonlyRequestCookies
-} from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-const createDbClient = (cookies: ReadonlyRequestCookies) => createServerClient(
+const createDbClient = (cookies: ReadonlyRequestCookies) =>
+  createServerClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
     {
-        cookies: {
-            getAll() {
-                return cookies.getAll();
-            },
-            setAll(cookie) {
-                try {
-                    for (const {name, value, options} of cookie) {
-                        cookies.set(name, value, options);
-                    }
-                } catch {
-                    console.error("Error setting cookies");
-                }
-            },
+      cookies: {
+        getAll() {
+          return cookies.getAll();
         },
+        setAll(cookie) {
+          try {
+            for (const { name, value, options } of cookie) {
+              cookies.set(name, value, options);
+            }
+          } catch {
+            console.error("Error setting cookies");
+          }
+        },
+      },
     },
-);
+  );
 
 export const Testimonials = async (): Promise<Array<Testimonial>> => {
   const cookieStore = await cookies();
@@ -39,12 +38,12 @@ export const Testimonials = async (): Promise<Array<Testimonial>> => {
 
   if (error) {
     console.error(
-      chalk.red("[ supabase ] Error retrieving testimonials:", error.message)
+      chalk.red("[ supabase ] Error retrieving testimonials:", error.message),
     );
     return [];
   }
   console.log(
-    chalk.green(`[ supabase ] retrieved ${testimonials?.length} testimonies`)
+    chalk.green(`[ supabase ] retrieved ${testimonials?.length} testimonies`),
   );
 
   return testimonials || [];
@@ -64,37 +63,41 @@ export type PricingPackageInsert = {
   deluxe_price: number | null;
 };
 
-export const getLatestPricing = async (): Promise<PricingPackageRecord | null> => {
-  const cookieStore = await cookies();
-  const supabase = createDbClient(cookieStore);
+export const getLatestPricing =
+  async (): Promise<PricingPackageRecord | null> => {
+    const cookieStore = await cookies();
+    const supabase = createDbClient(cookieStore);
 
-  console.log(chalk.gray("[ supabase ] retrieving latest pricing from database"));
-  const { data, error } = await supabase
-    .from("pricing_packages")
-    .select(
-      "id, inserted_at, express_price, experience_price, deluxe_price"
-    )
-    .order("inserted_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    console.error(
-      chalk.red("[ supabase ] Error retrieving latest pricing:", error.message)
+    console.log(
+      chalk.gray("[ supabase ] retrieving latest pricing from database"),
     );
-    return null;
-  }
+    const { data, error } = await supabase
+      .from("pricing_packages")
+      .select("id, inserted_at, express_price, experience_price, deluxe_price")
+      .order("inserted_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-  if (!data) {
-    console.log(chalk.yellow("[ supabase ] No pricing packages found"));
-    return null;
-  }
+    if (error) {
+      console.error(
+        chalk.red(
+          "[ supabase ] Error retrieving latest pricing:",
+          error.message,
+        ),
+      );
+      return null;
+    }
 
-  return data;
-};
+    if (!data) {
+      console.log(chalk.yellow("[ supabase ] No pricing packages found"));
+      return null;
+    }
+
+    return data;
+  };
 
 export const insertPricing = async (
-  prices: PricingPackageInsert
+  prices: PricingPackageInsert,
 ): Promise<PricingPackageRecord | null> => {
   const cookieStore = await cookies();
   const supabase = createDbClient(cookieStore);
@@ -108,7 +111,10 @@ export const insertPricing = async (
 
   if (error) {
     console.error(
-      chalk.red("[ supabase ] Error inserting pricing packages:", error.message)
+      chalk.red(
+        "[ supabase ] Error inserting pricing packages:",
+        error.message,
+      ),
     );
     return null;
   }

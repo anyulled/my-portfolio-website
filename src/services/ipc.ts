@@ -39,7 +39,7 @@ export const fetchLatestIpc = async (): Promise<number> => {
   const { Valor } = latestRecord ?? {};
 
   if (typeof Valor !== "number" || !Number.isFinite(Valor)) {
-      throw new TypeError("IPC response does not include a numeric Valor value");
+    throw new TypeError("IPC response does not include a numeric Valor value");
   }
 
   return Valor;

@@ -14,7 +14,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger
+  SheetTrigger,
 } from "@/components/ui/sheet";
 
 import { NavLinks } from "@/components/NavLinks";
@@ -28,7 +28,7 @@ const navLinks = [
   { name: "menu_what_is_boudoir", href: "/what-is-boudoir" },
   { name: "menu_about", href: "/about" },
   { name: "menu_testimonials", href: "/testimonials" },
-  { name: "menu_myths", href: "/boudoir-myths" }
+  { name: "menu_myths", href: "/boudoir-myths" },
 ];
 
 export default function NavBar() {
@@ -79,7 +79,7 @@ export default function NavBar() {
     <nav
       className={clsx(
         "fixed w-full z-50 transition-all duration-300",
-        scrollY > 50 && "bg-opacity-50 backdrop-blur-md"
+        scrollY > 50 && "bg-opacity-50 backdrop-blur-md",
       )}
     >
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">

@@ -46,7 +46,7 @@ const config: Config = {
           600: "#A98162",
           700: "#8B6848",
           800: "#6D4F32",
-          900: "#4F371E"
+          900: "#4F371E",
         },
         "chocolate-martini": {
           default: "#5C4B51", // Base color
@@ -59,7 +59,7 @@ const config: Config = {
           600: "#5C4B51", // Original
           700: "#4A3B40",
           800: "#372C30",
-          900: "#251D1F"
+          900: "#251D1F",
         },
         chanterelle: {
           default: "#9F8570",
@@ -72,7 +72,7 @@ const config: Config = {
           600: "#866D59",
           700: "#6D5645",
           800: "#544232",
-          900: "#3B2D21"
+          900: "#3B2D21",
         },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

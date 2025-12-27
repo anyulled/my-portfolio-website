@@ -28,7 +28,7 @@ export default function MythsCTA() {
     // Initial states
     gsap.set([content, actions], {
       opacity: 0,
-      y: 50
+      y: 50,
     });
 
     // Animation on scroll
@@ -37,24 +37,24 @@ export default function MythsCTA() {
         trigger: cta,
         start: "top 70%",
         end: "bottom 30%",
-        toggleActions: "play none none reverse"
-      }
+        toggleActions: "play none none reverse",
+      },
     });
 
     tl.to(content, {
       opacity: 1,
       y: 0,
       duration: 0.8,
-      ease: "power2.out"
+      ease: "power2.out",
     }).to(
       actions,
       {
         opacity: 1,
         y: 0,
         duration: 0.6,
-        ease: "power2.out"
+        ease: "power2.out",
       },
-      "-=0.4"
+      "-=0.4",
     );
 
     // Floating animation for action cards
@@ -64,21 +64,21 @@ export default function MythsCTA() {
       ease: "power2.inOut",
       stagger: 0.3,
       repeat: -1,
-      yoyo: true
+      yoyo: true,
     });
   }, []);
 
   return (
-      <section ref={ctaRef} className="py-20 bg-cream-tan-200">
+    <section ref={ctaRef} className="py-20 bg-cream-tan-200">
       <div className="max-w-6xl mx-auto px-4">
         <div ref={contentRef} className="text-center mb-16">
           <h2
-              className={`${arefRuqaa.className} text-3xl md:text-5xl font-serif dark:text-chocolate-martini-800 text-chocolate-martini-800 mb-6`}
+            className={`${arefRuqaa.className} text-3xl md:text-5xl font-serif dark:text-chocolate-martini-800 text-chocolate-martini-800 mb-6`}
           >
             {t("heading")}
           </h2>
-            <p className="text-xl dark:text-chanterelle-400 text-chanterelle-400 max-w-4xl mx-auto mb-8">
-              {t("paragraph")}
+          <p className="text-xl dark:text-chanterelle-400 text-chanterelle-400 max-w-4xl mx-auto mb-8">
+            {t("paragraph")}
           </p>
           <Button
             size="lg"
@@ -93,64 +93,43 @@ export default function MythsCTA() {
           ref={actionsRef}
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          <div
-            className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-            <MessageCircle
-              className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
-            <h3
-              className="text-lg font-semibold text-chocolate-martini-default mb-2">
+          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
+            <MessageCircle className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
               {t("cards.0.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">
-              {t("cards.0.text")}
-            </p>
+            <p className="text-chanterelle-700 text-sm">{t("cards.0.text")}</p>
           </div>
 
-          <div
-            className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
+          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
             <BookOpen className="h-12 w-12 text-chanterelle- mx-auto mb-4" />
-            <h3
-              className="text-lg font-semibold text-chocolate-martini-default mb-2">
+            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
               {t("cards.1.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">
-              {t("cards.1.text")}
-            </p>
+            <p className="text-chanterelle-700 text-sm">{t("cards.1.text")}</p>
           </div>
 
-          <div
-            className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-            <Camera
-              className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
-            <h3
-              className="text-lg font-semibold text-chocolate-martini-default mb-2">
+          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
+            <Camera className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
               {t("cards.2.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">
-              {t("cards.2.text")}
-            </p>
+            <p className="text-chanterelle-700 text-sm">{t("cards.2.text")}</p>
           </div>
 
-          <div
-            className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-            <div
-              className="h-12 w-12 bg-chanterelle-default rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
+            <div className="h-12 w-12 bg-chanterelle-default rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-white font-bold text-xl">★</span>
             </div>
-            <h3
-              className="text-lg font-semibold text-chocolate-martini-default mb-2">
+            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
               {t("cards.3.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">
-              {t("cards.3.text")}
-            </p>
+            <p className="text-chanterelle-700 text-sm">{t("cards.3.text")}</p>
           </div>
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-chanterelle-600 text-sm">
-            {t("footer")}
-          </p>
+          <p className="text-chanterelle-600 text-sm">{t("footer")}</p>
         </div>
       </div>
     </section>

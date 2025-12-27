@@ -62,8 +62,8 @@ export default function Gallery({
                 image: (props, context) =>
                   renderFadeInNextImage(
                     { ...props, index: context.index },
-                    context
-                  )
+                    context,
+                  ),
               }}
               photos={galleryPhotos}
               defaultContainerWidth={1200}

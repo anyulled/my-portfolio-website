@@ -1,104 +1,107 @@
-
-import {
-    getRedisCachedData,
-    setRedisCachedData
-} from "@/services/redis";
+import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { Redis } from "@upstash/redis";
 
-const mockRedis = {
-    get: jest.fn(),
-    set: jest.fn()
-};
+
 
 // Mock the dependencies
 jest.mock("@upstash/redis", () => ({
-    Redis: {
-        fromEnv: jest.fn()
-    }
+  Redis: {
+    fromEnv: jest.fn(),
+  },
 }));
 
 describe("Redis Service", () => {
-    let mockRedis: { get: jest.Mock; set: jest.Mock };
+  let mockRedis: { get: jest.Mock; set: jest.Mock };
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-        mockRedis = {
-            get: jest.fn(),
-            set: jest.fn()
-        };
-        (Redis.fromEnv as jest.Mock).mockReturnValue(mockRedis);
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockRedis = {
+      get: jest.fn(),
+      set: jest.fn(),
+    };
+    (Redis.fromEnv as jest.Mock).mockReturnValue(mockRedis);
 
-        process.env.UPSTASH_REDIS_REST_URL = "https://test-url.upstash.io";
-        process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
+    process.env.UPSTASH_REDIS_REST_URL = "https://test-url.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
+  });
+
+  const mockData = { id: 1, title: "Test Photo" };
+  const mockKey = "test-key";
+  // Based on previous error, sanitizeKey("test-key") -> "testkey"
+  const expectedSanitizedKey = "testkey";
+
+  describe("getRedisCachedData", () => {
+    it("should return null if Redis client is not initialized", async () => {
+      // Temporarily unset env vars
+      const originalUrl = process.env.UPSTASH_REDIS_REST_URL;
+      delete process.env.UPSTASH_REDIS_REST_URL;
+
+      // Mock fromEnv to error when env vars missing (simulating lib behavior or just forcing error)
+      (Redis.fromEnv as jest.Mock).mockImplementationOnce(() => {
+        throw new Error("Redis env missing");
+      });
+
+      // We expect the service to catch the error and return null
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      const result = await getRedisCachedData(mockKey);
+      expect(result).toBeNull();
+
+      consoleSpy.mockRestore();
+      process.env.UPSTASH_REDIS_REST_URL = originalUrl;
     });
 
-    const mockData = { id: 1, title: "Test Photo" };
-    const mockKey = "test-key";
-    // Based on previous error, sanitizeKey("test-key") -> "testkey"
-    const expectedSanitizedKey = "testkey";
+    it("should return data when found in Redis", async () => {
+      mockRedis.get.mockResolvedValue(mockData);
 
-    describe("getRedisCachedData", () => {
-        it("should return null if Redis client is not initialized", async () => {
-            // Temporarily unset env vars
-            const originalUrl = process.env.UPSTASH_REDIS_REST_URL;
-            delete process.env.UPSTASH_REDIS_REST_URL;
-
-            // Mock fromEnv to error when env vars missing (simulating lib behavior or just forcing error)
-            (Redis.fromEnv as jest.Mock).mockImplementationOnce(() => {
-                throw new Error("Redis env missing");
-            });
-
-            // We expect the service to catch the error and return null
-            const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-            const result = await getRedisCachedData(mockKey);
-            expect(result).toBeNull();
-
-            consoleSpy.mockRestore();
-            process.env.UPSTASH_REDIS_REST_URL = originalUrl;
-        });
-
-        it("should return data when found in Redis", async () => {
-            mockRedis.get.mockResolvedValue(mockData);
-
-            const result = await getRedisCachedData(mockKey);
-            expect(result).toEqual(mockData);
-            expect(mockRedis.get).toHaveBeenCalledWith(expectedSanitizedKey);
-        });
-
-        it("should return null on Redis error", async () => {
-            mockRedis.get.mockRejectedValue(new Error("Redis error"));
-
-            const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-            const result = await getRedisCachedData(mockKey);
-
-            expect(result).toBeNull();
-            expect(consoleSpy).toHaveBeenCalled();
-            consoleSpy.mockRestore();
-        });
+      const result = await getRedisCachedData(mockKey);
+      expect(result).toEqual(mockData);
+      expect(mockRedis.get).toHaveBeenCalledWith(expectedSanitizedKey);
     });
 
-    describe("setRedisCachedData", () => {
-        it("should set data in Redis", async () => {
-            mockRedis.set.mockResolvedValue("OK");
+    it("should return null on Redis error", async () => {
+      mockRedis.get.mockRejectedValue(new Error("Redis error"));
 
-            await setRedisCachedData(mockKey, mockData, 3600);
-            expect(mockRedis.set).toHaveBeenCalledWith(expectedSanitizedKey, mockData, { ex: 3600 });
-        });
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      const result = await getRedisCachedData(mockKey);
 
-        it("should handle custom TTL", async () => {
-            mockRedis.set.mockResolvedValue("OK");
-            await setRedisCachedData(mockKey, mockData, 60);
-            expect(mockRedis.set).toHaveBeenCalledWith(expectedSanitizedKey, mockData, { ex: 60 });
-        });
-
-        it("should swallow errors", async () => {
-            mockRedis.set.mockRejectedValue(new Error("Redis error"));
-            const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-
-            await expect(setRedisCachedData(mockKey, mockData, 3600)).resolves.not.toThrow();
-            expect(consoleSpy).toHaveBeenCalled();
-
-            consoleSpy.mockRestore();
-        });
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalled();
+      consoleSpy.mockRestore();
     });
+  });
+
+  describe("setRedisCachedData", () => {
+    it("should set data in Redis", async () => {
+      mockRedis.set.mockResolvedValue("OK");
+
+      await setRedisCachedData(mockKey, mockData, 3600);
+      expect(mockRedis.set).toHaveBeenCalledWith(
+        expectedSanitizedKey,
+        mockData,
+        { ex: 3600 },
+      );
+    });
+
+    it("should handle custom TTL", async () => {
+      mockRedis.set.mockResolvedValue("OK");
+      await setRedisCachedData(mockKey, mockData, 60);
+      expect(mockRedis.set).toHaveBeenCalledWith(
+        expectedSanitizedKey,
+        mockData,
+        { ex: 60 },
+      );
+    });
+
+    it("should swallow errors", async () => {
+      mockRedis.set.mockRejectedValue(new Error("Redis error"));
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+
+      await expect(
+        setRedisCachedData(mockKey, mockData, 3600),
+      ).resolves.not.toThrow();
+      expect(consoleSpy).toHaveBeenCalled();
+
+      consoleSpy.mockRestore();
+    });
+  });
 });

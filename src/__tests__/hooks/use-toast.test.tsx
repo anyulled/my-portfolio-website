@@ -25,7 +25,7 @@ describe("useToast", () => {
     act(() => {
       result.current.toast({
         title: "Test Toast",
-        description: "This is a test toast"
+        description: "This is a test toast",
       });
     });
 
@@ -43,7 +43,7 @@ describe("useToast", () => {
     act(() => {
       const response = result.current.toast({
         title: "Initial Toast",
-        description: "Initial description"
+        description: "Initial description",
       });
       toastId = response.id;
     });
@@ -54,7 +54,7 @@ describe("useToast", () => {
       result.current.toast({
         id: toastId,
         title: "Updated Toast",
-        description: "Updated description"
+        description: "Updated description",
       });
     });
 
@@ -70,7 +70,7 @@ describe("useToast", () => {
 
     act(() => {
       const response = result.current.toast({
-        title: "Test Toast"
+        title: "Test Toast",
       });
       toastId = response.id;
     });

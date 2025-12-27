@@ -18,19 +18,19 @@ export default getRequestConfig(async () => {
     messages = (await import(`@/messages/${locale}.json`)).default;
     console.info(
       chalk.green(
-        `[ i18n ] Successfully loaded messages for locale: ${locale}`
-      )
+        `[ i18n ] Successfully loaded messages for locale: ${locale}`,
+      ),
     );
   } catch (importError) {
     console.error(
       `[ i18n ] Failed to import messages for locale ${locale}:`,
-      importError
+      importError,
     );
     messages = {};
   }
 
   return {
     locale,
-    messages
+    messages,
   };
 });

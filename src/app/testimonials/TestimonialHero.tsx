@@ -29,7 +29,7 @@ export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
 
     gsap.set([title, subtitle], {
       opacity: 0,
-      y: 30
+      y: 30,
     });
 
     const tl = gsap.timeline();
@@ -38,16 +38,16 @@ export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
       opacity: 1,
       y: 0,
       duration: 1,
-      ease: "power2.out"
+      ease: "power2.out",
     }).to(
       subtitle,
       {
         opacity: 1,
         y: 0,
         duration: 0.8,
-        ease: "power2.out"
+        ease: "power2.out",
       },
-      "-=0.5"
+      "-=0.5",
     );
 
     gsap.to(hero, {
@@ -57,7 +57,7 @@ export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
         trigger: hero,
         start: "top bottom",
         end: "bottom top",
-        scrub: true
+        scrub: true,
       },
     });
   }, []);
@@ -78,8 +78,7 @@ export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
           className={"object-cover h-full opacity-60"}
         />
       </div>
-      <div
-        className="relative h-full flex flex-col items-center justify-center text-center px-4 pt-36">
+      <div className="relative h-full flex flex-col items-center justify-center text-center px-4 pt-36">
         <h1
           ref={titleRef}
           className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-mocha-mousse-900 shadow-mocha-mousse-100 dark:shadow-mocha-mousse-200 dark:text-white text-shadow-default mb-4`}

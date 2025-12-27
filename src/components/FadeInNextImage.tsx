@@ -4,7 +4,7 @@ import FadeInImage from "@/components/FadeInImage";
 
 export default function renderFadeInNextImage(
   { alt = "", title, sizes, index }: RenderImageProps & { index?: number },
-  { photo, width, height }: RenderImageContext
+  { photo, width, height }: RenderImageContext,
 ) {
   return (
     <FadeInImage index={index ?? 0} stagger={0.05}>
@@ -12,7 +12,7 @@ export default function renderFadeInNextImage(
         style={{
           width: "100%",
           position: "relative",
-          aspectRatio: `${width} / ${height}`
+          aspectRatio: `${width} / ${height}`,
         }}
       >
         {photo.srcSet && (

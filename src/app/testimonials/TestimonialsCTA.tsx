@@ -31,7 +31,7 @@ export default function TestimonialsCTA() {
     // Initial states
     gsap.set([content, icons], {
       opacity: 0,
-      y: 50
+      y: 50,
     });
 
     const tl = gsap.timeline({
@@ -39,7 +39,7 @@ export default function TestimonialsCTA() {
         trigger: cta,
         start: "top 70%",
         end: "bottom 30%",
-        toggleActions: "play none none reverse"
+        toggleActions: "play none none reverse",
       },
     });
 
@@ -47,16 +47,16 @@ export default function TestimonialsCTA() {
       opacity: 1,
       y: 0,
       duration: 0.8,
-      ease: "power2.out"
+      ease: "power2.out",
     }).to(
       icons,
       {
         opacity: 1,
         y: 0,
         duration: 0.6,
-        ease: "power2.out"
+        ease: "power2.out",
       },
-      "-=0.4"
+      "-=0.4",
     );
 
     gsap.to(icons.children, {
@@ -65,7 +65,7 @@ export default function TestimonialsCTA() {
       ease: "power2.inOut",
       stagger: 0.2,
       repeat: -1,
-      yoyo: true
+      yoyo: true,
     });
   }, []);
   const router = useRouter();
@@ -113,8 +113,7 @@ export default function TestimonialsCTA() {
             <p className="text-mocha-mousse-100 text-sm">{t("professional")}</p>
           </div>
           <div className="text-center">
-            <div
-              className="h-12 w-12 bg-white rounded-full flex items-center justify-center mx-auto mb-2">
+            <div className="h-12 w-12 bg-white rounded-full flex items-center justify-center mx-auto mb-2">
               <span className="text-mocha-mousse-100 font-bold text-xl">★</span>
             </div>
             <p className="text-mocha-mousse-100 text-sm">{t("five-star")}</p>
