@@ -9,7 +9,7 @@ import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 
 import type { Photo } from "@/types/photos";
-import type { PhotoProvider, ListPhotosOptions } from "./PhotoService";
+import type { ListPhotosOptions, PhotoProvider } from "./PhotoService";
 import { DEFAULT_LIST_OPTIONS } from "./PhotoService";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-website";
@@ -233,14 +233,6 @@ export class GCSPhotoProvider implements PhotoProvider {
       dateUpload,
       height: 0,
       title,
-      urlCrop: url,
-      urlLarge: url,
-      urlMedium: url,
-      urlNormal: url,
-      urlOriginal: url,
-      urlSmall: url,
-      urlThumbnail: url,
-      urlZoom: url,
       views: 0,
       width: 0,
       tags: "",

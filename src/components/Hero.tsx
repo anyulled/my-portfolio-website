@@ -1,9 +1,9 @@
 "use client";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import React, { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import React, { useEffect, useRef, useState } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -18,7 +18,7 @@ interface HeroProps {
   }[];
 }
 
-export default function Hero({ images }: HeroProps) {
+export default function Hero({ images }: Readonly<HeroProps>) {
   const t = useTranslations("home");
   const [mounted, setMounted] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);

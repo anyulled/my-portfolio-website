@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Photo } from "@/types/photos";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import { Check, X } from "lucide-react";
-import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -95,7 +95,7 @@ export default function MythsHero({ heroImage }: Readonly<MythsHeroProps>) {
     >
       <div className="absolute inset-0 bg-primary/80 dark:bg-primary/90">
         <Image
-          src={heroImage.urlLarge}
+          src={heroImage.srcSet[0].src}
           alt={t("alt")}
           width={1920}
           height={1080}

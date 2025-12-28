@@ -13,14 +13,6 @@ export interface Photo {
   dateUpload: Date;
   height: number;
   title: string;
-  urlCrop: string;
-  urlLarge: string;
-  urlMedium: string;
-  urlNormal: string;
-  urlOriginal: string;
-  urlThumbnail: string;
-  urlSmall: string;
-  urlZoom: string;
   views: number;
   width: number;
   tags: string;

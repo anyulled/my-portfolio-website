@@ -28,17 +28,17 @@ const createMockPhoto = (id: number, tags = ""): Photo => ({
   dateUpload: new Date(),
   height: 800,
   width: 1200,
-  urlCrop: `https://example.com/${id}/crop.jpg`,
-  urlLarge: `https://example.com/${id}/large.jpg`,
-  urlMedium: `https://example.com/${id}/medium.jpg`,
-  urlNormal: `https://example.com/${id}/normal.jpg`,
-  urlOriginal: `https://example.com/${id}/original.jpg`,
-  urlSmall: `https://example.com/${id}/small.jpg`,
-  urlThumbnail: `https://example.com/${id}/thumb.jpg`,
-  urlZoom: `https://example.com/${id}/zoom.jpg`,
   views: 100,
   tags,
-  srcSet: [],
+  srcSet: [
+    {
+      src: `https://example.com/${id}/large.jpg`,
+      width: 1200,
+      height: 800,
+      title: `Photo ${id}`,
+      description: "",
+    },
+  ],
 });
 
 describe("PhotoServiceFacade", () => {

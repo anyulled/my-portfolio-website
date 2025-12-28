@@ -1,9 +1,9 @@
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
+import type { Photo } from "@/types/photos";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 import chalk from "chalk";
-import type { Photo } from "@/types/photos";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
 const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
@@ -191,14 +191,6 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     dateUpload,
     height,
     title,
-    urlCrop: url,
-    urlLarge: url,
-    urlMedium: url,
-    urlNormal: url,
-    urlOriginal: url,
-    urlThumbnail: url,
-    urlSmall: url,
-    urlZoom: url,
     views,
     width,
     tags,
@@ -216,23 +208,29 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   return photo;
 };
 
-export const getPhotosFromStorage = async (
-  prefix: string,
-  limit?: number,
-  storageClient?: StorageClient,
-): Promise<Photo[] | null> => {
-  const cacheKey = `photos-${prefix}`;
+const filterInvalidPhotos = (photos: Photo[]): Photo[] =>
+  photos.filter(
+    (p) =>
+      p.srcSet?.[0]?.src &&
+      !p.srcSet[0].src.endsWith("/") &&
+      !p.srcSet[0].src.endsWith("%2F"),
+  );
 
+const retrievePhotosFromCache = async (
+  cacheKey: string,
+): Promise<Photo[] | null> => {
   // 1. Try to get from Redis (Metadata Cache)
   try {
     const cachedPhotos = await getRedisCachedData<Photo[]>(cacheKey);
     if (cachedPhotos) {
-      console.log(chalk.green(`[PhotosStorage] Redis hit for ${prefix}`));
-      return cachedPhotos;
+      console.log(chalk.green(`[PhotosStorage] Redis hit for ${cacheKey}`));
+      return filterInvalidPhotos(cachedPhotos);
     }
   } catch (error) {
     console.warn(
-      chalk.yellow(`[PhotosStorage] Failed to read from Redis for ${prefix}:`),
+      chalk.yellow(
+        `[PhotosStorage] Failed to read from Redis for ${cacheKey}:`,
+      ),
       error,
     );
   }
@@ -241,19 +239,54 @@ export const getPhotosFromStorage = async (
   try {
     const cachedPhotos = await getCachedData<Photo[]>(cacheKey);
     if (cachedPhotos) {
-      console.log(chalk.green(`[PhotosStorage] Vercel Blob hit for ${prefix}`));
+      console.log(
+        chalk.green(`[PhotosStorage] Vercel Blob hit for ${cacheKey}`),
+      );
+      const photos = filterInvalidPhotos(cachedPhotos);
       // Hydrate Redis
-      setRedisCachedData(cacheKey, cachedPhotos, CACHE_TTL_SECONDS);
-      return cachedPhotos;
+      setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
+      return photos;
     }
   } catch (error) {
     console.warn(
-      chalk.yellow(`[PhotosStorage] Failed to read from cache for ${prefix}:`),
+      chalk.yellow(
+        `[PhotosStorage] Failed to read from cache for ${cacheKey}:`,
+      ),
       error,
     );
   }
 
-  // 3. Fetch from GCS
+  return null;
+};
+
+const storePhotosInCache = async (
+  cacheKey: string,
+  photos: Photo[],
+): Promise<void> => {
+  if (photos.length === 0) return;
+
+  try {
+    console.log(
+      chalk.cyan(
+        `[PhotosStorage] Writing ${photos.length} photos to cache layers`,
+      ),
+    );
+    // Write to Redis (Fast access)
+    await setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
+    // Write to Vercel Blob (Persistence)
+    await setCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
+  } catch (error) {
+    console.warn(
+      chalk.yellow(`[PhotosStorage] Failed to write to cache for ${cacheKey}:`),
+      error,
+    );
+  }
+};
+
+const fetchPhotosFromGCS = async (
+  prefix: string,
+  storageClient?: StorageClient,
+): Promise<Photo[] | null> => {
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
   console.log(
     chalk.cyan(
@@ -287,39 +320,21 @@ export const getPhotosFromStorage = async (
     }
 
     const mapped = await Promise.all(
-      files.map((file) => mapFileToPhoto(file as StorageFileLike)),
+      files
+        .filter(
+          (file) =>
+            !file.name.endsWith("/") &&
+            /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+        )
+        .map((file) => mapFileToPhoto(file as StorageFileLike)),
     );
 
-    let photos = mapped.filter((photo): photo is Photo => photo !== null);
+    const photos = mapped.filter((photo): photo is Photo => photo !== null);
     console.log(
       chalk.green(
         `[PhotosStorage] Successfully mapped ${photos.length} photos from ${files.length} files`,
       ),
     );
-
-    if (limit && limit > 0) {
-      photos = photos.slice(0, limit);
-    }
-
-    // 4. Store in cache (Redis and Vercel Blob)
-    try {
-      if (photos.length > 0) {
-        console.log(
-          chalk.cyan(
-            `[PhotosStorage] Writing ${photos.length} photos to cache layers`,
-          ),
-        );
-        // Write to Redis (Fast access)
-        await setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
-        // Write to Vercel Blob (Persistence)
-        await setCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
-      }
-    } catch (error) {
-      console.warn(
-        chalk.yellow(`[PhotosStorage] Failed to write to cache for ${prefix}:`),
-        error,
-      );
-    }
 
     return photos;
   } catch (error) {
@@ -337,4 +352,32 @@ export const getPhotosFromStorage = async (
     }
     return null;
   }
+};
+
+export const getPhotosFromStorage = async (
+  prefix: string,
+  limit?: number,
+  storageClient?: StorageClient,
+): Promise<Photo[] | null> => {
+  const cacheKey = `photos-${prefix}`;
+
+  // 1. Try cache retrieval
+  let photos = await retrievePhotosFromCache(cacheKey);
+
+  // 2. Fetch from GCS if not in cache
+  if (!photos) {
+    photos = await fetchPhotosFromGCS(prefix, storageClient);
+
+    // 3. Store in cache if fetch was successful
+    if (photos) {
+      await storePhotosInCache(cacheKey, photos);
+    }
+  }
+
+  // 4. Apply limit and return
+  if (photos && limit && limit > 0) {
+    return photos.slice(0, limit);
+  }
+
+  return photos;
 };

@@ -67,7 +67,7 @@ export default async function TestimonialsPage() {
   const testimonials: Testimonial[] = await getTestimonials();
   const heroPhotos = await getPhotosFromStorage("hero");
   const heroImage =
-    heroPhotos?.[0]?.urlLarge ||
+    heroPhotos?.[0]?.srcSet[0]?.src ||
     "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg";
 
   const t = await getTranslations("testimonials");

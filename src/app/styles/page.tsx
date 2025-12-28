@@ -27,7 +27,7 @@ export default async function PhotographyStylesPage() {
     image:
       res?.filter((photo) =>
         photo.tags.split(" ").includes(style.tag.replace("-", "")),
-      )[0]?.urlLarge ?? "",
+      )[0]?.srcSet[0]?.src ?? "",
     link: `styles/${style.name}`,
   }));
 

@@ -9,20 +9,12 @@ const mockPhotos: Photo[] = [
     dateUpload: new Date(),
     height: 200,
     title: "Title",
-    urlCrop: "crop.jpg",
-    urlLarge: "large.jpg",
-    urlMedium: "medium.jpg",
-    urlNormal: "normal.jpg",
-    urlOriginal: "original.jpg",
-    urlThumbnail: "thumb.jpg",
-    urlSmall: "small.jpg",
-    urlZoom: "zoom.jpg",
     views: 10,
     width: 300,
     tags: "tag1",
     srcSet: [
       {
-        src: "small.jpg",
+        src: "large.jpg",
         width: 300,
         height: 200,
         title: "Title",
@@ -40,8 +32,8 @@ describe("mapPhotosToGalleryImages", () => {
     expect(galleryPhotos).toHaveLength(1);
     expect(lightboxPhotos).toHaveLength(1);
 
-    expect(galleryPhotos![0].src).toBe("medium.jpg");
-    expect(lightboxPhotos![0].src).toBe("original.jpg");
+    expect(galleryPhotos![0].src).toBe("large.jpg");
+    expect(lightboxPhotos![0].src).toBe("large.jpg");
   });
 
   it("handles null input", () => {

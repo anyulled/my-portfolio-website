@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { commonBeforeEach } from "@/__tests__/utils/testUtils";
 import TestimonialsPage from "@/app/testimonials/page";
 import { getTestimonials, Testimonial } from "@/lib/testimonials";
-import { commonBeforeEach } from "@/__tests__/utils/testUtils";
+import { render, screen } from "@testing-library/react";
 
 // Mock the database service to avoid Supabase ESM issues
 jest.mock("@/services/database", () => ({
@@ -66,7 +66,7 @@ jest.mock("next-intl/server", () => ({
 jest.mock("@/services/storage/photos", () => ({
   getPhotosFromStorage: jest.fn().mockResolvedValue([
     {
-      urlLarge: "https://example.com/mock-hero.jpg",
+      srcSet: [{ src: "https://example.com/mock-hero.jpg" }],
       id: 123,
     },
   ]),

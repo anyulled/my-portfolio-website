@@ -1,5 +1,5 @@
-import { Image } from "react-photo-album";
 import { Photo } from "@/types/photos";
+import { Image } from "react-photo-album";
 
 export interface GalleryImages {
   galleryPhotos: Image[] | undefined;
@@ -19,16 +19,16 @@ export const mapPhotosToGalleryImages = (
   }
 
   const galleryPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.urlMedium,
+    src: photo.srcSet[0]?.src || "",
     srcSet: photo.srcSet,
     alt: photo.title,
-    blurDataURL: photo.urlThumbnail,
+    blurDataURL: photo.srcSet[0]?.src || "",
     width: photo.width || DEFAULT_WIDTH,
     height: photo.height || DEFAULT_HEIGHT,
   }));
 
   const lightboxPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.urlOriginal,
+    src: photo.srcSet[0]?.src || "",
     srcSet: photo.srcSet,
     alt: photo.title,
     width: photo.width || DEFAULT_WIDTH,

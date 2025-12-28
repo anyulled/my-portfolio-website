@@ -1,19 +1,19 @@
 "use client";
-import Image from "next/image";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { Card, CardContent } from "@/components/ui/card";
-import Gallery from "@/components/Gallery";
-import Link from "next/link";
-import { Suspense, useRef } from "react";
 import Loading from "@/app/loading";
-import { Photo } from "@/types/photos";
-import { useTranslations } from "next-intl";
 import FadeInTitle from "@/components/FadeInTitle";
+import Gallery from "@/components/Gallery";
+import { Card, CardContent } from "@/components/ui/card";
+import { useScroll } from "@/contexts/ScrollContext";
+import { useFadeIn } from "@/hooks/useFadeIn";
+import { Photo } from "@/types/photos";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useScroll } from "@/contexts/ScrollContext";
-import { useFadeIn } from "@/hooks/useFadeIn";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense, useRef } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -114,8 +114,8 @@ export default function BoudoirContent({
             <div ref={imageRef1} className="md:w-1/3">
               <Image
                 priority
-                src={randomPhotos?.at(1)?.urlZoom!}
-                blurDataURL={randomPhotos?.at(1)?.urlCrop}
+                src={randomPhotos?.at(1)?.srcSet[0]?.src!}
+                blurDataURL={randomPhotos?.at(1)?.srcSet[0]?.src}
                 placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}
@@ -149,8 +149,8 @@ export default function BoudoirContent({
             <div ref={imageRef2} className="md:w-1/3">
               <Image
                 priority
-                src={randomPhotos?.at(2)?.urlZoom!}
-                blurDataURL={randomPhotos?.at(2)?.urlCrop}
+                src={randomPhotos?.at(2)?.srcSet[0]?.src!}
+                blurDataURL={randomPhotos?.at(2)?.srcSet[0]?.src}
                 placeholder="blur"
                 alt={t("boudoir_photography")}
                 width={600}

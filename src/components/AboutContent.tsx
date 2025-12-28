@@ -1,12 +1,11 @@
 "use client";
-import React from "react";
+import FadeInImage from "@/components/FadeInImage";
+import FadeInTitle from "@/components/FadeInTitle";
+import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import FadeInTitle from "@/components/FadeInTitle";
-import FadeInImage from "@/components/FadeInImage";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { useTranslations } from "next-intl";
 
 import type { Photo } from "@/types/photos";
 
@@ -138,8 +137,8 @@ export default function AboutContent({
                   >
                     <FadeInImage index={index} stagger={0.05}>
                       <Image
-                        src={cover.urlMedium}
-                        blurDataURL={cover.urlSmall}
+                        src={cover.srcSet[0]?.src}
+                        blurDataURL={cover.srcSet[0]?.src}
                         placeholder="blur"
                         alt={cover.title}
                         width={300}
@@ -176,11 +175,11 @@ export default function AboutContent({
               <FadeInImage index={0} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[0]?.urlMedium ||
+                    collaborationImages?.[0]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/peter-coulson-workshop_53985394873_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[0]?.urlSmall ||
+                    collaborationImages?.[0]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/peter-coulson-workshop_53985394873_o.jpg"
                   }
                   placeholder="blur"
@@ -203,11 +202,11 @@ export default function AboutContent({
               <FadeInImage index={1} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[1]?.urlMedium ||
+                    collaborationImages?.[1]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/antonio-garci--chema-photo_53984294097_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[1]?.urlSmall ||
+                    collaborationImages?.[1]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/antonio-garci--chema-photo_53984294097_o.jpg"
                   }
                   placeholder="blur"
@@ -230,11 +229,11 @@ export default function AboutContent({
               <FadeInImage index={2} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[2]?.urlMedium ||
+                    collaborationImages?.[2]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/workshop-with-rubn-surez_53985940379_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[2]?.urlSmall ||
+                    collaborationImages?.[2]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/workshop-with-rubn-surez_53985940379_o.jpg"
                   }
                   placeholder="blur"
@@ -257,11 +256,11 @@ export default function AboutContent({
               <FadeInImage index={3} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[3]?.urlMedium ||
+                    collaborationImages?.[3]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/me-and-dan-hecho_54396567099_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[3]?.urlSmall ||
+                    collaborationImages?.[3]?.srcSet[0]?.src ||
                     "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/me-and-dan-hecho_54396567099_o.jpg"
                   }
                   placeholder="blur"

@@ -137,7 +137,7 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
               >
                 <div className={isEven ? "lg:order-1" : "lg:order-2"}>
                   <Image
-                    src={myth.image.urlMedium}
+                    src={myth.image.srcSet[0].src}
                     alt={t("image_alt", {
                       id: Number(myth.id),
                       myth: myth.myth,
