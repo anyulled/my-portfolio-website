@@ -1,3 +1,5 @@
+import { Photo } from "@/types/photos";
+
 export const commonBeforeEach = (): void => {
   jest.clearAllMocks();
 
@@ -46,3 +48,33 @@ export const commonBeforeEach = (): void => {
     value: jest.fn(),
   });
 };
+
+export const mockPhotos: Photo[] = [
+  {
+    id: 123,
+    title: "Test Photo",
+    description: "Test Description",
+    dateTaken: new Date("2023-01-01T12:00:00Z"),
+    dateUpload: new Date(1672531200 * 1000),
+    tags: "test",
+    views: 100,
+    urlSmall: "http://example.com/small.jpg",
+    urlMedium: "http://example.com/medium.jpg",
+    urlNormal: "http://example.com/normal.jpg",
+    urlLarge: "http://example.com/large.jpg",
+    urlOriginal: "http://example.com/original.jpg",
+    urlThumbnail: "http://example.com/thumbnail.jpg",
+    urlZoom: "http://example.com/zoom.jpg",
+    urlCrop: "http://example.com/crop.jpg",
+    width: "1024",
+    height: "768",
+    srcSet: [
+      {
+        src: "http://example.com/large.jpg",
+        width: 1024,
+        height: 768,
+        title: "Test Photo",
+      },
+    ],
+  },
+];

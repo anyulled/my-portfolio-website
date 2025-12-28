@@ -11,40 +11,14 @@ if (typeof window !== "undefined") {
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
+interface HeroProps {
+  images: {
+    image: string;
+    position: string;
+  }[];
+}
 
-// Hero background images from GCS bucket
-// Format: https://storage.googleapis.com/{bucket}/{object}
-const GCS_BUCKET_URL =
-  "https://storage.googleapis.com/sensuelle-boudoir-website";
-
-const images = [
-  {
-    image: `${GCS_BUCKET_URL}/delaia-gonzlez_53923428207_o.jpg`,
-    position: "25% top",
-  },
-  {
-    image: `${GCS_BUCKET_URL}/abigail-marsh_53963952034_o.jpg`,
-    position: "75% top",
-  },
-  {
-    image: `${GCS_BUCKET_URL}/andrea-cano-montull_54701383010_o.jpg`,
-    position: "center top",
-  },
-  {
-    image: `${GCS_BUCKET_URL}/arianna-gray_54253107306_o.jpg`,
-    position: "center top",
-  },
-  {
-    image: `${GCS_BUCKET_URL}/lydia-badic_54784653273_o.jpg`,
-    position: "center top",
-  },
-  {
-    image: `${GCS_BUCKET_URL}/sadie-gray-in-the-bedroom_54755963626_o.jpg`,
-    position: "37% top",
-  },
-];
-
-export default function Hero() {
+export default function Hero({ images }: HeroProps) {
   const t = useTranslations("home");
   const [mounted, setMounted] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
@@ -57,8 +31,9 @@ export default function Hero() {
   }, []);
 
   const randomImage = React.useMemo(() => {
+    if (!images || images.length === 0) return null;
     return images[Math.floor(Math.random() * images.length)];
-  }, []);
+  }, [images]);
 
   useGSAP(() => {
     if (mounted) {
@@ -125,18 +100,20 @@ export default function Hero() {
       ref={containerRef}
       className="relative h-screen flex items-center justify-center overflow-hidden bg-mocha-mousse-50 dark:bg-mocha-mousse-900 text-mocha-mousse-900 dark:text-mocha-mousse-50"
     >
-      <div
-        ref={backgroundRef}
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('${randomImage.image}')`,
-          backgroundAttachment: "fixed",
-          backgroundPosition: randomImage.position,
-          backgroundSize: "cover",
-          mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
-          opacity: 0, // Initial state for animation
-        }}
-      />
+      {randomImage && (
+        <div
+          ref={backgroundRef}
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url('${randomImage.image}')`,
+            backgroundAttachment: "fixed",
+            backgroundPosition: randomImage.position,
+            backgroundSize: "cover",
+            mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
+            opacity: 0, // Initial state for animation
+          }}
+        />
+      )}
       <div className="relative z-10 text-center">
         <h1
           ref={titleRef}

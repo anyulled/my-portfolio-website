@@ -1,15 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-// Mock database before any imports
-jest.mock("@/services/database", () => ({
-  createClient: jest.fn(() => ({
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
-      })),
-    })),
-  })),
-}));
-
 import { render, screen } from "@testing-library/react";
 import TestimonialHero from "@/app/testimonials/TestimonialHero";
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";
@@ -68,7 +57,7 @@ jest.mock("next/image", () => ({
       ClassAttributes<HTMLImageElement> &
       ImgHTMLAttributes<HTMLImageElement>,
   ) => {
-    return <img {...props} alt={"Test User"} />;
+    return <img {...props} alt={props.alt || "test"} />;
   },
 }));
 
@@ -91,7 +80,9 @@ describe("TestimonialHero", () => {
   });
 
   it("renders the hero section correctly", () => {
-    render(<TestimonialHero />);
+    render(
+      <TestimonialHero image="https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg" />,
+    );
 
     // Check if the title is rendered with the correct translation
     expect(
@@ -103,7 +94,9 @@ describe("TestimonialHero", () => {
   });
 
   it("applies the correct font classes", () => {
-    render(<TestimonialHero />);
+    render(
+      <TestimonialHero image="https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg" />,
+    );
 
     // Check if the title has the Dancing_Script font class
     const title = screen.getByText("translated_client_testimonials");
@@ -115,10 +108,12 @@ describe("TestimonialHero", () => {
   });
 
   it("renders the background image correctly", () => {
-    render(<TestimonialHero />);
+    render(
+      <TestimonialHero image="https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg" />,
+    );
 
     // Check if the image is rendered with the correct props
-    const image = screen.getByAltText("Test User");
+    const image = screen.getByAltText("boudoir");
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute(
       "src",

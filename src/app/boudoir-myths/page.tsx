@@ -5,7 +5,7 @@ import MythsList from "./MythsList";
 import TruthSection from "./TruthSection";
 import MythsCTA from "./MythsCTA";
 import { Article, FAQPage, WithContext } from "schema-dts";
-import { fetchBoudoirPhotos } from "@/services/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 
 export const metadata: Metadata = {
   title: "5 Common Boudoir Photography Myths Debunked",
@@ -118,9 +118,14 @@ const faqStructuredData: WithContext<FAQPage> = {
   ],
 };
 
+async function fetchPhotos() {
+  return await getPhotosFromStorage("boudoir", 6);
+}
+
 export default async function BoudoirMythsPage() {
-  // Uses GCS primary with Flickr fallback
-  const photos = await fetchBoudoirPhotos(6);
+  const photos = await fetchPhotos();
+
+  if (!photos) return null;
 
   return (
     <>

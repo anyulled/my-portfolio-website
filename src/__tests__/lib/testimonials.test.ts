@@ -1,15 +1,3 @@
-// Mock database before any imports
-jest.mock("@/services/database", () => ({
-  createClient: jest.fn(() => ({
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
-        order: jest.fn(() => Promise.resolve({ data: [], error: null })),
-      })),
-    })),
-  })),
-}));
-
 // Import after mocking
 import { getTestimonials, Testimonial } from "@/lib/testimonials";
 
@@ -37,10 +25,9 @@ jest.mock("@/lib/testimonials", () => {
   ];
 
   const getTestimonials = jest.fn().mockResolvedValue(mockTestimonials);
-  const cacheMock = jest.fn((fn) => fn);
 
   return {
-    getTestimonials: cacheMock(async () => getTestimonials()),
+    getTestimonials,
     Testimonial: {},
   };
 });
@@ -104,6 +91,14 @@ describe("testimonials", () => {
   });
 
   describe("getTestimonials", () => {
+    it("should call getTestimonials", async () => {
+      (getTestimonials as jest.Mock).mockClear();
+
+      await getTestimonials();
+
+      expect(getTestimonials).toHaveBeenCalled();
+    });
+
     it("should be wrapped with cache", async () => {
       // We can't directly test the cache function since we're mocking the module
       // Instead, we'll verify that getTestimonials is a function that returns a Promise

@@ -1,6 +1,4 @@
-export const dynamic = "force-dynamic";
-
-import { fetchCoverPhotos as fetchCover } from "@/services/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
 import AboutContent from "@/components/AboutContent";
@@ -34,16 +32,28 @@ export const metadata: Metadata = {
 
 const fetchCoverPhotos = async () => {
   try {
-    // Uses GCS primary with Flickr fallback
-    return await fetchCover(50);
+    return await getPhotosFromStorage("cover", 50);
   } catch (error) {
-    console.error("[ About ] Error fetching cover photos:", error);
+    console.error("[ About ] Error fetching photos from storage:", error);
+    return null;
+  }
+};
+
+const fetchCollaborationPhotos = async () => {
+  try {
+    return await getPhotosFromStorage("collaboration", 4);
+  } catch (error) {
+    console.error(
+      "[ About ] Error fetching collaboration photos from storage:",
+      error,
+    );
     return null;
   }
 };
 
 export default async function BioPage() {
   const images = await fetchCoverPhotos();
+  const collaborationImages = await fetchCollaborationPhotos();
 
   if (images == null) {
     console.error("[ About ] Error fetching cover photos");
@@ -54,6 +64,7 @@ export default async function BioPage() {
       images={images}
       profileImageUrl={profileImageUrl}
       imageThumbnail={imageThumbnail}
+      collaborationImages={collaborationImages}
     />
   );
 }

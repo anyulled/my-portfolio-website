@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
 import { styles } from "@/data/styles";
-import { fetchStylePhotos } from "@/services/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 /*eslint-disable @next/next/no-img-element */
 
 export const contentType = "image/png";
@@ -18,7 +18,7 @@ export default async function OpengraphImage({
 }) {
   const styleName = extractNameFromTag(styles, params.styleName);
   const convertedStyleName = styleName ?? "boudoir";
-  const photos = await fetchStylePhotos(convertedStyleName, 1);
+  const photos = await getPhotosFromStorage(`styles/${convertedStyleName}`, 1);
   return new ImageResponse(
     (
       <div tw="flex flex-col w-full h-full items-center justify-center bg-black">

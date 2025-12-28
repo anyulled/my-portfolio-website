@@ -3,17 +3,10 @@ import SocialMedia from "@/components/SocialMedia";
 import Gallery from "@/components/Gallery";
 import ContactForm from "@/components/ContactForm";
 import type { Metadata } from "next";
-import { listHomepagePhotos } from "@/services/storage/homepage";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 import { Separator } from "@/components/ui/separator";
-
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(useGSAP);
-}
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
@@ -22,7 +15,21 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const galleryPhotos = await listHomepagePhotos();
+  const galleryPhotos = await getPhotosFromStorage("portfolio");
+  const heroPhotos = (await getPhotosFromStorage("hero")) || [];
+
+  const formattedHeroImages =
+    heroPhotos.length > 0
+      ? heroPhotos.map((p) => ({
+          image: p.urlLarge,
+          position: "center center", // Default position as GCS doesn't store position data yet
+        }))
+      : [
+          {
+            image: "/images/DSC_7028.jpg", // Fallback if no images found
+            position: "left top",
+          },
+        ];
 
   if (!galleryPhotos || galleryPhotos.length === 0) {
     return (
@@ -37,7 +44,7 @@ export default async function HomePage() {
 
   return (
     <main>
-      <Hero />
+      <Hero images={formattedHeroImages} />
       <Suspense fallback={<Loading />}>
         <Gallery photos={galleryPhotos} />
       </Suspense>

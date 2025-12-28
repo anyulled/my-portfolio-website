@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { fetchStylePhotos } from "@/services/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import Gallery from "@/components/Gallery";
 import { openGraph } from "@/lib/openGraph";
 import { Dancing_Script } from "next/font/google";
@@ -8,6 +8,7 @@ import { styles } from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
 import NotFound from "@/app/not-found";
 import { getTranslations } from "next-intl/server";
+
 import Loading from "@/app/loading";
 import { Suspense } from "react";
 
@@ -16,13 +17,7 @@ type Params = Promise<{ styleName: string }>;
 
 export type Props = { params: Params };
 
-export const revalidate = 43200;
-
-export async function generateStaticParams() {
-  return styles.map((style) => ({
-    styleName: style.name,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export const generateMetadata = async ({
   params,
@@ -63,12 +58,11 @@ export default async function StylePage({ params }: Readonly<Props>) {
   }
   const convertedStyleName = styleName ?? "boudoir";
   console.log(`Param styleName: ${extractedStyleName}`);
-  console.log(`to GCS/Flickr: ${styleName}`);
+  console.log(`to Storage: ${styleName}`);
 
-  // Use PhotoService with GCS primary + Flickr fallback
-  const photos = await fetchStylePhotos(convertedStyleName, 36);
+  const photos = await getPhotosFromStorage(`styles/${convertedStyleName}`, 36);
 
-  if (!styleName || photos.length === 0) {
+  if (!styleName || !photos) {
     return NotFound();
   }
 

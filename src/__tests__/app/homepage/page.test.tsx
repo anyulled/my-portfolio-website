@@ -47,13 +47,13 @@ jest.mock("@/contexts/ScrollContext", () => ({
   useScroll: jest.fn(() => ({ lenis: null })),
 }));
 
-jest.mock("@/services/storage/homepage", () => {
-  const listHomepagePhotosMock = jest.fn();
+jest.mock("@/services/storage/photos", () => {
+  const getPhotosFromStorageMock = jest.fn();
 
   return {
     __esModule: true,
-    listHomepagePhotos: listHomepagePhotosMock,
-    default: listHomepagePhotosMock,
+    getPhotosFromStorage: getPhotosFromStorageMock,
+    default: getPhotosFromStorageMock,
   };
 });
 
@@ -93,42 +93,45 @@ const renderHomePage = async () => {
 };
 
 describe("HomePage", () => {
-  let listHomepagePhotosMock: jest.Mock;
+  let getPhotosFromStorageMock: jest.Mock;
 
   beforeEach(() => {
-    const mockedModule = jest.requireMock("@/services/storage/homepage") as {
-      listHomepagePhotos: jest.Mock;
+    const mockedModule = jest.requireMock("@/services/storage/photos") as {
+      getPhotosFromStorage: jest.Mock;
     };
 
-    listHomepagePhotosMock = mockedModule.listHomepagePhotos;
-    listHomepagePhotosMock.mockReset();
+    getPhotosFromStorageMock = mockedModule.getPhotosFromStorage;
+    getPhotosFromStorageMock.mockReset();
     jest.clearAllMocks();
   });
 
   it("renders gallery photos returned by storage", async () => {
-    listHomepagePhotosMock.mockResolvedValue([createPhoto({ id: 5 })]);
+    getPhotosFromStorageMock.mockResolvedValue([createPhoto({ id: 5 })]);
 
     await renderHomePage();
 
-    expect(listHomepagePhotosMock).toHaveBeenCalled();
+    // Verify calls
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("portfolio");
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero");
+
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
   });
 
   it("shows an error when no photos are available", async () => {
-    listHomepagePhotosMock.mockResolvedValue(null);
+    getPhotosFromStorageMock.mockResolvedValue(null);
 
     await renderHomePage();
 
-    expect(listHomepagePhotosMock).toHaveBeenCalled();
+    expect(getPhotosFromStorageMock).toHaveBeenCalled();
     expect(screen.getByText(/unable to load gallery/i)).toBeInTheDocument();
   });
 
   it("shows an error message when the bucket is empty", async () => {
-    listHomepagePhotosMock.mockResolvedValue([]);
+    getPhotosFromStorageMock.mockResolvedValue([]);
 
     await renderHomePage();
 
-    expect(listHomepagePhotosMock).toHaveBeenCalled();
+    expect(getPhotosFromStorageMock).toHaveBeenCalled();
     expect(screen.getByText(/unable to load gallery/i)).toBeInTheDocument();
   });
 });

@@ -11,11 +11,6 @@ export interface GalleryImages {
 const DEFAULT_WIDTH = 1200;
 const DEFAULT_HEIGHT = 800;
 
-const parseDimension = (value: string, fallback: number): number => {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-};
-
 export const mapPhotosToGalleryImages = (
   photos: Array<Photo> | null,
 ): GalleryImages => {
@@ -28,16 +23,16 @@ export const mapPhotosToGalleryImages = (
     srcSet: photo.srcSet,
     alt: photo.title,
     blurDataURL: photo.urlThumbnail,
-    width: parseDimension(photo.width, DEFAULT_WIDTH),
-    height: parseDimension(photo.height, DEFAULT_HEIGHT),
+    width: photo.width || DEFAULT_WIDTH,
+    height: photo.height || DEFAULT_HEIGHT,
   }));
 
   const lightboxPhotos: Image[] = photos.map((photo: Photo) => ({
     src: photo.urlOriginal,
     srcSet: photo.srcSet,
     alt: photo.title,
-    width: parseDimension(photo.width, DEFAULT_WIDTH),
-    height: parseDimension(photo.height, DEFAULT_HEIGHT),
+    width: photo.width || DEFAULT_WIDTH,
+    height: photo.height || DEFAULT_HEIGHT,
     title: photo.title,
     description: photo.description,
   }));

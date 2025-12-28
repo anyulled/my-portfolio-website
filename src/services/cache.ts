@@ -1,9 +1,9 @@
 import { list, put } from "@vercel/blob";
 import chalk from "chalk";
-import type { Photo } from "@/types/photos";
+
 import { sanitizeKey } from "@/lib/sanitizer";
 
-export async function getCachedData(key: string): Promise<Photo[] | null> {
+export async function getCachedData<T>(key: string): Promise<T | null> {
   const sanitizedKey = sanitizeKey(key);
   const response = await list();
   console.log(chalk.cyan(`Getting Cache for (${sanitizedKey}):`));
@@ -19,9 +19,9 @@ export async function getCachedData(key: string): Promise<Photo[] | null> {
   return await res.json();
 }
 
-export async function setCachedData(
+export async function setCachedData<T>(
   key: string,
-  data: Array<Photo>,
+  data: T,
   expiryInSeconds: number,
 ): Promise<void> {
   const sanitizedKey = sanitizeKey(key);

@@ -1,19 +1,15 @@
+/* eslint-disable @next/next/no-img-element */
 import { render, screen } from "@testing-library/react";
 import TestimonialCard from "@/components/TestimonialCard";
 import { Testimonial } from "@/lib/testimonials";
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";
 import { ClassAttributes, ImgHTMLAttributes, JSX } from "react";
 
-/* eslint-disable @next/next/no-img-element */
 jest.mock("gsap/ScrollTrigger", () => ({
   __esModule: true,
+  default: "mocked-scroll-trigger",
   ScrollTrigger: {
-    getAll: jest.fn(() => []),
-    scrollerProxy: jest.fn(),
-    update: jest.fn(),
-  },
-  default: {
-    getAll: jest.fn(() => []),
+    getAll: jest.fn().mockReturnValue([{ kill: jest.fn() }]),
   },
 }));
 jest.mock("gsap", () => {
@@ -55,7 +51,7 @@ jest.mock("next/image", () => ({
       ClassAttributes<HTMLImageElement> &
       ImgHTMLAttributes<HTMLImageElement>,
   ) => {
-    return <img {...props} alt={"Test User"} />;
+    return <img {...props} alt={props.alt || "test"} />;
   },
 }));
 

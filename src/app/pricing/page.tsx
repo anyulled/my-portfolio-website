@@ -13,7 +13,10 @@ import { Metadata } from "next";
 import { openGraph } from "@/lib/openGraph";
 import AnimatedPackages from "@/components/AnimatedPackages";
 import FadeInTitle from "@/components/FadeInTitle";
-import { getPricing } from "@/lib/pricing";
+import { Offer, WithContext } from "schema-dts";
+
+import { getPricing, PricingPackageRecord } from "@/lib/pricing";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -58,104 +61,140 @@ export const metadata: Metadata = {
   },
 };
 
+const getPackages = (
+  t: (key: string) => string,
+  latestPricing: PricingPackageRecord | null,
+  images: [string, string, string],
+) => [
+  {
+    name: t("boudoir_express"),
+    price: formatPrice(latestPricing?.express_price, defaultPricing.express),
+    image: images[0],
+    features: [
+      {
+        icon: <Photo className="w-5 h-5" />,
+        text: `12 ${t("edited_photos")}`,
+      },
+      {
+        icon: <Camera className="w-5 h-5" />,
+        text: `150 ${t("photos_hd")}`,
+      },
+      {
+        icon: <Shirt className="w-5 h-5" />,
+        text: `3 ${t("clothing_change")}`,
+      },
+      {
+        icon: <Clock className="w-5 h-5" />,
+        text: `2 ${t("hours_studio")}`,
+      },
+      {
+        icon: <Check className="w-5 h-5" />,
+        text: t("clothing_and_attrezzo"),
+      },
+    ],
+  },
+  {
+    name: t("boudoir_experience"),
+    price: formatPrice(
+      latestPricing?.experience_price,
+      defaultPricing.experience,
+    ),
+    image: images[1],
+    features: [
+      {
+        icon: <Photo className="w-5 h-5" />,
+        text: `18 ${t("edited_photos")}`,
+      },
+      {
+        icon: <Shirt className="w-5 h-5" />,
+        text: `4 ${t("clothing_change")}`,
+      },
+      {
+        icon: <Clock className="w-5 h-5" />,
+        text: `2 ${t("hours_studio")}`,
+      },
+      {
+        icon: <Camera className="w-5 h-5" />,
+        text: `200 ${t("photos_hd")}`,
+      },
+      {
+        icon: <Check className="w-5 h-5" />,
+        text: t("clothing_and_attrezzo"),
+      },
+    ],
+  },
+  {
+    name: t("deluxe_experience"),
+    price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
+    image: images[2],
+    features: [
+      {
+        icon: <Photo className="w-5 h-5" />,
+        text: `24 ${t("edited_photos")}`,
+      },
+      { icon: <Video className="w-5 h-5" />, text: t("video") },
+      {
+        icon: <UserRound className="w-5 h-5" />,
+        text: t("professional_makeup"),
+      },
+      {
+        icon: <Shirt className="w-5 h-5" />,
+        text: `4 ${t("clothing_change")}`,
+      },
+      {
+        icon: <Clock className="w-5 h-5" />,
+        text: `3 ${t("hours_studio")}`,
+      },
+      {
+        icon: <Camera className="w-5 h-5" />,
+        text: `200 ${t("photos_hd")}`,
+      },
+      {
+        icon: <Check className="w-5 h-5" />,
+        text: t("clothing_and_attrezzo"),
+      },
+    ],
+  },
+];
+
 export default async function PricingPage() {
   const t = await getTranslations("pricing");
   const latestPricing = await getPricing();
+  const pricingPhotos = (await getPhotosFromStorage("pricing")) || [];
 
-  const packages = [
-    {
-      name: t("boudoir_express"),
-      price: formatPrice(latestPricing?.express_price, defaultPricing.express),
-      image:
-        "https://live.staticflickr.com/65535/53232949297_8eb88c70b6_c_d.jpg",
-      features: [
-        {
-          icon: <Photo className="w-5 h-5" />,
-          text: `12 ${t("edited_photos")}`,
-        },
-        {
-          icon: <Camera className="w-5 h-5" />,
-          text: `150 ${t("photos_hd")}`,
-        },
-        {
-          icon: <Shirt className="w-5 h-5" />,
-          text: `3 ${t("clothing_change")}`,
-        },
-        {
-          icon: <Clock className="w-5 h-5" />,
-          text: `2 ${t("hours_studio")}`,
-        },
-        {
-          icon: <Check className="w-5 h-5" />,
-          text: t("clothing_and_attrezzo"),
-        },
-      ],
-    },
-    {
-      name: t("boudoir_experience"),
-      price: formatPrice(
-        latestPricing?.experience_price,
-        defaultPricing.experience,
-      ),
-      image:
-        "https://live.staticflickr.com/65535/54154502487_981fb48243_c_d.jpg",
-      features: [
-        {
-          icon: <Photo className="w-5 h-5" />,
-          text: `18 ${t("edited_photos")}`,
-        },
-        {
-          icon: <Shirt className="w-5 h-5" />,
-          text: `4 ${t("clothing_change")}`,
-        },
-        {
-          icon: <Clock className="w-5 h-5" />,
-          text: `2 ${t("hours_studio")}`,
-        },
-        {
-          icon: <Camera className="w-5 h-5" />,
-          text: `200 ${t("photos_hd")}`,
-        },
-        {
-          icon: <Check className="w-5 h-5" />,
-          text: t("clothing_and_attrezzo"),
-        },
-      ],
-    },
-    {
-      name: t("deluxe_experience"),
-      price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
-      image:
-        "https://live.staticflickr.com/65535/53307099860_93b77dd6dc_k_d.jpg",
-      features: [
-        {
-          icon: <Photo className="w-5 h-5" />,
-          text: `24 ${t("edited_photos")}`,
-        },
-        { icon: <Video className="w-5 h-5" />, text: t("video") },
-        {
-          icon: <UserRound className="w-5 h-5" />,
-          text: t("professional_makeup"),
-        },
-        {
-          icon: <Shirt className="w-5 h-5" />,
-          text: `4 ${t("clothing_change")}`,
-        },
-        {
-          icon: <Clock className="w-5 h-5" />,
-          text: `3 ${t("hours_studio")}`,
-        },
-        {
-          icon: <Camera className="w-5 h-5" />,
-          text: `200 ${t("photos_hd")}`,
-        },
-        {
-          icon: <Check className="w-5 h-5" />,
-          text: t("clothing_and_attrezzo"),
-        },
-      ],
-    },
+  // Shuffle photos to get random selection
+  const shuffledPhotos = [...pricingPhotos].sort(() => 0.5 - Math.random());
+
+  // Ensure we have at least 3 photos
+  const getPhotoUrl = (index: number) => {
+    if (shuffledPhotos.length === 0) return "";
+    return shuffledPhotos[index % shuffledPhotos.length]?.urlLarge || "";
+  };
+
+  const images: [string, string, string] = [
+    getPhotoUrl(0),
+    getPhotoUrl(1),
+    getPhotoUrl(2),
   ];
+
+  const packages = getPackages(
+    t as unknown as (key: string) => string,
+    latestPricing,
+    images,
+  );
+
+  const structuredData: WithContext<Offer>[] = packages.map((pkg) => ({
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    name: pkg.name,
+    price: pkg.price.replace(" €", ""),
+    priceCurrency: "EUR",
+    image: pkg.image,
+    description: pkg.features.map((f) => f.text).join(", "),
+    availability: "https://schema.org/InStock",
+    url: "https://boudoir.barcelona/pricing",
+  }));
+
   return (
     <div className="min-h-screen pt-24">
       <div className="container mx-auto px-4 py-16">
@@ -226,6 +265,10 @@ export default async function PricingPage() {
           </div>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
     </div>
   );
 }

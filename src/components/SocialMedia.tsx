@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { SimpleIcon } from "simple-icons";
 import {
   siBluesky,
-  siFlickr,
   siInstagram,
   siKeras,
   siThemodelsresource,
@@ -33,7 +32,7 @@ const socialLinks: Array<SocialLinks> = [
     icon: siInstagram,
     url: "https://instagram.com/sensuelleboudoir",
   },
-  { name: "Flickr", icon: siFlickr, url: "https://flickr.com/people/anyulled" },
+
   { name: "Kavyar", icon: siKeras, url: "https://kavyar.com/anyulled" },
   {
     name: "Model Mayhem",

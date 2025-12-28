@@ -1,10 +1,8 @@
 import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
-import { fetchModelPhotos } from "@/services/photos";
 import modelData from "@/data/models";
-/*eslint-disable @next/next/no-img-element */
+import { getPhotosFromStorage } from "@/services/storage/photos";
 
-export const contentType = "image/png";
 export const alt = "Sensuelle Boudoir";
 export const size = {
   width: 1200,
@@ -17,7 +15,7 @@ export default async function OpengraphImage({
   params: { modelName: string };
 }) {
   const modelName = extractNameFromTag(modelData, params.modelName);
-  const photos = await fetchModelPhotos(params.modelName, 1);
+  const photos = await getPhotosFromStorage(`models/${params.modelName}`, 1);
 
   return new ImageResponse(
     (

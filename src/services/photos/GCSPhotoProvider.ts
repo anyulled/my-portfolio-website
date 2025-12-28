@@ -39,12 +39,8 @@ interface GCSFile {
     timeCreated?: string;
   };
   publicUrl(): string;
-  getSignedUrl?(config: {
-    action: string;
-    expires: number;
-  }): Promise<[string]>;
+  getSignedUrl?(config: { action: string; expires: number }): Promise<[string]>;
 }
-
 
 /**
  * Extracts the photo ID from a filename.
@@ -234,7 +230,7 @@ export class GCSPhotoProvider implements PhotoProvider {
       description: "",
       dateTaken: dateUpload,
       dateUpload,
-      height: "0",
+      height: 0,
       title,
       urlCrop: url,
       urlLarge: url,
@@ -245,7 +241,7 @@ export class GCSPhotoProvider implements PhotoProvider {
       urlThumbnail: url,
       urlZoom: url,
       views: 0,
-      width: "0",
+      width: 0,
       tags: "",
       srcSet: [
         {

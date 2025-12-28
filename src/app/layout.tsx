@@ -34,7 +34,12 @@ export const metadata: Metadata = {
     },
     description: "Boudoir photography service in Barcelona.",
     images: [
-      "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
+      {
+        url: "/opengraph-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Boudoir Barcelona",
+      },
     ],
     site: "@anyulled",
     creator: "@anyulled",

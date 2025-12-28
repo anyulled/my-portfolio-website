@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import models, { Model } from "@/data/models";
+import models from "@/data/models";
 import { Metadata } from "next";
-import { getPhotoService } from "@/services/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Photo } from "@/types/photos";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
@@ -15,33 +15,13 @@ export const metadata: Metadata = {
   twitter: { title: "Models" },
 };
 
-const batchModels = (models: Model[], batchSize: number) => {
-  const batches = [];
-  for (let i = 0; i < models.length; i += batchSize) {
-    batches.push(models.slice(i, i + batchSize));
-  }
-  return batches;
-};
-
 const fetchPhotos = async (): Promise<Photo[]> => {
-  const photoService = getPhotoService();
-  const modelBatches = batchModels(models, 20);
-  const allPhotos: Photo[] = [];
-
-  for (const batch of modelBatches) {
-    try {
-      // Uses GCS primary with Flickr fallback
-      const photos = await photoService.fetchPhotos({
-        tags: batch.map((model) => model.tag.replace("-", "")),
-        limit: 100,
-      });
-      allPhotos.push(...photos);
-    } catch (error) {
-      console.error("Error fetching photos:", error);
-    }
+  try {
+    return (await getPhotosFromStorage("models", 200)) || [];
+  } catch (error) {
+    console.error("Error fetching photos from storage:", error);
+    return [];
   }
-
-  return allPhotos;
 };
 
 export default async function ModelIndexPage() {

@@ -7,6 +7,7 @@ import FadeInTitle from "@/components/FadeInTitle";
 import FadeInImage from "@/components/FadeInImage";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { useTranslations } from "next-intl";
+
 import type { Photo } from "@/types/photos";
 
 //region Fonts
@@ -19,12 +20,14 @@ interface AboutContentProps {
   images: Photo[] | null;
   profileImageUrl: string;
   imageThumbnail: string;
+  collaborationImages: Photo[] | null;
 }
 
 export default function AboutContent({
   images,
   profileImageUrl,
   imageThumbnail,
+  collaborationImages,
 }: Readonly<AboutContentProps>) {
   const t = useTranslations("about");
   return (
@@ -107,7 +110,7 @@ export default function AboutContent({
           </div>
         </div>
 
-        {images && images.length > 0 && (
+        {images && (
           <>
             <FadeInTitle>
               <h2
@@ -162,8 +165,14 @@ export default function AboutContent({
             <CardContent className="p-2">
               <FadeInImage index={0} stagger={0.1}>
                 <Image
-                  src="https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
-                  blurDataURL="https://live.staticflickr.com/65535/53985394873_d9fca2f480_w_d.jpg"
+                  src={
+                    collaborationImages?.[0]?.urlMedium ||
+                    "https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
+                  }
+                  blurDataURL={
+                    collaborationImages?.[0]?.urlSmall ||
+                    "https://live.staticflickr.com/65535/53985394873_d9fca2f480_w_d.jpg"
+                  }
                   placeholder="blur"
                   alt="Peter Coulson, Jon Hernandez, Anyul Rivas"
                   width={500}
@@ -181,8 +190,14 @@ export default function AboutContent({
             <CardContent className="p-2">
               <FadeInImage index={1} stagger={0.1}>
                 <Image
-                  src="https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
-                  blurDataURL="https://live.staticflickr.com/65535/53984294097_715ef9c26c_w_d.jpg"
+                  src={
+                    collaborationImages?.[1]?.urlMedium ||
+                    "https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
+                  }
+                  blurDataURL={
+                    collaborationImages?.[1]?.urlSmall ||
+                    "https://live.staticflickr.com/65535/53984294097_715ef9c26c_w_d.jpg"
+                  }
                   placeholder="blur"
                   alt="Antonio Garci, Chema Photo, Anyul Rivas"
                   width={500}
@@ -200,8 +215,14 @@ export default function AboutContent({
             <CardContent className="p-2">
               <FadeInImage index={2} stagger={0.1}>
                 <Image
-                  src="https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
-                  blurDataURL="https://live.staticflickr.com/65535/53985940379_089fa1da0e_w_d.jpg"
+                  src={
+                    collaborationImages?.[2]?.urlMedium ||
+                    "https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
+                  }
+                  blurDataURL={
+                    collaborationImages?.[2]?.urlSmall ||
+                    "https://live.staticflickr.com/65535/53985940379_089fa1da0e_w_d.jpg"
+                  }
                   placeholder="blur"
                   alt="Rubén Suárez, Anyul Rivas"
                   width={500}
@@ -219,8 +240,14 @@ export default function AboutContent({
             <CardContent className="p-2">
               <FadeInImage index={3} stagger={0.1}>
                 <Image
-                  src="https://live.staticflickr.com/65535/54396567099_28021d76b8_z.jpg"
-                  blurDataURL="https://live.staticflickr.com/65535/54396567099_28021d76b8_w_d.jpg"
+                  src={
+                    collaborationImages?.[3]?.urlMedium ||
+                    "https://live.staticflickr.com/65535/54396567099_28021d76b8_z.jpg"
+                  }
+                  blurDataURL={
+                    collaborationImages?.[3]?.urlSmall ||
+                    "https://live.staticflickr.com/65535/54396567099_28021d76b8_w_d.jpg"
+                  }
                   placeholder="blur"
                   alt="Dan Hecho, Anyul Rivas"
                   width={500}

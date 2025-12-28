@@ -1,15 +1,18 @@
 import { ImageResponse } from "next/og";
 /*eslint-disable @next/next/no-img-element */
 
-export const runtime = "edge";
 export const contentType = "image/png";
 export const alt = "Sensuelle Boudoir";
 export const size = {
   width: 1200,
   height: 630,
 };
+export const runtime = "nodejs";
+
+import { getPhotosFromStorage } from "@/services/storage/photos";
 
 async function fetchAndEncodeImage(url: string) {
+  if (!url) return null;
   try {
     const response = await fetch(url);
 
@@ -29,24 +32,25 @@ async function fetchAndEncodeImage(url: string) {
     return `data:${contentType};base64,${base64}`;
   } catch (error) {
     console.error(`Error fetching image from ${url}:`, error);
-    throw error;
+    // Don't throw, return null so Promise.allSettled or similar can handle it,
+    // or just return null to filter out.
+    return null;
   }
 }
 
 export default async function PricingImage() {
   try {
     console.log("Fetching Images");
-    const images = await Promise.all([
-      fetchAndEncodeImage(
-        "https://live.staticflickr.com/65535/53232949297_8eb88c70b6_c_d.jpg",
-      ),
-      fetchAndEncodeImage(
-        "https://live.staticflickr.com/65535/54154502487_981fb48243_c_d.jpg",
-      ),
-      fetchAndEncodeImage(
-        "https://live.staticflickr.com/65535/53307099860_93b77dd6dc_k_d.jpg",
-      ),
-    ]);
+    const photos = (await getPhotosFromStorage("pricing")) || [];
+
+    // Use first 3 photos or fallback
+    const pricingImages = photos.slice(0, 3).map((p) => p.urlMedium);
+
+    const validImages = await Promise.all(
+      pricingImages.map((url) => fetchAndEncodeImage(url)),
+    );
+
+    const images = validImages.filter((img): img is string => img !== null);
 
     console.log("Images fetched successfully");
 

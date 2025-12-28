@@ -7,7 +7,7 @@ const mockPhotos: Photo[] = [
     description: "desc",
     dateTaken: new Date(),
     dateUpload: new Date(),
-    height: "200",
+    height: 200,
     title: "Title",
     urlCrop: "crop.jpg",
     urlLarge: "large.jpg",
@@ -18,7 +18,7 @@ const mockPhotos: Photo[] = [
     urlSmall: "small.jpg",
     urlZoom: "zoom.jpg",
     views: 10,
-    width: "300",
+    width: 300,
     tags: "tag1",
     srcSet: [
       {

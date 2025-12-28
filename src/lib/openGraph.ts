@@ -10,7 +10,7 @@ export const openGraph: OpenGraph = {
   siteName: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
   images: [
     {
-      url: "https://live.staticflickr.com/65535/53367295647_2ff0fdf881_h.jpg",
+      url: "/opengraph-image.jpg",
       width: 1200,
       height: 630,
       alt: "Boudoir photography in Barcelona",
