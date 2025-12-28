@@ -2,6 +2,7 @@ import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
+import chalk from "chalk";
 import type { Photo } from "@/types/photos";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
@@ -36,12 +37,16 @@ const hasCredentials = () =>
 const createStorageClient = (): Storage => {
   if (!hasCredentials()) {
     console.log(
-      "[PhotosStorage] No explicit GCP credentials found, using Application Default Credentials (ADC)",
+      chalk.cyan(
+        "[PhotosStorage] No explicit GCP credentials found, using Application Default Credentials (ADC)",
+      ),
     );
     return new Storage();
   }
   console.log(
-    "[PhotosStorage] Using explicit GCP credentials from environment",
+    chalk.cyan(
+      "[PhotosStorage] Using explicit GCP credentials from environment",
+    ),
   );
   return new Storage({
     projectId: process.env.GCP_PROJECT_ID,
@@ -94,7 +99,9 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
     // Construct URL manually to avoid double-encoding issues
     const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
     const url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
-    console.log(`[PhotosStorage] Using public URL for ${file.name}: ${url}`);
+    console.log(
+      chalk.cyan(`[PhotosStorage] Using public URL for ${file.name}: ${url}`),
+    );
     return url;
   }
 
@@ -108,7 +115,10 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
 
     return signedUrl;
   } catch (error) {
-    console.warn(`[PhotosStorage] Failed to sign URL for ${file.name}`, error);
+    console.warn(
+      chalk.yellow(`[PhotosStorage] Failed to sign URL for ${file.name}`),
+      error,
+    );
 
     const [isPublic] = await file.isPublic();
     if (!isPublic && typeof file.makePublic === "function") {
@@ -116,7 +126,9 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
         await file.makePublic();
       } catch (makePublicError) {
         console.warn(
-          `[PhotosStorage] Failed to make ${file.name} public before falling back to public URL`,
+          chalk.yellow(
+            `[PhotosStorage] Failed to make ${file.name} public before falling back to public URL`,
+          ),
           makePublicError,
         );
       }
@@ -160,7 +172,9 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     }
     id = Math.abs(hash);
     console.log(
-      `[PhotosStorage] Generated ID ${id} from filename hash for ${file.name}`,
+      chalk.cyan(
+        `[PhotosStorage] Generated ID ${id} from filename hash for ${file.name}`,
+      ),
     );
   }
 
@@ -213,12 +227,12 @@ export const getPhotosFromStorage = async (
   try {
     const cachedPhotos = await getRedisCachedData<Photo[]>(cacheKey);
     if (cachedPhotos) {
-      console.log(`[PhotosStorage] Redis hit for ${prefix}`);
+      console.log(chalk.green(`[PhotosStorage] Redis hit for ${prefix}`));
       return cachedPhotos;
     }
   } catch (error) {
     console.warn(
-      `[PhotosStorage] Failed to read from Redis for ${prefix}:`,
+      chalk.yellow(`[PhotosStorage] Failed to read from Redis for ${prefix}:`),
       error,
     );
   }
@@ -227,14 +241,14 @@ export const getPhotosFromStorage = async (
   try {
     const cachedPhotos = await getCachedData<Photo[]>(cacheKey);
     if (cachedPhotos) {
-      console.log(`[PhotosStorage] Vercel Blob hit for ${prefix}`);
+      console.log(chalk.green(`[PhotosStorage] Vercel Blob hit for ${prefix}`));
       // Hydrate Redis
       setRedisCachedData(cacheKey, cachedPhotos, CACHE_TTL_SECONDS);
       return cachedPhotos;
     }
   } catch (error) {
     console.warn(
-      `[PhotosStorage] Failed to read from cache for ${prefix}:`,
+      chalk.yellow(`[PhotosStorage] Failed to read from cache for ${prefix}:`),
       error,
     );
   }
@@ -242,7 +256,9 @@ export const getPhotosFromStorage = async (
   // 3. Fetch from GCS
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
   console.log(
-    `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}`,
+    chalk.cyan(
+      `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}`,
+    ),
   );
 
   try {
@@ -253,15 +269,19 @@ export const getPhotosFromStorage = async (
       prefix,
     };
     console.log(
-      `[PhotosStorage] Calling bucket.getFiles with options:`,
+      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
       options,
     );
     const [files] = await bucket.getFiles(options);
-    console.log(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`);
+    console.log(
+      chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
+    );
 
     if (!files || files.length === 0) {
       console.warn(
-        `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
+        chalk.yellow(
+          `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
+        ),
       );
       return [];
     }
@@ -272,7 +292,9 @@ export const getPhotosFromStorage = async (
 
     let photos = mapped.filter((photo): photo is Photo => photo !== null);
     console.log(
-      `[PhotosStorage] Successfully mapped ${photos.length} photos from ${files.length} files`,
+      chalk.green(
+        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${files.length} files`,
+      ),
     );
 
     if (limit && limit > 0) {
@@ -283,7 +305,9 @@ export const getPhotosFromStorage = async (
     try {
       if (photos.length > 0) {
         console.log(
-          `[PhotosStorage] Writing ${photos.length} photos to cache layers`,
+          chalk.cyan(
+            `[PhotosStorage] Writing ${photos.length} photos to cache layers`,
+          ),
         );
         // Write to Redis (Fast access)
         await setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
@@ -292,7 +316,7 @@ export const getPhotosFromStorage = async (
       }
     } catch (error) {
       console.warn(
-        `[PhotosStorage] Failed to write to cache for ${prefix}:`,
+        chalk.yellow(`[PhotosStorage] Failed to write to cache for ${prefix}:`),
         error,
       );
     }
@@ -303,11 +327,13 @@ export const getPhotosFromStorage = async (
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
     console.error(
-      `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
+      chalk.red(
+        `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
+      ),
     );
-    console.error(`[PhotosStorage] Error message: ${errorMessage}`);
+    console.error(chalk.red(`[PhotosStorage] Error message: ${errorMessage}`));
     if (errorStack) {
-      console.error(`[PhotosStorage] Stack trace: ${errorStack}`);
+      console.error(chalk.red(`[PhotosStorage] Stack trace: ${errorStack}`));
     }
     return null;
   }

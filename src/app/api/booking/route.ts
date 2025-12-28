@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import chalk from "chalk";
 import { sendEmailToRecipient } from "@/services/mailer";
 
 export async function POST(req: Request) {
@@ -76,7 +77,7 @@ Booking Details:
 - Willing to Sign Model Release: ${modelRelease}
 - Preferred Payment Types: ${paymentTypes.join(", ")}
 `;
-    console.log("ENV:", process.env.NODE_ENV);
+    console.log(chalk.cyan("[Booking] ENV:"), process.env.NODE_ENV);
     if (process.env.NODE_ENV == "production") {
       await sendEmailToRecipient(
         message,
@@ -84,7 +85,8 @@ Booking Details:
         `Boudoir Barcelona - New Booking Request from ${fullName}`,
       );
     } else {
-      console.log(message);
+      console.log(chalk.yellow("[Booking] Development mode - email not sent:"));
+      console.log(chalk.gray(message));
     }
 
     return NextResponse.json({
@@ -93,7 +95,7 @@ Booking Details:
         "Thank you for your booking request. We will review your information and get back to you soon!",
     });
   } catch (error) {
-    console.error("Booking form error:", error);
+    console.error(chalk.red("[Booking] Booking form error:"), error);
     return NextResponse.json(
       {
         success: false,

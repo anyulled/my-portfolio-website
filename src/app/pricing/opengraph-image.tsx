@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import chalk from "chalk";
 
 export const contentType = "image/png";
 export const alt = "Sensuelle Boudoir";
@@ -30,7 +31,10 @@ async function fetchAndEncodeImage(url: string) {
     const base64 = Buffer.from(arrayBuffer).toString("base64");
     return `data:${contentType};base64,${base64}`;
   } catch (error) {
-    console.error(`Error fetching image from ${url}:`, error);
+    console.error(
+      chalk.red(`[PricingOG] Error fetching image from ${url}:`),
+      error,
+    );
     // Don't throw, return null so Promise.allSettled or similar can handle it,
     // or just return null to filter out.
     return null;
@@ -39,7 +43,7 @@ async function fetchAndEncodeImage(url: string) {
 
 export default async function PricingImage() {
   try {
-    console.log("Fetching Images");
+    console.log(chalk.cyan("[PricingOG] Fetching Images"));
     const photos = (await getPhotosFromStorage("pricing")) || [];
 
     // Use first 3 photos or fallback
@@ -51,7 +55,7 @@ export default async function PricingImage() {
 
     const images = validImages.filter((img): img is string => img !== null);
 
-    console.log("Images fetched successfully");
+    console.log(chalk.green("[PricingOG] Images fetched successfully"));
 
     return new ImageResponse(
       (
@@ -72,7 +76,10 @@ export default async function PricingImage() {
       },
     );
   } catch (error) {
-    console.error("Error generating OpenGraph image:", error);
+    console.error(
+      chalk.red("[PricingOG] Error generating OpenGraph image:"),
+      error,
+    );
     return new ImageResponse(
       (
         <div tw="flex items-center justify-center w-full h-full bg-black">

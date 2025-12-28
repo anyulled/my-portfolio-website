@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa } from "next/font/google";
 import React from "react";
+import chalk from "chalk";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -199,7 +200,7 @@ export default function BookingPage() {
 
       const result = await res.json();
 
-      console.log("== Result ==", result);
+      console.log(chalk.cyan("[BookingForm] Result:"), result);
 
       if (result.success) {
         toast({
@@ -217,7 +218,7 @@ export default function BookingPage() {
         });
       }
     } catch (error) {
-      console.error("error", error);
+      console.error(chalk.red("[BookingForm] Error:"), error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again later.",

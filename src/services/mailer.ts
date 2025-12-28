@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import chalk from "chalk";
 
 const transporter = nodemailer.createTransport({
   service: "smtp",
@@ -36,7 +37,7 @@ export const sendEmail = async (
       text: options.text,
     });
   } catch (e) {
-    console.error(e);
+    console.error(chalk.red("[Mailer] Error sending email:"), e);
     return null;
   }
 };

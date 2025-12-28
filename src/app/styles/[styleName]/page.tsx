@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import chalk from "chalk";
 
 import { getPhotosFromStorage } from "@/services/storage/photos";
 import Gallery from "@/components/Gallery";
@@ -57,8 +58,8 @@ export default async function StylePage({ params }: Readonly<Props>) {
     return NotFound();
   }
   const convertedStyleName = styleName ?? "boudoir";
-  console.log(`Param styleName: ${extractedStyleName}`);
-  console.log(`to Storage: ${styleName}`);
+  console.log(chalk.cyan(`[Styles] Param styleName: ${extractedStyleName}`));
+  console.log(chalk.cyan(`[Styles] to Storage: ${styleName}`));
 
   const photos = await getPhotosFromStorage(`styles/${convertedStyleName}`, 36);
 
