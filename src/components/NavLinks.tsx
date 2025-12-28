@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 export const NavLinks = (props: {
   navLinks: {
@@ -18,8 +18,8 @@ export const NavLinks = (props: {
           className="text-sm font-medium hover:text-primary transition-colors dark:text-foreground text-muted-foreground"
           onClick={() => props.handleNavClick(link.name)}
         >
-          {/* @ts-expect-error i18n issues */}
-          {t(link.name)}
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {t(link.name as any)}
         </Link>
       ))}
     </>

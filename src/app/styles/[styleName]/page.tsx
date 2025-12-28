@@ -1,14 +1,14 @@
-import { Metadata } from "next";
 import chalk from "chalk";
+import { Metadata } from "next";
 
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import NotFound from "@/app/not-found";
 import Gallery from "@/components/Gallery";
-import { openGraph } from "@/lib/openGraph";
-import { Dancing_Script } from "next/font/google";
 import { styles } from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
-import NotFound from "@/app/not-found";
+import { openGraph } from "@/lib/openGraph";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { getTranslations } from "next-intl/server";
+import { Dancing_Script } from "next/font/google";
 
 import Loading from "@/app/loading";
 import { Suspense } from "react";
@@ -72,8 +72,8 @@ export default async function StylePage({ params }: Readonly<Props>) {
       <h1
         className={`${dancingScript.className} pt-44 pb-3 pl-12 lg:pb-12 capitalize`}
       >
-        {/* @ts-expect-error i18n issues */}
-        {t(styleName.replace("-", "_"))}
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {t(styleName.replace("-", "_") as any)}
       </h1>
       <Suspense fallback={<Loading />}>
         <Gallery photos={photos} showTitle={false} />

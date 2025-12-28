@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 const footerLinks = [
   { name: "privacy", href: "/privacy" },
@@ -16,8 +16,8 @@ export default function Footer() {
           <nav className="flex flex-wrap justify-center gap-4 mb-4">
             {footerLinks.map((link) => (
               <Link key={link.name} href={link.href} className="text-sm">
-                {/* @ts-expect-error i18n issues */}
-                {t(link.name)}
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {t(link.name as any)}
               </Link>
             ))}
           </nav>
