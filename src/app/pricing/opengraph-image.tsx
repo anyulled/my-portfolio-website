@@ -11,6 +11,12 @@ export const runtime = "nodejs";
 
 import { getPhotosFromStorage } from "@/services/storage/photos";
 
+/**
+ * Fetches an image from the given URL and returns it encoded as a base64 data URL.
+ *
+ * @param url - The image URL to fetch.
+ * @returns A `data:` URL containing the image encoded in base64 if the fetch and validation succeed, `null` otherwise. Errors and validation failures are logged to the console.
+ */
 async function fetchAndEncodeImage(url: string) {
   if (!url) return null;
   try {
@@ -38,6 +44,13 @@ async function fetchAndEncodeImage(url: string) {
   }
 }
 
+/**
+ * Generate an Open Graph image for the pricing page using up to three stored photos.
+ *
+ * Attempts to embed up to three medium-resolution pricing photos as inline data URLs; if image fetching or rendering fails, returns a fallback branded image with centered text.
+ *
+ * @returns An ImageResponse containing either a horizontal composition of up to three embedded pricing photos or a fallback black background image with branding text.
+ */
 export default async function PricingImage() {
   try {
     console.log("Fetching Images");

@@ -9,6 +9,13 @@ export const size = {
   height: 630,
 };
 
+/**
+ * Generates an Open Graph image for a model using the model route parameter.
+ *
+ * @param params - Route parameters object.
+ * @param params.modelName - The model identifier from the route; used to derive a display name and to fetch the model's photos from storage.
+ * @returns An ImageResponse containing a two-column Open Graph image: the model's first stored photo on the left and branding plus "Model {modelName}" headings on the right.
+ */
 export default async function OpengraphImage({
   params,
 }: {

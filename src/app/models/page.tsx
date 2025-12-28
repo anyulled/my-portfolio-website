@@ -24,6 +24,11 @@ const fetchPhotos = async (): Promise<Photo[]> => {
   }
 };
 
+/**
+ * Render the Models index page displaying model names and representative photos.
+ *
+ * @returns A React element containing the page header and a responsive grid of models; each model shows its name and, when available, a linked representative photo.
+ */
 export default async function ModelIndexPage() {
   const allPhotos = await fetchPhotos();
 

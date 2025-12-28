@@ -49,6 +49,18 @@ export const generateMetadata = async ({
   };
 };
 
+/**
+ * Render a style-specific gallery page.
+ *
+ * Fetches photos for the provided `styleName`, renders a localized heading for the style,
+ * and displays the photos in a Gallery. If the style name is invalid, missing, or photos
+ * cannot be retrieved, the NotFound page is returned.
+ *
+ * @param params - An object containing the route `styleName` used to identify which style's
+ *   photos to load (may be undefined).
+ * @returns The page content: an H1 with the localized style name and a photo gallery for that
+ *   style, or the NotFound component when the style is invalid or photos are unavailable.
+ */
 export default async function StylePage({ params }: Readonly<Props>) {
   const { styleName } = await params;
   const t = await getTranslations("styles");

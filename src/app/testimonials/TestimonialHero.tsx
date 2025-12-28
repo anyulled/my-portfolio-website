@@ -14,6 +14,12 @@ interface TestimonialsHeroProps {
   image: string;
 }
 
+/**
+ * Render a testimonials hero section with a background image, animated title and subtitle, and a scroll-linked parallax effect.
+ *
+ * @param image - URL or import path of the background image used for the hero section
+ * @returns A section element containing a translucent overlay with the background image and centered translated title and subtitle; the title and subtitle animate into view on mount and the hero image shifts vertically in response to scrolling.
+ */
 export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);

@@ -61,6 +61,13 @@ const structuredData: WithContext<WebPage> = {
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
+/**
+ * Render the testimonials page with a hero image, featured testimonials, additional client stories, a call-to-action, and embedded JSON-LD.
+ *
+ * Loads testimonials, a hero photo, and translations; splits testimonials into featured and regular groups and composes the page layout that includes the hero, testimonial grids, CTA, and structured data script.
+ *
+ * @returns The React element representing the testimonials page
+ */
 export default async function TestimonialsPage() {
   const testimonials: Testimonial[] = await getTestimonials();
   const heroPhotos = await getPhotosFromStorage("hero");

@@ -51,6 +51,13 @@ const fetchCollaborationPhotos = async () => {
   }
 };
 
+/**
+ * Render the About page content with profile, cover, and collaboration photos.
+ *
+ * If fetching cover photos fails, an error is logged and the page is rendered with `images` set to `null`.
+ *
+ * @returns The rendered `AboutContent` React element configured with fetched cover photos, collaboration photos, the profile image URL, and the thumbnail URL.
+ */
 export default async function BioPage() {
   const images = await fetchCoverPhotos();
   const collaborationImages = await fetchCollaborationPhotos();

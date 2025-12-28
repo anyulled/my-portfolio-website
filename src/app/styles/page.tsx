@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   description: "Boudoir photography service in Barcelona",
 };
 
+/**
+ * Renders the photography styles index page with a grid of styled links for each photography style.
+ *
+ * Fetches stored photos tagged as styles and translations, then displays each style with an image,
+ * captioned name, and link to the style's detail page.
+ *
+ * @returns The React element for the Photography Styles page consisting of a header and a responsive grid of style cards.
+ */
 export default async function PhotographyStylesPage() {
   const res = await getPhotosFromStorage("styles", 500);
   const t = await getTranslations("styles-index");

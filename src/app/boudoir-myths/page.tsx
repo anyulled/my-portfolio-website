@@ -118,10 +118,22 @@ const faqStructuredData: WithContext<FAQPage> = {
   ],
 };
 
+/**
+ * Retrieve up to six "boudoir" photos from the configured storage.
+ *
+ * @returns An array of up to 6 boudoir photo objects, or `null`/`undefined` if retrieval fails.
+ */
 async function fetchPhotos() {
   return await getPhotosFromStorage("boudoir", 6);
 }
 
+/**
+ * Render the Boudoir myths page with embedded structured data and component sections driven by fetched photos.
+ *
+ * Renders JSON-LD for article and FAQ structured data, a hero image when enough photos are available, and the page sections (intro, list, truth section, and CTA).
+ *
+ * @returns A JSX element containing the complete page markup, or `null` if the required photos could not be loaded.
+ */
 export default async function BoudoirMythsPage() {
   const photos = await fetchPhotos();
 

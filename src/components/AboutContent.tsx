@@ -23,6 +23,15 @@ interface AboutContentProps {
   collaborationImages: Photo[] | null;
 }
 
+/**
+ * Render the About page content including profile image, biography text, published works gallery, and collaborations grid.
+ *
+ * @param images - Optional array of published work photos displayed in the published works gallery; when null the gallery is omitted.
+ * @param profileImageUrl - URL of the main profile image shown in the left column.
+ * @param imageThumbnail - Blur-placeholder data URL used while the profile image is loading.
+ * @param collaborationImages - Optional array of photos used for the collaborations grid; individual entries may be missing and will fall back to default images.
+ * @returns The About content React element ready for rendering within a page layout.
+ */
 export default function AboutContent({
   images,
   profileImageUrl,

@@ -58,6 +58,15 @@ const fetchPhotos = async (modelName: string) => {
   }
 };
 
+/**
+ * Render the page for a model identified by params.modelName.
+ *
+ * Fetches the model's photos and renders a page with the model name header and a photo gallery;
+ * triggers a 404 response when `modelName` is missing.
+ *
+ * @param params - Route parameters containing `modelName`
+ * @returns A React element for the model page, or the 404 response when `modelName` is not provided
+ */
 export default async function ModelPage({ params }: Readonly<Props>) {
   const { modelName } = await params;
   if (!modelName) {

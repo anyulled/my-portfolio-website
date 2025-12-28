@@ -3,6 +3,12 @@ import chalk from "chalk";
 
 import { sanitizeKey } from "@/lib/sanitizer";
 
+/**
+ * Retrieve cached JSON data for a given cache key from blob storage.
+ *
+ * @param key - The cache key to look up; it will be sanitized before lookup.
+ * @returns The parsed JSON value stored under the sanitized key as type `T`, or `null` if no cache entry exists.
+ */
 export async function getCachedData<T>(key: string): Promise<T | null> {
   const sanitizedKey = sanitizeKey(key);
   const response = await list();
@@ -19,6 +25,13 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
   return await res.json();
 }
 
+/**
+ * Store a value in Vercel Blob storage under a sanitized key and set its cache lifetime.
+ *
+ * @param key - The cache key (will be sanitized before storage)
+ * @param data - The value to serialize and store as JSON
+ * @param expiryInSeconds - Time-to-live in seconds applied to the `cache-control` max-age
+ */
 export async function setCachedData<T>(
   key: string,
   data: T,

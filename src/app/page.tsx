@@ -14,6 +14,13 @@ export const metadata: Metadata = {
     "Intimate, elegant boudoir photography in Barcelona. Empowering portraits with expert guidance, luxe styling, and a private experience. Book today.",
 };
 
+/**
+ * Renders the home page with a hero banner, gallery, social links, separator, and contact form; shows a minimal error view if gallery photos cannot be loaded.
+ *
+ * The hero banner uses stored hero images when available and falls back to a static image when not.
+ *
+ * @returns The page's JSX: the full main content (hero, gallery, social media, separator, contact form) or a minimal error fragment when gallery photos are unavailable.
+ */
 export default async function HomePage() {
   const galleryPhotos = await getPhotosFromStorage("portfolio");
   const heroPhotos = (await getPhotosFromStorage("hero")) || [];

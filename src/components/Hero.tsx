@@ -18,6 +18,12 @@ interface HeroProps {
   }[];
 }
 
+/**
+ * Render the page hero with an optional background image, animated title, and localized subtitle.
+ *
+ * @param images - Optional array of background image descriptors; each item should have `image` (URL) and `position` (CSS background-position). If `images` is empty or undefined, no background layer is rendered.
+ * @returns The hero section element when mounted, `null` otherwise.
+ */
 export default function Hero({ images }: HeroProps) {
   const t = useTranslations("home");
   const [mounted, setMounted] = useState(false);

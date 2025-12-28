@@ -11,6 +11,13 @@ export const size = {
   height: 630,
 };
 
+/**
+ * Generate an Open Graph image for a style route parameter.
+ *
+ * The function derives a style name from the route `params.styleName` (defaulting to "boudoir" when extraction fails), fetches one photo from storage at `styles/<styleName>`, and returns an ImageResponse containing a two-column layout: the left column shows the fetched photo (if any) and the right column displays the fixed title "Sensuelle Boudoir" and the resolved style name.
+ *
+ * @returns An ImageResponse containing the composed Open Graph image. If no photo is available, the image is returned with an empty/missing photo element. 
+ */
 export default async function OpengraphImage({
   params,
 }: {

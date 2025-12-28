@@ -157,6 +157,13 @@ const getPackages = (
   },
 ];
 
+/**
+ * Render the Pricing page composed of localized package offers, general conditions, and embedded structured data.
+ *
+ * The page displays three pricing packages (with images and features), a list of general conditions, and a JSON-LD script containing schema.org Offer entries derived from the displayed packages.
+ *
+ * @returns The JSX element representing the pricing page.
+ */
 export default async function PricingPage() {
   const t = await getTranslations("pricing");
   const latestPricing = await getPricing();
