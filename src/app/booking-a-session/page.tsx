@@ -555,7 +555,7 @@ export default function BookingPage() {
           <div className="pt-4">
             <Button
               type="submit"
-              className="w-full text-bold bg-mocha-mousse-400 text-mocha-mousse-50"
+              className="w-full text-bold bg-primary text-primary-foreground"
               disabled={isSubmitting}
             >
               {isSubmitting ? t("submitting") : t("submit")}

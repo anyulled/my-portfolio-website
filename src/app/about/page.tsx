@@ -5,10 +5,10 @@ import AboutContent from "@/components/AboutContent";
 
 //region Images
 const profileImageUrl =
-  "https://live.staticflickr.com/65535/53985281833_769ef447ff_z.jpg";
+  "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/anyul-rivas_53909071543_o.jpg";
 
 const imageThumbnail =
-  "https://live.staticflickr.com/65535/53985281833_769ef447ff_c_d.jpg";
+  "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/anyul-rivas_53909071543_o.jpg";
 //endregion
 
 const metadataImages = [

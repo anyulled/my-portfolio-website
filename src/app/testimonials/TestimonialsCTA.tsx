@@ -76,24 +76,21 @@ export default function TestimonialsCTA() {
   }
 
   return (
-    <section
-      ref={ctaRef}
-      className="bg-gradient-to-r from-mocha-mousse-800 to-mocha-mousse-900 py-20"
-    >
+    <section ref={ctaRef} className="bg-primary/90 py-20">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <div ref={contentRef}>
           <h2
-            className={`${arefRuqaa.className} text-3xl md:text-4xl font-serif text-white mb-6`}
+            className={`${arefRuqaa.className} text-3xl md:text-4xl font-serif text-primary-foreground mb-6`}
           >
             {t("ready_to_create")}
           </h2>
-          <p className="text-mocha-mousse-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-primary-foreground/90 text-lg mb-8 max-w-2xl mx-auto">
             {t("join_hundreds")}
           </p>
           <Button
             onClick={handleClick}
             size="lg"
-            className="bg-white text-mocha-mousse-200 hover:bg-mocha-mousse-100 px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+            className="bg-background text-foreground hover:bg-background/90 px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
           >
             <Calendar className="mr-2 h-5 w-5" />
             {t("book_your_session")}
@@ -105,18 +102,24 @@ export default function TestimonialsCTA() {
           className="flex justify-center items-center space-x-12 mt-12"
         >
           <div className="text-center">
-            <Heart className="h-12 w-12 text-white mx-auto mb-2" />
-            <p className="text-mocha-mousse-100 text-sm">{t("empowering")}</p>
+            <Heart className="h-12 w-12 text-primary-foreground mx-auto mb-2" />
+            <p className="text-primary-foreground/90 text-sm">
+              {t("empowering")}
+            </p>
           </div>
           <div className="text-center">
-            <Camera className="h-12 w-12 text-white mx-auto mb-2" />
-            <p className="text-mocha-mousse-100 text-sm">{t("professional")}</p>
+            <Camera className="h-12 w-12 text-primary-foreground mx-auto mb-2" />
+            <p className="text-primary-foreground/90 text-sm">
+              {t("professional")}
+            </p>
           </div>
           <div className="text-center">
-            <div className="h-12 w-12 bg-white rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-mocha-mousse-100 font-bold text-xl">★</span>
+            <div className="h-12 w-12 bg-background rounded-full flex items-center justify-center mx-auto mb-2">
+              <span className="text-primary font-bold text-xl">★</span>
             </div>
-            <p className="text-mocha-mousse-100 text-sm">{t("five-star")}</p>
+            <p className="text-primary-foreground/90 text-sm">
+              {t("five-star")}
+            </p>
           </div>
         </div>
       </div>

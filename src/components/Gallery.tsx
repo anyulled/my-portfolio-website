@@ -45,7 +45,7 @@ export default function Gallery({
 
   return (
     <>
-      <section className="py-6 md:py-3 bg-mocha-mousse-50 dark:bg-mocha-mousse-900">
+      <section className="py-6 md:py-3 bg-background dark:bg-background">
         <div className="container mx-auto px-6">
           {showTitle && (
             <FadeInTitle>

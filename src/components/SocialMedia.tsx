@@ -65,12 +65,12 @@ export default function SocialMedia() {
                 <TooltipTrigger asChild>
                   <Link
                     href={social.url}
-                    className="text-2xl text-mocha-mousse-600 dark:text-mocha-mousse-100 hover:text-mocha-mousse-800 transition-colors"
+                    className="text-2xl text-muted-foreground dark:text-foreground hover:text-primary transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <svg
-                      className="fill-mocha-mousse-900 dark:fill-mocha-mousse-100"
+                      className="fill-current"
                       xmlns="http://www.w3.org/2000/svg"
                       width={24}
                       height={24}

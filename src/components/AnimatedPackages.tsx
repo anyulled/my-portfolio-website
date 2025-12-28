@@ -72,7 +72,7 @@ export default function AnimatedPackages({
             <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
             <div className="absolute bottom-0 left-0 right-0 p-6">
               <h2 className="text-2xl md:text-3xl mb-2">{pkg.name}</h2>
-              <p className="text-4xl md:text-5xl text-mocha-mousse-200">
+              <p className="text-4xl md:text-5xl text-primary-foreground">
                 {pkg.price}
               </p>
             </div>
@@ -84,9 +84,7 @@ export default function AnimatedPackages({
                   key={pkg.name.replaceAll(" ", "-").concat(feature.text)}
                   className="flex items-center ml-4"
                 >
-                  <span className="mr-2 text-mocha-mousse-500">
-                    {feature.icon}
-                  </span>
+                  <span className="mr-2 text-primary">{feature.icon}</span>
                   <span>{feature.text}</span>
                 </li>
               ))}
@@ -94,7 +92,7 @@ export default function AnimatedPackages({
 
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="w-full bg-mocha-mousse-600 hover:bg-mocha-mousse-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded transition duration-300">
                   {bookNowText}
                 </Button>
               </DialogTrigger>

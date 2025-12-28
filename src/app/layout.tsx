@@ -144,11 +144,11 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-900"}>
+      <body className={"bg-background dark:bg-background"}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ScrollProvider>
-              <div className="min-h-screen bg-mocha-mousse-50 text-mocha-mousse-800 dark:bg-mocha-mousse-900 dark:text-mocha-mousse-100">
+              <div className="min-h-screen bg-background text-foreground dark:bg-background dark:text-foreground">
                 <NavBar />
                 <MixpanelLayout>{children}</MixpanelLayout>
               </div>

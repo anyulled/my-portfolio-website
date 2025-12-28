@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Award, Shield, Sparkles, Users } from "lucide-react";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { useTranslations } from "next-intl";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import React, { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -98,11 +98,11 @@ export default function TruthSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 bg-white">
+    <section ref={sectionRef} className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4">
         <h2
           ref={titleRef}
-          className={`${dancingScript.className} text-3xl md:text-5xl font-serif text-chocolate-martini-700 text-center mb-16`}
+          className={`${dancingScript.className} text-3xl md:text-5xl font-serif text-foreground text-center mb-16`}
         >
           {t("title")}
         </h2>
@@ -116,15 +116,15 @@ export default function TruthSection() {
             return (
               <div
                 key={index}
-                className="text-center p-6 bg-cream-tan-50 rounded-2xl hover:shadow-lg transition-shadow duration-300"
+                className="text-center p-6 bg-muted/50 rounded-2xl hover:shadow-lg transition-shadow duration-300"
               >
-                <div className="w-16 h-16 bg-chanterelle-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <IconComponent className="h-8 w-8 text-white" />
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <IconComponent className="h-8 w-8 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-semibold text-chocolate-martini-500 mb-4">
+                <h3 className="text-xl font-semibold text-foreground mb-4">
                   {t(`cards.${index}.title`)}
                 </h3>
-                <p className="text-chanterelle-700 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   {t(`cards.${index}.description`)}
                 </p>
               </div>
@@ -132,25 +132,25 @@ export default function TruthSection() {
           })}
         </div>
 
-        <div className="mt-16 bg-gradient-to-r from-chanterelle-500 to-chocolate-martini-500 rounded-3xl p-8 md:p-12 text-center">
+        <div className="mt-16 bg-primary rounded-3xl p-8 md:p-12 text-center">
           <h3
-            className={`${dancingScript.className}  text-2xl md:text-3xl font-serif text-white mb-6`}
+            className={`${dancingScript.className}  text-2xl md:text-3xl font-serif text-primary-foreground mb-6`}
           >
             {t("cta.title")}
           </h3>
           <p
-            className={`${arefRuqaa.className} text-cream-tan-100 text-lg mb-8 max-w-3xl mx-auto`}
+            className={`${arefRuqaa.className} text-primary-foreground/90 text-lg mb-8 max-w-3xl mx-auto`}
           >
             {t("cta.paragraph")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              className={`${arefRuqaa.className} text-white hover:bg-cream-tan-600 px-8 py-4 rounded-full font-semibold transition-colors duration-300`}
+              className={`${arefRuqaa.className} text-primary-foreground hover:bg-background/20 px-8 py-4 rounded-full font-semibold transition-colors duration-300`}
             >
               {t("cta.learn_more")}
             </button>
             <button
-              className={`${arefRuqaa.className} border-2 border-white text-white hover:bg-white hover:text-chocolate-martini-500 px-8 py-4 rounded-full font-semibold transition-all duration-300`}
+              className={`${arefRuqaa.className} border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary px-8 py-4 rounded-full font-semibold transition-all duration-300`}
             >
               {t("cta.view_portfolio")}
             </button>

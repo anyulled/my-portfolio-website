@@ -64,7 +64,7 @@ export default async function HomePage() {
         {galleryPhotos.length > 0 && <Gallery photos={galleryPhotos} />}
       </Suspense>
       <SocialMedia />
-      <Separator className="my-4 bg-mocha-mousse-900 dark:bg-mocha-mousse-500" />
+      <Separator className="my-4 bg-border" />
       <Suspense fallback={<Loading />}>
         <ContactForm />
       </Suspense>

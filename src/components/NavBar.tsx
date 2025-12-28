@@ -86,8 +86,8 @@ export default function NavBar() {
         <Link
           href="/"
           className={clsx(
-            `dark:text-mocha-mousse-50 text-mocha-mousse-200 ${dancingScript.className} text-3xl`,
-            pathname !== "/" && "text-mocha-mousse-400",
+            `dark:text-foreground text-primary ${dancingScript.className} text-3xl`,
+            pathname !== "/" && "text-muted-foreground",
           )}
         >
           Sensuelle Boudoir
@@ -96,7 +96,7 @@ export default function NavBar() {
           <LocaleSwitcher />
           <Button
             className={clsx(
-              "!ml-0 bg-mocha-mousse-50 text-mocha-mousse-500 dark:bg-mocha-mousse-900",
+              "!ml-0 bg-background text-foreground dark:bg-background",
               pathname === "/" && "!bg-transparent",
             )}
             variant="ghost"
@@ -115,14 +115,14 @@ export default function NavBar() {
           </div>
           <Button
             onClick={handleBookNow}
-            className="hidden md:inline-flex bg-mocha-mousse-400 text-mocha-mousse-50"
+            className="hidden md:inline-flex bg-primary text-primary-foreground"
           >
             {t("nav_bar.book_now")}
           </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6 dark:text-mocha-mousse-50 text-neutral-800" />
+                <Menu className="h-6 w-6 dark:text-foreground text-neutral-800" />
                 <span className="sr-only">{t("nav_bar.open_menu")}</span>
               </Button>
             </SheetTrigger>
@@ -139,7 +139,7 @@ export default function NavBar() {
                 <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
                 <Button
                   onClick={handleBookNow}
-                  className="mt-4 bg-mocha-mousse-400 dark:bg-mocha-mousse-700"
+                  className="mt-4 bg-primary dark:bg-primary"
                 >
                   {t("nav_bar.book_now")}
                 </Button>

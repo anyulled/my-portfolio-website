@@ -1,11 +1,11 @@
-import { Metadata } from "next";
-import { getTestimonials, Testimonial } from "@/lib/testimonials";
-import { getPhotosFromStorage } from "@/services/storage/photos";
 import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialCard from "@/components/TestimonialCard";
-import { Aref_Ruqaa } from "next/font/google";
+import { getTestimonials, Testimonial } from "@/lib/testimonials";
+import { getPhotosFromStorage } from "@/services/storage/photos";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { Aref_Ruqaa } from "next/font/google";
 import { WebPage, WithContext } from "schema-dts";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg",
+        url: "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
         width: 500,
         height: 333,
         alt: "Andrea Cano Montull",
@@ -36,7 +36,9 @@ export const metadata: Metadata = {
       "Client Testimonials | Sensuelle Boudoir · Boudoir Photography in Barcelona",
     description:
       "Read authentic testimonials from our boudoir photography clients.",
-    images: ["https://live.staticflickr.com/65535/54349881217_fc73413f84.jpg"],
+    images: [
+      "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
+    ],
   },
 };
 
@@ -66,7 +68,7 @@ export default async function TestimonialsPage() {
   const heroPhotos = await getPhotosFromStorage("hero");
   const heroImage =
     heroPhotos?.[0]?.urlLarge ||
-    "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg";
+    "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg";
 
   const t = await getTranslations("testimonials");
 
@@ -79,17 +81,17 @@ export default async function TestimonialsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="min-h-screen bg-mocha-mousse-50">
+      <div className="min-h-screen bg-background">
         <TestimonialsHero image={heroImage} />
 
         <section className="max-w-7xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <h2
-              className={`${arefRuqaa.className} text-3xl md:text-4xl font-serif text-mocha-mousse-900 mb-4`}
+              className={`${arefRuqaa.className} text-3xl md:text-4xl font-serif text-foreground mb-4`}
             >
               {t("what_our_clients_say")}
             </h2>
-            <p className="text-mocha-mousse-700 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               {t("discover_transformative_experiences")}
             </p>
           </div>
@@ -110,7 +112,7 @@ export default async function TestimonialsPage() {
         {regularTestimonials.length > 0 && (
           <section className="max-w-7xl mx-auto px-4 py-16">
             <h2
-              className={`${arefRuqaa.className} text-2xl md:text-3xl font-serif text-mocha-mousse-900 text-center mb-12`}
+              className={`${arefRuqaa.className} text-2xl md:text-3xl font-serif text-foreground text-center mb-12`}
             >
               {t("more_client_stories")}
             </h2>

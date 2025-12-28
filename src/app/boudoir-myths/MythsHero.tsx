@@ -93,7 +93,7 @@ export default function MythsHero({ heroImage }: Readonly<MythsHeroProps>) {
       ref={heroRef}
       className="relative h-[70vh] min-h-[600px] w-full overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-mocha-mousse-900/80 to-mocha-mousse-800/70">
+      <div className="absolute inset-0 bg-primary/80 dark:bg-primary/90">
         <Image
           src={heroImage.urlLarge}
           alt={t("alt")}
@@ -110,14 +110,14 @@ export default function MythsHero({ heroImage }: Readonly<MythsHeroProps>) {
           className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-white mb-6 leading-tight`}
         >
           {t("title1")}
-          <span className="block text-cream-tan-100 text-shadow-lg">
+          <span className="block text-primary-foreground/90 text-shadow-lg">
             {t("title2")}
           </span>
         </h1>
 
         <p
           ref={subtitleRef}
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-cream-tan-100 font-light max-w-4xl mb-12`}
+          className={`${arefRuqaa.className} text-xl md:text-2xl text-primary-foreground/90 font-light max-w-4xl mb-12`}
         >
           {t("subtitle")}
         </p>
@@ -130,7 +130,7 @@ export default function MythsHero({ heroImage }: Readonly<MythsHeroProps>) {
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
               <X className="h-8 w-8 text-red-300" />
             </div>
-            <p className="text-pantone-creamTan200 text-sm">
+            <p className="text-primary-foreground/90 text-sm">
               {t("label_myths")}
             </p>
           </div>
@@ -138,7 +138,7 @@ export default function MythsHero({ heroImage }: Readonly<MythsHeroProps>) {
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
               <Check className="h-8 w-8 text-green-300" />
             </div>
-            <p className="text-pantone-creamTan200 text-sm">
+            <p className="text-primary-foreground/90 text-sm">
               {t("label_truth")}
             </p>
           </div>

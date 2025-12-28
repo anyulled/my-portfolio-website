@@ -226,37 +226,37 @@ export default async function PricingPage() {
           <div className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg p-6">
             <ul className="space-y-4">
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_release_form")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_deposit")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_payment")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_photos_sharing")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_late_arrival")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_additional_photos")}</span>

@@ -7,7 +7,6 @@ import { siTelegram, siWhatsapp } from "simple-icons";
 import React from "react";
 import { Aref_Ruqaa } from "next/font/google";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import Link from "next/link";
 import { submitLeadForm } from "@/lib/gtag";
 import { useTranslations } from "next-intl";
 import FadeInTitle from "@/components/FadeInTitle";
@@ -79,13 +78,17 @@ export default function ContactForm() {
           <Button
             disabled={sendingForm}
             type="submit"
-            className="w-full text-bold bg-mocha-mousse-400 text-mocha-mousse-50"
+            className="w-full text-bold bg-primary text-primary-foreground"
           >
             {t("send_message")}
           </Button>
         </form>
         <div className="mt-8 flex justify-center space-x-4">
-          <Link href={"https://wa.me/34638802609"} target={"_blank"}>
+          <a
+            href={"https://wa.me/34638802609"}
+            target={"_blank"}
+            rel="noopener noreferrer"
+          >
             <Button
               variant="outline"
               className={"bg-whatsapp text-neutral-100"}
@@ -101,8 +104,12 @@ export default function ContactForm() {
               </svg>
               WhatsApp
             </Button>
-          </Link>
-          <Link href={"https://t.me/m/1f-erIOJMjhk"} target={"_blank"}>
+          </a>
+          <a
+            href={"https://t.me/m/1f-erIOJMjhk"}
+            target={"_blank"}
+            rel="noopener noreferrer"
+          >
             <Button
               variant="outline"
               className={"bg-telegram text-neutral-100"}
@@ -118,7 +125,7 @@ export default function ContactForm() {
               </svg>
               Telegram
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
     </section>

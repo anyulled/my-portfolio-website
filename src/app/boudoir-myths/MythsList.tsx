@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { Photo } from "@/types/photos";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import { Camera, Check, Eye, Heart, Users, X, Zap } from "lucide-react";
-import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import React, { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -115,11 +115,11 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
   }, [photos, t]);
 
   return (
-    <section ref={sectionRef} className="py-20 bg-mocha-mousse-100">
+    <section ref={sectionRef} className="py-20 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4">
         <h2
           ref={titleRef}
-          className="text-3xl md:text-5xl font-serif text-mocha-mousse-600 text-center mb-16"
+          className="text-3xl md:text-5xl font-serif text-foreground text-center mb-16"
         >
           {t("title")}
         </h2>
@@ -152,10 +152,10 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
                   className={`space-y-6 ${isEven ? "lg:order-2" : "lg:order-1"}`}
                 >
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-12 h-12 bg-mocha-mousse-600 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                       <IconComponent />
                     </div>
-                    <span className="text-2xl font-bold text-mocha-mousse-900">
+                    <span className="text-2xl font-bold text-foreground">
                       {t("myth_number", { id: Number(myth.id) })}
                     </span>
                   </div>
@@ -188,12 +188,12 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-lg shadow-md">
-                    <p className="text-mocha-mousse-700 leading-relaxed mb-4">
+                  <div className="bg-card p-6 rounded-lg shadow-md">
+                    <p className="text-foreground leading-relaxed mb-4">
                       {myth.explanation}
                     </p>
-                    <div className="bg-mocha-mousse-200 p-3 rounded-lg">
-                      <p className="text-sm font-medium text-mocha-mousse-100">
+                    <div className="bg-muted p-3 rounded-lg">
+                      <p className="text-sm font-medium text-foreground">
                         <strong>{t("labels.reality_check")}</strong>{" "}
                         {myth.stats}
                       </p>
