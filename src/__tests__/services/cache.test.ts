@@ -40,6 +40,7 @@ describe("Cache Service", () => {
           width: 1024,
           height: 768,
           title: "Test Photo",
+          description: "Test Description",
         },
       ],
     },
