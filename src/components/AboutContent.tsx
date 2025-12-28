@@ -44,7 +44,6 @@ export default function AboutContent({
               <FadeInImage ease={"power1.in"} duration={0.5}>
                 <Image
                   src={profileImageUrl}
-                  placeholder="blur"
                   priority
                   alt={t("alt_image")}
                   width={400}

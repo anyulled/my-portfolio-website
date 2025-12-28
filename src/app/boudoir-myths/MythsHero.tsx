@@ -127,8 +127,8 @@ export default function MythsHero({ heroImage }: Readonly<MythsHeroProps>) {
           className="flex justify-center items-center space-x-12"
         >
           <div className="text-center">
-            <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <X className="h-8 w-8 text-red-300" />
+            <div className="w-16 h-16 bg-pantone-satin-slipper/20 rounded-full flex items-center justify-center mx-auto mb-3">
+              <X className="h-8 w-8 text-pantone-satin-slipper" />
             </div>
             <p className="text-primary-foreground/90 text-sm">
               {t("label_myths")}
