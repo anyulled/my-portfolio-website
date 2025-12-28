@@ -11,8 +11,6 @@ export interface GalleryImages {
 const DEFAULT_WIDTH = 1200;
 const DEFAULT_HEIGHT = 800;
 
-
-
 export const mapPhotosToGalleryImages = (
   photos: Array<Photo> | null,
 ): GalleryImages => {

@@ -8,8 +8,6 @@ import { Suspense } from "react";
 import Loading from "@/app/loading";
 import { Separator } from "@/components/ui/separator";
 
-
-
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
   description:
@@ -23,16 +21,15 @@ export default async function HomePage() {
   const formattedHeroImages =
     heroPhotos.length > 0
       ? heroPhotos.map((p) => ({
-        image: p.urlLarge,
-        position: "center center", // Default position as GCS doesn't store position data yet
-      }))
+          image: p.urlLarge,
+          position: "center center", // Default position as GCS doesn't store position data yet
+        }))
       : [
-        {
-          image:
-            "/images/DSC_7028.jpg", // Fallback if no images found
-          position: "left top",
-        },
-      ];
+          {
+            image: "/images/DSC_7028.jpg", // Fallback if no images found
+            position: "left top",
+          },
+        ];
 
   if (!galleryPhotos || galleryPhotos.length === 0) {
     return (

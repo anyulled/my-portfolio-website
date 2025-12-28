@@ -31,6 +31,7 @@ export default function Hero({ images }: HeroProps) {
   }, []);
 
   const randomImage = React.useMemo(() => {
+    if (!images || images.length === 0) return null;
     return images[Math.floor(Math.random() * images.length)];
   }, [images]);
 
@@ -99,18 +100,20 @@ export default function Hero({ images }: HeroProps) {
       ref={containerRef}
       className="relative h-screen flex items-center justify-center overflow-hidden bg-mocha-mousse-50 dark:bg-mocha-mousse-900 text-mocha-mousse-900 dark:text-mocha-mousse-50"
     >
-      <div
-        ref={backgroundRef}
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('${randomImage.image}')`,
-          backgroundAttachment: "fixed",
-          backgroundPosition: randomImage.position,
-          backgroundSize: "cover",
-          mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
-          opacity: 0, // Initial state for animation
-        }}
-      />
+      {randomImage && (
+        <div
+          ref={backgroundRef}
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url('${randomImage.image}')`,
+            backgroundAttachment: "fixed",
+            backgroundPosition: randomImage.position,
+            backgroundSize: "cover",
+            mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
+            opacity: 0, // Initial state for animation
+          }}
+        />
+      )}
       <div className="relative z-10 text-center">
         <h1
           ref={titleRef}
