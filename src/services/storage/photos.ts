@@ -154,7 +154,7 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     // Simple hash function to generate a numeric ID from filename
     let hash = 0;
     for (let i = 0; i < file.name.length; i++) {
-      const char = file.name.codePointAt(i);
+      const char = file.name.codePointAt(i) ?? 0;
       hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32bit integer
     }

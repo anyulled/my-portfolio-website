@@ -1,7 +1,8 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 import tailwindcssAnimate from "tailwindcss-animate";
-import tailwindcssTypography from "tailwindcss-typography";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const tailwindcssTypography = require("tailwindcss-typography");
 
 const config: Config = {
   darkMode: ["class"],
