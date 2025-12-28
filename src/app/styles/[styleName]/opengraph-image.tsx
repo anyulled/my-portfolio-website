@@ -2,7 +2,6 @@ import { ImageResponse } from "next/og";
 import { extractNameFromTag } from "@/lib/extractName";
 import { styles } from "@/data/styles";
 import { getPhotosFromStorage } from "@/services/storage/photos";
-/*eslint-disable @next/next/no-img-element */
 
 export const contentType = "image/png";
 export const alt = "Sensuelle Boudoir";

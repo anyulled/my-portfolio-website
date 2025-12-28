@@ -62,7 +62,7 @@ const createPhoto = (overrides: Partial<Photo> = {}): Photo => ({
   description: overrides.description ?? "desc",
   dateTaken: overrides.dateTaken ?? new Date("2024-01-01T00:00:00Z"),
   dateUpload: overrides.dateUpload ?? new Date("2024-01-01T00:00:00Z"),
-  height: overrides.height ?? "200",
+  height: overrides.height ?? 200,
   title: overrides.title ?? "Title",
   urlCrop: overrides.urlCrop ?? "https://example.com/crop.jpg",
   urlLarge: overrides.urlLarge ?? "https://example.com/large.jpg",
@@ -73,7 +73,7 @@ const createPhoto = (overrides: Partial<Photo> = {}): Photo => ({
   urlSmall: overrides.urlSmall ?? "https://example.com/small.jpg",
   urlZoom: overrides.urlZoom ?? "https://example.com/zoom.jpg",
   views: overrides.views ?? 10,
-  width: overrides.width ?? "300",
+  width: overrides.width ?? 300,
   tags: overrides.tags ?? "tag1",
   srcSet: overrides.srcSet ?? [
     {
@@ -96,9 +96,7 @@ describe("HomePage", () => {
   let getPhotosFromStorageMock: jest.Mock;
 
   beforeEach(() => {
-    const mockedModule = jest.requireMock("@/services/storage/photos") as {
-      getPhotosFromStorage: jest.Mock;
-    };
+    const mockedModule = jest.requireMock("@/services/storage/photos");
 
     getPhotosFromStorageMock = mockedModule.getPhotosFromStorage;
     getPhotosFromStorageMock.mockReset();
@@ -110,8 +108,8 @@ describe("HomePage", () => {
 
     await renderHomePage();
 
-    // Verify calls
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("portfolio");
+    // Verify calls - gallery fetches from root (empty prefix), hero from "hero" folder
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("");
     expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero");
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");

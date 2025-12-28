@@ -50,15 +50,15 @@ const extractIdFromFilename = (filename: string): number | null => {
   const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
 
   // Match pattern: anything_NUMBER_o
-  const match = nameWithoutExt.match(/_(\d+)_o$/);
-  if (match && match[1]) {
+  const match = RegExp(/_(\d+)_o$/).exec(nameWithoutExt);
+  if (match?.[1]) {
     const parsed = Number(match[1]);
     return Number.isFinite(parsed) ? parsed : null;
   }
 
   // Fallback: trailing number sequence
-  const fallbackMatch = nameWithoutExt.match(/(\d+)$/);
-  if (fallbackMatch && fallbackMatch[1]) {
+  const fallbackMatch = RegExp(/(\d+)$/).exec(nameWithoutExt);
+  if (fallbackMatch?.[1]) {
     const parsed = Number(fallbackMatch[1]);
     return Number.isFinite(parsed) ? parsed : null;
   }
@@ -75,7 +75,7 @@ const extractTitleFromFilename = (filename: string): string => {
   const nameWithoutSuffix = nameWithoutExt.replace(/_\d+_o$/, "");
 
   const title = nameWithoutSuffix
-    .replace(/[-_]/g, " ")
+    .replaceAll(/[-_]/g, " ")
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
@@ -88,14 +88,15 @@ const parseDate = (value: string | undefined, fallback: Date): Date => {
   return Number.isNaN(date.getTime()) ? fallback : date;
 };
 
-const sanitisePrivateKey = (key: string) => key.replace(/\\n/g, "\n");
+const sanitisePrivateKey = (key: string) =>
+  key.replaceAll(String.raw`\n`, "\n");
 
 export class GCSPhotoProvider implements PhotoProvider {
   readonly name = "GCS";
 
-  private storage: Storage;
-  private bucketName: string;
-  private useSignedUrls: boolean;
+  private readonly storage: Storage;
+  private readonly bucketName: string;
+  private readonly useSignedUrls: boolean;
 
   constructor(options: GCSPhotoProviderOptions = {}) {
     this.bucketName =
@@ -263,7 +264,7 @@ export class GCSPhotoProvider implements PhotoProvider {
           expires: Date.now() + SIGNED_URL_TTL_MS,
         });
         return signedUrl;
-      } catch (error) {
+      } catch {
         // Silently fall back to public URL
       }
     }

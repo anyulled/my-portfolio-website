@@ -152,21 +152,24 @@ describe("Cache Service", () => {
       expect(result).toBeNull();
     });
 
-    it("should handle errors from list", async () => {
+    it("should return null on errors from list", async () => {
       // Mock list to throw an error
       (list as jest.Mock).mockRejectedValue(new Error("List error"));
 
-      // Call the function and expect it to throw
-      await expect(getCachedData(mockKey)).rejects.toThrow("List error");
+      // Call the function - should return null instead of throwing
+      const result = await getCachedData(mockKey);
 
       // Check that list was called
       expect(list).toHaveBeenCalled();
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
+
+      // Should return null on error
+      expect(result).toBeNull();
     });
 
-    it("should handle errors from fetch", async () => {
+    it("should return null on errors from fetch", async () => {
       // Mock list to return a blob that matches our key
       (list as jest.Mock).mockResolvedValue({
         blobs: [mockBlob],
@@ -175,8 +178,8 @@ describe("Cache Service", () => {
       // Mock fetch to throw an error
       global.fetch = jest.fn().mockRejectedValue(new Error("Fetch error"));
 
-      // Call the function and expect it to throw
-      await expect(getCachedData(mockKey)).rejects.toThrow("Fetch error");
+      // Call the function - should return null instead of throwing
+      const result = await getCachedData(mockKey);
 
       // Check that list was called
       expect(list).toHaveBeenCalled();
@@ -186,6 +189,9 @@ describe("Cache Service", () => {
 
       // Check that fetch was called with the correct URL
       expect(global.fetch).toHaveBeenCalledWith(mockBlob.downloadUrl);
+
+      // Should return null on error
+      expect(result).toBeNull();
     });
   });
 
@@ -214,14 +220,12 @@ describe("Cache Service", () => {
       );
     });
 
-    it("should handle errors from put", async () => {
+    it("should handle errors from put gracefully", async () => {
       // Mock put to throw an error
       (put as jest.Mock).mockRejectedValue(new Error("Put error"));
 
-      // Call the function and expect it to throw
-      await expect(setCachedData(mockKey, mockPhotos, 3600)).rejects.toThrow(
-        "Put error",
-      );
+      // Call the function - should not throw, just log error
+      await setCachedData(mockKey, mockPhotos, 3600);
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);

@@ -105,17 +105,22 @@ describe("Photos Storage Service", () => {
     expect(result).toBeNull();
   });
 
-  it("should exclude photos with invalid ID", async () => {
+  it("should generate hash-based ID for photos without valid metadata ID", async () => {
     (getRedisCachedData as jest.Mock).mockResolvedValue(null);
     (getCachedData as jest.Mock).mockResolvedValue(null);
 
-    const invalidFile = {
+    const fileWithoutId = {
       ...mockFile,
+      name: "photo-without-id.jpg",
       metadata: { metadata: { id: "invalid" } },
     };
-    mockBucket.getFiles.mockResolvedValue([[invalidFile]]);
+    mockBucket.getFiles.mockResolvedValue([[fileWithoutId]]);
 
     const result = await getPhotosFromStorage("test-prefix");
-    expect(result).toEqual([]);
+
+    // Should not be excluded - instead gets a hash-based ID
+    expect(result).toHaveLength(1);
+    expect(result?.[0].id).toBeGreaterThan(0);
+    expect(result?.[0].title).toBe("photo-without-id.jpg");
   });
 });

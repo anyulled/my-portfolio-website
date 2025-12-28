@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const galleryPhotos = await getPhotosFromStorage("portfolio");
+  const galleryPhotos = await getPhotosFromStorage("");
   const heroPhotos = (await getPhotosFromStorage("hero")) || [];
 
   const formattedHeroImages =

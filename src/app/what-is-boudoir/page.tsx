@@ -4,8 +4,6 @@ import { Photo } from "@/types/photos";
 import BoudoirContent from "@/components/BoudoirContent";
 import { getTranslations } from "next-intl/server";
 
-/*eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-
 export const metadata: Metadata = {
   title: "What is Boudoir?",
   description:

@@ -27,15 +27,22 @@ export type StorageFileLike = {
   isPublic(): Promise<[boolean]>;
 };
 
-const sanitisePrivateKey = (key: string) => key.replace(/\\n/g, "\n");
+const sanitisePrivateKey = (key: string) =>
+  key.replaceAll(String.raw`\n`, "\n");
 
 const hasCredentials = () =>
   Boolean(process.env.GCP_CLIENT_EMAIL && process.env.GCP_PRIVATE_KEY);
 
 const createStorageClient = (): Storage => {
   if (!hasCredentials()) {
+    console.log(
+      "[PhotosStorage] No explicit GCP credentials found, using Application Default Credentials (ADC)",
+    );
     return new Storage();
   }
+  console.log(
+    "[PhotosStorage] Using explicit GCP credentials from environment",
+  );
   return new Storage({
     projectId: process.env.GCP_PROJECT_ID,
     credentials: {
@@ -61,7 +68,7 @@ const extractTrailingDigits = (value: string): string | null => {
     return null;
   }
 
-  return matches[matches.length - 1] ?? null;
+  return matches.at(-1) ?? null;
 };
 
 const parsePhotoId = (value: string | undefined): number | null => {
@@ -82,6 +89,15 @@ const parsePhotoId = (value: string | undefined): number | null => {
 };
 
 const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
+  // Skip signing attempt if using ADC without explicit credentials - use public URL directly
+  if (!hasCredentials()) {
+    // Construct URL manually to avoid double-encoding issues
+    const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
+    const url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
+    console.log(`[PhotosStorage] Using public URL for ${file.name}: ${url}`);
+    return url;
+  }
+
   try {
     const result = await file.getSignedUrl({
       action: "read",
@@ -127,20 +143,25 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     new Date(0),
   );
 
-  // Consider user-provided ID (e.g. from Flickr), fallback to parsing GCS ID/Name not recommended for stability but as last resort?
-  // Actually the previous code was using resourceMetadata.id (GCS ID).
-  // context: we populated GCS with metadata.id = flickr_id. so we MUST use userMetadata.id.
+  // Try to get ID from metadata first, then fallback to extracting from filename
+  let id = parsePhotoId(userMetadata.id);
 
-  // Check user metadata id first
-  const id = parsePhotoId(userMetadata.id);
+  // If no metadata ID, try to extract from filename (e.g., "name_53963952034_o.jpg")
+  id ??= parsePhotoId(file.name);
 
-  // If not found, log warning? OR fallback?
-  // User requirement: "Verified GCS metadata (id...)" implies we rely on it.
+  // If still no ID, generate one from filename hash
   if (id === null) {
-    console.warn(
-      `[PhotosStorage] File ${file.name} is missing a valid 'id' in metadata. Skipping.`,
+    // Simple hash function to generate a numeric ID from filename
+    let hash = 0;
+    for (let i = 0; i < file.name.length; i++) {
+      const char = file.name.codePointAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    id = Math.abs(hash);
+    console.log(
+      `[PhotosStorage] Generated ID ${id} from filename hash for ${file.name}`,
     );
-    return null;
   }
 
   const views = parseNumber(userMetadata.views);
@@ -220,6 +241,9 @@ export const getPhotosFromStorage = async (
 
   // 3. Fetch from GCS
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
+  console.log(
+    `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}`,
+  );
 
   try {
     const client = storageClient ?? createStorageClient();
@@ -228,9 +252,17 @@ export const getPhotosFromStorage = async (
       autoPaginate: false,
       prefix,
     };
+    console.log(
+      `[PhotosStorage] Calling bucket.getFiles with options:`,
+      options,
+    );
     const [files] = await bucket.getFiles(options);
+    console.log(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`);
 
     if (!files || files.length === 0) {
+      console.warn(
+        `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
+      );
       return [];
     }
 
@@ -239,6 +271,9 @@ export const getPhotosFromStorage = async (
     );
 
     let photos = mapped.filter((photo): photo is Photo => photo !== null);
+    console.log(
+      `[PhotosStorage] Successfully mapped ${photos.length} photos from ${files.length} files`,
+    );
 
     if (limit && limit > 0) {
       photos = photos.slice(0, limit);
@@ -247,6 +282,9 @@ export const getPhotosFromStorage = async (
     // 4. Store in cache (Redis and Vercel Blob)
     try {
       if (photos.length > 0) {
+        console.log(
+          `[PhotosStorage] Writing ${photos.length} photos to cache layers`,
+        );
         // Write to Redis (Fast access)
         await setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
         // Write to Vercel Blob (Persistence)
@@ -262,10 +300,15 @@ export const getPhotosFromStorage = async (
     return photos;
   } catch (error) {
     captureException(error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
     console.error(
       `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
-      error,
     );
+    console.error(`[PhotosStorage] Error message: ${errorMessage}`);
+    if (errorStack) {
+      console.error(`[PhotosStorage] Stack trace: ${errorStack}`);
+    }
     return null;
   }
 };
