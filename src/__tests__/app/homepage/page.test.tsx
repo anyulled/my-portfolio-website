@@ -109,27 +109,31 @@ describe("HomePage", () => {
     await renderHomePage();
 
     // Verify calls - gallery fetches from root (empty prefix), hero from "hero" folder
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("");
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero");
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 1);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
   });
 
-  it("shows an error when no photos are available", async () => {
+  it("renders gallery with fallback photos when no photos are available", async () => {
     getPhotosFromStorageMock.mockResolvedValue(null);
 
     await renderHomePage();
 
-    expect(getPhotosFromStorageMock).toHaveBeenCalled();
-    expect(screen.getByText(/unable to load gallery/i)).toBeInTheDocument();
+    // Verify calls with correct limits - updated loop in component logic restores limits
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 1);
+
+    // Expect 1 fallback photo (id 0)
+    expect(screen.getByTestId("gallery")).toHaveTextContent("0");
   });
 
-  it("shows an error message when the bucket is empty", async () => {
+  it("renders gallery with fallback photos when the bucket is empty", async () => {
     getPhotosFromStorageMock.mockResolvedValue([]);
 
     await renderHomePage();
 
-    expect(getPhotosFromStorageMock).toHaveBeenCalled();
-    expect(screen.getByText(/unable to load gallery/i)).toBeInTheDocument();
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(screen.getByTestId("gallery")).toHaveTextContent("0");
   });
 });
