@@ -1,13 +1,5 @@
 "use client";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Dancing_Script } from "next/font/google";
-import { useScroll } from "@/contexts/ScrollContext";
-import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -16,12 +8,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useScroll } from "@/contexts/ScrollContext";
+import useAnalyticsEventTracker from "@/hooks/eventTracker";
+import { Menu, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Dancing_Script } from "next/font/google";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { NavLinks } from "@/components/NavLinks";
-import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
+import { NavLinks } from "@/components/NavLinks";
 import chalk from "chalk";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const navLinks = [
@@ -139,7 +139,7 @@ export default function NavBar() {
                 <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
                 <Button
                   onClick={handleBookNow}
-                  className="mt-4 bg-primary dark:bg-primary"
+                  className="mt-4 bg-pantone-fig dark:bg-pantone-fig"
                 >
                   {t("nav_bar.book_now")}
                 </Button>

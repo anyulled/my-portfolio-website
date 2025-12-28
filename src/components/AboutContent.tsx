@@ -18,14 +18,12 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 interface AboutContentProps {
   images: Photo[] | null;
   profileImageUrl: string;
-  imageThumbnail: string;
   collaborationImages: Photo[] | null;
 }
 
 export default function AboutContent({
   images,
   profileImageUrl,
-  imageThumbnail,
   collaborationImages,
 }: Readonly<AboutContentProps>) {
   const t = useTranslations("about");
@@ -46,7 +44,6 @@ export default function AboutContent({
               <FadeInImage ease={"power1.in"} duration={0.5}>
                 <Image
                   src={profileImageUrl}
-                  blurDataURL={imageThumbnail}
                   placeholder="blur"
                   priority
                   alt={t("alt_image")}

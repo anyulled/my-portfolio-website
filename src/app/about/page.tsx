@@ -1,15 +1,10 @@
+import AboutContent from "@/components/AboutContent";
+import { openGraph } from "@/lib/openGraph";
 import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Metadata } from "next";
-import { openGraph } from "@/lib/openGraph";
-import AboutContent from "@/components/AboutContent";
 
-//region Images
 const profileImageUrl =
   "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/anyul-rivas_53909071543_o.jpg";
-
-const imageThumbnail =
-  "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/anyul-rivas_53909071543_o.jpg";
-//endregion
 
 const metadataImages = [
   {
@@ -63,7 +58,6 @@ export default async function BioPage() {
     <AboutContent
       images={images}
       profileImageUrl={profileImageUrl}
-      imageThumbnail={imageThumbnail}
       collaborationImages={collaborationImages}
     />
   );
