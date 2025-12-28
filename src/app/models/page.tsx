@@ -1,10 +1,10 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import models from "@/data/models";
-import { Metadata } from "next";
 import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Photo } from "@/types/photos";
+import { Metadata } from "next";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -60,7 +60,7 @@ export default async function ModelIndexPage() {
                     className="relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105"
                   >
                     <Image
-                      src={matchedPhoto.urlMedium}
+                      src={matchedPhoto.srcSet[0].src}
                       alt={matchedPhoto.title}
                       width={300}
                       height={400}

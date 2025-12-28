@@ -1,9 +1,9 @@
 "use client";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import React, { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import React, { useEffect, useRef, useState } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -18,7 +18,7 @@ interface HeroProps {
   }[];
 }
 
-export default function Hero({ images }: HeroProps) {
+export default function Hero({ images }: Readonly<HeroProps>) {
   const t = useTranslations("home");
   const [mounted, setMounted] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
@@ -98,7 +98,7 @@ export default function Hero({ images }: HeroProps) {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen flex items-center justify-center overflow-hidden bg-mocha-mousse-50 dark:bg-mocha-mousse-900 text-mocha-mousse-900 dark:text-mocha-mousse-50"
+      className="relative h-screen flex items-center justify-center overflow-hidden bg-background dark:bg-background text-foreground dark:text-foreground"
     >
       {randomImage && (
         <div
@@ -117,14 +117,14 @@ export default function Hero({ images }: HeroProps) {
       <div className="relative z-10 text-center">
         <h1
           ref={titleRef}
-          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-mocha-mousse-900 shadow-mocha-mousse-100 dark:shadow-mocha-mousse-200 dark:text-white text-shadow-default`}
+          className={`${dancingScript.className} text-5xl md:text-7xl font-bold mb-4 text-foreground shadow-background dark:shadow-muted dark:text-white text-shadow-default`}
           style={{ opacity: 0 }}
         >
           Sensuelle Boudoir
         </h1>
         <p
           ref={subtitleRef}
-          className={`${arefRuqaa.className} text-2xl md:text-3xl text-neutral-300 shadow-mocha-mousse-800 dark:text-neutral-200 dark:shadow-mocha-mousse-300 text-shadow-sm`}
+          className={`${arefRuqaa.className} text-2xl md:text-3xl text-neutral-300 shadow-foreground dark:text-neutral-200 dark:shadow-muted-foreground text-shadow-sm`}
           style={{ opacity: 0 }}
         >
           {t("capture_your_essence")}

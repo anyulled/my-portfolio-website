@@ -1,6 +1,6 @@
-import { getPhotosFromStorage } from "@/services/storage/photos";
-import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { getCachedData, setCachedData } from "@/services/cache";
+import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Storage } from "@google-cloud/storage";
 
 // Mock dependencies
@@ -15,9 +15,22 @@ describe("Photos Storage Service", () => {
   const mockPhoto = {
     id: 1,
     title: "Test Photo",
-    urlMedium: "https://example.com/photo.jpg",
     width: 800,
     height: 600,
+    description: "Test Description",
+    dateTaken: new Date(0),
+    dateUpload: new Date(0),
+    views: 100,
+    tags: "test",
+    srcSet: [
+      {
+        src: "https://example.com/photo-large.jpg",
+        width: 800,
+        height: 600,
+        title: "Test Photo",
+        description: "Test Description",
+      },
+    ],
   };
 
   const mockFile = {

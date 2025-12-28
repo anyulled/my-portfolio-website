@@ -77,7 +77,7 @@ export default function TestimonialCard({
   return (
     <div
       ref={cardRef}
-      className="bg-white rounded-2xl p-6 shadow-lg border border-mocha-mousse-200 hover:shadow-xl transition-shadow duration-300"
+      className="bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow duration-300"
     >
       <div className="flex items-center mb-4">
         {testimonial.image && (
@@ -90,10 +90,10 @@ export default function TestimonialCard({
           />
         )}
         <div>
-          <h3 className="font-semibold fill-mocha-mousse-700 text-lg">
+          <h3 className="font-semibold text-foreground text-lg">
             {testimonial.name}
           </h3>
-          <p className="fill-mocha-mousse-600 text-sm">
+          <p className="text-muted-foreground text-sm">
             {testimonial.location}
           </p>
         </div>
@@ -101,21 +101,18 @@ export default function TestimonialCard({
 
       <div className="flex mb-3">
         {[...Array(testimonial.rating)].map((_, i) => (
-          <Star
-            key={i}
-            className="w-5 h-5 fill-mocha-mousse-900 text-mocha-mousse-900"
-          />
+          <Star key={i} className="w-5 h-5 fill-primary text-primary" />
         ))}
       </div>
 
       <blockquote
         data-testid="testimonial-content"
-        className="text-mocha-mousse-700 leading-relaxed italic"
+        className="text-foreground leading-relaxed italic"
       >
         &quot; {testimonial.content} &quot;
       </blockquote>
 
-      <div className="mt-4 text-xs text-mocha-mousse-600">
+      <div className="mt-4 text-xs text-muted-foreground">
         {new Date(testimonial.date).toLocaleDateString(t("date"), {
           year: "numeric",
           month: "long",

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Button } from "@/components/ui/button";
 import { BookOpen, Calendar, Camera, MessageCircle } from "lucide-react";
-import { Aref_Ruqaa } from "next/font/google";
 import { useTranslations } from "next-intl";
+import { Aref_Ruqaa } from "next/font/google";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,20 +69,20 @@ export default function MythsCTA() {
   }, []);
 
   return (
-    <section ref={ctaRef} className="py-20 bg-cream-tan-200">
+    <section ref={ctaRef} className="py-20 bg-muted/50">
       <div className="max-w-6xl mx-auto px-4">
         <div ref={contentRef} className="text-center mb-16">
           <h2
-            className={`${arefRuqaa.className} text-3xl md:text-5xl font-serif dark:text-chocolate-martini-800 text-chocolate-martini-800 mb-6`}
+            className={`${arefRuqaa.className} text-3xl md:text-5xl font-serif text-foreground mb-6`}
           >
             {t("heading")}
           </h2>
-          <p className="text-xl dark:text-chanterelle-400 text-chanterelle-400 max-w-4xl mx-auto mb-8">
+          <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-8">
             {t("paragraph")}
           </p>
           <Button
             size="lg"
-            className="bg-chocolate-martini-default hover:bg-chanterelle-default text-white px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
           >
             <Calendar className="mr-2 h-5 w-5" />
             {t("book_button")}
@@ -93,43 +93,45 @@ export default function MythsCTA() {
           ref={actionsRef}
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-            <MessageCircle className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
+          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+            <MessageCircle className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               {t("cards.0.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">{t("cards.0.text")}</p>
+            <p className="text-muted-foreground text-sm">{t("cards.0.text")}</p>
           </div>
 
-          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-            <BookOpen className="h-12 w-12 text-chanterelle- mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
+          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+            <BookOpen className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               {t("cards.1.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">{t("cards.1.text")}</p>
+            <p className="text-muted-foreground text-sm">{t("cards.1.text")}</p>
           </div>
 
-          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-            <Camera className="h-12 w-12 text-chanterelle-default mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
+          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+            <Camera className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               {t("cards.2.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">{t("cards.2.text")}</p>
+            <p className="text-muted-foreground text-sm">{t("cards.2.text")}</p>
           </div>
 
-          <div className="action-card bg-white p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-            <div className="h-12 w-12 bg-chanterelle-default rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-xl">★</span>
+          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+            <div className="h-12 w-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-primary-foreground font-bold text-xl">
+                ★
+              </span>
             </div>
-            <h3 className="text-lg font-semibold text-chocolate-martini-default mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               {t("cards.3.title")}
             </h3>
-            <p className="text-chanterelle-700 text-sm">{t("cards.3.text")}</p>
+            <p className="text-muted-foreground text-sm">{t("cards.3.text")}</p>
           </div>
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-chanterelle-600 text-sm">{t("footer")}</p>
+          <p className="text-muted-foreground text-sm">{t("footer")}</p>
         </div>
       </div>
     </section>

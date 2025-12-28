@@ -235,7 +235,7 @@ describe("GCSPhotoProvider", () => {
       const photos = await provider.listPhotos();
 
       expect(mockFile.getSignedUrl).not.toHaveBeenCalled();
-      expect(photos![0].urlOriginal).toContain("storage.googleapis.com");
+      expect(photos![0].srcSet[0].src).toContain("storage.googleapis.com");
     });
 
     it("falls back to public URL when signing fails", async () => {
@@ -246,7 +246,7 @@ describe("GCSPhotoProvider", () => {
       const provider = new GCSPhotoProvider({ useSignedUrls: true });
       const photos = await provider.listPhotos();
 
-      expect(photos![0].urlOriginal).toContain("storage.googleapis.com");
+      expect(photos![0].srcSet[0].src).toContain("storage.googleapis.com");
     });
   });
 });

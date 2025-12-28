@@ -6,6 +6,9 @@ const buildEslintCommand = (filenames) =>
     .join(" --file ")}`;
 
 module.exports = {
-  "*.{js,jsx,ts,tsx}": [buildEslintCommand, "jest --bail --findRelatedTests"],
+  "*.{js,jsx,ts,tsx}": [
+    buildEslintCommand,
+    "jest --bail --findRelatedTests --passWithNoTests",
+  ],
   "*.{js,jsx,ts,tsx,md,mdx,json,css,scss,html}": "prettier --write",
 };

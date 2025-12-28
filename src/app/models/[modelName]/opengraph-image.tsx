@@ -1,7 +1,7 @@
-import { ImageResponse } from "next/og";
-import { extractNameFromTag } from "@/lib/extractName";
 import modelData from "@/data/models";
+import { extractNameFromTag } from "@/lib/extractName";
 import { getPhotosFromStorage } from "@/services/storage/photos";
+import { ImageResponse } from "next/og";
 
 export const alt = "Sensuelle Boudoir";
 export const size = {
@@ -23,7 +23,7 @@ export default async function OpengraphImage({
         <div tw="bg-neutral-800 flex flex-row w-full h-full">
           <div tw="w-2/5 py-12 px-4 p-8 flex ">
             <img
-              src={photos?.at(0)?.urlZoom}
+              src={photos?.at(0)?.srcSet[0]?.src}
               alt={modelName}
               tw="w-full h-auto rounded-md"
             />

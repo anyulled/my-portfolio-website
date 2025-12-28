@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { render, screen } from "@testing-library/react";
-import TestimonialHero from "@/app/testimonials/TestimonialHero";
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";
+import TestimonialHero from "@/app/testimonials/TestimonialHero";
+import { render, screen } from "@testing-library/react";
 import { ClassAttributes, ImgHTMLAttributes, JSX } from "react";
 
 // Mock the gsap library and ScrollTrigger plugin
@@ -81,7 +81,7 @@ describe("TestimonialHero", () => {
 
   it("renders the hero section correctly", () => {
     render(
-      <TestimonialHero image="https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg" />,
+      <TestimonialHero image="https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg" />,
     );
 
     // Check if the title is rendered with the correct translation
@@ -95,7 +95,7 @@ describe("TestimonialHero", () => {
 
   it("applies the correct font classes", () => {
     render(
-      <TestimonialHero image="https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg" />,
+      <TestimonialHero image="https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg" />,
     );
 
     // Check if the title has the Dancing_Script font class
@@ -109,7 +109,7 @@ describe("TestimonialHero", () => {
 
   it("renders the background image correctly", () => {
     render(
-      <TestimonialHero image="https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg" />,
+      <TestimonialHero image="https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg" />,
     );
 
     // Check if the image is rendered with the correct props
@@ -117,7 +117,7 @@ describe("TestimonialHero", () => {
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute(
       "src",
-      "https://live.staticflickr.com/65535/54349881217_a687110589_k_d.jpg",
+      "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
     );
     expect(image).toHaveAttribute("width", "1920");
     expect(image).toHaveAttribute("height", "800");

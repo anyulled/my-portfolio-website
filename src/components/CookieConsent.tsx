@@ -30,19 +30,19 @@ export default function CookieConsent() {
   return (
     <div
       className={clsx(
-        "fixed bottom-0 left-0 right-0 p-2 dark:bg-mocha-mousse-800 bg-mocha-mousse-100 bg-opacity-75 backdrop-blur-sm z-50 text-sm transition-all duration-300",
+        "fixed bottom-0 left-0 right-0 p-2 dark:bg-popover bg-popover/90 bg-opacity-75 backdrop-blur-sm z-50 text-sm transition-all duration-300",
         !showConsent && "hidden",
       )}
     >
       <div className="container mx-auto flex justify-between items-center">
-        <p className="dark:text-mocha-mousse-200 text-mocha-mousse-800">
+        <p className="dark:text-popover-foreground text-popover-foreground">
           {t("cookie_message")}
         </p>
         <Button
           onClick={handleAccept}
           variant="outline"
           size="sm"
-          className="dark:hover:bg-mocha-mousse-700 dark:text-mocha-mousse-200 dark:border-mocha-mousse-700 hover:bg-mocha-mousse-200  text-mocha-mousse-800 border-mocha-mousse-200"
+          className="dark:hover:bg-muted dark:text-popover-foreground dark:border-muted hover:bg-muted text-popover-foreground border-border"
         >
           {t("accept")}
         </Button>

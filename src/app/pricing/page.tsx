@@ -1,4 +1,6 @@
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import AnimatedPackages from "@/components/AnimatedPackages";
+import FadeInTitle from "@/components/FadeInTitle";
+import { openGraph } from "@/lib/openGraph";
 import {
   Camera,
   Check,
@@ -8,11 +10,9 @@ import {
   UserRound,
   Video,
 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
 import { Metadata } from "next";
-import { openGraph } from "@/lib/openGraph";
-import AnimatedPackages from "@/components/AnimatedPackages";
-import FadeInTitle from "@/components/FadeInTitle";
+import { getTranslations } from "next-intl/server";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Offer, WithContext } from "schema-dts";
 
 import { getPricing, PricingPackageRecord } from "@/lib/pricing";
@@ -168,7 +168,7 @@ export default async function PricingPage() {
   // Ensure we have at least 3 photos
   const getPhotoUrl = (index: number) => {
     if (shuffledPhotos.length === 0) return "";
-    return shuffledPhotos[index % shuffledPhotos.length]?.urlLarge || "";
+    return shuffledPhotos[index % shuffledPhotos.length]?.srcSet[0]?.src || "";
   };
 
   const images: [string, string, string] = [
@@ -226,37 +226,37 @@ export default async function PricingPage() {
           <div className="dark:bg-neutral-800 bg-neutral-100 rounded-lg shadow-lg p-6">
             <ul className="space-y-4">
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_release_form")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_deposit")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_payment")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_photos_sharing")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_late_arrival")}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2 text-mocha-mousse-500 mt-1">
+                <span className="mr-2 text-primary mt-1">
                   <Check className="w-5 h-5" />
                 </span>
                 <span>{t("condition_additional_photos")}</span>

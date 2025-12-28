@@ -67,7 +67,7 @@ export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
       ref={heroRef}
       className="relative h-[50vh] min-h-[500px] w-full overflow-hidden"
     >
-      <div className="absolute inset-0 bg-mocha-mousse-300/80">
+      <div className="absolute inset-0 bg-background/80 dark:bg-background/90">
         <Image
           src={image}
           alt={"boudoir"}
@@ -79,13 +79,13 @@ export default function TestimonialsHero({ image }: TestimonialsHeroProps) {
       <div className="relative h-full flex flex-col items-center justify-center text-center px-4 pt-36">
         <h1
           ref={titleRef}
-          className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-mocha-mousse-900 shadow-mocha-mousse-100 dark:shadow-mocha-mousse-200 dark:text-white text-shadow-default mb-4`}
+          className={`${dancingScript.className} text-4xl md:text-6xl font-serif text-foreground dark:text-foreground mb-4`}
         >
           {t("client_testimonials")}
         </h1>
         <p
           ref={subtitleRef}
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300 shadow-mocha-mousse-800 dark:text-neutral-200 dark:shadow-mocha-mousse-300 text-shadow-sm font-light max-w-3xl`}
+          className={`${arefRuqaa.className} text-xl md:text-2xl text-muted-foreground dark:text-muted-foreground font-light max-w-3xl`}
         >
           {t("real_stories")}
         </p>

@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
 import type { Photo } from "@/types/photos";
+import { render, screen } from "@testing-library/react";
 
 jest.mock("@/components/Gallery", () => ({
   __esModule: true,
@@ -64,14 +64,6 @@ const createPhoto = (overrides: Partial<Photo> = {}): Photo => ({
   dateUpload: overrides.dateUpload ?? new Date("2024-01-01T00:00:00Z"),
   height: overrides.height ?? 200,
   title: overrides.title ?? "Title",
-  urlCrop: overrides.urlCrop ?? "https://example.com/crop.jpg",
-  urlLarge: overrides.urlLarge ?? "https://example.com/large.jpg",
-  urlMedium: overrides.urlMedium ?? "https://example.com/medium.jpg",
-  urlNormal: overrides.urlNormal ?? "https://example.com/normal.jpg",
-  urlOriginal: overrides.urlOriginal ?? "https://example.com/original.jpg",
-  urlThumbnail: overrides.urlThumbnail ?? "https://example.com/thumb.jpg",
-  urlSmall: overrides.urlSmall ?? "https://example.com/small.jpg",
-  urlZoom: overrides.urlZoom ?? "https://example.com/zoom.jpg",
   views: overrides.views ?? 10,
   width: overrides.width ?? 300,
   tags: overrides.tags ?? "tag1",
@@ -110,7 +102,7 @@ describe("HomePage", () => {
 
     // Verify calls - gallery fetches from root (empty prefix), hero from "hero" folder
     expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 1);
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
   });
@@ -122,7 +114,7 @@ describe("HomePage", () => {
 
     // Verify calls with correct limits - updated loop in component logic restores limits
     expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 1);
+    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     // Expect 1 fallback photo (id 0)
     expect(screen.getByTestId("gallery")).toHaveTextContent("0");

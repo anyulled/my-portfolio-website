@@ -53,43 +53,43 @@ export default function MythsIntro() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 bg-white">
+    <section ref={sectionRef} className="py-20 bg-background">
       <div className="max-w-6xl mx-auto px-4">
         <div ref={contentRef} className="text-center mb-16">
-          <div className="w-16 h-16 bg-mocha-mousse-300/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Lightbulb className="h-8 w-8 text-mocha-mousse-500" />
+          <div className="w-16 h-16 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Lightbulb className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-serif text-mocha-mousse-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-6">
             {t("title")}
           </h2>
-          <p className="text-xl text-mocha-mousse-700 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
             {t("paragraph")}
           </p>
         </div>
 
         <div ref={statsRef} className="grid md:grid-cols-3 gap-8">
-          <div className="text-center p-6 bg-mocha-mousse-100 rounded-2xl">
-            <Users className="h-12 w-12 text-mocha-mousse-800 mx-auto mb-4" />
-            <div className="text-3xl font-bold text-mocha-mousse-900 mb-2">
+          <div className="text-center p-6 bg-muted/50 rounded-2xl">
+            <Users className="h-12 w-12 text-foreground mx-auto mb-4" />
+            <div className="text-3xl font-bold text-foreground mb-2">
               {t("stats.0.value")}
             </div>
-            <p className="text-mocha-mousse-700">{t("stats.0.text")}</p>
+            <p className="text-muted-foreground">{t("stats.0.text")}</p>
           </div>
-          <div className="text-center p-6 bg-mocha-mousse-100 rounded-2xl">
-            <Heart className="h-12 w-12 text-mocha-mousse-900 mx-auto mb-4" />
-            <div className="text-3xl font-bold text-mocha-mousse-900 mb-2">
+          <div className="text-center p-6 bg-muted/50 rounded-2xl">
+            <Heart className="h-12 w-12 text-foreground mx-auto mb-4" />
+            <div className="text-3xl font-bold text-foreground mb-2">
               {t("stats.1.value")}
             </div>
-            <p className="text-mocha-mousse-700">{t("stats.1.text")}</p>
+            <p className="text-muted-foreground">{t("stats.1.text")}</p>
           </div>
-          <div className="text-center p-6 bg-mocha-mousse-100 rounded-2xl">
-            <div className="text-3xl font-bold text-mocha-mousse-800 mx-auto mb-4">
+          <div className="text-center p-6 bg-muted/50 rounded-2xl">
+            <div className="text-3xl font-bold text-foreground mx-auto mb-4">
               {t("stats.2.stars")}
             </div>
-            <div className="text-3xl font-bold text-mocha-mousse-900 mb-2">
+            <div className="text-3xl font-bold text-foreground mb-2">
               {t("stats.2.value")}
             </div>
-            <p className="text-mocha-mousse-700">{t("stats.2.text")}</p>
+            <p className="text-muted-foreground">{t("stats.2.text")}</p>
           </div>
         </div>
       </div>

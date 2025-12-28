@@ -1,12 +1,12 @@
+import Loading from "@/app/loading";
+import ContactForm from "@/components/ContactForm";
+import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
 import SocialMedia from "@/components/SocialMedia";
-import Gallery from "@/components/Gallery";
-import ContactForm from "@/components/ContactForm";
-import type { Metadata } from "next";
-import { getPhotosFromStorage } from "@/services/storage/photos";
-import { Suspense } from "react";
-import Loading from "@/app/loading";
 import { Separator } from "@/components/ui/separator";
+import { getPhotosFromStorage } from "@/services/storage/photos";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
@@ -27,27 +27,27 @@ export default async function HomePage() {
             dateUpload: new Date(),
             height: 1080,
             title: "Boudoir Session",
-            urlCrop: "/images/DSC_7028.jpg",
-            urlLarge: "/images/DSC_7028.jpg",
-            urlMedium: "/images/DSC_7028.jpg",
-            urlNormal: "/images/DSC_7028.jpg",
-            urlOriginal: "/images/DSC_7028.jpg",
-            urlThumbnail: "/images/DSC_7028.jpg",
-            urlSmall: "/images/DSC_7028.jpg",
-            urlZoom: "/images/DSC_7028.jpg",
             views: 0,
             width: 1920,
             tags: "boudoir, portrait",
-            srcSet: [],
+            srcSet: [
+              {
+                src: "/images/DSC_7028.jpg",
+                width: 1920,
+                height: 1080,
+                title: "Boudoir Session",
+                description: "Boudoir Session",
+              },
+            ],
           },
         ];
 
-  const heroPhotos = (await getPhotosFromStorage("hero", 1)) || [];
+  const heroPhotos = (await getPhotosFromStorage("hero", 6)) || [];
 
   const formattedHeroImages =
     heroPhotos.length > 0
       ? heroPhotos.map((p) => ({
-          image: p.urlLarge,
+          image: p.srcSet[0].src,
           position: "center center", // Default position as GCS doesn't store position data yet
         }))
       : [
@@ -64,7 +64,7 @@ export default async function HomePage() {
         {galleryPhotos.length > 0 && <Gallery photos={galleryPhotos} />}
       </Suspense>
       <SocialMedia />
-      <Separator className="my-4 bg-mocha-mousse-900 dark:bg-mocha-mousse-500" />
+      <Separator className="my-4 bg-border" />
       <Suspense fallback={<Loading />}>
         <ContactForm />
       </Suspense>

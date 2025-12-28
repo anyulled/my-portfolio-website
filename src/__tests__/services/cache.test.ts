@@ -1,6 +1,6 @@
+import { sanitizeKey } from "@/lib/sanitizer";
 import { getCachedData, setCachedData } from "@/services/cache";
 import { Photo } from "@/types/photos";
-import { sanitizeKey } from "@/lib/sanitizer";
 // Import the mocked functions after mocking
 import { list, put } from "@vercel/blob";
 
@@ -24,14 +24,6 @@ describe("Cache Service", () => {
       dateUpload: new Date(1672531200 * 1000),
       tags: "test",
       views: 100,
-      urlSmall: "http://example.com/small.jpg",
-      urlMedium: "http://example.com/medium.jpg",
-      urlNormal: "http://example.com/normal.jpg",
-      urlLarge: "http://example.com/large.jpg",
-      urlOriginal: "http://example.com/original.jpg",
-      urlThumbnail: "http://example.com/thumbnail.jpg",
-      urlZoom: "http://example.com/zoom.jpg",
-      urlCrop: "http://example.com/crop.jpg",
       width: 1024,
       height: 768,
       srcSet: [

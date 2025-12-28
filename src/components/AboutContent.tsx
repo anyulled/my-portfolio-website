@@ -1,12 +1,11 @@
 "use client";
-import React from "react";
+import FadeInImage from "@/components/FadeInImage";
+import FadeInTitle from "@/components/FadeInTitle";
+import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import FadeInTitle from "@/components/FadeInTitle";
-import FadeInImage from "@/components/FadeInImage";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import { useTranslations } from "next-intl";
 
 import type { Photo } from "@/types/photos";
 
@@ -19,14 +18,12 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 interface AboutContentProps {
   images: Photo[] | null;
   profileImageUrl: string;
-  imageThumbnail: string;
   collaborationImages: Photo[] | null;
 }
 
 export default function AboutContent({
   images,
   profileImageUrl,
-  imageThumbnail,
   collaborationImages,
 }: Readonly<AboutContentProps>) {
   const t = useTranslations("about");
@@ -35,7 +32,7 @@ export default function AboutContent({
       <div className="container max-w-7xl mx-auto px-4">
         <FadeInTitle>
           <h1
-            className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mb-8`}
+            className={`${arefRuqaa.className} text-4xl md:text-5xl font-bold text-center mb-8 text-foreground dark:text-foreground`}
           >
             {t("title")}
           </h1>
@@ -47,8 +44,6 @@ export default function AboutContent({
               <FadeInImage ease={"power1.in"} duration={0.5}>
                 <Image
                   src={profileImageUrl}
-                  blurDataURL={imageThumbnail}
-                  placeholder="blur"
                   priority
                   alt={t("alt_image")}
                   width={400}
@@ -60,20 +55,26 @@ export default function AboutContent({
           </Card>
 
           <div className="space-y-6 md:col-span-2 lg:col-auto">
-            <Card className=" bg-mocha-mousse-50 dark:bg-mocha-mousse-50">
+            <Card className=" bg-card dark:bg-card">
               <CardContent className="p-6">
                 <FadeInTitle delay={0.3}>
-                  <h2 className={`${dancingScript.className} text-3xl mb-1`}>
+                  <h2
+                    className={`${dancingScript.className} text-3xl mb-1 text-foreground dark:text-foreground`}
+                  >
                     {t("h2")}
                   </h2>
                 </FadeInTitle>
                 <FadeInTitle delay={0.4}>
-                  <h3 className={`${arefRuqaa.className} text-lg mb-4`}>
+                  <h3
+                    className={`${arefRuqaa.className} text-lg mb-4 text-muted-foreground dark:text-muted-foreground`}
+                  >
                     {t("h3")}
                   </h3>
                 </FadeInTitle>
-                <p className=" my-2">{t("p1")}</p>
-                <p className=" my-2">
+                <p className=" my-2 text-foreground dark:text-foreground">
+                  {t("p1")}
+                </p>
+                <p className=" my-2 text-foreground dark:text-foreground">
                   {t("p2")}
                   <Link href={"https://efacontigo.com/"} target={"_blank"}>
                     {" "}
@@ -81,7 +82,7 @@ export default function AboutContent({
                   </Link>{" "}
                   {t("p3")}
                 </p>
-                <p className=" my-2">
+                <p className=" my-2 text-foreground dark:text-foreground">
                   {t("p4")}
                   <Link href={"https://www.malvie.fr/"} target={"_blank"}>
                     Malvie
@@ -95,9 +96,13 @@ export default function AboutContent({
                   </Link>
                   , Dominante, {t("p5")}
                 </p>
-                <p className=" my-2">{t("p6")}</p>
-                <p className=" my-2">{t("p7")}</p>
-                <p className=" my-2">
+                <p className=" my-2 text-foreground dark:text-foreground">
+                  {t("p6")}
+                </p>
+                <p className=" my-2 text-foreground dark:text-foreground">
+                  {t("p7")}
+                </p>
+                <p className=" my-2 text-foreground dark:text-foreground">
                   {t("p8")}
                   <strong>
                     Lindsay Adler, Jen Rozenbaum, Antonio Garci, Dan Hecho &
@@ -114,12 +119,12 @@ export default function AboutContent({
           <>
             <FadeInTitle>
               <h2
-                className={`${arefRuqaa.className} text-3xl font-semibold text-center my-4`}
+                className={`${arefRuqaa.className} text-3xl font-semibold text-center my-4 text-foreground dark:text-foreground`}
               >
                 {t("published_works")}
               </h2>
             </FadeInTitle>
-            <Card className={"bg-mocha-mousse-50 dark:bg-mocha-mousse-50 p-3"}>
+            <Card className={"bg-card dark:bg-card p-3"}>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1">
                 {images.map((cover: Photo, index: number) => (
                   <div
@@ -128,8 +133,8 @@ export default function AboutContent({
                   >
                     <FadeInImage index={index} stagger={0.05}>
                       <Image
-                        src={cover.urlMedium}
-                        blurDataURL={cover.urlSmall}
+                        src={cover.srcSet[0]?.src}
+                        blurDataURL={cover.srcSet[0]?.src}
                         placeholder="blur"
                         alt={cover.title}
                         width={300}
@@ -154,24 +159,24 @@ export default function AboutContent({
         )}
         <FadeInTitle>
           <h2
-            className={`${arefRuqaa.className} text-3xl font-semibold text-center mb-8 my-4`}
+            className={`${arefRuqaa.className} text-3xl font-semibold text-center mb-8 my-4 text-foreground dark:text-foreground`}
           >
             {t("collaborations")}
           </h2>
         </FadeInTitle>
 
         <div className="grid md:grid-cols-3 gap-2">
-          <Card className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="bg-muted/50 dark:bg-muted/10 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={0} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[0]?.urlMedium ||
-                    "https://live.staticflickr.com/65535/53985394873_d9fca2f480_z.jpg"
+                    collaborationImages?.[0]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/peter-coulson-workshop_53985394873_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[0]?.urlSmall ||
-                    "https://live.staticflickr.com/65535/53985394873_d9fca2f480_w_d.jpg"
+                    collaborationImages?.[0]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/peter-coulson-workshop_53985394873_o.jpg"
                   }
                   placeholder="blur"
                   alt="Peter Coulson, Jon Hernandez, Anyul Rivas"
@@ -180,23 +185,25 @@ export default function AboutContent({
                   className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
                 />
               </FadeInImage>
-              <p className={`${arefRuqaa.className} text-base text-center`}>
+              <p
+                className={`${arefRuqaa.className} text-base text-center text-foreground dark:text-foreground`}
+              >
                 {t("collab_peter_coulson")}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="bg-muted/50 dark:bg-muted/10 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={1} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[1]?.urlMedium ||
-                    "https://live.staticflickr.com/65535/53984294097_715ef9c26c_z.jpg"
+                    collaborationImages?.[1]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/antonio-garci--chema-photo_53984294097_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[1]?.urlSmall ||
-                    "https://live.staticflickr.com/65535/53984294097_715ef9c26c_w_d.jpg"
+                    collaborationImages?.[1]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/antonio-garci--chema-photo_53984294097_o.jpg"
                   }
                   placeholder="blur"
                   alt="Antonio Garci, Chema Photo, Anyul Rivas"
@@ -205,23 +212,25 @@ export default function AboutContent({
                   className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
                 />
               </FadeInImage>
-              <p className={`${arefRuqaa.className} text-base text-center`}>
+              <p
+                className={`${arefRuqaa.className} text-base text-center text-foreground dark:text-foreground`}
+              >
                 {t("collab_garci")}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="bg-muted/50 dark:bg-muted/10 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={2} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[2]?.urlMedium ||
-                    "https://live.staticflickr.com/65535/53985940379_089fa1da0e_z.jpg"
+                    collaborationImages?.[2]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/workshop-with-rubn-surez_53985940379_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[2]?.urlSmall ||
-                    "https://live.staticflickr.com/65535/53985940379_089fa1da0e_w_d.jpg"
+                    collaborationImages?.[2]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/workshop-with-rubn-surez_53985940379_o.jpg"
                   }
                   placeholder="blur"
                   alt="Rubén Suárez, Anyul Rivas"
@@ -230,23 +239,25 @@ export default function AboutContent({
                   className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
                 />
               </FadeInImage>
-              <p className={`${arefRuqaa.className} text-base text-center`}>
+              <p
+                className={`${arefRuqaa.className} text-base text-center text-foreground dark:text-foreground`}
+              >
                 {t("collab_ruben_suarez")}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="my-1 bg-mocha-mousse-100 dark:bg-mocha-mousse-900 overflow-hidden border-0">
+          <Card className="my-1 bg-muted/50 dark:bg-muted/10 overflow-hidden border-0">
             <CardContent className="p-2">
               <FadeInImage index={3} stagger={0.1}>
                 <Image
                   src={
-                    collaborationImages?.[3]?.urlMedium ||
-                    "https://live.staticflickr.com/65535/54396567099_28021d76b8_z.jpg"
+                    collaborationImages?.[3]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/me-and-dan-hecho_54396567099_o.jpg"
                   }
                   blurDataURL={
-                    collaborationImages?.[3]?.urlSmall ||
-                    "https://live.staticflickr.com/65535/54396567099_28021d76b8_w_d.jpg"
+                    collaborationImages?.[3]?.srcSet[0]?.src ||
+                    "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/me-and-dan-hecho_54396567099_o.jpg"
                   }
                   placeholder="blur"
                   alt="Dan Hecho, Anyul Rivas"
@@ -255,27 +266,27 @@ export default function AboutContent({
                   className="w-full h-auto object-cover rounded-lg mb-4 hover:scale-110 grayscale transition-all duration-300 ease-in-out hover:rotate-1 hover:grayscale-0"
                 />
               </FadeInImage>
-              <p className={`${arefRuqaa.className} text-base text-center`}>
+              <p
+                className={`${arefRuqaa.className} text-base text-center text-foreground dark:text-foreground`}
+              >
                 {t("collab_dan_hecho")}
               </p>
             </CardContent>
           </Card>
         </div>
 
-        <Card
-          className={
-            "my-1 bg-mocha-mousse-50 dark:bg-mocha-mousse-900 overflow-hidden border-0"
-          }
-        >
+        <Card className={"my-1 bg-card dark:bg-card overflow-hidden border-0"}>
           <CardContent className="p-6">
             <FadeInTitle duration={2.5}>
               <h2
-                className={`${dancingScript.className} text-3xl mb-4 text-center`}
+                className={`${dancingScript.className} text-3xl mb-4 text-center text-foreground dark:text-foreground`}
               >
                 {t("create_together")}
               </h2>
             </FadeInTitle>
-            <p className="text-center ">{t("create_paragraph")}</p>
+            <p className="text-center text-foreground dark:text-foreground">
+              {t("create_paragraph")}
+            </p>
           </CardContent>
         </Card>
       </div>

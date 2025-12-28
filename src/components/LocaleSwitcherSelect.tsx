@@ -50,13 +50,13 @@ export default function LocaleSwitcherSelect({
         <SelectTrigger
           aria-label={label}
           className={clsx(
-            "rounded-sm p-2 transition-colors border-none bg-mocha-mousse-50 dark:bg-mocha-mousse-900",
+            "rounded-sm p-2 transition-colors border-none bg-background dark:bg-muted/50",
             isPending && "pointer-events-none opacity-60",
             pathname === "/" && "!bg-transparent",
           )}
         >
           <SelectIcon>
-            <LanguageIcon className="h-6 w-6 dark:text-mocha-mousse-100 text-mocha-mousse-600 accent-mocha-mousse-700 transition-colors group-hover:text-mocha-mousse-900" />
+            <LanguageIcon className="h-6 w-6 dark:text-foreground text-muted-foreground accent-primary transition-colors group-hover:text-primary" />
           </SelectIcon>
         </SelectTrigger>
         <SelectPortal>
@@ -77,7 +77,7 @@ export default function LocaleSwitcherSelect({
                       <CheckIcon className="h-5 w-5 text-neutral-800" />
                     )}
                   </div>
-                  <span className="dark:text-mocha-mousse-100 text-mocha-mousse-600">
+                  <span className="dark:text-foreground text-foreground">
                     {item.label}
                   </span>
                 </SelectItem>

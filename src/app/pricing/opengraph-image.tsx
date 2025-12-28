@@ -1,5 +1,5 @@
-import { ImageResponse } from "next/og";
 import chalk from "chalk";
+import { ImageResponse } from "next/og";
 
 export const contentType = "image/png";
 export const alt = "Sensuelle Boudoir";
@@ -47,7 +47,10 @@ export default async function PricingImage() {
     const photos = (await getPhotosFromStorage("pricing")) || [];
 
     // Use first 3 photos or fallback
-    const pricingImages = photos.slice(0, 3).map((p) => p.urlMedium);
+    const pricingImages = photos
+      .slice(0, 3)
+      .map((p) => p.srcSet[0]?.src)
+      .filter((url): url is string => !!url);
 
     const validImages = await Promise.all(
       pricingImages.map((url) => fetchAndEncodeImage(url)),

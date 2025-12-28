@@ -17,12 +17,12 @@ export default function NotFound() {
       >
         {t("not_found")}
       </h2>
-      <p className="text-xl mb-8 text-center max-w-md text-mocha-mousse-700 dark:text-mocha-mousse-700">
+      <p className="text-xl mb-8 text-center max-w-md text-muted-foreground dark:text-muted-foreground">
         {t("p1")}
       </p>
       <Link
         href="/"
-        className="bg-mocha-mousse-600 hover:bg-mocha-mousse-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+        className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded transition duration-300"
       >
         {t("return_to_homepage")}
       </Link>

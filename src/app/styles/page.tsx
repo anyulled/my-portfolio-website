@@ -1,10 +1,10 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Dancing_Script, Playfair_Display } from "next/font/google";
 import { styles } from "@/data/styles";
 import { getPhotosFromStorage } from "@/services/storage/photos";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { Dancing_Script, Playfair_Display } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
@@ -27,7 +27,7 @@ export default async function PhotographyStylesPage() {
     image:
       res?.filter((photo) =>
         photo.tags.split(" ").includes(style.tag.replace("-", "")),
-      )[0]?.urlLarge ?? "",
+      )[0]?.srcSet[0]?.src ?? "",
     link: `styles/${style.name}`,
   }));
 
@@ -35,12 +35,12 @@ export default async function PhotographyStylesPage() {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-16">
         <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center mt-4 text-mocha-mousse-500`}
+          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center mt-4 text-primary`}
         >
           {t("photography-styles")}
         </h1>
         <p
-          className={`${playfair.className} text-xl md:text-2xl text-mocha-mousse-300 text-center mb-12`}
+          className={`${playfair.className} text-xl md:text-2xl text-muted-foreground text-center mb-12`}
         >
           {t("discover-our-styles")}
         </p>
@@ -59,7 +59,7 @@ export default async function PhotographyStylesPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h2
-                    className={`${playfair.className} text-2xl md:text-3xl text-mocha-mousse-500 group-hover:text-mocha-mousse-400 transition-colors duration-300 capitalize`}
+                    className={`${playfair.className} text-2xl md:text-3xl text-primary-foreground group-hover:text-primary transition-colors duration-300 capitalize`}
                   >
                     {style.name}
                   </h2>

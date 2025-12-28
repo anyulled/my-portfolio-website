@@ -138,7 +138,7 @@ export default async function BoudoirMythsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
 
-      <div className="min-h-screen bg-cream-tan-50">
+      <div className="min-h-screen bg-background">
         {photos && photos.length > 5 && <MythsHero heroImage={photos[5]} />}
         <MythsIntro />
         <MythsList photos={photos} />
