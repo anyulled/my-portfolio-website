@@ -1,4 +1,4 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { Testimonial } from "@/lib/testimonials";
 import chalk from "chalk";
@@ -13,7 +13,9 @@ const createDbClient = (cookies: ReadonlyRequestCookies) =>
         getAll() {
           return cookies.getAll();
         },
-        setAll(cookie) {
+        setAll(
+          cookie: { name: string; value: string; options: CookieOptions }[],
+        ) {
           try {
             for (const { name, value, options } of cookie) {
               cookies.set(name, value, options);
