@@ -46,7 +46,7 @@ interface ProcessResult {
 function isValidImage(file: GCSFile): boolean {
   return (
     !file.name.endsWith("/") &&
-    !!file.name.match(/\.(jpg|jpeg|png|webp|gif|tiff|avif)$/i)
+    !!file.name.match(/\.(jpg|jpeg|png|gif|tiff|avif)$/i)
   );
 }
 
@@ -61,12 +61,12 @@ async function processImage(
     const image = sharp(buffer);
     const metadata = await image.metadata();
 
-    const isWebP = metadata.format === "webp";
     const isTooLarge =
       (metadata.width && metadata.width > MAX_WIDTH_HEIGHT) ||
       (metadata.height && metadata.height > MAX_WIDTH_HEIGHT);
 
-    if (isWebP && !isTooLarge) {
+    if (!isTooLarge && metadata.format === "webp") {
+      // Safety skip in case a WebP file slipped through or was mislabeled
       return {
         status: "skipped",
         originalBytes: 0,
@@ -97,19 +97,26 @@ async function processImage(
     const newMetadata = await sharp(convertedBuffer).metadata();
 
     const newFile = bucket.file(newFileName);
-    await newFile.save(convertedBuffer, {
+    // Prepare metadata, filtering out 'name' to avoid conflicts
+    const existingMetadata = { ...file.metadata.metadata };
+    delete existingMetadata.name;
+
+    const saveOptions = {
       contentType: "image/webp",
       metadata: {
-        ...file.metadata,
+        // Do not spread ...file.metadata directly to avoid name conflict
         metadata: {
-          ...file.metadata.metadata,
+          ...existingMetadata,
           width: String(newMetadata.width),
           height: String(newMetadata.height),
           updated: new Date().toISOString(),
         },
+        cacheControl: file.metadata.cacheControl,
       },
       resumable: false,
-    });
+    };
+
+    await newFile.save(convertedBuffer, saveOptions);
 
     if (newFileName !== file.name) {
       console.log(chalk.cyan(`[Cron] Deleting original file ${file.name}`));
@@ -146,7 +153,9 @@ async function processImage(
 
 export async function GET() {
   console.log(
-    chalk.cyan("[Cron] Starting image resizing & WebP conversion job..."),
+    chalk.cyan(
+      "[Cron] Starting image resizing & WebP conversion job... (VERSION 3)",
+    ),
   );
   const startTime = Date.now();
 
@@ -203,13 +212,14 @@ export async function GET() {
 
     console.log(chalk.green("[Cron] Job finished."), summary);
 
-    // Send email notification
-    /* eslint-disable-next-line @typescript-eslint/no-require-imports */
-    const { sendEmailToRecipient } = require("@/services/mailer");
-    const emailRecipient =
-      process.env.CRON_NOTIFICATION_EMAIL || "anyulled@gmail.com";
-    const emailSubject = `[Cron] Image Resizing Job Completed`;
-    const emailBody = `
+    // Send email notification only if there were errors or images processed
+    if (processed.length > 0 || errors.length > 0) {
+      /* eslint-disable-next-line @typescript-eslint/no-require-imports */
+      const { sendEmailToRecipient } = require("@/services/mailer");
+      const emailRecipient =
+        process.env.CRON_NOTIFICATION_EMAIL || "anyulled@gmail.com";
+      const emailSubject = `[Cron] Image Resizing Job Completed`;
+      const emailBody = `
 Job Summary:
 - Processed: ${summary.processed}
 - Resized/Converted: ${summary.convertedOrResized}
@@ -223,9 +233,16 @@ Metrics:
 
 Errors List:
 ${summary.errorList.length > 0 ? JSON.stringify(summary.errorList, null, 2) : "None"}
-        `;
+          `;
 
-    await sendEmailToRecipient(emailBody, emailRecipient, emailSubject);
+      await sendEmailToRecipient(emailBody, emailRecipient, emailSubject);
+    } else {
+      console.log(
+        chalk.gray(
+          "[Cron] No images processed or errors found. Skipping email notification.",
+        ),
+      );
+    }
 
     return NextResponse.json(summary);
   } catch (error) {
