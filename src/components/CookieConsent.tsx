@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { grantConsent } from "@/lib/gtag";
-import { useTranslations } from "next-intl";
 import { clsx } from "clsx";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+
+import mixpanel from "mixpanel-browser";
 
 export default function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false);
@@ -15,6 +17,14 @@ export default function CookieConsent() {
       const consent = localStorage.getItem("cookieConsent");
       if (!consent) {
         setShowConsent(true);
+      } else {
+        // If consent was previously likely given (based on logic, though 'cookieConsent' string check isn't perfect for granular consent,
+        // usually existence means yes here. In a stricter setup we'd check value).
+        // However, standard pattern: if consent exists, we assume opt-in if using this simple banner.
+        // Actually, looking at handleAccept, it sets "true".
+        if (consent === "true") {
+          mixpanel.opt_in_tracking();
+        }
       }
     }
   }, []);
@@ -22,6 +32,7 @@ export default function CookieConsent() {
   const handleAccept = () => {
     localStorage.setItem("cookieConsent", "true");
     grantConsent();
+    mixpanel.opt_in_tracking();
     setShowConsent(false);
   };
 

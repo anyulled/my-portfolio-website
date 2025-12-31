@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import chalk from "chalk";
+import { NextResponse } from "next/server";
 
 import {
   getLatestPricing,
@@ -121,6 +121,29 @@ export async function GET(req: Request) {
     if (!inserted) {
       throw new Error("Failed to persist recalculated pricing");
     }
+
+    // Send email notification
+    /* eslint-disable-next-line @typescript-eslint/no-require-imports */
+    const { sendEmailToRecipient } = require("@/services/mailer");
+
+    const emailRecipient =
+      process.env.CRON_NOTIFICATION_EMAIL || "anyulled@gmail.com";
+    const emailSubject = `[Pricing] Recalculation Complete (IPC: ${ipcPercentage}%)`;
+    const emailBody = `
+      Pricing recalculation completed successfully.
+      
+      IPC Percentage Used: ${ipcPercentage}%
+      Adjustment Factor: ${adjustmentFactor}
+      
+      New Pricing:
+      - Express: ${inserted.express_price}
+      - Experience: ${inserted.experience_price}
+      - Deluxe: ${inserted.deluxe_price}
+      
+      Triggered by: ${isCronInvocation ? "Cron" : "Manual"}
+    `;
+
+    await sendEmailToRecipient(emailBody, emailRecipient, emailSubject);
 
     return NextResponse.json({
       success: true,

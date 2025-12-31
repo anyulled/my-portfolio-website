@@ -6,6 +6,9 @@ export const initMixpanel = () => {
     mixpanel.init(MIXPANEL_TOKEN, {
       autocapture: true,
       debug: process.env.NODE_ENV !== "production",
+      record_sessions_percent: 100,
+      api_host: "https://api-eu.mixpanel.com",
+      opt_out_tracking_by_default: true,
     });
   } else if (process.env.NODE_ENV !== "production") {
     console.warn("Mixpanel token is missing! Check your .env file.");

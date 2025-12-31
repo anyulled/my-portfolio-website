@@ -1,11 +1,13 @@
 {
-  "regions": [
-    "cdg1"
-  ],
+  "regions": ["cdg1"],
   "ignoreCommand": "git log -1 --pretty=oneline --abbrev-commit | grep -w '[skip deploy]' && exit 0 || exit 1",
   "crons": [
     {
       "path": "/api/pricing/recalculate",
+      "schedule": "0 0 1 * *"
+    },
+    {
+      "path": "/api/cron/resize-images",
       "schedule": "0 0 1 * *"
     }
   ]

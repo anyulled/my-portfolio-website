@@ -5,7 +5,7 @@ import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 import chalk from "chalk";
 
-const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
+export const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
 const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
 const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24 hours
 
@@ -34,7 +34,7 @@ const sanitisePrivateKey = (key: string) =>
 const hasCredentials = () =>
   Boolean(process.env.GCP_CLIENT_EMAIL && process.env.GCP_PRIVATE_KEY);
 
-const createStorageClient = (): Storage => {
+export const createStorageClient = (): Storage => {
   if (!hasCredentials()) {
     console.log(
       chalk.cyan(
@@ -99,9 +99,6 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
     // Construct URL manually to avoid double-encoding issues
     const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
     const url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
-    console.log(
-      chalk.cyan(`[PhotosStorage] Using public URL for ${file.name}: ${url}`),
-    );
     return url;
   }
 

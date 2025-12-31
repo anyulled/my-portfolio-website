@@ -15,7 +15,7 @@ export const NavLinks = (props: {
         <Link
           key={link.name}
           href={link.href}
-          className="text-sm font-medium hover:text-primary transition-colors dark:text-foreground text-muted-foreground"
+          className="text-sm font-medium hover:text-primary transition-colors dark:text-foreground text-foreground"
           onClick={() => props.handleNavClick(link.name)}
         >
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
