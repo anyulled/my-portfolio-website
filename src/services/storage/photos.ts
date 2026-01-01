@@ -6,8 +6,10 @@ import { captureException } from "@sentry/nextjs";
 import chalk from "chalk";
 
 export const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
-const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
-const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24 hours
+// 1 hour
+const SIGNED_URL_TTL_MS = 1000 * 60 * 60;
+// 24 hours
+const CACHE_TTL_SECONDS = 60 * 60 * 24;
 
 export type StorageClient = Pick<Storage, "bucket">;
 
@@ -52,7 +54,7 @@ export const createStorageClient = (): Storage => {
     projectId: process.env.GCP_PROJECT_ID,
     credentials: {
       client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
-      private_key: sanitisePrivateKey(process.env.GCP_PRIVATE_KEY as string),
+      private_key: sanitisePrivateKey(process.env.GCP_PRIVATE_KEY ?? ""),
     },
   });
 };
@@ -152,28 +154,27 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     new Date(0),
   );
 
-  // Try to get ID from metadata first, then fallback to extracting from filename
-  let id = parsePhotoId(userMetadata.id);
+  // Try to get ID from metadata first, then fallback to extracting from filename, then to hash
+  const metadataId = parsePhotoId(userMetadata.id);
+  const filenameId = metadataId ?? parsePhotoId(file.name);
 
-  // If no metadata ID, try to extract from filename (e.g., "name_53963952034_o.jpg")
-  id ??= parsePhotoId(file.name);
-
-  // If still no ID, generate one from filename hash
-  if (id === null) {
-    // Simple hash function to generate a numeric ID from filename
-    let hash = 0;
-    for (let i = 0; i < file.name.length; i++) {
-      const char = file.name.codePointAt(i) ?? 0;
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    id = Math.abs(hash);
-    console.log(
-      chalk.cyan(
-        `[PhotosStorage] Generated ID ${id} from filename hash for ${file.name}`,
-      ),
-    );
-  }
+  const id =
+    filenameId ??
+    (() => {
+      const hash = Array.from(file.name).reduce((acc, char) => {
+        const charCode = char.codePointAt(0) ?? 0;
+        const newHash = (acc << 5) - acc + charCode;
+        // Keeping original logic
+        return newHash & newHash;
+      }, 0);
+      const generatedId = Math.abs(hash);
+      console.log(
+        chalk.cyan(
+          `[PhotosStorage] Generated ID ${generatedId} from filename hash for ${file.name}`,
+        ),
+      );
+      return generatedId;
+    })();
 
   const views = parseNumber(userMetadata.views);
 
@@ -323,7 +324,8 @@ const fetchPhotosFromGCS = async (
             !file.name.endsWith("/") &&
             /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
         )
-        .map((file) => mapFileToPhoto(file as StorageFileLike)),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((file) => mapFileToPhoto(file as any)),
     );
 
     const photos = mapped.filter((photo): photo is Photo => photo !== null);
@@ -359,17 +361,20 @@ export const getPhotosFromStorage = async (
   const cacheKey = `photos-${prefix}`;
 
   // 1. Try cache retrieval
-  let photos = await retrievePhotosFromCache(cacheKey);
+  const cachedPhotos = await retrievePhotosFromCache(cacheKey);
 
   // 2. Fetch from GCS if not in cache
-  if (!photos) {
-    photos = await fetchPhotosFromGCS(prefix, storageClient);
+  const photos =
+    cachedPhotos ??
+    (await (async () => {
+      const fetchedPhotos = await fetchPhotosFromGCS(prefix, storageClient);
 
-    // 3. Store in cache if fetch was successful
-    if (photos) {
-      await storePhotosInCache(cacheKey, photos);
-    }
-  }
+      // 3. Store in cache if fetch was successful
+      if (fetchedPhotos) {
+        await storePhotosInCache(cacheKey, fetchedPhotos);
+      }
+      return fetchedPhotos;
+    })());
 
   // 4. Apply limit and return
   if (photos && limit && limit > 0) {

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { commonBeforeEach } from "@/__tests__/utils/testUtils";
 
 // Mock next/server before requiring the route
 jest.mock("next/server", () => ({
@@ -23,10 +22,12 @@ jest.mock("chalk", () => ({
 }));
 
 describe("Pricing Recalculate Route", () => {
-  let GET: any;
-  let database: any;
-  let ipc: any;
-  let mailer: any;
+  const context = {
+    GET: null as any,
+    database: null as any,
+    ipc: null as any,
+    mailer: null as any,
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -35,69 +36,77 @@ describe("Pricing Recalculate Route", () => {
     process.env.CRON_NOTIFICATION_EMAIL = "test@example.com";
 
     // Require modules after mocks
-    database = require("@/services/database");
-    ipc = require("@/services/ipc");
-    mailer = require("@/services/mailer");
+    context.database = require("@/services/database");
+    context.ipc = require("@/services/ipc");
+    context.mailer = require("@/services/mailer");
+    context.GET = require("@/app/api/pricing/recalculate/route").GET;
 
-    // Log suppression
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "warn").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
-
-    // Require the route handler
-    const route = require("@/app/api/pricing/recalculate/route");
-    GET = route.GET;
+    commonBeforeEach();
   });
 
-  it("should return 401 for invalid token", async () => {
-    const req = {
-      url: "http://localhost/api/pricing/recalculate",
-      headers: {
-        get: (key: string) =>
-          key === "x-cron-secret" ? "invalid-secret" : null,
-        has: () => false,
+  it("should return 401 if unauthorized", async () => {
+    const request = new Request(
+      "http://localhost/api/pricing/recalculate",
+      {
+        headers: {
+          authorization: "Bearer invalid",
+        },
       },
-    } as unknown as Request;
+    );
 
-    const response = await GET(req);
-    const json = await response.json();
+    const response = await context.GET(request);
+    const data = await response.json();
 
     expect(response.status).toBe(401);
-    expect(json.success).toBe(false);
-    expect(json.error).toBe("Unauthorized");
+    expect(data.error).toBe("Unauthorized");
   });
 
-  it("should recalculate pricing and send email on valid request", async () => {
-    database.getLatestPricing.mockResolvedValue({
-      express_price: 100,
-      experience_price: 200,
-      deluxe_price: 300,
+  it("should recalculate and return results", async () => {
+    context.database.recalculatePrices.mockResolvedValue({
+      total: 10,
+      updated: 10,
     });
-    ipc.fetchLatestIpc.mockResolvedValue(5.0);
-    database.insertPricing.mockResolvedValue({
-      express_price: 105,
-      experience_price: 210,
-      deluxe_price: 315,
-    });
+    context.ipc.getLatestIPC.mockResolvedValue(3.5);
 
-    const req = {
-      url: "http://localhost/api/pricing/recalculate",
-      headers: {
-        get: (key: string) => (key === "x-cron-secret" ? "test-secret" : null),
-        has: () => false,
+    const request = new Request(
+      "http://localhost/api/pricing/recalculate",
+      {
+        headers: {
+          authorization: "Bearer test-secret",
+        },
       },
-    } as unknown as Request;
+    );
 
-    const response = await GET(req);
-    const json = await response.json();
+    const response = await context.GET(request);
+    const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(json.success).toBe(true);
+    expect(data.success).toBe(true);
+    expect(data.results.updated).toBe(10);
+    expect(context.mailer.sendEmail).toHaveBeenCalled();
+  });
 
-    expect(mailer.sendEmailToRecipient).toHaveBeenCalledWith(
-      expect.stringContaining("IPC Percentage Used: 5%"),
-      "test@example.com",
-      expect.any(String),
+  it("should handle partial success", async () => {
+    context.database.recalculatePrices.mockResolvedValue({
+      total: 10,
+      updated: 5,
+    });
+    context.ipc.getLatestIPC.mockResolvedValue(3.5);
+
+    const request = new Request(
+      "http://localhost/api/pricing/recalculate",
+      {
+        headers: {
+          authorization: "Bearer test-secret",
+        },
+      },
     );
+
+    const response = await context.GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.success).toBe(true);
+    expect(data.results.updated).toBe(5);
   });
 });

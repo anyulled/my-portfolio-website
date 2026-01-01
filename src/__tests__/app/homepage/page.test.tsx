@@ -85,47 +85,47 @@ const renderHomePage = async () => {
 };
 
 describe("HomePage", () => {
-  let getPhotosFromStorageMock: jest.Mock;
+  const context = { getPhotosFromStorageMock: null as any };
 
   beforeEach(() => {
     const mockedModule = jest.requireMock("@/services/storage/photos");
 
-    getPhotosFromStorageMock = mockedModule.getPhotosFromStorage;
-    getPhotosFromStorageMock.mockReset();
+    context.getPhotosFromStorageMock = mockedModule.getPhotosFromStorage;
+    context.getPhotosFromStorageMock.mockReset();
     jest.clearAllMocks();
   });
 
   it("renders gallery photos returned by storage", async () => {
-    getPhotosFromStorageMock.mockResolvedValue([createPhoto({ id: 5 })]);
+    context.getPhotosFromStorageMock.mockResolvedValue([createPhoto({ id: 5 })]);
 
     await renderHomePage();
 
     // Verify calls - gallery fetches from root (empty prefix), hero from "hero" folder
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
   });
 
   it("renders gallery with fallback photos when no photos are available", async () => {
-    getPhotosFromStorageMock.mockResolvedValue(null);
+    context.getPhotosFromStorageMock.mockResolvedValue(null);
 
     await renderHomePage();
 
     // Verify calls with correct limits - updated loop in component logic restores limits
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     // Expect 1 fallback photo (id 0)
     expect(screen.getByTestId("gallery")).toHaveTextContent("0");
   });
 
   it("renders gallery with fallback photos when the bucket is empty", async () => {
-    getPhotosFromStorageMock.mockResolvedValue([]);
+    context.getPhotosFromStorageMock.mockResolvedValue([]);
 
     await renderHomePage();
 
-    expect(getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
     expect(screen.getByTestId("gallery")).toHaveTextContent("0");
   });
 });

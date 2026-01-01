@@ -18,8 +18,7 @@ export const NavLinks = (props: {
           className="text-sm font-medium hover:text-primary transition-colors dark:text-foreground text-foreground"
           onClick={() => props.handleNavClick(link.name)}
         >
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {t(link.name as any)}
+          {((key: string) => t(key))(link.name)}
         </Link>
       ))}
     </>

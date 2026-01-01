@@ -1,4 +1,4 @@
-import * as gtag from "../lib/gtag";
+import * as gtag from "@/lib/gtag";
 
 const useAnalyticsEventTracker =
   (category: string) => (action: string, label: string, value?: number) => {

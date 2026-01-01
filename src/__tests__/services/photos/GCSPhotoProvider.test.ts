@@ -1,13 +1,12 @@
-// Store the mock bucket for test access
-let mockBucket: {
-  getFiles: jest.Mock;
+const mockBucketContainer = {
+  getFiles: jest.fn(),
 };
 
 // Mock the GCS Storage module
 jest.mock("@google-cloud/storage", () => {
   return {
     Storage: jest.fn().mockImplementation(() => ({
-      bucket: jest.fn().mockImplementation(() => mockBucket),
+      bucket: jest.fn().mockImplementation(() => mockBucketContainer),
     })),
   };
 });
@@ -53,9 +52,7 @@ describe("GCSPhotoProvider", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Reset the mock bucket before each test
-    mockBucket = {
-      getFiles: jest.fn().mockResolvedValue([[]]),
-    };
+    mockBucketContainer.getFiles = jest.fn().mockResolvedValue([[]]);
   });
 
   describe("construction", () => {
@@ -74,7 +71,7 @@ describe("GCSPhotoProvider", () => {
 
   describe("listPhotos", () => {
     it("returns empty array when bucket has no files", async () => {
-      mockBucket.getFiles.mockResolvedValue([[]]);
+      mockBucketContainer.getFiles.mockResolvedValue([[]]);
 
       const provider = new GCSPhotoProvider();
       const photos = await provider.listPhotos();
@@ -86,7 +83,7 @@ describe("GCSPhotoProvider", () => {
       const mockFiles = [
         createMockFile("andrea-cano-montull_54701383010_o.jpg"),
       ];
-      mockBucket.getFiles.mockResolvedValue([mockFiles]);
+      mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photos = await provider.listPhotos();
@@ -97,12 +94,12 @@ describe("GCSPhotoProvider", () => {
     });
 
     it("filters by prefix", async () => {
-      mockBucket.getFiles.mockResolvedValue([[]]);
+      mockBucketContainer.getFiles.mockResolvedValue([[]]);
 
       const provider = new GCSPhotoProvider();
       await provider.listPhotos({ prefix: "styles/boudoir/" });
 
-      expect(mockBucket.getFiles).toHaveBeenCalledWith({
+      expect(mockBucketContainer.getFiles).toHaveBeenCalledWith({
         prefix: "styles/boudoir/",
         autoPaginate: false,
       });
@@ -116,7 +113,7 @@ describe("GCSPhotoProvider", () => {
         createMockFile("photo4_4_o.jpg"),
         createMockFile("photo5_5_o.jpg"),
       ];
-      mockBucket.getFiles.mockResolvedValue([mockFiles]);
+      mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photos = await provider.listPhotos({ limit: 3 });
@@ -129,9 +126,9 @@ describe("GCSPhotoProvider", () => {
         createMockFile("no-id-here.jpg"),
         createMockFile("valid_123_o.jpg"),
       ];
-      mockBucket.getFiles.mockResolvedValue([mockFiles]);
+      mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
-      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => { });
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photos = await provider.listPhotos();
@@ -151,7 +148,7 @@ describe("GCSPhotoProvider", () => {
         createMockFile("document_2_o.pdf"),
         createMockFile("image_3_o.png"),
       ];
-      mockBucket.getFiles.mockResolvedValue([mockFiles]);
+      mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photos = await provider.listPhotos();
@@ -160,11 +157,11 @@ describe("GCSPhotoProvider", () => {
     });
 
     it("returns null on error", async () => {
-      mockBucket.getFiles.mockRejectedValue(new Error("Network error"));
+      mockBucketContainer.getFiles.mockRejectedValue(new Error("Network error"));
 
       const errorSpy = jest
         .spyOn(console, "error")
-        .mockImplementation(() => {});
+        .mockImplementation(() => { });
 
       const provider = new GCSPhotoProvider();
       const photos = await provider.listPhotos();
@@ -186,7 +183,7 @@ describe("GCSPhotoProvider", () => {
           metadata: { updated: "2022-01-01T00:00:00Z" },
         }),
       ];
-      mockBucket.getFiles.mockResolvedValue([mockFiles]);
+      mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photos = await provider.listPhotos({
@@ -194,8 +191,10 @@ describe("GCSPhotoProvider", () => {
         orderDirection: "desc",
       });
 
-      expect(photos![0].id).toBe(2); // newest
-      expect(photos![2].id).toBe(1); // oldest
+      // newest
+      expect(photos![0].id).toBe(2);
+      // oldest
+      expect(photos![2].id).toBe(1);
     });
   });
 
@@ -206,7 +205,7 @@ describe("GCSPhotoProvider", () => {
         createMockFile("photo2_222_o.jpg"),
         createMockFile("photo3_333_o.jpg"),
       ];
-      mockBucket.getFiles.mockResolvedValue([mockFiles]);
+      mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photo = await provider.getPhoto(222);
@@ -217,7 +216,7 @@ describe("GCSPhotoProvider", () => {
 
     it("returns null when photo not found", async () => {
       const mockFiles = [createMockFile("photo1_111_o.jpg")];
-      mockBucket.getFiles.mockResolvedValue([mockFiles]);
+      mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photo = await provider.getPhoto(999);
@@ -229,7 +228,7 @@ describe("GCSPhotoProvider", () => {
   describe("URL handling", () => {
     it("uses public URLs when useSignedUrls is false", async () => {
       const mockFile = createMockFile("test_123_o.jpg");
-      mockBucket.getFiles.mockResolvedValue([[mockFile]]);
+      mockBucketContainer.getFiles.mockResolvedValue([[mockFile]]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photos = await provider.listPhotos();
@@ -241,7 +240,7 @@ describe("GCSPhotoProvider", () => {
     it("falls back to public URL when signing fails", async () => {
       const mockFile = createMockFile("test_456_o.jpg");
       mockFile.getSignedUrl.mockRejectedValue(new Error("Signing failed"));
-      mockBucket.getFiles.mockResolvedValue([[mockFile]]);
+      mockBucketContainer.getFiles.mockResolvedValue([[mockFile]]);
 
       const provider = new GCSPhotoProvider({ useSignedUrls: true });
       const photos = await provider.listPhotos();

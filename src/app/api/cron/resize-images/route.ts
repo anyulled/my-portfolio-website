@@ -6,7 +6,8 @@ import chalk from "chalk";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 
-export const maxDuration = 300; // 5 minutes
+// 5 minutes
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
 const MAX_WIDTH_HEIGHT = 2560;
@@ -82,15 +83,14 @@ async function processImage(
       ),
     );
 
-    let pipeline = image;
-    if (isTooLarge) {
-      pipeline = pipeline.resize({
+    const pipeline = isTooLarge
+      ? image.resize({
         width: MAX_WIDTH_HEIGHT,
         height: MAX_WIDTH_HEIGHT,
         fit: "inside",
         withoutEnlargement: true,
-      });
-    }
+      })
+      : image;
 
     const convertedBuffer = await pipeline.webp({ quality: 80 }).toBuffer();
     const newBytes = convertedBuffer.length;
@@ -151,6 +151,10 @@ async function processImage(
   }
 }
 
+interface GCSStorage {
+  bucket(name: string): GCSBucket;
+}
+
 export async function GET() {
   console.log(
     chalk.cyan(
@@ -160,9 +164,8 @@ export async function GET() {
   const startTime = Date.now();
 
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
-  const storage = createStorageClient();
-  // Cast to our interface to enforce usage structure
-  const bucket = storage.bucket(bucketName) as unknown as GCSBucket;
+  const storage = createStorageClient() as unknown as GCSStorage;
+  const bucket = storage.bucket(bucketName);
 
   try {
     const [files] = await bucket.getFiles();
@@ -214,8 +217,7 @@ export async function GET() {
 
     // Send email notification only if there were errors or images processed
     if (processed.length > 0 || errors.length > 0) {
-      /* eslint-disable-next-line @typescript-eslint/no-require-imports */
-      const { sendEmailToRecipient } = require("@/services/mailer");
+      const { sendEmailToRecipient } = await import("@/services/mailer");
       const emailRecipient =
         process.env.CRON_NOTIFICATION_EMAIL || "anyulled@gmail.com";
       const emailSubject = `[Cron] Image Resizing Job Completed`;

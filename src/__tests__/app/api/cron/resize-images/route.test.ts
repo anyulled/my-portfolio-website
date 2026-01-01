@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // Mock next/server
 jest.mock("next/server", () => ({
@@ -33,10 +31,12 @@ jest.mock("sharp", () => {
 });
 
 describe("Image Resizing Cron Route", () => {
-  let GET: any;
-  let mailer: any;
-  let photosStorage: any;
-  let mockBucket: any;
+  const context = {
+    GET: null as any,
+    mailer: null as any,
+    photosStorage: null as any,
+    mockBucket: null as any,
+  };
 
   const mockFile = (name: string) => ({
     name,
@@ -55,45 +55,45 @@ describe("Image Resizing Cron Route", () => {
     process.env.GCP_HOMEPAGE_BUCKET = "test-bucket";
 
     // Import mocks
-    mailer = require("@/services/mailer");
-    photosStorage = require("@/services/storage/photos");
+    context.mailer = require("@/services/mailer");
+    context.photosStorage = require("@/services/storage/photos");
 
-    mockBucket = {
+    context.mockBucket = {
       getFiles: jest.fn(),
       file: jest.fn(),
     };
 
-    photosStorage.createStorageClient.mockReturnValue({
-      bucket: jest.fn().mockReturnValue(mockBucket),
+    context.photosStorage.createStorageClient.mockReturnValue({
+      bucket: jest.fn().mockReturnValue(context.mockBucket),
     });
 
     // Mock console
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    jest.spyOn(console, "log").mockImplementation(() => { });
+    jest.spyOn(console, "error").mockImplementation(() => { });
 
     // Import route
     const route = require("@/app/api/cron/resize-images/route");
-    GET = route.GET;
+    context.GET = route.GET;
   });
 
   it("should process images and send email summary", async () => {
     const file1 = mockFile("image1.jpg");
     const file2 = mockFile("image2.png");
-    mockBucket.getFiles.mockResolvedValue([[file1, file2]]);
-    mockBucket.file.mockImplementation((name: string) => mockFile(name));
+    context.mockBucket.getFiles.mockResolvedValue([[file1, file2]]);
+    context.mockBucket.file.mockImplementation((name: string) => mockFile(name));
 
-    const response = await GET();
+    const response = await context.GET();
     const json = await response.json();
 
     expect(response.status).toBe(200);
     expect(json.processed).toBe(2);
 
-    expect(mailer.sendEmailToRecipient).toHaveBeenCalledWith(
+    expect(context.mailer.sendEmailToRecipient).toHaveBeenCalledWith(
       expect.stringContaining("Job Summary"),
       "test@example.com",
       expect.stringContaining("[Cron] Image Resizing Job Completed"),
     );
-    expect(mailer.sendEmailToRecipient).toHaveBeenCalledWith(
+    expect(context.mailer.sendEmailToRecipient).toHaveBeenCalledWith(
       expect.stringContaining("Processed: 2"),
       "test@example.com",
       expect.any(String),

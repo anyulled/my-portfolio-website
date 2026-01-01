@@ -1,99 +1,93 @@
-import chalk from "chalk";
+import { getPhotosFromStorage } from "@/services/storage/photos";
 import { ImageResponse } from "next/og";
 
 export const contentType = "image/png";
-export const alt = "Sensuelle Boudoir";
+export const alt = "Sensuelle Boudoir Pricing";
 export const size = {
   width: 1200,
   height: 630,
 };
 export const runtime = "nodejs";
+export const revalidate = 3600;
+export const dynamic = "force-static";
 
-import { getPhotosFromStorage } from "@/services/storage/photos";
 
-async function fetchAndEncodeImage(url: string) {
-  if (!url) return null;
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch image: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const contentType = response.headers.get("content-type");
-    if (!contentType?.includes("image/")) {
-      throw new Error(`Invalid content type: ${contentType}`);
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const base64 = Buffer.from(arrayBuffer).toString("base64");
-    return `data:${contentType};base64,${base64}`;
-  } catch (error) {
-    console.error(
-      chalk.red(`[PricingOG] Error fetching image from ${url}:`),
-      error,
-    );
-    // Don't throw, return null so Promise.allSettled or similar can handle it,
-    // or just return null to filter out.
-    return null;
-  }
+/**
+ * Generates a simple fallback OG image.
+ */
+function generateFallbackImage() {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "1200px",
+          height: "630px",
+          backgroundColor: "#1a1a2e",
+          color: "#fff",
+          fontFamily: "sans-serif",
+        }}
+      >
+        <div style={{ fontSize: 72, fontWeight: "bold" }}>Sensuelle Boudoir</div>
+        <div style={{ fontSize: 32, marginTop: 20, color: "#a0a0a0" }}>Pricing & Experiences</div>
+      </div>
+    ),
+    { ...size },
+  );
 }
 
 export default async function PricingImage() {
+  console.log("[PricingOG] Starting image generation...");
   try {
-    console.log(chalk.cyan("[PricingOG] Fetching Images"));
-    const photos = (await getPhotosFromStorage("pricing")) || [];
+    const photos = await getPhotosFromStorage("pricing");
+    console.log(`[PricingOG] Fetched ${photos?.length ?? 0} photos from storage.`);
 
-    // Use first 3 photos or fallback
-    const pricingImages = photos
-      .slice(0, 3)
+    if (!photos || photos.length === 0) {
+      console.warn("[PricingOG] No photos found, using fallback.");
+      return generateFallbackImage();
+    }
+
+    // Take up to 3 images - use remote URLs directly instead of encoding
+    // Satori doesn't support WebP, so filter to only JPEG/PNG
+    const imageUrls = photos
       .map((p) => p.srcSet[0]?.src)
-      .filter((url): url is string => !!url);
+      .filter((url): url is string => Boolean(url) && !url.endsWith(".webp"))
+      .slice(0, 3);
 
-    const validImages = await Promise.all(
-      pricingImages.map((url) => fetchAndEncodeImage(url)),
-    );
+    if (imageUrls.length === 0) {
+      console.warn("[PricingOG] No valid non-WebP image URLs, using fallback.");
+      return generateFallbackImage();
+    }
 
-    const images = validImages.filter((img): img is string => img !== null);
+    console.log(`[PricingOG] Using ${imageUrls.length} remote image URLs.`);
 
-    console.log(chalk.green("[PricingOG] Images fetched successfully"));
+    // Use remote URLs directly
+    const [img0, img1, img2] = imageUrls;
+    const imgStyle = { flex: 1, height: "100%", objectFit: "cover" as const };
 
     return new ImageResponse(
       (
-        <div tw="flex flex-row w-full h-full bg-white">
-          {images.map((src) => (
-            <img
-              key={crypto.randomUUID()}
-              src={src}
-              alt="Sensuelle Boudoir"
-              tw="h-full object-cover"
-            />
-          ))}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: "1200px",
+            height: "630px",
+            backgroundColor: "#1a1a2e",
+          }}
+        >
+          {img0 && <img src={img0} alt="" style={imgStyle} />}
+          {img1 && <img src={img1} alt="" style={imgStyle} />}
+          {img2 && <img src={img2} alt="" style={imgStyle} />}
         </div>
       ),
-      {
-        width: size.width,
-        height: size.height,
-      },
+      { ...size },
     );
   } catch (error) {
-    console.error(
-      chalk.red("[PricingOG] Error generating OpenGraph image:"),
-      error,
-    );
-    return new ImageResponse(
-      (
-        <div tw="flex items-center justify-center w-full h-full bg-black">
-          <div tw="text-white text-6xl">Sensuelle Boudoir</div>
-          <div tw="text-white text-2xl">Pricing Packages</div>
-        </div>
-      ),
-      {
-        width: size.width,
-        height: size.height,
-      },
-    );
+    console.error("[PricingOG] Unexpected error during generation:", error);
+    return generateFallbackImage();
   }
 }

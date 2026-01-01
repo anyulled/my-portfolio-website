@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+
 import { render, screen } from "@testing-library/react";
 import TestimonialCard from "@/components/TestimonialCard";
 import { Testimonial } from "@/lib/testimonials";

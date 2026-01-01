@@ -5,20 +5,38 @@
  */
 
 // Types and interfaces
-export type { PhotoProvider, ListPhotosOptions } from "./PhotoService";
-export { DEFAULT_LIST_OPTIONS } from "./PhotoService";
+export { DEFAULT_LIST_OPTIONS } from "./PhotoInterfaces";
+export type { ListPhotosOptions, PhotoProvider } from "./PhotoInterfaces";
 
 // Providers
-export { GCSPhotoProvider, createGCSPhotoProvider } from "./GCSPhotoProvider";
+export { createGCSPhotoProvider, GCSPhotoProvider } from "./GCSPhotoProvider";
 
-// Unified service with Flickr fallback
-export {
-  PhotoService,
-  getPhotoService,
-  fetchStylePhotos,
-  fetchModelPhotos,
-  fetchCoverPhotos,
+// Unified library
+import {
   fetchBoudoirPhotos,
-  tagToPrefix,
+  fetchCoverPhotos,
+  fetchModelPhotos,
+  fetchStylePhotos,
+  getPhotoLibrary,
+  PhotoLibrary,
   tagsToPrefix,
-} from "./PhotoServiceFacade";
+  tagToPrefix,
+} from "./PhotoLibrary";
+
+export {
+  fetchBoudoirPhotos,
+  fetchCoverPhotos,
+  fetchModelPhotos,
+  fetchStylePhotos,
+  getPhotoLibrary,
+  PhotoLibrary,
+  tagsToPrefix,
+  tagToPrefix
+};
+
+// Aliases for compatibility
+export {
+  getPhotoLibrary as getPhotoService,
+  PhotoLibrary as PhotoService
+};
+

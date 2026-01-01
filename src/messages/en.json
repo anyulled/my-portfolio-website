@@ -1,19 +1,11 @@
 {
-  "LocaleSwitcher": {
-    "ca": "Catalan",
-    "en": "English",
-    "es": "Spanish",
-    "fr": "French",
-    "it": "Italian",
-    "uk": "Ukrainian",
-    "label": "Language"
-  },
   "about": {
     "alt_image": "Anyul Rivas — Boudoir photographer in Barcelona, Spain",
+    "book_session": "Book Your Session",
+    "collab_dan_hecho": "Málaga Workshop with Dan Hecho",
     "collab_garci": "Book signature with Antonio Garci & Chema Photo at PhotoForum Fest",
     "collab_peter_coulson": "Workshop with Peter Coulson & Jon Hernández",
     "collab_ruben_suarez": "Fashion & portrait workshop with Rubén Suárez",
-    "collab_dan_hecho": "Málaga Workshop with Dan Hecho",
     "collaborations": "Collaborations",
     "create_paragraph": "I'm always excited to meet new clients and embark on new creative journeys. Whether you're looking to celebrate a milestone, boost your confidence, or simply create stunning art, I'm here to guide you through an unforgettable boudoir experience.",
     "create_together": "Let's Create Something Beautiful Together",
@@ -31,6 +23,82 @@
     "published_works": "Published Work",
     "title": "About me"
   },
+  "booking_form": {
+    "available_from": "Available From",
+    "available_until": "Available Until",
+    "booking_details": "Booking Details",
+    "chest": "Chest (cm)",
+    "country": "Country of Origin",
+    "email": "Email",
+    "error_chest": "Chest measurement must be between 30 and 150 cm",
+    "error_country": "Country is required",
+    "error_date_range": "End date must be after start date",
+    "error_email": "Valid email is required",
+    "error_endDate": "End date is required",
+    "error_eye_color": "Eye color is required",
+    "error_full_name": "Full name is required",
+    "error_hair_color": "Hair color is required",
+    "error_height": "Height must be between 100 and 220 cm",
+    "error_hips": "Hips measurement must be between 30 and 150 cm",
+    "error_payment_type": "Payment type is required",
+    "error_rates": "Rates information is required",
+    "error_social_account": "Social account is required",
+    "error_startDate": "Start date is required",
+    "error_waist": "Waist measurement must be between 30 and 150 cm",
+    "eye_amber": "Amber",
+    "eye_black": "Black",
+    "eye_blue": "Blue",
+    "eye_brown": "Brown",
+    "eye_color": "Eye Color",
+    "eye_gray": "Gray",
+    "eye_green": "Green",
+    "eye_hazel": "Hazel",
+    "eye_heterochromia": "Heterochromia",
+    "eye_other": "Other",
+    "eye_red": "Red",
+    "eye_violet": "Violet",
+    "full_name": "Full Name",
+    "hair_auburn": "Auburn",
+    "hair_black": "Black",
+    "hair_blonde": "Blonde",
+    "hair_blue": "Blue",
+    "hair_brown": "Brown",
+    "hair_chestnut": "Chestnut",
+    "hair_color": "Hair Color",
+    "hair_gray": "Gray",
+    "hair_green": "Green",
+    "hair_other": "Other",
+    "hair_pink": "Pink",
+    "hair_purple": "Purple",
+    "hair_red": "Red",
+    "hair_white": "White",
+    "height": "Height (cm)",
+    "hips": "Hips (cm)",
+    "implants": "Do you have any implants?",
+    "intro": "Thank you for your interest in booking a session with me. Please fill out the form below with your details, and I will get back to you as soon as possible.",
+    "model_release": "Are you willing to sign a model release?",
+    "no": "No",
+    "payment_bank": "Bank Transfer",
+    "payment_bizum": "Bizum",
+    "payment_cash": "Cash",
+    "payment_other": "Other",
+    "payment_paypal": "PayPal",
+    "payment_type": "Preferred Payment Type",
+    "personal_info": "Personal Information",
+    "physical_characteristics": "Physical Characteristics",
+    "rates": "Rates",
+    "rates_placeholder": "Please provide your rates and any additional information",
+    "select_payment": "Select payment type",
+    "social_account": "Instagram/ModelMayhem Account",
+    "submit": "Submit Booking Request",
+    "submitting": "Submitting...",
+    "tattoos": "Tattoos",
+    "tattoos_placeholder": "Describe your tattoos (if any)",
+    "title": "Book a Session",
+    "validation_error": "Please correct the errors in the form before submitting",
+    "waist": "Waist (cm)",
+    "yes": "Yes"
+  },
   "contact_form": {
     "contact_us": "Contact Us",
     "email": "Your email",
@@ -43,11 +111,84 @@
     "accept": "Accept",
     "cookie_message": "We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies."
   },
+  "faq": {
+    "categories": {
+      "general": {
+        "q1": {
+          "answer": "Boudoir photography is an intimate, artistic style of portraiture that celebrates your beauty and femininity. It's about capturing your unique essence in a tasteful, empowering way.",
+          "question": "What is boudoir photography?"
+        },
+        "q2": {
+          "answer": "Absolutely not! Boudoir is for every woman, regardless of age, size, or shape. Our expertise lies in highlighting your unique beauty and making you feel confident.",
+          "question": "Is boudoir photography only for certain body types?"
+        },
+        "q3": {
+          "answer": "Our packages vary in session length, number of edited photos, and included services like professional makeup. Visit our pricing page for detailed comparisons.",
+          "question": "What's the difference between the packages?"
+        },
+        "title": "General Questions"
+      },
+      "preparation": {
+        "q1": {
+          "answer": "We recommend bringing 3-5 outfit options. This can include lingerie, bodysuits, oversized shirts, or anything that makes you feel beautiful. Check our style guide for more tips.",
+          "question": "What should I wear to my session?"
+        },
+        "q2": {
+          "answer": "You're welcome to, but our Deluxe package includes professional makeup. If doing your own, we recommend keeping it natural and bringing touch-up essentials.",
+          "question": "Should I do my own hair and makeup?"
+        },
+        "q3": {
+          "answer": "Stay hydrated, get good sleep, and avoid tight clothing before your session to prevent marks on your skin. Moisturize regularly in the days leading up to your shoot.",
+          "question": "How should I prepare my skin?"
+        },
+        "title": "Preparation"
+      },
+      "privacy": {
+        "q1": {
+          "answer": "Absolutely. Your privacy is our priority. Images are shared only with your explicit written consent, and we never share without permission.",
+          "question": "Are my photos kept private?"
+        },
+        "q2": {
+          "answer": "You'll receive your edited images within 15 days via a private Google Drive folder. Additional editing is available at extra cost.",
+          "question": "When will I receive my photos?"
+        },
+        "title": "Privacy & Images"
+      },
+      "session": {
+        "q1": {
+          "answer": "Yes! We provide complete direction throughout your session. You don't need any modeling experience - just relax and follow our guidance.",
+          "question": "Will you guide me on posing?"
+        },
+        "q2": {
+          "answer": "Sessions range from 2 to 3 hours depending on your package. This includes time for outfit changes and ensures a relaxed, unhurried experience.",
+          "question": "How long does a session last?"
+        },
+        "q3": {
+          "answer": "You can come alone if you feel confident, or with your partner to witness your transformation and empowerment, or with your friends to celebrate a special occasion like a wedding, a body change, or a birthday.",
+          "question": "Can I bring someone with me?"
+        },
+        "title": "During the Session"
+      }
+    },
+    "cta": {
+      "contact_button": "Contact Us",
+      "process_button": "Learn Our Process",
+      "text": "We're here to help you feel confident and informed. Reach out anytime - we'd love to chat.",
+      "title": "Still Have Questions?"
+    },
+    "subtitle": "Everything You Need to Know",
+    "title": "Frequently Asked Questions"
+  },
   "footer": {
+    "about": "About Me",
     "cookies": "Cookies",
     "copyright": "All rights reserved.",
+    "faq": "FAQ",
     "legal": "Legal Terms",
-    "privacy": "Privacy Terms"
+    "pricing": "Pricing",
+    "privacy": "Privacy Terms",
+    "styles": "Styles",
+    "testimonials": "Testimonials"
   },
   "gallery": {
     "no_photos": "No photos found",
@@ -56,13 +197,147 @@
   "home": {
     "capture_your_essence": "Capture Your Essence"
   },
+  "locale": {
+    "date": "en-US"
+  },
+  "LocaleSwitcher": {
+    "ca": "Catalan",
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "it": "Italian",
+    "label": "Language",
+    "uk": "Ukrainian"
+  },
+  "myths": {
+    "cta": {
+      "book_button": "Book Your Empowering Session",
+      "cards": [
+        {
+          "text": "Discuss your concerns and learn about our process",
+          "title": "Free Consultation"
+        },
+        {
+          "text": "Get our complete preparation and styling guide",
+          "title": "Style Guide"
+        },
+        {
+          "text": "See real examples of our tasteful, artistic work",
+          "title": "View Portfolio"
+        },
+        {
+          "text": "Hear from real women about their experiences",
+          "title": "Read Reviews"
+        }
+      ],
+      "footer": "Still have questions? We're here to help you feel confident and informed about your decision.",
+      "heading": "Don't Let Myths Hold You Back",
+      "paragraph": "Now that you know the truth about boudoir photography, take the next step toward your empowering experience. Every woman deserves to feel beautiful, confident, and celebrated."
+    },
+    "hero": {
+      "alt": "Confident woman breaking stereotypes about boudoir photography",
+      "label_myths": "Myths",
+      "label_truth": "Truth",
+      "subtitle": "Separate fact from fiction and discover the empowering truth about boudoir photography",
+      "title1": "Busting Boudoir",
+      "title2": "Photography Myths"
+    },
+    "intro": {
+      "paragraph": "Despite its growing popularity, boudoir photography is still surrounded by misconceptions and myths. These false beliefs prevent many women from experiencing the empowering and transformative journey that boudoir photography offers. Let's set the record straight and reveal the beautiful truth behind this art form.",
+      "stats": [
+        {
+          "text": "of women report increased confidence after their boudoir session",
+          "value": "85%"
+        },
+        {
+          "text": "from 18 to 75+ celebrate their beauty through boudoir",
+          "value": "All Ages"
+        },
+        {
+          "stars": "★★★★★",
+          "text": "of clients say they would recommend the experience",
+          "value": "98%"
+        }
+      ],
+      "title": "The Truth About Boudoir Photography"
+    },
+    "list": {
+      "image_alt": "Myth {id}: {myth}",
+      "items": {
+        "1": {
+          "explanation": "Beauty comes in all shapes, sizes, and ages. Professional boudoir photographers are skilled at highlighting every woman's unique beauty. Whether you're 25 or 65, size 2 or 22, you deserve to feel beautiful and empowered. The most stunning boudoir images often come from women who initially felt hesitant about their bodies.",
+          "myth": "Boudoir photography is only for young, thin women",
+          "stats": "Women aged 18-75+ book boudoir sessions",
+          "truth": "Boudoir is for EVERY woman, regardless of age, size, or body type"
+        },
+        "2": {
+          "explanation": "Professional boudoir photography is an art form that celebrates femininity with class and elegance. You have complete control over your comfort level - from fully clothed to more intimate poses. Skilled photographers use lighting, angles, and composition to create beautiful, tasteful images that you'll be proud to display.",
+          "myth": "Boudoir photography is inappropriate or too revealing",
+          "stats": "100% client control over comfort level",
+          "truth": "Boudoir is tasteful, artistic, and always respects your comfort level"
+        },
+        "3": {
+          "explanation": "Most women arrive at their session feeling nervous or self-conscious. That's completely normal! The magic happens during the session as professional guidance, flattering poses, and seeing yourself through the camera's lens gradually builds your confidence. Many clients say they felt like a completely different person by the end of their shoot.",
+          "myth": "You need to be confident to do a boudoir shoot",
+          "stats": "90% of clients start nervous, leave empowered",
+          "truth": "Boudoir builds confidence - you don't need to bring it"
+        },
+        "4": {
+          "explanation": "While some women gift their images to partners, the majority book boudoir sessions as a celebration of themselves. It's about self-love, marking life milestones, celebrating personal achievements, or simply embracing your femininity. The empowerment and confidence boost are gifts you give to yourself.",
+          "myth": "Boudoir photos are just for romantic partners",
+          "stats": "70% of sessions are for personal empowerment",
+          "truth": "Most women do boudoir sessions for themselves"
+        },
+        "5": {
+          "explanation": "While boudoir photography is an investment, clients consistently report that the confidence boost, self-love, and empowerment they gain far exceed the cost. Many describe it as life-changing. When you consider the lasting impact on your self-image and confidence, it's one of the most valuable investments you can make in yourself.",
+          "myth": "Boudoir photography is expensive and not worth it",
+          "stats": "Priceless confidence boost that lasts a lifetime",
+          "truth": "It's an investment in yourself that pays dividends in confidence"
+        }
+      },
+      "labels": {
+        "myth": "MYTH:",
+        "reality_check": "Reality Check:",
+        "truth": "TRUTH:"
+      },
+      "myth_number": "Myth #{id}",
+      "title": "5 Myths vs Reality"
+    },
+    "truth_section": {
+      "cards": [
+        {
+          "description": "Every woman deserves to feel beautiful, confident, and empowered, regardless of age, size, or background.",
+          "title": "Empowerment for All"
+        },
+        {
+          "description": "Professional boudoir photographers create a safe, comfortable environment where you're always in control.",
+          "title": "Safe & Professional"
+        },
+        {
+          "description": "Boudoir photography is a respected art form that celebrates femininity with taste and elegance.",
+          "title": "Artistic Excellence"
+        },
+        {
+          "description": "Most clients describe their boudoir session as transformative, boosting confidence for years to come.",
+          "title": "Life-Changing Experience"
+        }
+      ],
+      "cta": {
+        "learn_more": "Learn More About Our Process",
+        "paragraph": "Don't let myths and misconceptions hold you back from an empowering, life-changing experience. Discover the beautiful truth about boudoir photography for yourself.",
+        "title": "Ready to Experience the Truth?",
+        "view_portfolio": "View Our Portfolio"
+      },
+      "title": "The Beautiful Truth"
+    }
+  },
   "nav_bar": {
     "book_now": "Book Now",
     "capture_your_essence": "Capture Your Essence",
     "menu_about": "About Me",
+    "menu_myths": "Boudoir myths",
     "menu_testimonials": "Testimonials",
     "menu_what_is_boudoir": "What is Boudoir?",
-    "menu_myths": "Boudoir myths",
     "models": "Models",
     "open_menu": "Open Menu",
     "search_models": "Search Models...",
@@ -75,31 +350,99 @@
     "p1": "The page you're looking for might have been moved, deleted, or never existed.",
     "return_to_homepage": "Return to Homepage"
   },
+  "our_process": {
+    "cta": {
+      "book_button": "Book Your Session",
+      "pricing_button": "View Pricing",
+      "text": "Every woman deserves to feel beautiful and empowered. Let us guide you through an unforgettable experience.",
+      "title": "Start Your Journey Today"
+    },
+    "intro": "From our first conversation to the moment you receive your stunning images, we're dedicated to making your boudoir experience extraordinary.",
+    "steps": {
+      "consultation": {
+        "description": "We'll chat about your vision, answer questions, and ensure you feel comfortable and excited about your session.",
+        "title": "Free Consultation"
+      },
+      "delivery": {
+        "description": "Receive your high-resolution images via private gallery, ready to cherish for a lifetime.",
+        "title": "Final Delivery"
+      },
+      "editing": {
+        "description": "Each image is carefully edited to enhance your natural beauty while maintaining an authentic, artistic style.",
+        "title": "Professional Editing"
+      },
+      "planning": {
+        "description": "Together we'll select your date, discuss wardrobe options, and plan every detail of your personalized experience.",
+        "title": "Session Planning"
+      },
+      "reveal": {
+        "description": "Experience the magic of seeing yourself through an artistic lens. Select your favorite images from the session.",
+        "title": "Image Reveal"
+      },
+      "session": {
+        "description": "Relax in our private studio. With expert guidance, you'll feel confident and beautiful throughout the shoot.",
+        "title": "Photo Session"
+      }
+    },
+    "subtitle": "Your Journey to Empowerment",
+    "title": "Our Process"
+  },
   "pricing": {
     "book_now": "Book Now",
     "boudoir_experience": "Boudoir Experience",
     "boudoir_express": "Boudoir Express",
     "clothing_and_attrezzo": "Clothing and Attrezzo included",
     "clothing_change": "Clothing Change",
+    "condition_additional_photos": "Additional photos can be retouched with an additional cost.",
+    "condition_deposit": "A non-refundable deposit (via Paypal, Bizum, or bank transfer) must be made for confirming the session.",
+    "condition_late_arrival": "If the customer doesn't arrive during the first 30 minutes of the session, it will be concluded and full payment must be done.",
+    "condition_payment": "The rest of the payment will be performed the day of the session before the session start.",
+    "condition_photos_sharing": "The photos and videos will be shared in a Google drive folder the next 15 days after the session.",
+    "condition_release_form": "A release form must be signed by both part for proceeding. The customer is not allowed to make commercial profit of the photos unless explicitly granted.",
     "deluxe_experience": "Deluxe Experience",
     "discover_our_experiences": "Discover our Boudoir Experiences",
     "edited_photos": "edited photos",
+    "general_conditions": "General Conditions",
     "hours_studio": "hours in private studio with sets",
     "photos_hd": "HD quality photos",
     "pricing": "Pricing",
     "professional_makeup": "Professional Makeup",
-    "video": "1 - 2min. video book included",
-    "general_conditions": "General Conditions",
-    "condition_release_form": "A release form must be signed by both part for proceeding. The customer is not allowed to make commercial profit of the photos unless explicitly granted.",
-    "condition_deposit": "A non-refundable deposit (via Paypal, Bizum, or bank transfer) must be made for confirming the session.",
-    "condition_payment": "The rest of the payment will be performed the day of the session before the session start.",
-    "condition_photos_sharing": "The photos and videos will be shared in a Google drive folder the next 15 days after the session.",
-    "condition_late_arrival": "If the customer doesn't arrive during the first 30 minutes of the session, it will be concluded and full payment must be done.",
-    "condition_additional_photos": "Additional photos can be retouched with an additional cost."
+    "video": "1 - 2min. video book included"
   },
   "social": {
     "connect": "Connect with us",
     "follow_us": "Follow us on"
+  },
+  "style_guide": {
+    "beauty": {
+      "item1": "Get a good night's sleep the night before",
+      "item2": "Stay hydrated and avoid alcohol the day before",
+      "item3": "Get your nails done if that makes you feel polished",
+      "item4": "Professional makeup is included in our Deluxe package",
+      "title": "Beauty Preparation"
+    },
+    "cta": {
+      "button": "Book Your Session",
+      "text": "Now that you know how to prepare, let's create something beautiful together.",
+      "title": "Ready to Book Your Session?"
+    },
+    "day_of": {
+      "item1": "Wear loose, comfortable clothing to avoid marks on your skin",
+      "item2": "Arrive with a clean, moisturized face",
+      "item3": "Bring any props that are meaningful to you",
+      "item4": "Come with an open mind and ready to have fun!",
+      "title": "Day of Session"
+    },
+    "intro": "Your boudoir session should be a relaxing, empowering experience. Here's everything you need to know to prepare and feel your absolute best.",
+    "subtitle": "Prepare for Your Perfect Boudoir Session",
+    "title": "Style Guide",
+    "wardrobe": {
+      "item1": "Bring 3-5 outfit options including lingerie, bodysuits, or oversized shirts",
+      "item2": "Choose pieces that make you feel confident and beautiful",
+      "item3": "Include a mix of colors - neutrals, black, and one bold color",
+      "item4": "Don't forget accessories: robes, jewelry, high heels",
+      "title": "Wardrobe Tips"
+    }
   },
   "styles": {
     "artistic_nude": "Artistic Nude",
@@ -112,6 +455,19 @@
   "styles-index": {
     "discover-our-styles": "Discover Our photography Styles",
     "photography-styles": "Photography Styles"
+  },
+  "testimonials": {
+    "book_your_session": "Book Your Session Today",
+    "client_testimonials": "Clients testimonials",
+    "discover_transformative_experiences": "Discover the transformative experiences of women who chose to celebrate their beauty and confidence through boudoir photography.",
+    "empowering": "Empowering",
+    "five-star": "5-star rated",
+    "join_hundreds": "Join hundreds of women who have discovered their confidence and beauty through our empowering boudoir photography sessions.",
+    "more_client_stories": "More Client Stories",
+    "professional": "Professional",
+    "ready_to_create": "Ready to Create Your Own Story?",
+    "real_stories": "Real stories from women who discovered their inner goddess through boudoir photography",
+    "what_our_clients_say": "What Our Clients Say"
   },
   "what_is_boudoir": {
     "art_boudoir": "The Art of Boudoir",
@@ -132,219 +488,5 @@
     "p6": "Whether you're looking to boost your confidence, celebrate your body, or create a special gift, our boudoir photography sessions are tailored to your unique vision and comfort level.",
     "what_is_boudoir": "What is Boudoir Photography?",
     "why_boudoir": "Why Choose Boudoir Photography?"
-  },
-  "booking_form": {
-    "title": "Book a Session",
-    "intro": "Thank you for your interest in booking a session with me. Please fill out the form below with your details, and I will get back to you as soon as possible.",
-    "personal_info": "Personal Information",
-    "full_name": "Full Name",
-    "social_account": "Instagram/ModelMayhem Account",
-    "email": "Email",
-    "country": "Country of Origin",
-    "physical_characteristics": "Physical Characteristics",
-    "height": "Height (cm)",
-    "chest": "Chest (cm)",
-    "waist": "Waist (cm)",
-    "hips": "Hips (cm)",
-    "tattoos": "Tattoos",
-    "tattoos_placeholder": "Describe your tattoos (if any)",
-    "hair_color": "Hair Color",
-    "eye_color": "Eye Color",
-    "implants": "Do you have any implants?",
-    "yes": "Yes",
-    "no": "No",
-    "booking_details": "Booking Details",
-    "available_from": "Available From",
-    "available_until": "Available Until",
-    "rates": "Rates",
-    "rates_placeholder": "Please provide your rates and any additional information",
-    "model_release": "Are you willing to sign a model release?",
-    "payment_type": "Preferred Payment Type",
-    "payment_cash": "Cash",
-    "payment_bank": "Bank Transfer",
-    "payment_bizum": "Bizum",
-    "payment_paypal": "PayPal",
-    "payment_other": "Other",
-    "select_payment": "Select payment type",
-    "submit": "Submit Booking Request",
-    "submitting": "Submitting...",
-    "validation_error": "Please correct the errors in the form before submitting",
-    "error_full_name": "Full name is required",
-    "error_social_account": "Social account is required",
-    "error_email": "Valid email is required",
-    "error_country": "Country is required",
-    "error_height": "Height must be between 100 and 220 cm",
-    "error_chest": "Chest measurement must be between 30 and 150 cm",
-    "error_waist": "Waist measurement must be between 30 and 150 cm",
-    "error_hips": "Hips measurement must be between 30 and 150 cm",
-    "error_hair_color": "Hair color is required",
-    "error_eye_color": "Eye color is required",
-    "error_startDate": "Start date is required",
-    "error_endDate": "End date is required",
-    "error_date_range": "End date must be after start date",
-    "error_rates": "Rates information is required",
-    "error_payment_type": "Payment type is required",
-    "hair_black": "Black",
-    "hair_brown": "Brown",
-    "hair_blonde": "Blonde",
-    "hair_red": "Red",
-    "hair_auburn": "Auburn",
-    "hair_chestnut": "Chestnut",
-    "hair_gray": "Gray",
-    "hair_white": "White",
-    "hair_blue": "Blue",
-    "hair_green": "Green",
-    "hair_purple": "Purple",
-    "hair_pink": "Pink",
-    "hair_other": "Other",
-    "eye_brown": "Brown",
-    "eye_blue": "Blue",
-    "eye_green": "Green",
-    "eye_hazel": "Hazel",
-    "eye_amber": "Amber",
-    "eye_gray": "Gray",
-    "eye_black": "Black",
-    "eye_red": "Red",
-    "eye_violet": "Violet",
-    "eye_heterochromia": "Heterochromia",
-    "eye_other": "Other"
-  },
-  "testimonials": {
-    "what_our_clients_say": "What Our Clients Say",
-    "discover_transformative_experiences": "Discover the transformative experiences of women who chose to celebrate their beauty and confidence through boudoir photography.",
-    "more_client_stories": "More Client Stories",
-    "client_testimonials": "Clients testimonials",
-    "real_stories": "Real stories from women who discovered their inner goddess through boudoir photography",
-    "ready_to_create": "Ready to Create Your Own Story?",
-    "book_your_session": "Book Your Session Today",
-    "join_hundreds": "Join hundreds of women who have discovered their confidence and beauty through our empowering boudoir photography sessions.",
-    "empowering": "Empowering",
-    "professional": "Professional",
-    "five-star": "5-star rated"
-  },
-  "locale": {
-    "date": "en-US"
-  },
-  "myths": {
-    "hero": {
-      "alt": "Confident woman breaking stereotypes about boudoir photography",
-      "title1": "Busting Boudoir",
-      "title2": "Photography Myths",
-      "subtitle": "Separate fact from fiction and discover the empowering truth about boudoir photography",
-      "label_myths": "Myths",
-      "label_truth": "Truth"
-    },
-    "intro": {
-      "title": "The Truth About Boudoir Photography",
-      "paragraph": "Despite its growing popularity, boudoir photography is still surrounded by misconceptions and myths. These false beliefs prevent many women from experiencing the empowering and transformative journey that boudoir photography offers. Let's set the record straight and reveal the beautiful truth behind this art form.",
-      "stats": [
-        {
-          "value": "85%",
-          "text": "of women report increased confidence after their boudoir session"
-        },
-        {
-          "value": "All Ages",
-          "text": "from 18 to 75+ celebrate their beauty through boudoir"
-        },
-        {
-          "stars": "★★★★★",
-          "value": "98%",
-          "text": "of clients say they would recommend the experience"
-        }
-      ]
-    },
-    "list": {
-      "title": "5 Myths vs Reality",
-      "image_alt": "Myth {id}: {myth}",
-      "myth_number": "Myth #{id}",
-      "labels": {
-        "myth": "MYTH:",
-        "truth": "TRUTH:",
-        "reality_check": "Reality Check:"
-      },
-      "items": {
-        "1": {
-          "myth": "Boudoir photography is only for young, thin women",
-          "truth": "Boudoir is for EVERY woman, regardless of age, size, or body type",
-          "explanation": "Beauty comes in all shapes, sizes, and ages. Professional boudoir photographers are skilled at highlighting every woman's unique beauty. Whether you're 25 or 65, size 2 or 22, you deserve to feel beautiful and empowered. The most stunning boudoir images often come from women who initially felt hesitant about their bodies.",
-          "stats": "Women aged 18-75+ book boudoir sessions"
-        },
-        "2": {
-          "myth": "Boudoir photography is inappropriate or too revealing",
-          "truth": "Boudoir is tasteful, artistic, and always respects your comfort level",
-          "explanation": "Professional boudoir photography is an art form that celebrates femininity with class and elegance. You have complete control over your comfort level - from fully clothed to more intimate poses. Skilled photographers use lighting, angles, and composition to create beautiful, tasteful images that you'll be proud to display.",
-          "stats": "100% client control over comfort level"
-        },
-        "3": {
-          "myth": "You need to be confident to do a boudoir shoot",
-          "truth": "Boudoir builds confidence - you don't need to bring it",
-          "explanation": "Most women arrive at their session feeling nervous or self-conscious. That's completely normal! The magic happens during the session as professional guidance, flattering poses, and seeing yourself through the camera's lens gradually builds your confidence. Many clients say they felt like a completely different person by the end of their shoot.",
-          "stats": "90% of clients start nervous, leave empowered"
-        },
-        "4": {
-          "myth": "Boudoir photos are just for romantic partners",
-          "truth": "Most women do boudoir sessions for themselves",
-          "explanation": "While some women gift their images to partners, the majority book boudoir sessions as a celebration of themselves. It's about self-love, marking life milestones, celebrating personal achievements, or simply embracing your femininity. The empowerment and confidence boost are gifts you give to yourself.",
-          "stats": "70% of sessions are for personal empowerment"
-        },
-        "5": {
-          "myth": "Boudoir photography is expensive and not worth it",
-          "truth": "It's an investment in yourself that pays dividends in confidence",
-          "explanation": "While boudoir photography is an investment, clients consistently report that the confidence boost, self-love, and empowerment they gain far exceed the cost. Many describe it as life-changing. When you consider the lasting impact on your self-image and confidence, it's one of the most valuable investments you can make in yourself.",
-          "stats": "Priceless confidence boost that lasts a lifetime"
-        }
-      }
-    },
-    "truth_section": {
-      "title": "The Beautiful Truth",
-      "cards": [
-        {
-          "title": "Empowerment for All",
-          "description": "Every woman deserves to feel beautiful, confident, and empowered, regardless of age, size, or background."
-        },
-        {
-          "title": "Safe & Professional",
-          "description": "Professional boudoir photographers create a safe, comfortable environment where you're always in control."
-        },
-        {
-          "title": "Artistic Excellence",
-          "description": "Boudoir photography is a respected art form that celebrates femininity with taste and elegance."
-        },
-        {
-          "title": "Life-Changing Experience",
-          "description": "Most clients describe their boudoir session as transformative, boosting confidence for years to come."
-        }
-      ],
-      "cta": {
-        "title": "Ready to Experience the Truth?",
-        "paragraph": "Don't let myths and misconceptions hold you back from an empowering, life-changing experience. Discover the beautiful truth about boudoir photography for yourself.",
-        "learn_more": "Learn More About Our Process",
-        "view_portfolio": "View Our Portfolio"
-      }
-    },
-    "cta": {
-      "heading": "Don't Let Myths Hold You Back",
-      "paragraph": "Now that you know the truth about boudoir photography, take the next step toward your empowering experience. Every woman deserves to feel beautiful, confident, and celebrated.",
-      "book_button": "Book Your Empowering Session",
-      "cards": [
-        {
-          "title": "Free Consultation",
-          "text": "Discuss your concerns and learn about our process"
-        },
-        {
-          "title": "Style Guide",
-          "text": "Get our complete preparation and styling guide"
-        },
-        {
-          "title": "View Portfolio",
-          "text": "See real examples of our tasteful, artistic work"
-        },
-        {
-          "title": "Read Reviews",
-          "text": "Hear from real women about their experiences"
-        }
-      ],
-      "footer": "Still have questions? We're here to help you feel confident and informed about your decision."
-    }
   }
 }

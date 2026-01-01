@@ -110,7 +110,8 @@ export default function Hero({ images }: Readonly<HeroProps>) {
             backgroundPosition: randomImage.position,
             backgroundSize: "cover",
             mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
-            opacity: 0, // Initial state for animation
+            // Initial state for animation
+            opacity: 0,
           }}
         />
       )}

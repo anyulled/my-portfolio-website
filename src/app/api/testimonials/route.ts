@@ -1,12 +1,13 @@
+import { getTestimonials } from "@/lib/testimonials";
 import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";
-import { getTestimonials } from "@/lib/testimonials";
 
 const getCachedTestimonials = unstable_cache(
   getTestimonials,
   ["testimonials"],
   {
-    revalidate: 3600, // 1 hour
+    // 1 hour
+    revalidate: 3600,
     tags: ["testimonials"],
   },
 );

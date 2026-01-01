@@ -1,6 +1,6 @@
-import { getRequestConfig } from "next-intl/server";
 import { getUserLocale } from "@/services/locale";
 import chalk from "chalk";
+import { getRequestConfig } from "next-intl/server";
 
 const FALLBACK_LOCALE = "en";
 
@@ -12,22 +12,35 @@ export default getRequestConfig(async () => {
     ? requestedLocale
     : FALLBACK_LOCALE;
 
-  let messages;
-  try {
-    console.warn(chalk.green(`[ i18n ] loading messages for locale ${locale}`));
-    messages = (await import(`@/messages/${locale}.json`)).default;
-    console.info(
-      chalk.green(
-        `[ i18n ] Successfully loaded messages for locale: ${locale}`,
-      ),
-    );
-  } catch (importError) {
-    console.error(
-      `[ i18n ] Failed to import messages for locale ${locale}:`,
-      importError,
-    );
-    messages = {};
-  }
+  const messages: Record<string, unknown> = await (async () => {
+    try {
+      console.warn(
+        chalk.green(`[ i18n ] loading messages for locale ${locale}`),
+      );
+      const modRaw: unknown = await import(`@/messages/${locale}.json`);
+      const isMod = (
+        val: unknown,
+      ): val is { default: Record<string, unknown> } =>
+        typeof val === "object" && val !== null && "default" in val;
+
+      if (!isMod(modRaw)) {
+        throw new Error(`Invalid message format for locale ${locale}`);
+      }
+      const mod = modRaw;
+      console.info(
+        chalk.green(
+          `[ i18n ] Successfully loaded messages for locale: ${locale}`,
+        ),
+      );
+      return mod.default;
+    } catch (importError) {
+      console.error(
+        `[ i18n ] Failed to import messages for locale ${locale}:`,
+        importError,
+      );
+      return {};
+    }
+  })();
 
   return {
     locale,

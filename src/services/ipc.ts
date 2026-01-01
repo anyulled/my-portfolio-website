@@ -1,5 +1,5 @@
 const IPC_ENDPOINT =
-  "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/50913?nult=1&tip=A&tv=3:84&tv=762:304092&tv=70:9005";
+  "https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/50913?nult=2&tip=A&tv=3:84&tv=762:304092&tv=70:9005";
 
 type IpcResponse = Array<{
   Data?: Array<{
@@ -25,7 +25,7 @@ export const fetchLatestIpc = async (): Promise<number> => {
     );
   }
 
-  const payload = (await response.json()) as unknown;
+  const payload: unknown = await response.json();
   assertIsIpcResponse(payload);
 
   const [firstEntry] = payload;

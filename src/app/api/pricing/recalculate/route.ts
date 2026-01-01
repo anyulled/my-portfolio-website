@@ -7,6 +7,7 @@ import {
   PricingPackageInsert,
 } from "@/services/database";
 import { fetchLatestIpc } from "@/services/ipc";
+import { sendEmailToRecipient } from "@/services/mailer";
 
 function adjustPrice(
   value: number | null,
@@ -32,7 +33,7 @@ function buildUnauthorizedResponse() {
   );
 }
 
-export async function GET(req: Request) {
+function checkAuth(req: Request) {
   const url = new URL(req.url);
   const isCronInvocation = req.headers.has("x-vercel-cron");
   const providedToken =
@@ -46,14 +47,17 @@ export async function GET(req: Request) {
           "[ pricing:recalculate ] Manual invocation attempted without PRICING_RECALC_SECRET configured",
         ),
       );
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            "Manual recalculation is disabled. Configure PRICING_RECALC_SECRET to enable it.",
-        },
-        { status: 503 },
-      );
+      return {
+        authorized: false,
+        response: NextResponse.json(
+          {
+            success: false,
+            error:
+              "Manual recalculation is disabled. Configure PRICING_RECALC_SECRET to enable it.",
+          },
+          { status: 503 },
+        ),
+      };
     }
 
     if (providedToken !== requiredSecret) {
@@ -62,7 +66,7 @@ export async function GET(req: Request) {
           "[ pricing:recalculate ] Manual invocation rejected due to invalid token",
         ),
       );
-      return buildUnauthorizedResponse();
+      return { authorized: false, response: buildUnauthorizedResponse() };
     }
   } else if (
     requiredSecret &&
@@ -74,8 +78,15 @@ export async function GET(req: Request) {
         "[ pricing:recalculate ] Cron invocation provided invalid token",
       ),
     );
-    return buildUnauthorizedResponse();
+    return { authorized: false, response: buildUnauthorizedResponse() };
   }
+
+  return { authorized: true, isCronInvocation, response: null };
+}
+
+export async function GET(req: Request) {
+  const { authorized, response, isCronInvocation } = checkAuth(req);
+  if (!authorized && response) return response;
 
   try {
     console.log(
@@ -123,8 +134,6 @@ export async function GET(req: Request) {
     }
 
     // Send email notification
-    /* eslint-disable-next-line @typescript-eslint/no-require-imports */
-    const { sendEmailToRecipient } = require("@/services/mailer");
 
     const emailRecipient =
       process.env.CRON_NOTIFICATION_EMAIL || "anyulled@gmail.com";

@@ -24,7 +24,61 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 //endregion
 
-/* eslint-disable  @typescript-eslint/no-non-null-asserted-optional-chain */
+interface SectionProps {
+  title: string;
+  p1: string;
+  p2: string;
+  imageSrc: string;
+  imageAlt: string;
+  reverse?: boolean;
+  textRef: React.RefObject<HTMLDivElement | null>;
+  imageRef: React.RefObject<HTMLDivElement | null>;
+}
+
+const BoudoirSection = ({
+  title,
+  p1,
+  p2,
+  imageSrc,
+  imageAlt,
+  reverse,
+  textRef,
+  imageRef,
+}: SectionProps) => (
+  <section className="mb-16">
+    <FadeInTitle>
+      <h2
+        className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 text-muted-foreground dark:text-muted-foreground`}
+      >
+        {title}
+      </h2>
+    </FadeInTitle>
+    <div
+      className={`flex flex-col md:flex-row${reverse ? "-reverse" : ""} items-center gap-8`}
+    >
+      <div ref={textRef} className="md:w-2/3">
+        <p className="mb-4 prose lg:prose-xl text-foreground dark:text-foreground">
+          {p1}
+        </p>
+        <p className="prose lg:prose-xl text-foreground dark:text-foreground">
+          {p2}
+        </p>
+      </div>
+      <div ref={imageRef} className="md:w-1/3">
+        <Image
+          priority
+          src={imageSrc}
+          blurDataURL={imageSrc}
+          placeholder="blur"
+          alt={imageAlt}
+          width={600}
+          height={400}
+          className="rounded-lg shadow-lg h-auto w-full hover:scale-105 hover:shadow-xl transition-all duration-500 ease-in-out"
+        />
+      </div>
+    </div>
+  </section>
+);
 
 export default function BoudoirContent({
   randomPhotos,
@@ -90,76 +144,27 @@ export default function BoudoirContent({
         </FadeInTitle>
       </header>
       <main className="container mx-auto px-4 py-4">
-        <section className="mb-16">
-          <FadeInTitle>
-            <h2
-              className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 text-muted-foreground dark:text-muted-foreground`}
-            >
-              {t("what_is_boudoir")}
-            </h2>
-          </FadeInTitle>
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div ref={textRef1} className="md:w-2/3">
-              <p className="mb-4 prose lg:prose-xl text-foreground dark:text-foreground">
-                {t("p1")}
-              </p>
-              <p
-                className={
-                  "prose lg:prose-xl text-foreground dark:text-foreground"
-                }
-              >
-                {t("p2")}
-              </p>
-            </div>
-            <div ref={imageRef1} className="md:w-1/3">
-              <Image
-                priority
-                src={randomPhotos?.at(1)?.srcSet[0]?.src!}
-                blurDataURL={randomPhotos?.at(1)?.srcSet[0]?.src}
-                placeholder="blur"
-                alt={t("boudoir_photography")}
-                width={600}
-                height={400}
-                className="rounded-lg shadow-lg h-auto w-full hover:scale-105 hover:shadow-xl transition-all duration-500 ease-in-out"
-              />
-            </div>
-          </div>
-        </section>
-        <section className="mb-16">
-          <FadeInTitle>
-            <h2
-              className={`${arefRuqaa.className} text-3xl md:text-4xl mb-6 text-muted-foreground dark:text-muted-foreground`}
-            >
-              {t("art_boudoir")}
-            </h2>
-          </FadeInTitle>
-          <div className="flex flex-col md:flex-row-reverse items-center gap-8">
-            <div ref={textRef2} className="md:w-2/3">
-              <p className="mb-4 prose lg:prose-xl text-foreground dark:text-foreground">
-                {t("p3")}
-              </p>
-              <p
-                className={
-                  "prose lg:prose-xl text-foreground dark:text-foreground"
-                }
-              >
-                {t("p4")}
-              </p>
-            </div>
-            <div ref={imageRef2} className="md:w-1/3">
-              <Image
-                priority
-                src={randomPhotos?.at(2)?.srcSet[0]?.src!}
-                blurDataURL={randomPhotos?.at(2)?.srcSet[0]?.src}
-                placeholder="blur"
-                alt={t("boudoir_photography")}
-                width={600}
-                height={400}
-                className="rounded-lg shadow-lg h-auto w-full hover:scale-105 hover:shadow-xl transition-all duration-500 ease-in-out"
-              />
-            </div>
-          </div>
-        </section>
+        <BoudoirSection
+          title={t("what_is_boudoir")}
+          p1={t("p1")}
+          p2={t("p2")}
+          imageSrc={randomPhotos?.at(1)?.srcSet[0]?.src ?? "/images/DSC_7028.webp"}
+          imageAlt={t("boudoir_photography")}
+          textRef={textRef1}
+          imageRef={imageRef1}
+        />
+
+        <BoudoirSection
+          title={t("art_boudoir")}
+          p1={t("p3")}
+          p2={t("p4")}
+          imageSrc={randomPhotos?.at(2)?.srcSet[0]?.src ?? "/images/DSC_7028.webp"}
+          imageAlt={t("boudoir_photography")}
+          reverse
+          textRef={textRef2}
+          imageRef={imageRef2}
+        />
+
         <section className="mb-16">
           <FadeInTitle>
             <h2

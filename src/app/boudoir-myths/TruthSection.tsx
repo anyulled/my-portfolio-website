@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Award, Shield, Sparkles, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -144,16 +145,18 @@ export default function TruthSection() {
             {t("cta.paragraph")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
+            <Link
+              href="/our-process"
               className={`${arefRuqaa.className} text-primary-foreground hover:bg-background/20 px-8 py-4 rounded-full font-semibold transition-colors duration-300`}
             >
               {t("cta.learn_more")}
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/styles"
               className={`${arefRuqaa.className} border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary px-8 py-4 rounded-full font-semibold transition-all duration-300`}
             >
               {t("cta.view_portfolio")}
-            </button>
+            </Link>
           </div>
         </div>
       </div>

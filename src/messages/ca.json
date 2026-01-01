@@ -29,7 +29,8 @@
     "p8": "S'inspira en una gran varietat de fotògrafs, incloent ",
     "p9": "La seva obra reflecteix una barreja d'aquestes influències, combinada amb la seva visió personal, donant com a resultat fotografies que no només són visualment impressionants sinó també emocionalment ressonants.",
     "published_works": "Obres Publicades",
-    "title": "Sobre mi"
+    "title": "Sobre mi",
+    "book_session": "Reserva la Teva Sessió"
   },
   "contact_form": {
     "contact_us": "Contacta'ns",
@@ -47,7 +48,12 @@
     "cookies": "Cookies",
     "copyright": "Tots els drets reservats.",
     "legal": "Termes Legals",
-    "privacy": "Termes de Privacitat"
+    "privacy": "Termes de Privacitat",
+    "about": "Sobre mi",
+    "pricing": "Preus",
+    "testimonials": "Testimonis",
+    "styles": "Estils",
+    "faq": "Preguntes Freqüents"
   },
   "gallery": {
     "no_photos": "No s'han trobat fotos",
@@ -346,5 +352,141 @@
   },
   "locale": {
     "date": "ca-ES"
+  },
+  "style_guide": {
+    "title": "Guia d'Estil",
+    "subtitle": "Prepara't per a la Teva Sessió Boudoir Perfecta",
+    "intro": "La teva sessió boudoir hauria de ser una experiència relaxant i empoderadora. Aquí tens tot el que necessites saber per preparar-te i sentir-te el millor possible.",
+    "wardrobe": {
+      "title": "Consells de Vestuari",
+      "item1": "Porta 3-5 opcions de roba incloent llenceria, bodis o camises grans",
+      "item2": "Tria peces que et facin sentir segura i bella",
+      "item3": "Inclou una barreja de colors: neutres, negre i un color atrevit",
+      "item4": "No oblidis els accessoris: bates, joies, talons alts"
+    },
+    "beauty": {
+      "title": "Preparació de Bellesa",
+      "item1": "Dorm bé la nit anterior",
+      "item2": "Mantén-te hidratada i evita l'alcohol el dia abans",
+      "item3": "Fes-te les ungles si això et fa sentir més polida",
+      "item4": "El maquillatge professional està inclòs al nostre paquet Deluxe"
+    },
+    "day_of": {
+      "title": "El Dia de la Sessió",
+      "item1": "Porta roba ampla i còmoda per evitar marques a la pell",
+      "item2": "Arriba amb la cara neta i hidratada",
+      "item3": "Porta qualsevol accessori que sigui significatiu per a tu",
+      "item4": "Vine amb la ment oberta i preparada per divertir-te!"
+    },
+    "cta": {
+      "title": "Llesta per Reservar la Teva Sessió?",
+      "text": "Ara que saps com preparar-te, creem alguna cosa bonica junts.",
+      "button": "Reserva la Teva Sessió"
+    }
+  },
+  "our_process": {
+    "title": "El Nostre Procés",
+    "subtitle": "El Teu Viatge cap a l'Empoderament",
+    "intro": "Des de la nostra primera conversa fins al moment que rebis les teves imatges impressionants, ens dediquem a fer la teva experiència boudoir extraordinària.",
+    "steps": {
+      "consultation": {
+        "title": "Consulta Gratuïta",
+        "description": "Parlarem de la teva visió, respondrem preguntes i ens assegurarem que et sentis còmoda i emocionada per la teva sessió."
+      },
+      "planning": {
+        "title": "Planificació de la Sessió",
+        "description": "Junts seleccionarem la teva data, discutirem opcions de vestuari i planificarem cada detall de la teva experiència personalitzada."
+      },
+      "session": {
+        "title": "Sessió de Fotos",
+        "description": "Relaxa't al nostre estudi privat. Amb guia experta, et sentiràs segura i bella durant tota la sessió."
+      },
+      "editing": {
+        "title": "Edició Professional",
+        "description": "Cada imatge s'edita amb cura per realçar la teva bellesa natural mentre es manté un estil autèntic i artístic."
+      },
+      "reveal": {
+        "title": "Revelació d'Imatges",
+        "description": "Experimenta la màgia de veure't a través d'un objectiu artístic. Selecciona les teves imatges preferides de la sessió."
+      },
+      "delivery": {
+        "title": "Lliurament Final",
+        "description": "Rep les teves imatges en alta resolució via galeria privada, llestes per a guardar per sempre."
+      }
+    },
+    "cta": {
+      "title": "Comença el Teu Viatge Avui",
+      "text": "Tota dona mereix sentir-se bella i empoderada. Deixa'ns guiar-te a través d'una experiència inoblidable.",
+      "book_button": "Reserva la Teva Sessió",
+      "pricing_button": "Veure Preus"
+    }
+  },
+  "faq": {
+    "title": "Preguntes Freqüents",
+    "subtitle": "Tot el que Necessites Saber",
+    "categories": {
+      "general": {
+        "title": "Preguntes Generals",
+        "q1": {
+          "question": "Què és la fotografia boudoir?",
+          "answer": "La fotografia boudoir és un estil íntim i artístic de retrat que celebra la teva bellesa i feminitat. Es tracta de capturar la teva essència única d'una manera elegant i empoderadora."
+        },
+        "q2": {
+          "question": "La fotografia boudoir és només per a certs tipus de cos?",
+          "answer": "De cap manera! El boudoir és per a totes les dones, independentment de l'edat, la talla o la forma. La nostra experiència rau en destacar la teva bellesa única i fer-te sentir segura."
+        },
+        "q3": {
+          "question": "Quina és la diferència entre els paquets?",
+          "answer": "Els nostres paquets varien en durada de la sessió, nombre de fotos editades i serveis inclosos com maquillatge professional. Visita la nostra pàgina de preus per comparacions detallades."
+        }
+      },
+      "preparation": {
+        "title": "Preparació",
+        "q1": {
+          "question": "Què hauria de portar a la meva sessió?",
+          "answer": "Recomanem portar 3-5 opcions de roba. Això pot incloure llenceria, bodis, camises grans o qualsevol cosa que et faci sentir bella. Consulta la nostra guia d'estil per més consells."
+        },
+        "q2": {
+          "question": "Hauria de fer-me el cabell i maquillatge jo mateixa?",
+          "answer": "Pots fer-ho, però el nostre paquet Deluxe inclou maquillatge professional. Si ho fas tu, recomanem mantenir-ho natural i portar essencials per retocar."
+        },
+        "q3": {
+          "question": "Com hauria de preparar la meva pell?",
+          "answer": "Mantén-te hidratada, dorm bé i evita roba ajustada abans de la sessió per evitar marques a la pell. Hidrata't regularment els dies previs."
+        }
+      },
+      "session": {
+        "title": "Durant la Sessió",
+        "q1": {
+          "question": "Em guiareu amb les poses?",
+          "answer": "Sí! Proporcionem direcció completa durant tota la sessió. No necessites experiència com a model - simplement relaxa't i segueix les nostres indicacions."
+        },
+        "q2": {
+          "question": "Quant dura una sessió?",
+          "answer": "Les sessions duren de 2 a 3 hores segons el teu paquet. Això inclou temps per canvis de roba i assegura una experiència relaxada."
+        },
+        "q3": {
+          "question": "Puc portar algú amb mi?",
+          "answer": "Pots venir sola si te'n sents capaç, o amb la teva parella per ser testimoni de la teva transformació i empoderament, o amb les teves amigues per celebrar una ocasió especial com un casament, un canvi corporal o un aniversari."
+        }
+      },
+      "privacy": {
+        "title": "Privacitat i Imatges",
+        "q1": {
+          "question": "Les meves fotos es mantenen privades?",
+          "answer": "Absolutament. La teva privacitat és la nostra prioritat. Les imatges es comparteixen només amb el teu consentiment escrit explícit, i mai compartim sense permís."
+        },
+        "q2": {
+          "question": "Quan rebré les meves fotos?",
+          "answer": "Rebràs les teves imatges editades dins de 15 dies via una carpeta privada de Google Drive. L'edició addicional està disponible amb cost extra."
+        }
+      }
+    },
+    "cta": {
+      "title": "Encara Tens Preguntes?",
+      "text": "Som aquí per ajudar-te a sentir-te segura i informada. Contacta'ns en qualsevol moment - ens encantaria parlar.",
+      "contact_button": "Contacta'ns",
+      "process_button": "Coneix el Nostre Procés"
+    }
   }
 }

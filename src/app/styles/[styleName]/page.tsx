@@ -72,8 +72,7 @@ export default async function StylePage({ params }: Readonly<Props>) {
       <h1
         className={`${dancingScript.className} pt-44 pb-3 pl-12 lg:pb-12 capitalize`}
       >
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        {t(styleName.replace("-", "_") as any)}
+        {((k: string) => t(k))(styleName.replace("-", "_"))}
       </h1>
       <Suspense fallback={<Loading />}>
         <Gallery photos={photos} showTitle={false} />

@@ -1,13 +1,13 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { Testimonial } from "@/lib/testimonials";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import chalk from "chalk";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { cookies } from "next/headers";
 
 const createDbClient = (cookies: ReadonlyRequestCookies) =>
   createServerClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_URL ?? "",
+    process.env.SUPABASE_ANON_KEY ?? "",
     {
       cookies: {
         getAll() {
@@ -32,7 +32,7 @@ export const Testimonials = async (): Promise<Array<Testimonial>> => {
   const cookieStore = await cookies();
   const supabase = createDbClient(cookieStore);
 
-  console.log(chalk.gray("[ supabase ] retrieving testimonials from database"));
+  (chalk.gray("[ supabase ] retrieving testimonials from database"));
   const { data: testimonials, error } = await supabase
     .from("testimonials")
     .select("id, name, content, location, rating, featured, date:created_at")

@@ -22,30 +22,30 @@ type ActionType = {
   REMOVE_TOAST: "REMOVE_TOAST";
 };
 
-let count = 0;
+const counter = { value: 0 };
 
 function genId() {
-  count = (count + 1) % Number.MAX_SAFE_INTEGER;
-  return count.toString();
+  counter.value = (counter.value + 1) % Number.MAX_SAFE_INTEGER;
+  return counter.value.toString();
 }
 
 type Action =
   | {
-      type: ActionType["ADD_TOAST"];
-      toast: ToasterToast;
-    }
+    type: ActionType["ADD_TOAST"];
+    toast: ToasterToast;
+  }
   | {
-      type: ActionType["UPDATE_TOAST"];
-      toast: Partial<ToasterToast>;
-    }
+    type: ActionType["UPDATE_TOAST"];
+    toast: Partial<ToasterToast>;
+  }
   | {
-      type: ActionType["DISMISS_TOAST"];
-      toastId?: ToasterToast["id"];
-    }
+    type: ActionType["DISMISS_TOAST"];
+    toastId?: ToasterToast["id"];
+  }
   | {
-      type: ActionType["REMOVE_TOAST"];
-      toastId?: ToasterToast["id"];
-    };
+    type: ActionType["REMOVE_TOAST"];
+    toastId?: ToasterToast["id"];
+  };
 
 interface State {
   toasts: ToasterToast[];
@@ -103,9 +103,9 @@ export const reducer = (state: State, action: Action): State => {
         toasts: state.toasts.map((t) =>
           t.id === toastId || toastId === undefined
             ? {
-                ...t,
-                open: false,
-              }
+              ...t,
+              open: false,
+            }
             : t,
         ),
       };
@@ -126,12 +126,12 @@ export const reducer = (state: State, action: Action): State => {
 
 const listeners: Array<(state: State) => void> = [];
 
-let memoryState: State = { toasts: [] };
+const internalState: { value: State } = { value: { toasts: [] } };
 
 function dispatch(action: Action) {
-  memoryState = reducer(memoryState, action);
+  internalState.value = reducer(internalState.value, action);
   listeners.forEach((listener) => {
-    listener(memoryState);
+    listener(internalState.value);
   });
 }
 
@@ -167,7 +167,7 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-  const [state, setState] = React.useState<State>(memoryState);
+  const [state, setState] = React.useState<State>(internalState.value);
 
   React.useEffect(() => {
     listeners.push(setState);
@@ -186,4 +186,5 @@ function useToast() {
   };
 }
 
-export { useToast, toast };
+export { toast, useToast };
+

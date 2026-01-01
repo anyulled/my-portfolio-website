@@ -1,9 +1,9 @@
 "use client";
 
-import Script from "next/script";
+import * as gtag from "@/lib/gtag";
 import { usePathname, useSearchParams } from "next/navigation";
+import Script from "next/script";
 import { useEffect } from "react";
-import * as gtag from "../lib/gtag";
 
 export default function GoogleAnalytics() {
   const pathname = usePathname();

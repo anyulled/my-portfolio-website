@@ -29,7 +29,8 @@
     "p8": "Il s'inspire d'une myriade de photographes, dont ",
     "p9": "Son travail reflète un mélange de ces influences, combiné avec sa vision personnelle, aboutissant à des photographies en même temps visuellement époustouflantes et émotionnellement résonnantes.",
     "published_works": "Travaux Publiés",
-    "title": "À propos de moi"
+    "title": "À propos de moi",
+    "book_session": "Réservez Votre Séance"
   },
   "contact_form": {
     "contact_us": "Contactez-nous",
@@ -47,7 +48,12 @@
     "cookies": "Cookies",
     "copyright": "Tous droits réservés.",
     "legal": "Mentions légales",
-    "privacy": "Conditions de confidentialité"
+    "privacy": "Conditions de confidentialité",
+    "about": "À propos de moi",
+    "pricing": "Tarifs",
+    "testimonials": "Témoignages",
+    "styles": "Styles",
+    "faq": "FAQ"
   },
   "gallery": {
     "no_photos": "Aucune photo trouvée",
@@ -346,5 +352,141 @@
   },
   "locale": {
     "date": "fr-FR"
+  },
+  "style_guide": {
+    "title": "Guide de Style",
+    "subtitle": "Préparez-vous pour Votre Séance Boudoir Parfaite",
+    "intro": "Votre séance boudoir devrait être une expérience relaxante et valorisante. Voici tout ce que vous devez savoir pour vous préparer et vous sentir au mieux.",
+    "wardrobe": {
+      "title": "Conseils Vestimentaires",
+      "item1": "Apportez 3-5 options incluant lingerie, bodys ou chemises amples",
+      "item2": "Choisissez des pièces qui vous font vous sentir confiante et belle",
+      "item3": "Incluez un mélange de couleurs : neutres, noir et une couleur audacieuse",
+      "item4": "N'oubliez pas les accessoires : peignoirs, bijoux, talons hauts"
+    },
+    "beauty": {
+      "title": "Préparation Beauté",
+      "item1": "Dormez bien la nuit précédente",
+      "item2": "Restez hydratée et évitez l'alcool la veille",
+      "item3": "Faites-vous les ongles si cela vous fait vous sentir plus soignée",
+      "item4": "Le maquillage professionnel est inclus dans notre forfait Deluxe"
+    },
+    "day_of": {
+      "title": "Le Jour de la Séance",
+      "item1": "Portez des vêtements amples et confortables pour éviter les marques sur la peau",
+      "item2": "Arrivez avec un visage propre et hydraté",
+      "item3": "Apportez tout accessoire significatif pour vous",
+      "item4": "Venez avec l'esprit ouvert et prête à vous amuser !"
+    },
+    "cta": {
+      "title": "Prête à Réserver Votre Séance ?",
+      "text": "Maintenant que vous savez comment vous préparer, créons quelque chose de beau ensemble.",
+      "button": "Réservez Votre Séance"
+    }
+  },
+  "our_process": {
+    "title": "Notre Processus",
+    "subtitle": "Votre Voyage vers la Valorisation",
+    "intro": "De notre première conversation au moment où vous recevrez vos images époustouflantes, nous nous consacrons à rendre votre expérience boudoir extraordinaire.",
+    "steps": {
+      "consultation": {
+        "title": "Consultation Gratuite",
+        "description": "Nous parlerons de votre vision, répondrons à vos questions et nous assurerons que vous vous sentiez à l'aise et enthousiaste pour votre séance."
+      },
+      "planning": {
+        "title": "Planification de la Séance",
+        "description": "Ensemble nous sélectionnerons votre date, discuterons des options vestimentaires et planifierons chaque détail de votre expérience personnalisée."
+      },
+      "session": {
+        "title": "Séance Photo",
+        "description": "Détendez-vous dans notre studio privé. Avec un accompagnement expert, vous vous sentirez confiante et belle tout au long de la séance."
+      },
+      "editing": {
+        "title": "Édition Professionnelle",
+        "description": "Chaque image est soigneusement éditée pour sublimer votre beauté naturelle tout en maintenant un style authentique et artistique."
+      },
+      "reveal": {
+        "title": "Révélation des Images",
+        "description": "Vivez la magie de vous voir à travers un objectif artistique. Sélectionnez vos images préférées de la séance."
+      },
+      "delivery": {
+        "title": "Livraison Finale",
+        "description": "Recevez vos images en haute résolution via galerie privée, prêtes à être chéries pour toujours."
+      }
+    },
+    "cta": {
+      "title": "Commencez Votre Voyage Aujourd'hui",
+      "text": "Chaque femme mérite de se sentir belle et valorisée. Laissez-nous vous guider à travers une expérience inoubliable.",
+      "book_button": "Réservez Votre Séance",
+      "pricing_button": "Voir les Tarifs"
+    }
+  },
+  "faq": {
+    "title": "Questions Fréquentes",
+    "subtitle": "Tout Ce Que Vous Devez Savoir",
+    "categories": {
+      "general": {
+        "title": "Questions Générales",
+        "q1": {
+          "question": "Qu'est-ce que la photographie boudoir ?",
+          "answer": "La photographie boudoir est un style intime et artistique de portrait qui célèbre votre beauté et féminité. Il s'agit de capturer votre essence unique de manière élégante et valorisante."
+        },
+        "q2": {
+          "question": "La photographie boudoir est-elle uniquement pour certains types de corps ?",
+          "answer": "Absolument pas ! Le boudoir est pour toutes les femmes, quel que soit l'âge, la taille ou la morphologie. Notre expertise réside dans la mise en valeur de votre beauté unique et vous faire sentir confiante."
+        },
+        "q3": {
+          "question": "Quelle est la différence entre les forfaits ?",
+          "answer": "Nos forfaits varient en durée de séance, nombre de photos éditées et services inclus comme le maquillage professionnel. Visitez notre page tarifs pour des comparaisons détaillées."
+        }
+      },
+      "preparation": {
+        "title": "Préparation",
+        "q1": {
+          "question": "Que devrais-je apporter à ma séance ?",
+          "answer": "Nous recommandons d'apporter 3-5 options vestimentaires. Cela peut inclure lingerie, bodys, chemises amples ou tout ce qui vous fait vous sentir belle. Consultez notre guide de style pour plus de conseils."
+        },
+        "q2": {
+          "question": "Devrais-je faire mes cheveux et maquillage moi-même ?",
+          "answer": "Vous pouvez, mais notre forfait Deluxe inclut le maquillage professionnel. Si vous le faites vous-même, nous recommandons de rester naturelle et d'apporter l'essentiel pour retouches."
+        },
+        "q3": {
+          "question": "Comment devrais-je préparer ma peau ?",
+          "answer": "Restez hydratée, dormez bien et évitez les vêtements serrés avant la séance pour éviter les marques sur la peau. Hydratez-vous régulièrement les jours précédents."
+        }
+      },
+      "session": {
+        "title": "Pendant la Séance",
+        "q1": {
+          "question": "Me guiderez-vous pour les poses ?",
+          "answer": "Oui ! Nous fournissons une direction complète tout au long de la séance. Vous n'avez pas besoin d'expérience de mannequin - détendez-vous simplement et suivez nos indications."
+        },
+        "q2": {
+          "question": "Combien de temps dure une séance ?",
+          "answer": "Les séances durent de 2 à 3 heures selon votre forfait. Cela inclut le temps pour les changements de tenue et assure une expérience détendue."
+        },
+        "q3": {
+          "question": "Puis-je amener quelqu'un avec moi ?",
+          "answer": "Vous pouvez venir seule si vous vous sentez en confiance, ou avec votre partenaire pour témoigner de votre transformation et de votre épanouissement, ou avec vos amies pour célébrer une occasion spéciale comme un mariage, un changement corporel ou un anniversaire."
+        }
+      },
+      "privacy": {
+        "title": "Confidentialité et Images",
+        "q1": {
+          "question": "Mes photos restent-elles privées ?",
+          "answer": "Absolument. Votre vie privée est notre priorité. Les images ne sont partagées qu'avec votre consentement écrit explicite, et nous ne partageons jamais sans permission."
+        },
+        "q2": {
+          "question": "Quand recevrai-je mes photos ?",
+          "answer": "Vous recevrez vos images éditées dans les 15 jours via un dossier Google Drive privé. L'édition supplémentaire est disponible moyennant un coût supplémentaire."
+        }
+      }
+    },
+    "cta": {
+      "title": "Encore des Questions ?",
+      "text": "Nous sommes là pour vous aider à vous sentir confiante et informée. Contactez-nous à tout moment - nous serions ravis de discuter.",
+      "contact_button": "Contactez-nous",
+      "process_button": "Découvrir Notre Processus"
+    }
   }
 }

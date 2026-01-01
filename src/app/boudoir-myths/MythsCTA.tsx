@@ -6,11 +6,24 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BookOpen, Calendar, Camera, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa } from "next/font/google";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
+
+// Card destinations for internal linking
+const cardLinks = [
+  // Free Consultation
+  { href: "/#book-session", icon: MessageCircle },
+  // Style Guide
+  { href: "/style-guide", icon: BookOpen },
+  // View Portfolio
+  { href: "/styles", icon: Camera },
+  // Read Reviews (uses star icon)
+  { href: "/testimonials", icon: null },
+];
 
 export default function MythsCTA() {
   const ctaRef = useRef<HTMLElement>(null);
@@ -81,11 +94,14 @@ export default function MythsCTA() {
             {t("paragraph")}
           </p>
           <Button
+            asChild
             size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
           >
-            <Calendar className="mr-2 h-5 w-5" />
-            {t("book_button")}
+            <Link href="/#book-session">
+              <Calendar className="mr-2 h-5 w-5" />
+              {t("book_button")}
+            </Link>
           </Button>
         </div>
 
@@ -93,31 +109,43 @@ export default function MythsCTA() {
           ref={actionsRef}
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+          <Link
+            href={cardLinks[0].href}
+            className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border cursor-pointer"
+          >
             <MessageCircle className="h-12 w-12 text-primary mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-foreground mb-2">
               {t("cards.0.title")}
             </h3>
             <p className="text-muted-foreground text-sm">{t("cards.0.text")}</p>
-          </div>
+          </Link>
 
-          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+          <Link
+            href={cardLinks[1].href}
+            className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border cursor-pointer"
+          >
             <BookOpen className="h-12 w-12 text-primary mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-foreground mb-2">
               {t("cards.1.title")}
             </h3>
             <p className="text-muted-foreground text-sm">{t("cards.1.text")}</p>
-          </div>
+          </Link>
 
-          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+          <Link
+            href={cardLinks[2].href}
+            className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border cursor-pointer"
+          >
             <Camera className="h-12 w-12 text-primary mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-foreground mb-2">
               {t("cards.2.title")}
             </h3>
             <p className="text-muted-foreground text-sm">{t("cards.2.text")}</p>
-          </div>
+          </Link>
 
-          <div className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border">
+          <Link
+            href="/testimonials"
+            className="action-card bg-card p-6 rounded-2xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 border border-border cursor-pointer"
+          >
             <div className="h-12 w-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-primary-foreground font-bold text-xl">
                 ★
@@ -127,7 +155,7 @@ export default function MythsCTA() {
               {t("cards.3.title")}
             </h3>
             <p className="text-muted-foreground text-sm">{t("cards.3.text")}</p>
-          </div>
+          </Link>
         </div>
 
         <div className="mt-12 text-center">

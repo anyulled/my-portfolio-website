@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap, { AnimationVars } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useScroll } from "@/contexts/ScrollContext";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import { useEffect, useRef } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -23,44 +24,63 @@ interface UseFadeInOptions {
   toggleActions?: string;
 }
 
+const setupScrollTrigger = (lenis: Lenis) => {
+  ScrollTrigger.scrollerProxy(document.documentElement, {
+    scrollTop(value) {
+      if (arguments.length) {
+        lenis.scrollTo(value ?? 0);
+      }
+      return lenis.scroll;
+    },
+    getBoundingClientRect() {
+      return {
+        top: 0,
+        left: 0,
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+    },
+  });
+
+  lenis.on("scroll", ScrollTrigger.update);
+};
+
+const DEFAULT_OPTIONS: UseFadeInOptions = {
+  delay: 0.2,
+  duration: 0.8,
+  threshold: 0.3,
+  stagger: 0.1,
+  index: 0,
+  ease: "power2.out",
+  x: 0,
+  y: 20,
+  scale: 1,
+  toggleActions: "play none none none",
+};
+
 export function useFadeIn(options: UseFadeInOptions = {}) {
+  const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
   const {
-    delay = 0.2,
-    duration = 0.8,
-    threshold = 0.3,
-    stagger = 0.1,
-    index = 0,
-    ease = "power2.out",
-    x = 0,
-    y = 20,
-    scale = 1,
-    start = `top bottom-=${threshold * 100}%`,
-    toggleActions = "play none none none",
-  } = options;
+    delay,
+    duration,
+    threshold,
+    stagger,
+    index,
+    ease,
+    x,
+    y,
+    scale,
+    toggleActions,
+  } = mergedOptions;
+  const start =
+    mergedOptions.start ?? `top bottom-=${(threshold ?? 0.3) * 100}%`;
 
   const elementRef = useRef<HTMLDivElement>(null);
   const { lenis } = useScroll();
 
   useEffect(() => {
     if (lenis) {
-      ScrollTrigger.scrollerProxy(document.documentElement, {
-        scrollTop(value) {
-          if (arguments.length) {
-            lenis.scrollTo(value ?? 0);
-          }
-          return lenis.scroll;
-        },
-        getBoundingClientRect() {
-          return {
-            top: 0,
-            left: 0,
-            width: window.innerWidth,
-            height: window.innerHeight,
-          };
-        },
-      });
-
-      lenis.on("scroll", ScrollTrigger.update);
+      setupScrollTrigger(lenis);
     }
 
     return () => {
@@ -75,41 +95,28 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
       const element = elementRef.current;
 
       if (element) {
-        const initialProps: {
-          y: number;
-          x: number;
-          scale: number;
-          opacity: number;
-        } = {
+        gsap.set(element, {
           opacity: 0,
+          y,
+          x,
+          scale,
+        });
+
+        gsap.to(element, {
+          opacity: 1,
+          duration: duration ?? 0.8,
+          delay: (delay ?? 0.2) + (index ?? 0) * (stagger ?? 0.1),
+          ease: ease ?? "power2.out",
           y: 0,
           x: 0,
           scale: 1,
-        };
-        if (y !== 0) initialProps.y = y;
-        if (x !== 0) initialProps.x = x;
-        if (scale !== 1) initialProps.scale = scale;
-
-        gsap.set(element, initialProps);
-
-        const animationProps: AnimationVars = {
-          opacity: 1,
-          duration: duration,
-          delay: delay + index * stagger,
-          ease: ease,
           scrollTrigger: {
             trigger: element,
-            start: start,
-            toggleActions: toggleActions,
+            start,
+            toggleActions: toggleActions ?? "play none none none",
             scroller: document.documentElement,
           },
-        };
-
-        if (y !== 0) animationProps.y = 0;
-        if (x !== 0) animationProps.x = 0;
-        if (scale !== 1) animationProps.scale = 1;
-
-        gsap.to(element, animationProps);
+        });
       }
     },
     { scope: elementRef, dependencies: [lenis, index] },

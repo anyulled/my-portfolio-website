@@ -1,49 +1,70 @@
-import { NextResponse } from "next/server";
-import chalk from "chalk";
 import { sendEmailToRecipient } from "@/services/mailer";
+import chalk from "chalk";
+import { NextResponse } from "next/server";
+
+const REQUIRED_FIELDS = [
+  "fullName",
+  "socialAccount",
+  "email",
+  "country",
+  "height",
+  "chest",
+  "waist",
+  "hips",
+  "hairColor",
+  "eyeColor",
+  "implants",
+  "startDate",
+  "endDate",
+  "rates",
+  "modelRelease",
+] as const;
+
+function validateFields(formData: FormData, paymentTypes: string[]) {
+  for (const field of REQUIRED_FIELDS) {
+    if (!formData.get(field)?.toString()) return false;
+  }
+  return paymentTypes.length > 0;
+}
+
+function formatMessage(formData: FormData, paymentTypes: string[]) {
+  const get = (key: string) => formData.get(key)?.toString() ?? "";
+  const fullName = get("fullName");
+
+  return `
+New Booking Request from ${fullName}
+
+Personal Information:
+- Full Name: ${fullName}
+- Instagram/ModelMayhem: ${get("socialAccount")}
+- Email: ${get("email")}
+- Country of Origin: ${get("country")}
+
+Physical Characteristics:
+- Height: ${get("height")} cm
+- Body Size: Chest ${get("chest")} cm, Waist ${get("waist")} cm, Hips ${get("hips")} cm
+- Tattoos: ${formData.get("tattoos")?.toString() ?? "None specified"}
+- Hair Color: ${get("hairColor")}
+- Eye Color: ${get("eyeColor")}
+- Implants: ${get("implants")}
+
+Booking Details:
+- Available From: ${get("startDate")}
+- Available Until: ${get("endDate")}
+- Rates: ${get("rates")}
+- Willing to Sign Model Release: ${get("modelRelease")}
+- Preferred Payment Types: ${paymentTypes.join(", ")}
+`;
+}
 
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
-
-    const fullName = formData.get("fullName")?.toString();
-    const socialAccount = formData.get("socialAccount")?.toString();
-    const email = formData.get("email")?.toString();
-    const country = formData.get("country")?.toString();
-    const height = formData.get("height")?.toString();
-    const chest = formData.get("chest")?.toString();
-    const waist = formData.get("waist")?.toString();
-    const hips = formData.get("hips")?.toString();
-    const tattoos = formData.get("tattoos")?.toString() ?? "None specified";
-    const hairColor = formData.get("hairColor")?.toString();
-    const eyeColor = formData.get("eyeColor")?.toString();
-    const implants = formData.get("implants")?.toString();
-    const startDate = formData.get("startDate")?.toString();
-    const endDate = formData.get("endDate")?.toString();
-    const rates = formData.get("rates")?.toString();
-    const modelRelease = formData.get("modelRelease")?.toString();
     const paymentTypes = formData
       .getAll("paymentTypes")
       .map((type) => type.toString());
 
-    if (
-      !fullName ||
-      !socialAccount ||
-      !email ||
-      !country ||
-      !height ||
-      !chest ||
-      !waist ||
-      !hips ||
-      !hairColor ||
-      !eyeColor ||
-      !implants ||
-      !startDate ||
-      !endDate ||
-      !rates ||
-      !modelRelease ||
-      paymentTypes.length === 0
-    ) {
+    if (!validateFields(formData, paymentTypes)) {
       return NextResponse.json(
         {
           success: false,
@@ -53,32 +74,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const message = `
-New Booking Request from ${fullName}
+    const message = formatMessage(formData, paymentTypes);
+    const fullName = formData.get("fullName")?.toString() ?? "Unknown";
 
-Personal Information:
-- Full Name: ${fullName}
-- Instagram/ModelMayhem: ${socialAccount}
-- Email: ${email}
-- Country of Origin: ${country}
-
-Physical Characteristics:
-- Height: ${height} cm
-- Body Size: Chest ${chest} cm, Waist ${waist} cm, Hips ${hips} cm
-- Tattoos: ${tattoos}
-- Hair Color: ${hairColor}
-- Eye Color: ${eyeColor}
-- Implants: ${implants}
-
-Booking Details:
-- Available From: ${startDate}
-- Available Until: ${endDate}
-- Rates: ${rates}
-- Willing to Sign Model Release: ${modelRelease}
-- Preferred Payment Types: ${paymentTypes.join(", ")}
-`;
     console.log(chalk.cyan("[Booking] ENV:"), process.env.NODE_ENV);
-    if (process.env.NODE_ENV == "production") {
+    if (process.env.NODE_ENV === "production") {
       await sendEmailToRecipient(
         message,
         "info@boudoir.barcelona",

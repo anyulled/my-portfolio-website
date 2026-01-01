@@ -20,42 +20,44 @@ export default async function HomePage() {
     fetchedGallery && fetchedGallery.length > 0
       ? fetchedGallery
       : [
-          {
-            id: 0,
-            description: "Boudoir Session",
-            dateTaken: new Date(),
-            dateUpload: new Date(),
-            height: 1080,
-            title: "Boudoir Session",
-            views: 0,
-            width: 1920,
-            tags: "boudoir, portrait",
-            srcSet: [
-              {
-                src: "/images/DSC_7028.jpg",
-                width: 1920,
-                height: 1080,
-                title: "Boudoir Session",
-                description: "Boudoir Session",
-              },
-            ],
-          },
-        ];
+        {
+          id: 0,
+          description: "Boudoir Session",
+          dateTaken: new Date(),
+          dateUpload: new Date(),
+          height: 1080,
+          title: "Boudoir Session",
+          views: 0,
+          width: 1920,
+          tags: "boudoir, portrait",
+          srcSet: [
+            {
+              src: "/images/DSC_7028.jpg",
+              width: 1920,
+              height: 1080,
+              title: "Boudoir Session",
+              description: "Boudoir Session",
+            },
+          ],
+        },
+      ];
 
   const heroPhotos = (await getPhotosFromStorage("hero", 6)) || [];
 
   const formattedHeroImages =
     heroPhotos.length > 0
       ? heroPhotos.map((p) => ({
-          image: p.srcSet[0].src,
-          position: "center center", // Default position as GCS doesn't store position data yet
-        }))
+        image: p.srcSet[0].src,
+        // Default position as GCS doesn't store position data yet
+        position: "center center",
+      }))
       : [
-          {
-            image: "/images/DSC_7028.jpg", // Fallback if no images found
-            position: "left top",
-          },
-        ];
+        {
+          // Fallback if no images found
+          image: "/images/DSC_7028.jpg",
+          position: "left top",
+        },
+      ];
 
   return (
     <main>

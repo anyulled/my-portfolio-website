@@ -9,11 +9,12 @@ import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 
 import type { Photo } from "@/types/photos";
-import type { ListPhotosOptions, PhotoProvider } from "./PhotoService";
-import { DEFAULT_LIST_OPTIONS } from "./PhotoService";
+import type { ListPhotosOptions, PhotoProvider } from "./PhotoInterfaces";
+import { DEFAULT_LIST_OPTIONS } from "./PhotoInterfaces";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-website";
-const SIGNED_URL_TTL_MS = 1000 * 60 * 60; // 1 hour
+// 1 hour
+const SIGNED_URL_TTL_MS = 1000 * 60 * 60;
 
 interface GCSPhotoProviderOptions {
   /** GCS bucket name. Defaults to env var GCP_HOMEPAGE_BUCKET or DEFAULT_BUCKET_NAME */
@@ -99,25 +100,25 @@ export class GCSPhotoProvider implements PhotoProvider {
   private readonly useSignedUrls: boolean;
 
   constructor(options: GCSPhotoProviderOptions = {}) {
-    this.bucketName =
-      options.bucketName ??
-      process.env.GCP_HOMEPAGE_BUCKET ??
-      DEFAULT_BUCKET_NAME;
+    const {
+      bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME,
+      clientEmail = process.env.GCP_CLIENT_EMAIL,
+      privateKey = process.env.GCP_PRIVATE_KEY,
+      projectId = process.env.GCP_PROJECT_ID,
+      useSignedUrls,
+    } = options;
 
-    const hasCredentials =
-      Boolean(options.clientEmail ?? process.env.GCP_CLIENT_EMAIL) &&
-      Boolean(options.privateKey ?? process.env.GCP_PRIVATE_KEY);
+    this.bucketName = bucketName;
 
-    this.useSignedUrls = options.useSignedUrls ?? hasCredentials;
+    const hasCredentials = Boolean(clientEmail) && Boolean(privateKey);
+    this.useSignedUrls = useSignedUrls ?? hasCredentials;
 
     if (hasCredentials) {
       this.storage = new Storage({
-        projectId: options.projectId ?? process.env.GCP_PROJECT_ID,
+        projectId,
         credentials: {
-          client_email: options.clientEmail ?? process.env.GCP_CLIENT_EMAIL,
-          private_key: sanitisePrivateKey(
-            options.privateKey ?? process.env.GCP_PRIVATE_KEY ?? "",
-          ),
+          client_email: clientEmail,
+          private_key: sanitisePrivateKey(privateKey ?? ""),
         },
       });
     } else {
@@ -133,7 +134,8 @@ export class GCSPhotoProvider implements PhotoProvider {
       const [files] = await bucket.getFiles({
         prefix: opts.prefix,
         autoPaginate: false,
-      } as { prefix?: string; autoPaginate?: boolean });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any);
 
       if (!files || files.length === 0) {
         return [];
@@ -149,31 +151,37 @@ export class GCSPhotoProvider implements PhotoProvider {
         imageFiles.map((file) => this.mapFileToPhoto(file)),
       );
 
-      let photos = mapped.filter((photo): photo is Photo => photo !== null);
+      const p0 = mapped.filter((photo): photo is Photo => photo !== null);
 
       // Sort
-      if (opts.orderBy === "date") {
-        photos = photos.sort((a, b) =>
-          opts.orderDirection === "asc"
-            ? a.dateUpload.getTime() - b.dateUpload.getTime()
-            : b.dateUpload.getTime() - a.dateUpload.getTime(),
-        );
-      } else if (opts.orderBy === "views") {
-        photos = photos.sort((a, b) =>
-          opts.orderDirection === "asc" ? a.views - b.views : b.views - a.views,
-        );
-      } else if (opts.orderBy === "name") {
-        photos = photos.sort((a, b) =>
-          opts.orderDirection === "asc"
-            ? a.title.localeCompare(b.title)
-            : b.title.localeCompare(a.title),
-        );
-      }
+      const p1 = (() => {
+        if (opts.orderBy === "date") {
+          return [...p0].sort((a, b) =>
+            opts.orderDirection === "asc"
+              ? a.dateUpload.getTime() - b.dateUpload.getTime()
+              : b.dateUpload.getTime() - a.dateUpload.getTime(),
+          );
+        }
+        if (opts.orderBy === "views") {
+          return [...p0].sort((a, b) =>
+            opts.orderDirection === "asc"
+              ? a.views - b.views
+              : b.views - a.views,
+          );
+        }
+        if (opts.orderBy === "name") {
+          return [...p0].sort((a, b) =>
+            opts.orderDirection === "asc"
+              ? a.title.localeCompare(b.title)
+              : b.title.localeCompare(a.title),
+          );
+        }
+        return p0;
+      })();
 
       // Apply limit
-      if (opts.limit && opts.limit > 0) {
-        photos = photos.slice(0, opts.limit);
-      }
+      const photos =
+        opts.limit && opts.limit > 0 ? p1.slice(0, opts.limit) : p1;
 
       return photos;
     } catch (error) {

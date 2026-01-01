@@ -1,5 +1,5 @@
-import { act, renderHook } from "@testing-library/react";
 import { toast as toastFunction, useToast } from "@/hooks/use-toast";
+import { act, renderHook } from "@testing-library/react";
 
 describe("useToast", () => {
   beforeEach(() => {
@@ -37,22 +37,15 @@ describe("useToast", () => {
 
   it("should update a toast when update function is called", () => {
     const { result } = renderHook(() => useToast());
+    const toastIds: string[] = [];
 
-    let toastId: string;
-
-    act(() => {
-      const response = result.current.toast({
-        title: "Initial Toast",
-        description: "Initial description",
-      });
-      toastId = response.id;
-    });
+    act();
 
     expect(result.current.toasts[0].title).toBe("Initial Toast");
 
     act(() => {
       result.current.toast({
-        id: toastId,
+        id: toastIds[0],
         title: "Updated Toast",
         description: "Updated description",
       });
@@ -65,20 +58,19 @@ describe("useToast", () => {
 
   it("should dismiss a toast when dismiss function is called with an id", () => {
     const { result } = renderHook(() => useToast());
-
-    let toastId: string;
+    const toastIds: string[] = [];
 
     act(() => {
       const response = result.current.toast({
         title: "Test Toast",
       });
-      toastId = response.id;
+      toastIds.push(response.id);
     });
 
     expect(result.current.toasts[0].open).toBe(true);
 
     act(() => {
-      result.current.dismiss(toastId);
+      result.current.dismiss(toastIds[0]);
     });
 
     expect(result.current.toasts[0].open).toBe(false);

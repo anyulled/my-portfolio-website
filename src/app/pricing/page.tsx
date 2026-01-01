@@ -66,96 +66,96 @@ const getPackages = (
   latestPricing: PricingPackageRecord | null,
   images: [string, string, string],
 ) => [
-  {
-    name: t("boudoir_express"),
-    price: formatPrice(latestPricing?.express_price, defaultPricing.express),
-    image: images[0],
-    features: [
-      {
-        icon: <Photo className="w-5 h-5" />,
-        text: `12 ${t("edited_photos")}`,
-      },
-      {
-        icon: <Camera className="w-5 h-5" />,
-        text: `150 ${t("photos_hd")}`,
-      },
-      {
-        icon: <Shirt className="w-5 h-5" />,
-        text: `3 ${t("clothing_change")}`,
-      },
-      {
-        icon: <Clock className="w-5 h-5" />,
-        text: `2 ${t("hours_studio")}`,
-      },
-      {
-        icon: <Check className="w-5 h-5" />,
-        text: t("clothing_and_attrezzo"),
-      },
-    ],
-  },
-  {
-    name: t("boudoir_experience"),
-    price: formatPrice(
-      latestPricing?.experience_price,
-      defaultPricing.experience,
-    ),
-    image: images[1],
-    features: [
-      {
-        icon: <Photo className="w-5 h-5" />,
-        text: `18 ${t("edited_photos")}`,
-      },
-      {
-        icon: <Shirt className="w-5 h-5" />,
-        text: `4 ${t("clothing_change")}`,
-      },
-      {
-        icon: <Clock className="w-5 h-5" />,
-        text: `2 ${t("hours_studio")}`,
-      },
-      {
-        icon: <Camera className="w-5 h-5" />,
-        text: `200 ${t("photos_hd")}`,
-      },
-      {
-        icon: <Check className="w-5 h-5" />,
-        text: t("clothing_and_attrezzo"),
-      },
-    ],
-  },
-  {
-    name: t("deluxe_experience"),
-    price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
-    image: images[2],
-    features: [
-      {
-        icon: <Photo className="w-5 h-5" />,
-        text: `24 ${t("edited_photos")}`,
-      },
-      { icon: <Video className="w-5 h-5" />, text: t("video") },
-      {
-        icon: <UserRound className="w-5 h-5" />,
-        text: t("professional_makeup"),
-      },
-      {
-        icon: <Shirt className="w-5 h-5" />,
-        text: `4 ${t("clothing_change")}`,
-      },
-      {
-        icon: <Clock className="w-5 h-5" />,
-        text: `3 ${t("hours_studio")}`,
-      },
-      {
-        icon: <Camera className="w-5 h-5" />,
-        text: `200 ${t("photos_hd")}`,
-      },
-      {
-        icon: <Check className="w-5 h-5" />,
-        text: t("clothing_and_attrezzo"),
-      },
-    ],
-  },
-];
+    {
+      name: t("boudoir_express"),
+      price: formatPrice(latestPricing?.express_price, defaultPricing.express),
+      image: images[0],
+      features: [
+        {
+          icon: <Photo className="w-5 h-5" />,
+          text: `12 ${t("edited_photos")}`,
+        },
+        {
+          icon: <Camera className="w-5 h-5" />,
+          text: `150 ${t("photos_hd")}`,
+        },
+        {
+          icon: <Shirt className="w-5 h-5" />,
+          text: `3 ${t("clothing_change")}`,
+        },
+        {
+          icon: <Clock className="w-5 h-5" />,
+          text: `2 ${t("hours_studio")}`,
+        },
+        {
+          icon: <Check className="w-5 h-5" />,
+          text: t("clothing_and_attrezzo"),
+        },
+      ],
+    },
+    {
+      name: t("boudoir_experience"),
+      price: formatPrice(
+        latestPricing?.experience_price,
+        defaultPricing.experience,
+      ),
+      image: images[1],
+      features: [
+        {
+          icon: <Photo className="w-5 h-5" />,
+          text: `18 ${t("edited_photos")}`,
+        },
+        {
+          icon: <Shirt className="w-5 h-5" />,
+          text: `4 ${t("clothing_change")}`,
+        },
+        {
+          icon: <Clock className="w-5 h-5" />,
+          text: `2 ${t("hours_studio")}`,
+        },
+        {
+          icon: <Camera className="w-5 h-5" />,
+          text: `200 ${t("photos_hd")}`,
+        },
+        {
+          icon: <Check className="w-5 h-5" />,
+          text: t("clothing_and_attrezzo"),
+        },
+      ],
+    },
+    {
+      name: t("deluxe_experience"),
+      price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
+      image: images[2],
+      features: [
+        {
+          icon: <Photo className="w-5 h-5" />,
+          text: `24 ${t("edited_photos")}`,
+        },
+        { icon: <Video className="w-5 h-5" />, text: t("video") },
+        {
+          icon: <UserRound className="w-5 h-5" />,
+          text: t("professional_makeup"),
+        },
+        {
+          icon: <Shirt className="w-5 h-5" />,
+          text: `4 ${t("clothing_change")}`,
+        },
+        {
+          icon: <Clock className="w-5 h-5" />,
+          text: `3 ${t("hours_studio")}`,
+        },
+        {
+          icon: <Camera className="w-5 h-5" />,
+          text: `200 ${t("photos_hd")}`,
+        },
+        {
+          icon: <Check className="w-5 h-5" />,
+          text: t("clothing_and_attrezzo"),
+        },
+      ],
+    },
+  ];
 
 export default async function PricingPage() {
   const t = await getTranslations("pricing");
@@ -178,7 +178,7 @@ export default async function PricingPage() {
   ];
 
   const packages = getPackages(
-    t as unknown as (key: string) => string,
+    (key: string) => t(key),
     latestPricing,
     images,
   );

@@ -1,17 +1,20 @@
 import { del, list, ListBlobResult } from "@vercel/blob";
 
 export async function deleteAllBlobs() {
-  let cursor: string | undefined = undefined;
+  const context: { cursor: string | undefined } = { cursor: undefined };
 
   do {
-    const listResult: ListBlobResult = await list({ cursor, limit: 1000 });
+    const listResult: ListBlobResult = await list({
+      cursor: context.cursor,
+      limit: 1000,
+    });
 
     if (listResult.blobs.length > 0) {
       await del(listResult.blobs.map((blob) => blob.url));
     }
 
-    cursor = listResult.cursor;
-  } while (cursor);
+    context.cursor = listResult.cursor;
+  } while (context.cursor);
 
   console.log("All blobs were deleted");
 }

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
+        url: "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.webp",
         width: 500,
         height: 333,
         alt: "Andrea Cano Montull",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     description:
       "Read authentic testimonials from our boudoir photography clients.",
     images: [
-      "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg",
+      "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.webp",
     ],
   },
 };
@@ -68,7 +68,7 @@ export default async function TestimonialsPage() {
   const heroPhotos = await getPhotosFromStorage("hero");
   const heroImage =
     heroPhotos?.[0]?.srcSet[0]?.src ||
-    "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.jpg";
+    "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.webp";
 
   const t = await getTranslations("testimonials");
 

@@ -24,7 +24,8 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
     console.log(chalk.green(`[VercelBlob] Cache hit for key: ${sanitizedKey}`));
 
     const res = await fetch(matchingBlob.downloadUrl);
-    return await res.json();
+    const data: unknown = await res.json();
+    return data as T;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(

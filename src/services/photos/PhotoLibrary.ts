@@ -4,9 +4,9 @@
  * Unified photo fetching service using GCS as storage.
  */
 
-import { GCSPhotoProvider } from "./GCSPhotoProvider";
-import type { PhotoProvider, ListPhotosOptions } from "./PhotoService";
 import type { Photo } from "@/types/photos";
+import { GCSPhotoProvider } from "./GCSPhotoProvider";
+import type { ListPhotosOptions, PhotoProvider } from "./PhotoInterfaces";
 
 const DEFAULT_BUCKET = "sensuelle-boudoir-website";
 
@@ -28,7 +28,7 @@ export const tagsToPrefix = (tags: string[]): string => {
   return tagToPrefix(tags[0]);
 };
 
-interface PhotoServiceOptions {
+interface PhotoLibraryOptions {
   /** GCS bucket name */
   bucketName?: string;
 }
@@ -43,10 +43,10 @@ interface FetchPhotosOptions extends ListPhotosOptions {
 /**
  * Photo Service using GCS storage
  */
-export class PhotoService {
+export class PhotoLibrary {
   private gcsProvider: PhotoProvider;
 
-  constructor(options: PhotoServiceOptions = {}) {
+  constructor(options: PhotoLibraryOptions = {}) {
     this.gcsProvider = new GCSPhotoProvider({
       bucketName: options.bucketName ?? DEFAULT_BUCKET,
     });
@@ -123,26 +123,26 @@ export class PhotoService {
 }
 
 // Singleton instance for convenience
-let defaultService: PhotoService | null = null;
+const serviceHolder: { instance: PhotoLibrary | null } = { instance: null };
 
-export const getPhotoService = (
-  options?: PhotoServiceOptions,
-): PhotoService => {
-  if (!defaultService || options) {
-    defaultService = new PhotoService(options);
+export const getPhotoLibrary = (
+  options?: PhotoLibraryOptions,
+): PhotoLibrary => {
+  if (!serviceHolder.instance || options) {
+    serviceHolder.instance = new PhotoLibrary(options);
   }
-  return defaultService;
+  return serviceHolder.instance;
 };
 
 // Convenience functions for common use cases
 export const fetchStylePhotos = (styleName: string, limit?: number) =>
-  getPhotoService().fetchStylePhotos(styleName, limit);
+  getPhotoLibrary().fetchStylePhotos(styleName, limit);
 
 export const fetchModelPhotos = (modelTag: string, limit?: number) =>
-  getPhotoService().fetchModelPhotos(modelTag, limit);
+  getPhotoLibrary().fetchModelPhotos(modelTag, limit);
 
 export const fetchCoverPhotos = (limit?: number) =>
-  getPhotoService().fetchCoverPhotos(limit);
+  getPhotoLibrary().fetchCoverPhotos(limit);
 
 export const fetchBoudoirPhotos = (limit?: number) =>
-  getPhotoService().fetchBoudoirPhotos(limit);
+  getPhotoLibrary().fetchBoudoirPhotos(limit);

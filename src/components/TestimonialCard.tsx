@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import type { Testimonial } from "@/lib/testimonials";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import { Star } from "lucide-react";
-import type { Testimonial } from "@/lib/testimonials";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -100,7 +100,7 @@ export default function TestimonialCard({
       </div>
 
       <div className="flex mb-3">
-        {[...Array(testimonial.rating)].map((_, i) => (
+        {Array.from({ length: testimonial.rating }).map((_, i) => (
           <Star key={i} className="w-5 h-5 fill-primary text-primary" />
         ))}
       </div>

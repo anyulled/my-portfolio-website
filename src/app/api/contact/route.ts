@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
 import { sendEMail } from "@/services/mailer";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const formData = await req.formData();
-  const name: string = formData.get("name")!.toString();
-  const email: string = formData.get("email")!.toString();
-  const message: string = formData.get("message")!.toString();
+  const name = formData.get("name")?.toString() ?? "";
+  const email = formData.get("email")?.toString() ?? "";
+  const message = formData.get("message")?.toString() ?? "";
 
   const result = await sendEMail(message, email, name);
 

@@ -63,11 +63,35 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
     }));
 
     const mythsWithPhotos: Array<MythsWithImages> = mythBases.map(
-      (base, index) => ({
-        ...base,
-        ...mythsTexts[index],
-        image: photos.at(index)!,
-      }),
+      (base, index) => {
+        const photo = photos.at(index);
+        const fallbackPhoto: Photo = {
+          id: 0,
+          description: "Fallback photo",
+          dateTaken: new Date(),
+          dateUpload: new Date(),
+          height: 400,
+          width: 600,
+          title: "Fallback",
+          views: 0,
+          tags: "",
+          srcSet: [
+            {
+              src: "/images/DSC_7028.webp",
+              width: 600,
+              height: 400,
+              title: "Fallback",
+              description: "Fallback",
+            },
+          ],
+        };
+
+        return {
+          ...base,
+          ...mythsTexts[index],
+          image: photo ?? fallbackPhoto,
+        };
+      },
     );
 
     setMythsWithImages(mythsWithPhotos);
@@ -162,7 +186,7 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
 
                   <div className="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg">
                     <div className="flex items-start">
-                      <X className="h-6 w-6 text-red-500 mr-3 mt-1 flex-shrink-0" />
+                      <X className="h-6 w-6 text-red-500 mr-3 mt-1 shrink-0" />
                       <div>
                         <h3 className="text-lg font-semibold text-red-800 mb-2">
                           {t("labels.myth")}
@@ -176,7 +200,7 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
 
                   <div className="bg-green-50 border-l-4 border-green-400 p-6 rounded-r-lg">
                     <div className="flex items-start">
-                      <Check className="h-6 w-6 text-green-500 mr-3 mt-1 flex-shrink-0" />
+                      <Check className="h-6 w-6 text-green-500 mr-3 mt-1 shrink-0" />
                       <div>
                         <h3 className="text-lg font-semibold text-green-800 mb-2">
                           {t("labels.truth")}

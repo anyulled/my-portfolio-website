@@ -1,16 +1,20 @@
 export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
+declare global {
+  interface Window {
+    gtag: (command: string, ...args: unknown[]) => void;
+  }
+}
+
 // https://developers.google.com/tag-platform/security/guides/consent?consentmode=basic
 export const pageview = (url: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).gtag("config", GA_TRACKING_ID, {
+  window.gtag("config", GA_TRACKING_ID, {
     page_path: url,
   });
 };
 
 export const submitLeadForm = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).gtag("event", "conversion", {
+  window.gtag("event", "conversion", {
     send_to: "AW-16670888958/QwUCCMzUnNUZEP6npo0-",
   });
 };
@@ -27,8 +31,7 @@ export const event = ({
   label: string;
   value?: number;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).gtag("event", action, {
+  window.gtag("event", action, {
     event_category: category,
     event_label: label,
     value: value,
@@ -36,8 +39,7 @@ export const event = ({
 };
 
 export const grantConsent = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).gtag("consent", "update", {
+  window.gtag("consent", "update", {
     ad_user_data: "granted",
     ad_personalization: "granted",
     ad_storage: "granted",

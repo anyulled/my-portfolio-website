@@ -1,16 +1,16 @@
 "use client";
+import FadeInTitle from "@/components/FadeInTitle";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
-import { siTelegram, siWhatsapp } from "simple-icons";
-import React from "react";
-import { Aref_Ruqaa } from "next/font/google";
 import useAnalyticsEventTracker from "@/hooks/eventTracker";
+import { toast } from "@/hooks/use-toast";
 import { submitLeadForm } from "@/lib/gtag";
-import { useTranslations } from "next-intl";
-import FadeInTitle from "@/components/FadeInTitle";
 import * as Sentry from "@sentry/nextjs";
+import { useTranslations } from "next-intl";
+import { Aref_Ruqaa } from "next/font/google";
+import React from "react";
+import { siTelegram, siWhatsapp } from "simple-icons";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
@@ -27,7 +27,13 @@ export default function ContactForm() {
         method: "POST",
         body: formData,
       });
-      const result = await res.json();
+
+      const resultRaw: unknown = await res.json();
+      const isResult = (val: unknown): val is { success: boolean; message: string } => typeof val === "object" && val !== null && "success" in val;
+      if (!isResult(resultRaw)) {
+        throw new Error("Invalid response");
+      }
+      const result = resultRaw;
 
       if (result.success) {
         toast({

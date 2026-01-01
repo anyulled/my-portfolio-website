@@ -96,8 +96,8 @@ export default function NavBar() {
           <LocaleSwitcher />
           <Button
             className={clsx(
-              "!ml-0 bg-background text-foreground dark:bg-background",
-              pathname === "/" && "!bg-transparent",
+              "ml-0! bg-background text-foreground dark:bg-background",
+              pathname === "/" && "bg-transparent!",
             )}
             variant="ghost"
             size="icon"

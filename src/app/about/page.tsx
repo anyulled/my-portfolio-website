@@ -4,7 +4,7 @@ import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Metadata } from "next";
 
 const profileImageUrl =
-  "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/anyul-rivas_53909071543_o.jpg";
+  "https://storage.googleapis.com/sensuelle-boudoir-homepage/about/anyul-rivas_53909071543_o.webp";
 
 const metadataImages = [
   {

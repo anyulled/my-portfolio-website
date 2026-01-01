@@ -29,7 +29,8 @@
     "p8": "Trae ispirazione da una miriade di fotografi, tra cui ",
     "p9": "Il suo lavoro riflette una combinazione di queste influenze, unita alla sua visione personale, risultando in fotografie non solo visivamente affascinanti ma anche emotivamente intense.",
     "published_works": "Opere Pubblicate",
-    "title": "Chi Sono"
+    "title": "Chi Sono",
+    "book_session": "Prenota la Tua Sessione"
   },
   "contact_form": {
     "contact_us": "Contattaci",
@@ -47,7 +48,12 @@
     "cookies": "Cookie",
     "copyright": "Tutti i diritti riservati.",
     "legal": "Termini Legali",
-    "privacy": "Termini di Privacy"
+    "privacy": "Termini di Privacy",
+    "about": "Chi Sono",
+    "pricing": "Prezzi",
+    "testimonials": "Testimonianze",
+    "styles": "Stili",
+    "faq": "FAQ"
   },
   "gallery": {
     "no_photos": "Nessuna foto trovata",
@@ -346,5 +352,141 @@
   },
   "locale": {
     "date": "it-IT"
+  },
+  "style_guide": {
+    "title": "Guida di Stile",
+    "subtitle": "Preparati per la Tua Sessione Boudoir Perfetta",
+    "intro": "La tua sessione boudoir dovrebbe essere un'esperienza rilassante e valorizzante. Ecco tutto ciò che devi sapere per prepararti e sentirti al meglio.",
+    "wardrobe": {
+      "title": "Consigli sul Guardaroba",
+      "item1": "Porta 3-5 opzioni includendo lingerie, body o camicie larghe",
+      "item2": "Scegli capi che ti fanno sentire sicura e bella",
+      "item3": "Includi un mix di colori: neutri, nero e un colore audace",
+      "item4": "Non dimenticare gli accessori: vestaglie, gioielli, tacchi alti"
+    },
+    "beauty": {
+      "title": "Preparazione di Bellezza",
+      "item1": "Dormi bene la notte prima",
+      "item2": "Mantieniti idratata ed evita l'alcol il giorno prima",
+      "item3": "Fatti le unghie se questo ti fa sentire più curata",
+      "item4": "Il trucco professionale è incluso nel nostro pacchetto Deluxe"
+    },
+    "day_of": {
+      "title": "Il Giorno della Sessione",
+      "item1": "Indossa abiti larghi e comodi per evitare segni sulla pelle",
+      "item2": "Arriva con il viso pulito e idratato",
+      "item3": "Porta qualsiasi accessorio significativo per te",
+      "item4": "Vieni con la mente aperta e pronta a divertirti!"
+    },
+    "cta": {
+      "title": "Pronta a Prenotare la Tua Sessione?",
+      "text": "Ora che sai come prepararti, creiamo qualcosa di bello insieme.",
+      "button": "Prenota la Tua Sessione"
+    }
+  },
+  "our_process": {
+    "title": "Il Nostro Processo",
+    "subtitle": "Il Tuo Viaggio verso l'Empowerment",
+    "intro": "Dalla nostra prima conversazione al momento in cui riceverai le tue immagini straordinarie, ci dedichiamo a rendere la tua esperienza boudoir straordinaria.",
+    "steps": {
+      "consultation": {
+        "title": "Consulenza Gratuita",
+        "description": "Parleremo della tua visione, risponderemo alle domande e ci assicureremo che ti senta a tuo agio ed entusiasta per la tua sessione."
+      },
+      "planning": {
+        "title": "Pianificazione della Sessione",
+        "description": "Insieme sceglieremo la tua data, discuteremo le opzioni di guardaroba e pianificheremo ogni dettaglio della tua esperienza personalizzata."
+      },
+      "session": {
+        "title": "Sessione Fotografica",
+        "description": "Rilassati nel nostro studio privato. Con guida esperta, ti sentirai sicura e bella durante tutta la sessione."
+      },
+      "editing": {
+        "title": "Editing Professionale",
+        "description": "Ogni immagine viene curata con attenzione per esaltare la tua bellezza naturale mantenendo uno stile autentico e artistico."
+      },
+      "reveal": {
+        "title": "Rivelazione delle Immagini",
+        "description": "Vivi la magia di vederti attraverso un obiettivo artistico. Seleziona le tue immagini preferite dalla sessione."
+      },
+      "delivery": {
+        "title": "Consegna Finale",
+        "description": "Ricevi le tue immagini in alta risoluzione via galleria privata, pronte da custodire per sempre."
+      }
+    },
+    "cta": {
+      "title": "Inizia il Tuo Viaggio Oggi",
+      "text": "Ogni donna merita di sentirsi bella e valorizzata. Lasciaci guidarti attraverso un'esperienza indimenticabile.",
+      "book_button": "Prenota la Tua Sessione",
+      "pricing_button": "Vedi i Prezzi"
+    }
+  },
+  "faq": {
+    "title": "Domande Frequenti",
+    "subtitle": "Tutto Ciò Che Devi Sapere",
+    "categories": {
+      "general": {
+        "title": "Domande Generali",
+        "q1": {
+          "question": "Cos'è la fotografia boudoir?",
+          "answer": "La fotografia boudoir è uno stile intimo e artistico di ritratto che celebra la tua bellezza e femminilità. Si tratta di catturare la tua essenza unica in modo elegante e valorizzante."
+        },
+        "q2": {
+          "question": "La fotografia boudoir è solo per certi tipi di corpo?",
+          "answer": "Assolutamente no! Il boudoir è per tutte le donne, indipendentemente da età, taglia o forma. La nostra esperienza sta nell'esaltare la tua bellezza unica e farti sentire sicura."
+        },
+        "q3": {
+          "question": "Qual è la differenza tra i pacchetti?",
+          "answer": "I nostri pacchetti variano in durata della sessione, numero di foto editate e servizi inclusi come il trucco professionale. Visita la nostra pagina prezzi per confronti dettagliati."
+        }
+      },
+      "preparation": {
+        "title": "Preparazione",
+        "q1": {
+          "question": "Cosa dovrei portare alla mia sessione?",
+          "answer": "Raccomandiamo di portare 3-5 opzioni di abbigliamento. Questo può includere lingerie, body, camicie larghe o qualsiasi cosa ti faccia sentire bella. Consulta la nostra guida stile per più consigli."
+        },
+        "q2": {
+          "question": "Dovrei fare i capelli e il trucco da sola?",
+          "answer": "Puoi farlo, ma il nostro pacchetto Deluxe include il trucco professionale. Se lo fai tu, raccomandiamo di mantenerlo naturale e portare l'essenziale per ritocchi."
+        },
+        "q3": {
+          "question": "Come dovrei preparare la mia pelle?",
+          "answer": "Mantieniti idratata, dormi bene ed evita vestiti stretti prima della sessione per evitare segni sulla pelle. Idratati regolarmente nei giorni precedenti."
+        }
+      },
+      "session": {
+        "title": "Durante la Sessione",
+        "q1": {
+          "question": "Mi guiderete con le pose?",
+          "answer": "Sì! Forniamo direzione completa durante tutta la sessione. Non hai bisogno di esperienza come modella - semplicemente rilassati e segui le nostre indicazioni."
+        },
+        "q2": {
+          "question": "Quanto dura una sessione?",
+          "answer": "Le sessioni durano da 2 a 3 ore a seconda del pacchetto. Questo include tempo per i cambi di abito e assicura un'esperienza rilassata."
+        },
+        "q3": {
+          "question": "Posso portare qualcuno con me?",
+          "answer": "Puoi venire da sola se ti senti sicura, o con il tuo partner per assistere alla tua trasformazione e al tuo empowerment, o con le tue amiche per festeggiare un'occasione speciale come un matrimonio, un cambiamento del corpo o un compleanno."
+        }
+      },
+      "privacy": {
+        "title": "Privacy e Immagini",
+        "q1": {
+          "question": "Le mie foto rimangono private?",
+          "answer": "Assolutamente. La tua privacy è la nostra priorità. Le immagini vengono condivise solo con il tuo consenso scritto esplicito, e non condividiamo mai senza permesso."
+        },
+        "q2": {
+          "question": "Quando riceverò le mie foto?",
+          "answer": "Riceverai le tue immagini editate entro 15 giorni via una cartella privata di Google Drive. L'editing aggiuntivo è disponibile con costo extra."
+        }
+      }
+    },
+    "cta": {
+      "title": "Hai Ancora Domande?",
+      "text": "Siamo qui per aiutarti a sentirti sicura e informata. Contattaci in qualsiasi momento - ci farebbe piacere parlare.",
+      "contact_button": "Contattaci",
+      "process_button": "Scopri il Nostro Processo"
+    }
   }
 }
