@@ -73,6 +73,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.0.5",
     "lint-staged": "^16.2.7",
+    "nx": "22.3.3",
     "postcss": "^8.5.6",
     "prettier": "^3.5.0",
     "supabase": "^2.67.1",
@@ -80,21 +81,25 @@
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.51.0"
+    "typescript-eslint": "^8.51.0",
+    "@nx/eslint": "22.3.3",
+    "@nx/jest": "22.3.3",
+    "@nx/next": "22.3.3"
   },
   "name": "boudoir-barcelona",
   "private": true,
   "scripts": {
-    "build": "npm run check-i18n && next build",
+    "build": "npm run check-i18n && nx next:build",
     "check-i18n": "npx tsx src/app/messagesChecker.ts",
-    "dev": "next dev --turbopack",
+    "dev": "nx next:dev --turbopack",
     "lint": "eslint .",
     "prepare": "husky",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx}\"",
-    "start": "next start",
+    "start": "nx next:start",
     "supabase:migrate": "supabase migration up",
-    "test": "jest --config jest.config.ts",
-    "test:watch": "jest --watch"
+    "test": "nx jest:test --config jest.config.ts",
+    "test:watch": "nx jest:test --watch"
   },
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "nx": {}
 }

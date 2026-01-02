@@ -41,3 +41,12 @@ next-env.d.ts
 # IDE files
 .idea/
 /supabase/.temp/
+
+
+
+.nx/cache
+.nx/workspace-data
+
+# Next.js
+.next
+out
