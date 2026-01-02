@@ -1,6 +1,6 @@
 import { styles } from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { ImageResponse } from "next/og";
 
 export const contentType = "image/png";

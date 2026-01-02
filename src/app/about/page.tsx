@@ -1,6 +1,6 @@
 import AboutContent from "@/components/AboutContent";
 import { openGraph } from "@/lib/openGraph";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { Metadata } from "next";
 
 const profileImageUrl =

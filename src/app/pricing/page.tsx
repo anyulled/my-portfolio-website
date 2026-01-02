@@ -16,7 +16,7 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Offer, WithContext } from "schema-dts";
 
 import { getPricing, PricingPackageRecord } from "@/lib/pricing";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });

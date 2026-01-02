@@ -35,10 +35,38 @@ describe("Pricing Recalculate Route", () => {
     process.env.PRICING_RECALC_SECRET = "test-secret";
     process.env.CRON_NOTIFICATION_EMAIL = "test@example.com";
 
+    // Polyfill Request for Node environment with proper headers implementation
+    globalThis.Request ??= class Request {
+      url: string;
+      headers: any;
+
+      constructor(url: string, init?: any) {
+        this.url = url;
+        // Create headers object with get() and has() methods
+        const headersMap = new Map<string, string>();
+        if (init?.headers) {
+          Object.entries(init.headers).forEach(([key, value]) => {
+            headersMap.set(key.toLowerCase(), value as string);
+          });
+        }
+        this.headers = {
+          get: (key: string) => headersMap.get(key.toLowerCase()) || null,
+          has: (key: string) => headersMap.has(key.toLowerCase()),
+        };
+      }
+    } as any;
+
     // Require modules after mocks
     context.database = require("@/services/database");
     context.ipc = require("@/services/ipc");
     context.mailer = require("@/services/mailer");
+
+    // Initialize all mocks
+    context.database.getLatestPricing = jest.fn();
+    context.database.insertPricing = jest.fn();
+    context.ipc.fetchLatestIpc = jest.fn();
+    context.mailer.sendEmailToRecipient = jest.fn();
+
     context.GET = require("@/app/api/pricing/recalculate/route").GET;
 
     commonBeforeEach();
@@ -62,17 +90,29 @@ describe("Pricing Recalculate Route", () => {
   });
 
   it("should recalculate and return results", async () => {
-    context.database.recalculatePrices.mockResolvedValue({
-      total: 10,
-      updated: 10,
+    // Mock getLatestPricing to return existing pricing data
+    context.database.getLatestPricing.mockResolvedValue({
+      express_price: 100,
+      experience_price: 200,
+      deluxe_price: 300,
     });
-    context.ipc.getLatestIPC.mockResolvedValue(3.5);
 
+    // Mock IPC fetching
+    context.ipc.fetchLatestIpc.mockResolvedValue(3.5);
+
+    // Mock insertPricing to return the new pricing
+    context.database.insertPricing.mockResolvedValue({
+      express_price: 103.5,
+      experience_price: 207,
+      deluxe_price: 310.5,
+    });
+
+    // Auth expects x-cron-secret header
     const request = new Request(
       "http://localhost/api/pricing/recalculate",
       {
         headers: {
-          authorization: "Bearer test-secret",
+          "x-cron-secret": "test-secret",
         },
       },
     );
@@ -82,22 +122,34 @@ describe("Pricing Recalculate Route", () => {
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(data.results.updated).toBe(10);
-    expect(context.mailer.sendEmail).toHaveBeenCalled();
+    expect(data.data.express_price).toBe(103.5);
+    expect(context.mailer.sendEmailToRecipient).toHaveBeenCalled();
   });
 
   it("should handle partial success", async () => {
-    context.database.recalculatePrices.mockResolvedValue({
-      total: 10,
-      updated: 5,
+    // Mock getLatestPricing to return existing pricing data
+    context.database.getLatestPricing.mockResolvedValue({
+      express_price: 100,
+      experience_price: 200,
+      deluxe_price: 300,
     });
-    context.ipc.getLatestIPC.mockResolvedValue(3.5);
 
+    // Mock IPC fetching
+    context.ipc.fetchLatestIpc.mockResolvedValue(2);
+
+    // Mock insertPricing to return the new pricing
+    context.database.insertPricing.mockResolvedValue({
+      express_price: 102,
+      experience_price: 204,
+      deluxe_price: 306,
+    });
+
+    // Auth expects x-cron-secret header
     const request = new Request(
       "http://localhost/api/pricing/recalculate",
       {
         headers: {
-          authorization: "Bearer test-secret",
+          "x-cron-secret": "test-secret",
         },
       },
     );
@@ -107,6 +159,6 @@ describe("Pricing Recalculate Route", () => {
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(data.results.updated).toBe(5);
+    expect(data.data.express_price).toBe(102);
   });
 });

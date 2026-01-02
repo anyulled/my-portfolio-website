@@ -47,7 +47,7 @@ jest.mock("@/contexts/ScrollContext", () => ({
   useScroll: jest.fn(() => ({ lenis: null })),
 }));
 
-jest.mock("@/services/storage/photos", () => {
+jest.mock("@/services/storage/photos-cached", () => {
   const getPhotosFromStorageMock = jest.fn();
 
   return {
@@ -88,7 +88,7 @@ describe("HomePage", () => {
   const context = { getPhotosFromStorageMock: null as any };
 
   beforeEach(() => {
-    const mockedModule = jest.requireMock("@/services/storage/photos");
+    const mockedModule = jest.requireMock("@/services/storage/photos-cached");
 
     context.getPhotosFromStorageMock = mockedModule.getPhotosFromStorage;
     context.getPhotosFromStorageMock.mockReset();

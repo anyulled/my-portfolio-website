@@ -1,5 +1,5 @@
 import { styles } from "@/data/styles";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Dancing_Script, Playfair_Display } from "next/font/google";
@@ -25,9 +25,9 @@ export default async function PhotographyStylesPage() {
   }> = styles.map((style) => ({
     name: style.tag.replace("-", " "),
     image:
-      res?.filter((photo) =>
+      res?.find((photo) =>
         photo.tags.split(" ").includes(style.tag.replace("-", "")),
-      )[0]?.srcSet[0]?.src ?? "",
+      )?.srcSet[0]?.src ?? "",
     link: `styles/${style.name}`,
   }));
 

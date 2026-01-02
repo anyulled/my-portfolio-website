@@ -6,7 +6,7 @@ import Gallery from "@/components/Gallery";
 import { styles } from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
 import { openGraph } from "@/lib/openGraph";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { getTranslations } from "next-intl/server";
 import { Dancing_Script } from "next/font/google";
 

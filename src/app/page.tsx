@@ -4,7 +4,7 @@ import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
 import SocialMedia from "@/components/SocialMedia";
 import { Separator } from "@/components/ui/separator";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 

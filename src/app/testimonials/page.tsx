@@ -2,7 +2,7 @@ import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialCard from "@/components/TestimonialCard";
 import { getTestimonials, Testimonial } from "@/lib/testimonials";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Aref_Ruqaa } from "next/font/google";

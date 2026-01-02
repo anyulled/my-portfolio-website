@@ -1,5 +1,5 @@
 import models from "@/data/models";
-import { getPhotosFromStorage } from "@/services/storage/photos";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { Photo } from "@/types/photos";
 import { Metadata } from "next";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";

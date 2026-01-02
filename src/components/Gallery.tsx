@@ -1,21 +1,28 @@
 "use client";
 
-import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/captions.css";
-import "react-photo-album/rows.css";
-import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Captions from "yet-another-react-lightbox/plugins/captions";
+import renderFadeInNextImage from "@/components/FadeInNextImage";
+import FadeInTitle from "@/components/FadeInTitle";
+import useAnalyticsEventTracker from "@/hooks/eventTracker";
+import mapPhotosToGalleryImages from "@/lib/photoMapper";
+import { Photo } from "@/types/photos";
+import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
 import { Aref_Ruqaa } from "next/font/google";
 import { useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
 import { RowsPhotoAlbum } from "react-photo-album";
-import useAnalyticsEventTracker from "@/hooks/eventTracker";
-import renderFadeInNextImage from "@/components/FadeInNextImage";
-import { useTranslations } from "next-intl";
-import { Photo } from "@/types/photos";
-import FadeInTitle from "@/components/FadeInTitle";
-import mapPhotosToGalleryImages from "@/lib/photoMapper";
+import "react-photo-album/rows.css";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/plugins/captions.css";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import "yet-another-react-lightbox/styles.css";
+
+// Dynamically import Lightbox to reduce initial bundle size
+// Note: Plugins cannot be dynamically imported as they're not React components
+const Lightbox = dynamic(() => import("yet-another-react-lightbox"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 

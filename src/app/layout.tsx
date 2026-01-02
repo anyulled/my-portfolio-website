@@ -1,20 +1,18 @@
-import "./globals.css";
-import { ThemeProvider } from "next-themes";
-import React from "react";
-import NavBar from "@/components/NavBar";
-import Footer from "@/components/Footer";
-import { ScrollProvider } from "@/contexts/ScrollContext";
-import { Toaster } from "@/components/ui/toaster";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
+import Analytics from "@/components/Analytics";
 import CookieConsent from "@/components/CookieConsent";
-import { Metadata } from "next";
+import Footer from "@/components/Footer";
+import MixpanelLayout from "@/components/MixpanelLayout";
+import NavBar from "@/components/NavBar";
+import { Toaster } from "@/components/ui/toaster";
+import { ScrollProvider } from "@/contexts/ScrollContext";
 import { openGraph } from "@/lib/openGraph";
+import { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { ThemeProvider } from "next-themes";
+import React from "react";
 import { LocalBusiness, WithContext } from "schema-dts";
-import MixpanelLayout from "@/components/MixpanelLayout";
+import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://boudoir.barcelona"),
@@ -157,9 +155,7 @@ export default async function RootLayout({
             </ScrollProvider>
           </ThemeProvider>
           <Footer />
-          <SpeedInsights />
           <Analytics />
-          <GoogleAnalytics />
         </NextIntlClientProvider>
         <script
           type="application/ld+json"

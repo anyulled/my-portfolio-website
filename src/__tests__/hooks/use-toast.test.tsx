@@ -37,15 +37,20 @@ describe("useToast", () => {
 
   it("should update a toast when update function is called", () => {
     const { result } = renderHook(() => useToast());
-    const toastIds: string[] = [];
+    let toastResponse: any;
 
-    act();
+    act(() => {
+      toastResponse = result.current.toast({
+        title: "Initial Toast",
+        description: "Initial description",
+      });
+    });
 
     expect(result.current.toasts[0].title).toBe("Initial Toast");
 
     act(() => {
-      result.current.toast({
-        id: toastIds[0],
+      toastResponse.update({
+        id: toastResponse.id,
         title: "Updated Toast",
         description: "Updated description",
       });

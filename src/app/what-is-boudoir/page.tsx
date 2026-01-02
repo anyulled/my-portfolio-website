@@ -1,7 +1,7 @@
-import { getPhotosFromStorage } from "@/services/storage/photos";
-import { Metadata } from "next";
-import { Photo } from "@/types/photos";
 import BoudoirContent from "@/components/BoudoirContent";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
+import { Photo } from "@/types/photos";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {

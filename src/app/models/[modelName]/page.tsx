@@ -1,14 +1,14 @@
-import { Metadata } from "next";
-import { getPhotosFromStorage } from "@/services/storage/photos";
 import Gallery from "@/components/Gallery";
-import { openGraph } from "@/lib/openGraph";
-import { Dancing_Script } from "next/font/google";
-import { extractNameFromTag } from "@/lib/extractName";
 import models from "@/data/models";
+import { extractNameFromTag } from "@/lib/extractName";
+import { openGraph } from "@/lib/openGraph";
+import { getPhotosFromStorage } from "@/services/storage/photos-cached";
+import { Metadata } from "next";
+import { Dancing_Script } from "next/font/google";
 
 import Loading from "@/app/loading";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ modelName: string }>;

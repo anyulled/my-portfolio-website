@@ -1,68 +1,41 @@
-// Learn more: https://github.com/testing-library/jest-dom
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
+const { TextDecoder, TextEncoder } = require('node:util');
 
-// Reset modules before each test
-beforeEach(() => {
-  jest.resetModules();
-});
+// Add Node.js globals for Jest environment
+globalThis.TextDecoder = TextDecoder;
+globalThis.TextEncoder = TextEncoder;
 
-// Mock the gtag module
-jest.mock("@/lib/gtag", () => ({
-  event: jest.fn(),
-}));
-
-jest.mock("gsap/ScrollTrigger", () => ({
-  ScrollTrigger: {
-    scrollerProxy: jest.fn(),
-    update: jest.fn(),
-    getAll: jest.fn(() => []),
+// Mock chalk to avoid ESM import issues in tests
+jest.mock('chalk', () => ({
+  default: {
+    red: (str) => str,
+    green: (str) => str,
+    yellow: (str) => str,
+    blue: (str) => str,
+    cyan: (str) => str,
+    magenta: (str) => str,
+    white: (str) => str,
+    gray: (str) => str,
+    bold: (str) => str,
   },
+  red: (str) => str,
+  green: (str) => str,
+  yellow: (str) => str,
+  blue: (str) => str,
+  cyan: (str) => str,
+  magenta: (str) => str,
+  white: (str) => str,
+  gray: (str) => str,
+  bold: (str) => str,
 }));
 
-// Create a mock for next/navigation
-jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn(),
-  })),
-  usePathname: jest.fn(() => "/"),
-  useSearchParams: jest.fn(() => new URLSearchParams()),
+// Mock next/cache - unstable_cache requires server environment
+jest.mock('next/cache', () => ({
+  unstable_cache: (fn) => fn
 }));
 
-// Mock chalk to avoid ESM issues
-jest.mock("chalk", () => {
-  const mockChalk = (text) => text;
-  mockChalk.red = (text) => text;
-  mockChalk.green = (text) => text;
-  mockChalk.gray = (text) => text;
-  mockChalk.blue = (text) => text;
-  mockChalk.cyan = (text) => text;
-  mockChalk.yellow = (text) => text;
-  mockChalk.bold = (text) => text;
-  mockChalk.italic = (text) => text;
-
-  // Add nested methods
-  mockChalk.blue.bold = (text) => text;
-  mockChalk.green.bold = (text) => text;
-  mockChalk.red.bold = (text) => text;
-  mockChalk.cyan.italic = (text) => text;
-  mockChalk.green.italic = (text) => text;
-
-  return mockChalk;
-});
-
-// Create any other global mocks here
-
-// Polyfill TextEncoder/TextDecoder for Node environments (needed by @vercel/blob)
-const { TextEncoder, TextDecoder } = require("util");
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-
-// Mock @upstash/redis to avoid ESM issues with uncrypto
-jest.mock("@upstash/redis", () => ({
-  Redis: jest.fn().mockImplementation(() => ({
-    get: jest.fn(),
-    set: jest.fn(),
-  })),
+// Mock photos-cached service to use original implementation in tests
+jest.mock('@/services/storage/photos-cached', () => ({
+  getPhotosFromStorage: jest.fn(),
 }));
+
