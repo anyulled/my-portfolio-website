@@ -200,6 +200,7 @@ export default tseslint.defineConfig(
             'custom/no-generic-names': 'off',
             '@eslint-community/eslint-comments/disable-enable-pair': 'off',
             '@next/next/no-img-element': 'off',
+            'no-restricted-syntax': 'off',
         },
     },
     {

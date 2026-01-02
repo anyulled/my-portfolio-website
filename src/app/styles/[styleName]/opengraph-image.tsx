@@ -13,9 +13,10 @@ export const size = {
 export default async function OpengraphImage({
   params,
 }: {
-  params: { styleName: string };
+  params: Promise<{ styleName: string }>;
 }) {
-  const styleName = extractNameFromTag(styles, params.styleName);
+  const { styleName: styleNameParam } = await params;
+  const styleName = extractNameFromTag(styles, styleNameParam);
   const convertedStyleName = styleName ?? "boudoir";
   const photos = await getPhotosFromStorage(`styles/${convertedStyleName}`, 1);
   return new ImageResponse(

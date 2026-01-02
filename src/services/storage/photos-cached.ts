@@ -13,9 +13,11 @@ export const getPhotosFromStorage = unstable_cache(
     async (prefix: string, limit?: number): Promise<Photo[] | null> => {
         return getPhotosFromStorageUncached(prefix, limit);
     },
-    ["photos-storage"], // Cache key prefix
+    // Cache key prefix
+    ["photos-storage"],
     {
-        revalidate: 604800, // 1 week in seconds
+        // 1 week in seconds
+        revalidate: 604800,
         tags: ["photos"],
     }
 );

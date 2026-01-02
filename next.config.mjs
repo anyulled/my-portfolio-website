@@ -26,11 +26,6 @@ export default withSentryConfig(withNextIntl(nextConfig), {
   project: "my-website",
   silent: !process.env.CI,
   widenClientFileUpload: true,
-  reactComponentAnnotation: {
-    enabled: true,
-  },
   tunnelRoute: "/monitoring",
   hideSourceMaps: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
 });

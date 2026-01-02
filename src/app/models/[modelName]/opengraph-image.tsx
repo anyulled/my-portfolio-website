@@ -12,10 +12,11 @@ export const size = {
 export default async function OpengraphImage({
   params,
 }: {
-  params: { modelName: string };
+  params: Promise<{ modelName: string }>;
 }) {
-  const modelName = extractNameFromTag(modelData, params.modelName);
-  const photos = await getPhotosFromStorage(`models/${params.modelName}`, 1);
+  const { modelName: modelNameParam } = await params;
+  const modelName = extractNameFromTag(modelData, modelNameParam);
+  const photos = await getPhotosFromStorage(`models/${modelNameParam}`, 1);
 
   return new ImageResponse(
     (

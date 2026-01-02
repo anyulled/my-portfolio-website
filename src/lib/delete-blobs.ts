@@ -19,6 +19,3 @@ export async function deleteAllBlobs() {
   console.log("All blobs were deleted");
 }
 
-deleteAllBlobs().catch((error) => {
-  console.error("An error occurred:", error);
-});
