@@ -5,12 +5,15 @@
  * Supports prefix-based organization for multiple galleries within a single bucket.
  */
 
+import { createGCPStorageClient } from "@/lib/gcp/storage-client";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
+
 
 import type { Photo } from "@/types/photos";
 import type { ListPhotosOptions, PhotoProvider } from "./PhotoInterfaces";
 import { DEFAULT_LIST_OPTIONS } from "./PhotoInterfaces";
+
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-website";
 // 1 hour
@@ -89,8 +92,6 @@ const parseDate = (value: string | undefined, fallback: Date): Date => {
   return Number.isNaN(date.getTime()) ? fallback : date;
 };
 
-const sanitisePrivateKey = (key: string) =>
-  key.replaceAll(String.raw`\n`, "\n");
 
 export class GCSPhotoProvider implements PhotoProvider {
   readonly name = "GCS";
@@ -102,28 +103,14 @@ export class GCSPhotoProvider implements PhotoProvider {
   constructor(options: GCSPhotoProviderOptions = {}) {
     const {
       bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME,
-      clientEmail = process.env.GCP_CLIENT_EMAIL,
-      privateKey = process.env.GCP_PRIVATE_KEY,
-      projectId = process.env.GCP_PROJECT_ID,
       useSignedUrls,
     } = options;
 
     this.bucketName = bucketName;
+    this.storage = createGCPStorageClient();
 
-    const hasCredentials = Boolean(clientEmail) && Boolean(privateKey);
-    this.useSignedUrls = useSignedUrls ?? hasCredentials;
-
-    if (hasCredentials) {
-      this.storage = new Storage({
-        projectId,
-        credentials: {
-          client_email: clientEmail,
-          private_key: sanitisePrivateKey(privateKey ?? ""),
-        },
-      });
-    } else {
-      this.storage = new Storage();
-    }
+    // Use signed URLs if explicitly requested or if credentials are available
+    this.useSignedUrls = useSignedUrls ?? true;
   }
 
   async listPhotos(options: ListPhotosOptions = {}): Promise<Photo[] | null> {

@@ -1,9 +1,16 @@
+import { createGCPStorageClient, getGCPCredentials } from "@/lib/gcp/storage-client";
+
+
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import type { Photo } from "@/types/photos";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 import chalk from "chalk";
+
+// Backward compatibility export
+export const createStorageClient = createGCPStorageClient;
+
 
 export const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
 // 1 hour
@@ -30,34 +37,7 @@ export type StorageFileLike = {
   isPublic(): Promise<[boolean]>;
 };
 
-const sanitisePrivateKey = (key: string) =>
-  key.replaceAll(String.raw`\n`, "\n");
 
-const hasCredentials = () =>
-  Boolean(process.env.GCP_CLIENT_EMAIL && process.env.GCP_PRIVATE_KEY);
-
-export const createStorageClient = (): Storage => {
-  if (!hasCredentials()) {
-    console.log(
-      chalk.cyan(
-        "[PhotosStorage] No explicit GCP credentials found, using Application Default Credentials (ADC)",
-      ),
-    );
-    return new Storage();
-  }
-  console.log(
-    chalk.cyan(
-      "[PhotosStorage] Using explicit GCP credentials from environment",
-    ),
-  );
-  return new Storage({
-    projectId: process.env.GCP_PROJECT_ID,
-    credentials: {
-      client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
-      private_key: sanitisePrivateKey(process.env.GCP_PRIVATE_KEY ?? ""),
-    },
-  });
-};
 
 const parseNumber = (value: string | undefined, fallback = 0): number => {
   const parsed = Number(value);
@@ -97,7 +77,7 @@ const parsePhotoId = (value: string | undefined): number | null => {
 
 const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
   // Skip signing attempt if using ADC without explicit credentials - use public URL directly
-  if (!hasCredentials()) {
+  if (!getGCPCredentials().hasCredentials) {
     // Construct URL manually to avoid double-encoding issues
     const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
     const url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
@@ -293,7 +273,7 @@ const fetchPhotosFromGCS = async (
   );
 
   try {
-    const client = storageClient ?? createStorageClient();
+    const client = storageClient ?? createGCPStorageClient();
     const bucket = client.bucket(bucketName);
     const options = {
       autoPaginate: false,
