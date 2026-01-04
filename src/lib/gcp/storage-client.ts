@@ -39,9 +39,6 @@ export const createGCPStorageClient = (): Storage => {
     const { clientEmail, privateKey, projectId, hasCredentials } =
         getGCPCredentials();
 
-    // Debug environment on every client creation attempt
-    debugEnvVars();
-
     if (!hasCredentials) {
         console.log(
             chalk.cyan(
@@ -61,25 +58,5 @@ export const createGCPStorageClient = (): Storage => {
             client_email: clientEmail,
             private_key: sanitizePrivateKey(privateKey ?? ""),
         },
-    });
-};
-
-// Debug helper to check environment
-export const debugEnvVars = () => {
-    const vars = [
-        "GCP_CLIENT_EMAIL",
-        "GCP_SERVICE_ACCOUNT_EMAIL",
-        "GCP_PROJECT_ID",
-        "GCP_PRIVATE_KEY",
-        "GOOGLE_APPLICATION_CREDENTIALS",
-        "VERCEL_OIDC_TOKEN",
-        "VERCEL_OIDC_ISSUER",
-        "VERCEL_OIDC_AUDIENCE"
-    ];
-
-    console.log("[GCP Debug] Environment Variables Check:");
-    vars.forEach(v => {
-        const val = process.env[v];
-        console.log(`- ${v}: ${val ? (val.length > 20 ? 'Present (Long)' : 'Present') : 'Missing'}`);
     });
 };
