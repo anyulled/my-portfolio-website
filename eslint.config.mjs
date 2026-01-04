@@ -4,7 +4,6 @@ import nx from '@nx/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import tseslint from 'typescript-eslint';
 import noGenericNames from './.eslint-rules/no-generic-names.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +22,7 @@ const customRules = {
     },
 };
 
-export default tseslint.defineConfig(
+export default [
     ...nx.configs['flat/base'],
     ...nx.configs['flat/typescript'],
     ...nx.configs['flat/javascript'],
@@ -218,4 +217,4 @@ export default tseslint.defineConfig(
             'custom/no-generic-names': 'off',
         },
     },
-);
+];

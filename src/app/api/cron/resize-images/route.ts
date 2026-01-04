@@ -85,11 +85,11 @@ async function processImage(
 
     const pipeline = isTooLarge
       ? image.resize({
-        width: MAX_WIDTH_HEIGHT,
-        height: MAX_WIDTH_HEIGHT,
-        fit: "inside",
-        withoutEnlargement: true,
-      })
+          width: MAX_WIDTH_HEIGHT,
+          height: MAX_WIDTH_HEIGHT,
+          fit: "inside",
+          withoutEnlargement: true,
+        })
       : image;
 
     const convertedBuffer = await pipeline.webp({ quality: 80 }).toBuffer();
@@ -173,11 +173,41 @@ export async function GET() {
 
     const results: ProcessResult[] = [];
 
-    for (const file of files) {
-      if (!isValidImage(file)) continue;
-      const result = await processImage(file, bucket);
-      results.push(result);
-    }
+    // Concurrency limit to optimize throughput without OOM
+    const CONCURRENCY = 5;
+
+    // Process files with concurrency limit
+    const queue = [...files];
+
+    // Simple semaphore for concurrency control
+    const processNext = async (): Promise<ProcessResult | null> => {
+      const file = queue.shift();
+      if (!file) return null;
+
+      if (!isValidImage(file)) {
+        return {
+          status: "skipped",
+          file: file.name,
+          originalBytes: 0,
+          newBytes: 0,
+        };
+      }
+
+      return processImage(file, bucket);
+    };
+
+    const worker = async (): Promise<void> => {
+      while (queue.length > 0) {
+        const result = await processNext();
+        if (result) results.push(result);
+      }
+    };
+
+    // Start workers
+    const workers = new Array(Math.min(files.length, CONCURRENCY))
+      .fill(null)
+      .map(worker);
+    await Promise.all(workers);
 
     const processed = results.filter((r) => r.status === "processed");
     const errors = results.filter((r) => r.status === "error");
