@@ -48,7 +48,7 @@
     "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.27.0",
+    "@babel/preset-typescript": "^7.28.5",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.5.0",
     "@eslint/eslintrc": "^3.3.3",
     "@next/eslint-plugin-next": "^16.1.1",
