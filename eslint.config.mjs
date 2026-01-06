@@ -104,6 +104,11 @@ export default [
             '@next/next/no-img-element': 'error',
             '@next/next/no-html-link-for-pages': 'error',
             '@next/next/google-font-display': 'error',
+            '@next/next/google-font-preconnect': 'error',
+            '@next/next/no-sync-scripts': 'error',
+            '@next/next/no-head-element': 'error',
+            '@next/next/inline-script-id': 'error',
+            '@next/next/no-page-custom-font': 'error',
 
             // No non-null assertions - handle errors properly
             '@typescript-eslint/no-non-null-assertion': 'error',
