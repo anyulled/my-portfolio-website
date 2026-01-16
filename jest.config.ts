@@ -1,4 +1,3 @@
-import type { Config } from "jest";
 import nextJest from "next/jest";
 
 const createJestConfig = nextJest({
@@ -6,11 +5,11 @@ const createJestConfig = nextJest({
 });
 
 /** Custom Jest configuration */
-const customJestConfig: Config = {
+const customJestConfig = {
   // Use ts-jest for TypeScript files
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
-    "^.+\\.(js|jsx)$": ["babel-jest", { presets: ["next/babel"] }],
+    "^.+\\.(js|jsx)$": ["babel-jest", { presets: ["next/babel"] }] as [string, Record<string, unknown>],
   },
   // Module name mappings for path aliases and mocks
   moduleNameMapper: {
