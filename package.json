@@ -53,7 +53,7 @@
     "@eslint/eslintrc": "^3.3.3",
     "@next/eslint-plugin-next": "^16.1.1",
     "@nx/eslint-plugin": "^22.3.3",
-    "@supabase/supabase-js": "^2.89.0",
+    "@supabase/supabase-js": "^2.90.1",
     "@tailwindcss/typography": "^0.5.19",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
