@@ -45,12 +45,13 @@ fs.readdir(messagesFolderPath, (err, files) => {
     process.exit(1);
   }
 
+  const referenceKeysSet = new Set(referenceKeys);
+
   files.forEach((file) => {
     if (path.extname(file) === ".json" && file !== "en.json") {
       const filePath = path.join(messagesFolderPath, file);
       const fileKeys = getKeysFromJsonFile(filePath);
 
-      const referenceKeysSet = new Set(referenceKeys);
       const fileKeysSet = new Set(fileKeys);
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
