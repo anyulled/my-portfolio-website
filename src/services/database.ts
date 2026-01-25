@@ -55,7 +55,10 @@ export const Testimonials = async (): Promise<Array<Testimonial>> => {
   const { data: testimonials, error } = await supabase
     .from("testimonials")
     .select("id, name, content, location, rating, featured, date:created_at")
-    .eq("status_id", "2");
+    .eq("status_id", "2")
+    .order("featured", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(100);
 
   if (error) {
     console.error(
