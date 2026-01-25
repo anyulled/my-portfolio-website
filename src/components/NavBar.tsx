@@ -19,7 +19,6 @@ import { useEffect, useState } from "react";
 
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { NavLinks } from "@/components/NavLinks";
-import chalk from "chalk";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
@@ -49,7 +48,6 @@ export default function NavBar() {
     if (!theme) {
       setTheme("light");
     }
-    console.log(chalk.cyan(`Current theme: ${theme}`));
   }, [setTheme, theme]);
 
   if (!mounted) {
@@ -58,7 +56,6 @@ export default function NavBar() {
 
   //region Handlers
   const handleThemeChange = () => {
-    console.log(chalk.cyan(`Theme change: ${theme}`));
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     gaEventTracker("theme_change", newTheme);
