@@ -4,10 +4,16 @@ import {
   PricingPackageInsert,
 } from "@/services/database";
 import { createServerClient } from "@supabase/ssr";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 jest.mock("@supabase/ssr", () => ({
   createServerClient: jest.fn(),
+}));
+
+jest.mock("next/cache", () => ({
+  unstable_cache: jest.fn((cb) => cb),
+  revalidateTag: jest.fn(),
 }));
 
 jest.mock("next/headers", () => ({
@@ -61,7 +67,7 @@ describe("pricing database helpers", () => {
 
       const result = await getLatestPricing();
 
-      expect(cookies).toHaveBeenCalledTimes(1);
+      expect(cookies).toHaveBeenCalledTimes(0);
       expect(createServerClient).toHaveBeenCalledTimes(1);
       expect(mockFrom).toHaveBeenCalledWith("pricing_packages");
       expect(mockSelect).toHaveBeenCalledWith(
@@ -155,6 +161,9 @@ describe("pricing database helpers", () => {
         "id, inserted_at, express_price, experience_price, deluxe_price",
       );
       expect(mockSingle).toHaveBeenCalledTimes(1);
+      expect(revalidateTag).toHaveBeenCalledWith("pricing-packages", {
+        expire: 0,
+      });
       expect(result).toEqual(insertedRecord);
     });
 
@@ -177,6 +186,7 @@ describe("pricing database helpers", () => {
       });
 
       expect(result).toBeNull();
+      expect(revalidateTag).not.toHaveBeenCalled();
     });
   });
 });
