@@ -161,7 +161,9 @@ describe("pricing database helpers", () => {
         "id, inserted_at, express_price, experience_price, deluxe_price",
       );
       expect(mockSingle).toHaveBeenCalledTimes(1);
-      expect(revalidateTag).toHaveBeenCalledWith("pricing-packages");
+      expect(revalidateTag).toHaveBeenCalledWith("pricing-packages", {
+        expire: 0,
+      });
       expect(result).toEqual(insertedRecord);
     });
 

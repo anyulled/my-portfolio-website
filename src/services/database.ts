@@ -149,7 +149,7 @@ export const insertPricing = async (
     return null;
   }
 
-  revalidateTag("pricing-packages");
+  revalidateTag("pricing-packages", { expire: 0 });
 
   return data;
 };
