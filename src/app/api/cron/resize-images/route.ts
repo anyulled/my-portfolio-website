@@ -165,18 +165,8 @@ export async function GET(request: NextRequest) {
   );
   const startTime = Date.now();
 
-  // Extract OIDC Token from Authorization header (Vercel Secure Backend Access)
-  const authHeader = request.headers.get("Authorization");
-  const oidcToken = authHeader?.startsWith("Bearer ")
-    ? authHeader.replace("Bearer ", "")
-    : undefined;
-
-  if (oidcToken) {
-    console.log(chalk.cyan("[Cron] OIDC Token detected in Authorization header"));
-  }
-
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
-  const storage = createStorageClient(oidcToken) as unknown as GCSStorage;
+  const storage = createStorageClient() as unknown as GCSStorage;
   const bucket = storage.bucket(bucketName);
 
   try {
