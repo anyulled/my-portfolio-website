@@ -51,6 +51,7 @@ export const createGCPStorageClient = (manualOidcToken?: string): Storage => {
         const poolId = "nextjs-app";
         const providerId = "vercel";
 
+
         if (oidcToken && process.env.VERCEL) {
             console.log(
                 chalk.cyan(
@@ -58,41 +59,40 @@ export const createGCPStorageClient = (manualOidcToken?: string): Storage => {
                 ),
             );
 
-            // Construct the External Account options manually
-            // This tells the Google Auth Library to swap the Vercel OIDC token for a Google Access Token
-            return new Storage({
-                projectId: projectId ?? "devbcn", // Fallback to known project
-                credentials: {
-                    client_email: "vercel@devbcn.iam.gserviceaccount.com", // The SA we are impersonating
-                    type: "external_account",
-                    audience: `//iam.googleapis.com/projects/${projectNumber}/locations/global/workloadIdentityPools/${poolId}/providers/${providerId}`,
-                    subject_token_type: "urn:ietf:params:oauth:token-type:jwt",
-                    token_url: "https://sts.googleapis.com/v1/token",
-                    service_account_impersonation_url: "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/vercel@devbcn.iam.gserviceaccount.com:generateAccessToken",
-                    credential_source: {
-                        file: "/dev/null", // Required by types but ignored if we supply the token (actually we need a custom helper or just write the token to file? No, we can pass object but library is tricky. Let's try the easiest path: standard auth library usage in code is hard without file.)
-                        // Workaround: We will use a hack to inject the environment variable credential source
-                        // implicitly by not providing 'file' if we could, but 'file' is mandatory in some types.
-                        // However, google-auth-library supports `credential_source` with `url` or `environment_id`.
-                        // For Vercel, we need to pass the token contents.
-                        // Since we can't easily write to file in edge/serverless always, we might need a custom auth client.
-                        // BUT, let's stick to the 'external_account' config with a simpler approach:
-                        // If we can't make `credential_source` work without a file, we might be stuck.
-                        //
-                        // WAIT: Vercel OIDC usually works by just having `GOOGLE_APPLICATION_CREDENTIALS` point to a file?
-                        // If we can't write a file, we can't use standard `new Storage()`.
-                        //
-                        // Let's TRY to use `credential_source: { url: ... }` if Vercel exposed a URL? No.
-                        //
-                        // Alternative: We manually create an `ExternalAccountClient` from `google-auth-library`?
-                        // That allows passing the token directly? No, it also expects a file/url.
-                        //
-                        // Okay, reverting to the plan: WE MUST WRITE THE TOKEN TO A FILE.
-                        // In Lambda/Vercel, `/tmp` is writable.
-                    },
-                } as any,
-            });
+            // Write the token to a temporary file because Google Auth Library expects a file path
+            // for 'external_account' credentials.
+            // Using /tmp is standard for Vercel/Lambda environments.
+            try {
+                // Determine temp directory - fallback to /tmp if os.tmpdir() fails or isn't available
+                const fs = require("node:fs");
+                const path = require("node:path");
+                const os = require("node:os");
 
+                const tempDir = os.tmpdir();
+                const tokenFilePath = path.join(tempDir, "gcp-oidc-token");
+
+                fs.writeFileSync(tokenFilePath, oidcToken);
+                console.log(chalk.cyan(`[GCP] Wrote OIDC token to ${tokenFilePath}`));
+
+                return new Storage({
+                    projectId: projectId ?? "devbcn", // Fallback to known project
+                    credentials: {
+                        client_email: "vercel@devbcn.iam.gserviceaccount.com", // The SA we are impersonating
+                        type: "external_account",
+                        audience: `//iam.googleapis.com/projects/${projectNumber}/locations/global/workloadIdentityPools/${poolId}/providers/${providerId}`,
+                        subject_token_type: "urn:ietf:params:oauth:token-type:jwt",
+                        token_url: "https://sts.googleapis.com/v1/token",
+                        service_account_impersonation_url: "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/vercel@devbcn.iam.gserviceaccount.com:generateAccessToken",
+                        credential_source: {
+                            file: tokenFilePath,
+                        },
+                    } as any,
+                });
+            } catch (error) {
+                console.error(chalk.red("[GCP] Failed to write OIDC token to temp file:"), error);
+                // Fallthrough to ADC or throw? If we have a token but can't use it, we should probably throw
+                // or let it fall through to ADC which will likely fail too.
+            }
         }
 
         // If no OIDC, fall back to ADC
