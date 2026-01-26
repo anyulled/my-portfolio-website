@@ -85,11 +85,11 @@ async function processImage(
 
     const pipeline = isTooLarge
       ? image.resize({
-          width: MAX_WIDTH_HEIGHT,
-          height: MAX_WIDTH_HEIGHT,
-          fit: "inside",
-          withoutEnlargement: true,
-        })
+        width: MAX_WIDTH_HEIGHT,
+        height: MAX_WIDTH_HEIGHT,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
       : image;
 
     const convertedBuffer = await pipeline.webp({ quality: 80 }).toBuffer();
@@ -155,7 +155,9 @@ interface GCSStorage {
   bucket(name: string): GCSBucket;
 }
 
-export async function GET() {
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
   console.log(
     chalk.cyan(
       "[Cron] Starting image resizing & WebP conversion job... (VERSION 3)",
@@ -163,8 +165,18 @@ export async function GET() {
   );
   const startTime = Date.now();
 
+  // Extract OIDC Token from Authorization header (Vercel Secure Backend Access)
+  const authHeader = request.headers.get("Authorization");
+  const oidcToken = authHeader?.startsWith("Bearer ")
+    ? authHeader.replace("Bearer ", "")
+    : undefined;
+
+  if (oidcToken) {
+    console.log(chalk.cyan("[Cron] OIDC Token detected in Authorization header"));
+  }
+
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
-  const storage = createStorageClient() as unknown as GCSStorage;
+  const storage = createStorageClient(oidcToken) as unknown as GCSStorage;
   const bucket = storage.bucket(bucketName);
 
   try {

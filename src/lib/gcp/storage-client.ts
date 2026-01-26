@@ -35,7 +35,7 @@ export const getGCPCredentials = () => {
 /**
  * Creates a Google Cloud Storage client with unified credential handling
  */
-export const createGCPStorageClient = (): Storage => {
+export const createGCPStorageClient = (manualOidcToken?: string): Storage => {
     const { clientEmail, privateKey, projectId, hasCredentials } =
         getGCPCredentials();
 
@@ -45,7 +45,8 @@ export const createGCPStorageClient = (): Storage => {
         // Vercel OIDC Support
         // If we are on Vercel and have the OIDC token, we can configure the client
         // to use the Workload Identity Pool for authentication.
-        const oidcToken = process.env.VERCEL_OIDC_TOKEN;
+        // Priority: Argument > Env Var
+        const oidcToken = manualOidcToken || process.env.VERCEL_OIDC_TOKEN;
         const projectNumber = "123866291860"; // Found in your gcloud output
         const poolId = "nextjs-app";
         const providerId = "vercel";
