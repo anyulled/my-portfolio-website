@@ -59,9 +59,12 @@ export default async function HomePage() {
         },
       ];
 
+  const randomHeroImage =
+    formattedHeroImages[Math.floor(Math.random() * formattedHeroImages.length)];
+
   return (
     <main>
-      <Hero images={formattedHeroImages} />
+      <Hero image={randomHeroImage} />
       <Suspense fallback={<Loading />}>
         {galleryPhotos.length > 0 && <Gallery photos={galleryPhotos} />}
       </Suspense>
