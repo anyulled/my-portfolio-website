@@ -1,6 +1,8 @@
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import nextPlugin from '@next/eslint-plugin-next';
-import nx from '@nx/eslint-plugin';
+import js from '@eslint/js';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,9 +25,16 @@ const customRules = {
 };
 
 export default [
-    ...nx.configs['flat/base'],
-    ...nx.configs['flat/typescript'],
-    ...nx.configs['flat/javascript'],
+    {
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+            },
+        },
+    },
+    js.configs.recommended,
+    ...tseslint.configs.recommended,
     // ...compat.extends("next/core-web-vitals", "next/typescript"),
     {
         ignores: [
@@ -89,6 +98,14 @@ export default [
 
             // No any types
             '@typescript-eslint/no-explicit-any': 'error',
+            '@typescript-eslint/no-unused-vars': [
+                'error',
+                {
+                    argsIgnorePattern: '^_',
+                    varsIgnorePattern: '^_',
+                    caughtErrorsIgnorePattern: '^_',
+                },
+            ],
             '@typescript-eslint/no-unsafe-assignment': 'error',
             '@typescript-eslint/no-unsafe-member-access': 'error',
             '@typescript-eslint/no-unsafe-call': 'error',
@@ -205,6 +222,7 @@ export default [
             '@eslint-community/eslint-comments/disable-enable-pair': 'off',
             '@next/next/no-img-element': 'off',
             'no-restricted-syntax': 'off',
+            '@typescript-eslint/no-require-imports': 'off',
         },
     },
     {
