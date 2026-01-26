@@ -1,15 +1,21 @@
+import { FlatCompat } from '@eslint/eslintrc';
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import nextPlugin from '@next/eslint-plugin-next';
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
+import vitest from '@vitest/eslint-plugin';
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import noGenericNames from './.eslint-rules/no-generic-names.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+    baseDirectory: __dirname,
+});
 
 
 const customRules = {
@@ -35,7 +41,15 @@ export default [
     },
     js.configs.recommended,
     ...tseslint.configs.recommended,
-    // ...compat.extends("next/core-web-vitals", "next/typescript"),
+    {
+        plugins: {
+            '@next/next': nextPlugin,
+        },
+        rules: {
+            ...nextPlugin.configs.recommended.rules,
+            ...nextPlugin.configs['core-web-vitals'].rules,
+        },
+    },
     {
         ignores: [
             ".next/**",
@@ -79,11 +93,11 @@ export default [
             'custom/no-generic-names': 'error',
 
             // No comments - forces self-documenting code
-            'no-warning-comments': 'off',
-            'multiline-comment-style': 'off',
-            'capitalized-comments': 'off',
+            'no-warning-comments': 'error',
+            'multiline-comment-style': 'error',
+            'capitalized-comments': 'error',
             'no-inline-comments': 'error',
-            'spaced-comment': 'off',
+            'spaced-comment': 'error',
 
             // Ban let - use const only
             'no-restricted-syntax': [
@@ -223,6 +237,16 @@ export default [
             '@next/next/no-img-element': 'off',
             'no-restricted-syntax': 'off',
             '@typescript-eslint/no-require-imports': 'off',
+        },
+    },
+    {
+        files: ['src/__tests__/**/*.ts', 'src/__tests__/**/*.tsx'],
+        plugins: {
+            vitest
+        },
+        rules: {
+            ...vitest.configs.recommended.rules,
+            'vitest/max-nested-describe': ['error', { max: 3 }],
         },
     },
     {
