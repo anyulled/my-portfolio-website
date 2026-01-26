@@ -3,7 +3,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
-import React, { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -12,102 +12,86 @@ if (typeof window !== "undefined") {
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 interface HeroProps {
-  images: {
+  image: {
     image: string;
     position: string;
-  }[];
+  } | null;
 }
 
-export default function Hero({ images }: Readonly<HeroProps>) {
+export default function Hero({ image }: Readonly<HeroProps>) {
   const t = useTranslations("home");
-  const [mounted, setMounted] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const randomImage = React.useMemo(() => {
-    if (!images || images.length === 0) return null;
-    return images[Math.floor(Math.random() * images.length)];
-  }, [images]);
-
   useGSAP(() => {
-    if (mounted) {
-      if (backgroundRef.current) {
-        gsap.fromTo(
-          backgroundRef.current,
-          { opacity: 0, scale: 1.1 },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 1.5,
-            ease: "power2.out",
-          },
-        );
-      }
-
-      if (titleRef.current) {
-        gsap.fromTo(
-          titleRef.current,
-          { opacity: 0, y: -50 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.5,
-            delay: 0.5,
-            ease: "back.out(1.7)",
-          },
-        );
-      }
-
-      if (subtitleRef.current) {
-        gsap.fromTo(
-          subtitleRef.current,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.5,
-            delay: 1,
-            ease: "power3.out",
-          },
-        );
-      }
-
-      if (containerRef.current) {
-        gsap.fromTo(
-          containerRef.current,
-          { autoAlpha: 0 },
-          {
-            autoAlpha: 1,
-            duration: 0.5,
-          },
-        );
-      }
+    if (backgroundRef.current) {
+      gsap.fromTo(
+        backgroundRef.current,
+        { opacity: 0, scale: 1.1 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.5,
+          ease: "power2.out",
+        },
+      );
     }
-  }, [mounted]);
 
-  if (!mounted) {
-    return null;
-  }
+    if (titleRef.current) {
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, y: -50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.5,
+          delay: 0.5,
+          ease: "back.out(1.7)",
+        },
+      );
+    }
+
+    if (subtitleRef.current) {
+      gsap.fromTo(
+        subtitleRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.5,
+          delay: 1,
+          ease: "power3.out",
+        },
+      );
+    }
+
+    if (containerRef.current) {
+      gsap.fromTo(
+        containerRef.current,
+        { autoAlpha: 0 },
+        {
+          autoAlpha: 1,
+          duration: 0.5,
+        },
+      );
+    }
+  });
 
   return (
     <section
       ref={containerRef}
       className="relative h-screen flex items-center justify-center overflow-hidden bg-background dark:bg-background text-foreground dark:text-foreground"
     >
-      {randomImage && (
+      {image && (
         <div
           ref={backgroundRef}
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url('${randomImage.image}')`,
+            backgroundImage: `url('${image.image}')`,
             backgroundAttachment: "fixed",
-            backgroundPosition: randomImage.position,
+            backgroundPosition: image.position,
             backgroundSize: "cover",
             mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
             // Initial state for animation

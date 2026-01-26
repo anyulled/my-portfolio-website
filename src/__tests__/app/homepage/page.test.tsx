@@ -10,7 +10,7 @@ jest.mock("@/components/Gallery", () => ({
 
 jest.mock("@/components/Hero", () => ({
   __esModule: true,
-  default: () => <div data-testid="hero" />,
+  default: (props: any) => <div data-testid="hero" data-props={JSON.stringify(props)} />,
 }));
 
 jest.mock("@/components/SocialMedia", () => ({
