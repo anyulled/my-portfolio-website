@@ -55,7 +55,7 @@ export const createGCPStorageClient = (): Storage => {
     if (!hasCredentials) {
         console.log(
             chalk.yellow(
-                "[GCP] Missing explicit credentials (GCP_CLIENT_EMAIL/GCP_PRIVATE_KEY).",
+                `[GCP] Missing explicit credentials. clientEmail: ${clientEmail ? "Present" : "Missing"}, privateKey: ${privateKey ? "Present" : "Missing"}`,
             ),
         );
         console.log(
