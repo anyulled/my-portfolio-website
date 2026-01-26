@@ -288,7 +288,9 @@ ${summary.errorList.length > 0 ? JSON.stringify(summary.errorList, null, 2) : "N
       );
     }
 
-    return NextResponse.json(summary);
+    return NextResponse.json(summary, {
+      status: summary.errors > 0 ? 500 : 200,
+    });
   } catch (error) {
     console.error(chalk.red("[Cron] Fatal error listing files:"), error);
     return NextResponse.json(
