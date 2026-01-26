@@ -84,7 +84,7 @@
     "typescript-eslint": "^8.51.0",
     "@nx/eslint": "22.3.3",
     "@nx/jest": "22.3.3",
-    "@nx/next": "22.3.3"
+    "@nx/next": "22.4.1"
   },
   "name": "boudoir-barcelona",
   "private": true,
