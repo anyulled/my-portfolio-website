@@ -59,9 +59,13 @@ export default async function HomePage() {
         },
       ];
 
+  // Select a random image on the server to avoid hydration mismatch and improve LCP
+  const heroImage =
+    formattedHeroImages[Math.floor(Math.random() * formattedHeroImages.length)];
+
   return (
     <main>
-      <Hero images={formattedHeroImages} />
+      <Hero image={heroImage} />
       <Suspense fallback={<Loading />}>
         {galleryPhotos.length > 0 && <Gallery photos={galleryPhotos} />}
       </Suspense>
