@@ -8,9 +8,13 @@ jest.mock("@/components/Gallery", () => ({
   ),
 }));
 
+const mockHero = jest.fn();
 jest.mock("@/components/Hero", () => ({
   __esModule: true,
-  default: () => <div data-testid="hero" />,
+  default: (props: any) => {
+    mockHero(props);
+    return <div data-testid="hero" />;
+  },
 }));
 
 jest.mock("@/components/SocialMedia", () => ({
@@ -92,6 +96,7 @@ describe("HomePage", () => {
 
     context.getPhotosFromStorageMock = mockedModule.getPhotosFromStorage;
     context.getPhotosFromStorageMock.mockReset();
+    mockHero.mockClear();
     jest.clearAllMocks();
   });
 
@@ -105,6 +110,14 @@ describe("HomePage", () => {
     expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
+    expect(mockHero).toHaveBeenCalledWith(
+      expect.objectContaining({
+        image: expect.objectContaining({
+          image: expect.any(String),
+          position: expect.any(String),
+        }),
+      }),
+    );
   });
 
   it("renders gallery with fallback photos when no photos are available", async () => {
