@@ -8,8 +8,8 @@ import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { Aref_Ruqaa } from "next/font/google";
-import { useState } from "react";
-import { RowsPhotoAlbum } from "react-photo-album";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { RenderImageContext, RenderImageProps, RowsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/rows.css";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/plugins/captions.css";
@@ -17,8 +17,10 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
 
-// Dynamically import Lightbox to reduce initial bundle size
-// Note: Plugins cannot be dynamically imported as they're not React components
+/*
+ * Dynamically import Lightbox to reduce initial bundle size
+ * Note: Plugins cannot be dynamically imported as they're not React components
+ */
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"), {
   ssr: false,
   loading: () => null,
@@ -36,19 +38,39 @@ export default function Gallery({
   showTitle = true,
 }: Readonly<GalleryProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Gallery");
+  const gaEventTrackerRef = useRef(gaEventTracker);
 
-  //region Component State
+  useEffect(() => {
+    gaEventTrackerRef.current = gaEventTracker;
+  }, [gaEventTracker]);
+
   const t = useTranslations("gallery");
   const [photoIndex, setPhotoIndex] = useState<number>(-1);
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
-  const handleImageClick = (image: number) => {
-    gaEventTracker("image_click", `Image ${image}`);
+
+  const handleImageClick = useCallback((image: number) => {
+    gaEventTrackerRef.current("image_click", `Image ${image}`);
     setLightboxOpen(true);
     setPhotoIndex(image);
-  };
-  //endregion
+  }, []);
 
-  const { galleryPhotos, lightboxPhotos } = mapPhotosToGalleryImages(photos);
+  const { galleryPhotos, lightboxPhotos } = useMemo(
+    () => mapPhotosToGalleryImages(photos),
+    [photos]
+  );
+
+  const render = useMemo(
+    () => ({
+      image: (props: RenderImageProps, context: RenderImageContext) =>
+        renderFadeInNextImage({ ...props, index: context.index }, context),
+    }),
+    [],
+  );
+
+  const onPhotoClick = useCallback(
+    ({ index }: { index: number }) => handleImageClick(index),
+    [handleImageClick],
+  );
 
   return (
     <>
@@ -65,16 +87,10 @@ export default function Gallery({
           )}
           {galleryPhotos && galleryPhotos?.length > 0 ? (
             <RowsPhotoAlbum
-              render={{
-                image: (props, context) =>
-                  renderFadeInNextImage(
-                    { ...props, index: context.index },
-                    context,
-                  ),
-              }}
+              render={render}
               photos={galleryPhotos}
               defaultContainerWidth={1200}
-              onClick={({ index }) => handleImageClick(index)}
+              onClick={onPhotoClick}
             />
           ) : (
             <div
