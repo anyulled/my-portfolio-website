@@ -31,7 +31,7 @@ const navLinks = [
 ];
 
 export default function NavBar() {
-  //region State
+  // Region State
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { scrollY } = useScroll();
@@ -39,7 +39,7 @@ export default function NavBar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
-  //endregion
+  // Endregion
 
   const t = useTranslations();
 
@@ -50,11 +50,7 @@ export default function NavBar() {
     }
   }, [setTheme, theme]);
 
-  if (!mounted) {
-    return null;
-  }
-
-  //region Handlers
+  // Region Handlers
   const handleThemeChange = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
@@ -70,7 +66,7 @@ export default function NavBar() {
     gaEventTracker("book_now_click", "navbar");
     router.push("/#book-session");
   };
-  //endregion
+  // Endregion
 
   return (
     <nav
@@ -101,7 +97,7 @@ export default function NavBar() {
             onClick={handleThemeChange}
             aria-label={t("nav_bar.toggle_theme")}
           >
-            {theme === "dark" ? (
+            {mounted && theme === "dark" ? (
               <Sun className="h-6 w-6" />
             ) : (
               <Moon className="h-6 w-6" />
