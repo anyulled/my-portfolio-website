@@ -50,10 +50,6 @@ export default function NavBar() {
     }
   }, [setTheme, theme]);
 
-  if (!mounted) {
-    return null;
-  }
-
   //region Handlers
   const handleThemeChange = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -101,7 +97,7 @@ export default function NavBar() {
             onClick={handleThemeChange}
             aria-label={t("nav_bar.toggle_theme")}
           >
-            {theme === "dark" ? (
+            {mounted && theme === "dark" ? (
               <Sun className="h-6 w-6" />
             ) : (
               <Moon className="h-6 w-6" />
