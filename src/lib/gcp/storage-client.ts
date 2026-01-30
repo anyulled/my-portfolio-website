@@ -16,14 +16,12 @@ const sanitizePrivateKey = (key: string | undefined): string => {
     if (!key) return "";
 
     // Replace literal \n with actual newlines
-    let sanitized = key.replaceAll(String.raw`\n`, "\n");
+    const withNewlines = key.replaceAll(String.raw`\n`, "\n");
 
     // Remove wrapping quotes if they exist (sometimes Vercel Env UI adds them)
-    if (sanitized.startsWith('"') && sanitized.endsWith('"')) {
-        sanitized = sanitized.slice(1, -1);
-    }
-
-    return sanitized;
+    return withNewlines.startsWith('"') && withNewlines.endsWith('"')
+        ? withNewlines.slice(1, -1)
+        : withNewlines;
 };
 
 /**
