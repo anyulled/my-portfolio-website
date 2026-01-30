@@ -3,6 +3,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
+import Image from "next/image";
 import React, { useRef } from "react";
 
 if (typeof window !== "undefined") {
@@ -15,6 +16,7 @@ interface HeroProps {
   image: {
     image: string;
     position: string;
+    alt?: string;
   };
 }
 
@@ -89,15 +91,22 @@ export default function Hero({ image }: Readonly<HeroProps>) {
           ref={backgroundRef}
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url('${image.image}')`,
-            backgroundAttachment: "fixed",
-            backgroundPosition: image.position,
-            backgroundSize: "cover",
             mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
             // Initial state for animation
             opacity: 0,
           }}
-        />
+        >
+          <Image
+            src={image.image}
+            alt={image.alt || "Sensuelle Boudoir Hero Image"}
+            fill
+            priority
+            className="object-cover"
+            style={{ objectPosition: image.position }}
+            sizes="100vw"
+            quality={85}
+          />
+        </div>
       )}
       <div className="relative z-10 text-center">
         <h1

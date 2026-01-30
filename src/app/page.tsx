@@ -50,12 +50,14 @@ export default async function HomePage() {
         image: p.srcSet[0].src,
         // Default position as GCS doesn't store position data yet
         position: "center center",
+        alt: p.description || p.title || "Boudoir Session",
       }))
       : [
         {
           // Fallback if no images found
           image: "/images/DSC_7028.jpg",
           position: "left top",
+          alt: "Boudoir Session",
         },
       ];
 
