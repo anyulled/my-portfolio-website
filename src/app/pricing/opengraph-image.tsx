@@ -50,8 +50,10 @@ export default async function PricingImage() {
       return generateFallbackImage();
     }
 
-    // Take up to 3 images - use remote URLs directly instead of encoding
-    // Satori doesn't support WebP, so filter to only JPEG/PNG
+    /*
+     * Take up to 3 images - use remote URLs directly instead of encoding
+     * Satori doesn't support WebP, so filter to only JPEG/PNG
+     */
     const imageUrls = photos
       .map((p) => p.srcSet[0]?.src)
       .filter((url): url is string => Boolean(url) && !url.endsWith(".webp"))

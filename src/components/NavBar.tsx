@@ -31,15 +31,16 @@ const navLinks = [
 ];
 
 export default function NavBar() {
-  //region State
+  /* Region State */
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
-  const { scrollY } = useScroll();
+  const { lenis } = useScroll();
+  const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
-  //endregion
+  /* Endregion */
 
   const t = useTranslations();
 
@@ -50,7 +51,30 @@ export default function NavBar() {
     }
   }, [setTheme, theme]);
 
-  //region Handlers
+  useEffect(() => {
+    const handleScroll = ({ scroll }: { scroll: number }) => {
+      setIsScrolled(scroll > 50);
+    };
+
+    if (lenis) {
+      lenis.on("scroll", handleScroll);
+      setIsScrolled(lenis.scroll > 50);
+      return () => {
+        lenis.off("scroll", handleScroll);
+      };
+    }
+
+    const handleWindowScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleWindowScroll);
+    handleWindowScroll();
+    return () => {
+      window.removeEventListener("scroll", handleWindowScroll);
+    };
+  }, [lenis]);
+
+  /* Region Handlers */
   const handleThemeChange = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
@@ -66,13 +90,13 @@ export default function NavBar() {
     gaEventTracker("book_now_click", "navbar");
     router.push("/#book-session");
   };
-  //endregion
+  /* Endregion */
 
   return (
     <nav
       className={clsx(
         "fixed w-full z-50 transition-all duration-300",
-        scrollY > 50 && "bg-opacity-50 backdrop-blur-md",
+        isScrolled && "bg-opacity-50 backdrop-blur-md",
       )}
     >
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">

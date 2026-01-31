@@ -9,11 +9,11 @@ import Link from "next/link";
 
 import FadeInImage from "./FadeInImage";
 
-//region Fonts
+/* Region Fonts */
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
-//endregion
+/* Endregion */
 
 interface AboutContentProps {
   images: Photo[] | null;

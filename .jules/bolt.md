@@ -9,3 +9,7 @@
 ## 2026-01-27 - [LCP Optimization: Hero Background Image]
 **Learning:** CSS `background-image` is hidden from the browser's preload scanner and lacks automatic optimization (resizing, format conversion), hurting LCP. `next/image` addresses this but supports only basic positioning.
 **Action:** Replaced `background-image` in Hero with `next/image` using `fill` and `priority`. Accepted the trade-off of removing `background-attachment: fixed` (parallax) in favor of significant LCP and bandwidth improvements.
+
+## 2026-01-27 - [Performance: React Context Re-renders]
+**Learning:** Storing rapidly changing values (like scroll position) in React Context triggers re-renders for all consumers on every update (e.g., every scroll frame). This creates massive performance overhead.
+**Action:** Removed `scrollY` from `ScrollContext`. Components needing scroll position should use local event listeners or specialized subscriptions (like `lenis.on`) to update their own local state only when necessary (e.g., crossing a threshold), avoiding global re-renders.
