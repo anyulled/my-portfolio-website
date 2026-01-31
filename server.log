@@ -1,0 +1,77 @@
+
+> boudoir-barcelona@0.1.0 dev
+> next dev --turbopack
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+- Environments: .env
+- Experiments (use with caution):
+  · clientTraceMetadata
+
+✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+✓ Ready in 4.3s
+○ Compiling / ...
+(node:2968) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///app/tailwind.config.ts?id=1769861718456 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /app/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Redis] Getting cache for key: photos
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[ i18n ] loading messages for locale en
+[ i18n ] Successfully loaded messages for locale: en
+(node:2592) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[Redis] Error getting cache: Failed to parse URL from /pipeline
+[VercelBlob] Getting cache for key: photos
+[VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
+[PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix:
+[GCP] Missing explicit credentials. clientEmail: Missing, privateKey: Missing
+[GCP] Falling back to Application Default Credentials (ADC).
+[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: '' }
+[PhotosStorage] GCS returned 272 files
+[PhotosStorage] Successfully mapped 266 photos from 272 files
+[PhotosStorage] Writing 266 photos to cache layers
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[Redis] Error writing cache: Failed to parse URL from /pipeline
+[VercelBlob] Error writing cache for key photos: Vercel Blob: Access denied, please provide a valid token for this resource.
+[Redis] Getting cache for key: photoshero
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[Redis] Error getting cache: Failed to parse URL from /pipeline
+[VercelBlob] Getting cache for key: photoshero
+[VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
+[PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix: hero
+[GCP] Missing explicit credentials. clientEmail: Missing, privateKey: Missing
+[GCP] Falling back to Application Default Credentials (ADC).
+[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: 'hero' }
+[PhotosStorage] GCS returned 47 files
+[PhotosStorage] Successfully mapped 47 photos from 47 files
+[PhotosStorage] Writing 47 photos to cache layers
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[Redis] Error writing cache: Failed to parse URL from /pipeline
+[VercelBlob] Error writing cache for key photoshero: Vercel Blob: Access denied, please provide a valid token for this resource.
+ GET / 200 in 44s (compile: 21.0s, render: 22.9s)
+[ i18n ] loading messages for locale en
+[ i18n ] Successfully loaded messages for locale: en
+ GET / 200 in 308ms (compile: 27ms, render: 281ms)
