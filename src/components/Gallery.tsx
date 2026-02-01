@@ -8,7 +8,7 @@ import { Photo } from "@/types/photos";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { Aref_Ruqaa } from "next/font/google";
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { RenderImageContext, RenderImageProps, RowsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/rows.css";
 import Captions from "yet-another-react-lightbox/plugins/captions";
@@ -38,21 +38,19 @@ export default function Gallery({
   showTitle = true,
 }: Readonly<GalleryProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Gallery");
-  const gaEventTrackerRef = useRef(gaEventTracker);
-
-  useEffect(() => {
-    gaEventTrackerRef.current = gaEventTracker;
-  }, [gaEventTracker]);
 
   const t = useTranslations("gallery");
   const [photoIndex, setPhotoIndex] = useState<number>(-1);
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
 
-  const handleImageClick = useCallback((image: number) => {
-    gaEventTrackerRef.current("image_click", `Image ${image}`);
-    setLightboxOpen(true);
-    setPhotoIndex(image);
-  }, []);
+  const handleImageClick = useCallback(
+    (image: number) => {
+      gaEventTracker("image_click", `Image ${image}`);
+      setLightboxOpen(true);
+      setPhotoIndex(image);
+    },
+    [gaEventTracker],
+  );
 
   const { galleryPhotos, lightboxPhotos } = useMemo(
     () => mapPhotosToGalleryImages(photos),
