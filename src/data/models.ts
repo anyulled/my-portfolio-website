@@ -51,7 +51,7 @@ const models: Array<Model> = [
   { tag: "melanie-de-toni", name: "Melanie de Toni" },
   { tag: "melissa", name: "Melissa" },
   { tag: "nadin-mclofen", name: "Nadin Muñoz Clofen" },
-  //{ tag: "nicole-liusoni", name: "Nicole Luisoni" },
+  // { tag: "nicole-liusoni", name: "Nicole Luisoni" },
   { tag: "nicole-gonzalez", name: "Nicole González" },
   { tag: "ninette-shibara", name: "Ninette Shibara" },
   { tag: "noelia", name: "Noelia Mompó" },

@@ -50,4 +50,15 @@ describe("useAnalyticsEventTracker", () => {
       value: 42,
     });
   });
+
+  it("should return the same function instance on re-renders", () => {
+    const { result, rerender } = renderHook(() =>
+      useAnalyticsEventTracker("test-category"),
+    );
+    const firstFn = result.current;
+
+    rerender();
+
+    expect(result.current).toBe(firstFn);
+  });
 });
