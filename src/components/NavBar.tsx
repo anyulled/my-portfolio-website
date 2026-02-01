@@ -15,7 +15,7 @@ import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { NavLinks } from "@/components/NavLinks";
@@ -31,7 +31,6 @@ const navLinks = [
 ];
 
 export default function NavBar() {
-  //region State
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { lenis } = useScroll();
@@ -40,7 +39,6 @@ export default function NavBar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
-  //endregion
 
   const t = useTranslations();
 
@@ -74,23 +72,24 @@ export default function NavBar() {
     };
   }, [lenis]);
 
-  //region Handlers
-  const handleThemeChange = () => {
+  const handleThemeChange = useCallback(() => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     gaEventTracker("theme_change", newTheme);
-  };
+  }, [theme, setTheme, gaEventTracker]);
 
-  const handleNavClick = (linkName: string) => {
-    gaEventTracker("nav_link_click", linkName);
-    setIsOpen(false);
-  };
+  const handleNavClick = useCallback(
+    (linkName: string) => {
+      gaEventTracker("nav_link_click", linkName);
+      setIsOpen(false);
+    },
+    [gaEventTracker],
+  );
 
-  const handleBookNow = () => {
+  const handleBookNow = useCallback(() => {
     gaEventTracker("book_now_click", "navbar");
     router.push("/#book-session");
-  };
-  //endregion
+  }, [gaEventTracker, router]);
 
   return (
     <nav
