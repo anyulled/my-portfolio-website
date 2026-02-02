@@ -1,10 +1,8 @@
 "use client";
-import { useScroll } from "@/contexts/ScrollContext";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -23,27 +21,6 @@ interface UseFadeInOptions {
   start?: string;
   toggleActions?: string;
 }
-
-const setupScrollTrigger = (lenis: Lenis) => {
-  ScrollTrigger.scrollerProxy(document.documentElement, {
-    scrollTop(value) {
-      if (arguments.length) {
-        lenis.scrollTo(value ?? 0);
-      }
-      return lenis.scroll;
-    },
-    getBoundingClientRect() {
-      return {
-        top: 0,
-        left: 0,
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-    },
-  });
-
-  lenis.on("scroll", ScrollTrigger.update);
-};
 
 const DEFAULT_OPTIONS: UseFadeInOptions = {
   delay: 0.2,
@@ -76,19 +53,6 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
     mergedOptions.start ?? `top bottom-=${(threshold ?? 0.3) * 100}%`;
 
   const elementRef = useRef<HTMLDivElement>(null);
-  const { lenis } = useScroll();
-
-  useEffect(() => {
-    if (lenis) {
-      setupScrollTrigger(lenis);
-    }
-
-    return () => {
-      if (lenis) {
-        lenis.off("scroll", ScrollTrigger.update);
-      }
-    };
-  }, [lenis]);
 
   useGSAP(
     () => {
@@ -119,7 +83,7 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
         });
       }
     },
-    { scope: elementRef, dependencies: [lenis, index] },
+    { scope: elementRef, dependencies: [index] },
   );
 
   return elementRef;

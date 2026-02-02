@@ -46,8 +46,30 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({
 
     gsap.ticker.add(update);
 
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop(value) {
+        if (arguments.length) {
+          newLenis.scrollTo(value ?? 0);
+        }
+        return newLenis.scroll;
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      },
+    });
+
+    const onScroll = ScrollTrigger.update;
+    newLenis.on("scroll", onScroll);
+    ScrollTrigger.refresh();
+
     return () => {
       gsap.ticker.remove(update);
+      newLenis.off("scroll", onScroll);
       newLenis.destroy();
     };
   }, []);
