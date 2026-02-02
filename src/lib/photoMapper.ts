@@ -6,8 +6,10 @@ export interface GalleryImages {
   lightboxPhotos: Image[] | undefined;
 }
 
-// Default dimensions for images without metadata
-// Using a common aspect ratio (3:2) with reasonable default size
+/*
+ * Default dimensions for images without metadata
+ * Using a common aspect ratio (3:2) with reasonable default size
+ */
 const DEFAULT_WIDTH = 1200;
 const DEFAULT_HEIGHT = 800;
 

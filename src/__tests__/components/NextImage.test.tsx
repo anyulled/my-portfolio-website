@@ -10,11 +10,13 @@ jest.mock("next/image", () => ({
 }));
 
 jest.mock("@/components/NextImage", () => (props: RenderImageProps, context: RenderImageContext) => {
-  // This mock simulates the behavior of the original renderNextImage function
-  // which returns a Next.js Image component or a div if srcSet is missing.
+  /*
+   * This mock simulates the behavior of the original renderNextImage function
+   * which returns a Next.js Image component or a div if srcSet is missing.
+   */
   if (context.photo.srcSet && context.photo.srcSet.length > 0) {
     return (
-      // Mock the Next.js Image component's output
+      /* Mock the Next.js Image component's output */
       <img
         alt={props.alt || ""}
         title={props.title}

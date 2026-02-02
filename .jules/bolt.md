@@ -17,3 +17,7 @@
 ## 2026-01-27 - [Performance: Hook Stability & Re-renders]
 **Learning:** Custom hooks (like `useAnalyticsEventTracker`) that return unstable function references cause consuming components (like `NavBar`) to re-render unnecessarily, defeating `React.memo` optimizations on children.
 **Action:** Wrapped the returned function in `useAnalyticsEventTracker` with `useCallback`. This stabilized the reference, enabling effective use of `React.memo` in `NavLinks` and preventing re-renders on every parent update (e.g., scroll threshold changes).
+
+## 2026-01-27 - [Scroll Performance: Global ScrollTrigger Integration]
+**Learning:** Initializing `ScrollTrigger.scrollerProxy` and `Lenis` listeners inside individual hooks (like `useFadeIn`) creates $O(N)$ listeners, causing severe performance degradation during scroll.
+**Action:** Centralized the integration in `ScrollContext`. Added `ScrollTrigger.refresh()` after setup to handle race conditions where child components initialize triggers before the proxy is ready.

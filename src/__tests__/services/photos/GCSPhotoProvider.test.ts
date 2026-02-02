@@ -191,9 +191,9 @@ describe("GCSPhotoProvider", () => {
         orderDirection: "desc",
       });
 
-      // newest
+      // Newest
       expect(photos![0].id).toBe(2);
-      // oldest
+      // Oldest
       expect(photos![2].id).toBe(1);
     });
   });
