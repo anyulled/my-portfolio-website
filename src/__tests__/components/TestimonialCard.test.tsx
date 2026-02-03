@@ -1,4 +1,3 @@
-
 import { render, screen } from "@testing-library/react";
 import TestimonialCard from "@/components/TestimonialCard";
 import { Testimonial } from "@/lib/testimonials";
@@ -22,6 +21,10 @@ jest.mock("gsap", () => {
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis(),
       })),
+      context: jest.fn((func) => {
+        func();
+        return { revert: jest.fn(), kill: jest.fn(), add: jest.fn() };
+      }),
     },
     default: {
       registerPlugin: jest.fn(),
@@ -30,6 +33,10 @@ jest.mock("gsap", () => {
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis(),
       })),
+      context: jest.fn((func) => {
+        func();
+        return { revert: jest.fn(), kill: jest.fn(), add: jest.fn() };
+      }),
     },
     registerPlugin: jest.fn(),
     set: jest.fn(),
@@ -114,8 +121,10 @@ describe("TestimonialCard", () => {
   it("formats the date correctly", () => {
     render(<TestimonialCard testimonial={mockTestimonial} index={0} />);
 
-    // The date should be formatted using toLocaleDateString
-    // Since we mocked the date locale to 'en-US', we expect a formatted date
+    /*
+     * The date should be formatted using toLocaleDateString
+     * Since we mocked the date locale to 'en-US', we expect a formatted date
+     */
     const formattedDate = new Date(mockTestimonial.date).toLocaleDateString(
       "en-US",
       {

@@ -9,11 +9,10 @@ import Link from "next/link";
 
 import FadeInImage from "./FadeInImage";
 
-//region Fonts
+// Region Fonts
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
-
-//endregion
+// Endregion
 
 interface AboutContentProps {
   images: Photo[] | null;
@@ -158,11 +157,11 @@ const CollaborationCard = ({
   imageSrc,
   alt,
   label,
-  index,
+  index: _index,
 }: CollaborationCardProps) => (
   <Card className="bg-muted/50 dark:bg-muted/10 overflow-hidden border-0">
     <CardContent className="p-2">
-      <FadeInImage index={index} stagger={0.1}>
+      <FadeInImage index={_index} stagger={0.1}>
         <Image
           src={imageSrc}
           blurDataURL={imageSrc}
