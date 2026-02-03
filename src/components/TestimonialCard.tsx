@@ -1,12 +1,13 @@
 "use client";
 
 import type { Testimonial } from "@/lib/testimonials";
+import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,62 +22,59 @@ export default function TestimonialCard({
 }: TestimonialCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("locale");
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
 
-    gsap.set(card, {
-      opacity: 0,
-      y: 50,
-      scale: 0.95,
-    });
+  const { contextSafe } = useGSAP(
+    () => {
+      const card = cardRef.current;
+      if (!card) return;
 
-    gsap.to(card, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.8,
-      ease: "power2.out",
-      delay: index * 0.1,
-      scrollTrigger: {
-        trigger: card,
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    const handleMouseEnter = () => {
-      gsap.to(card, {
-        scale: 1.02,
-        y: -5,
-        duration: 0.3,
-        ease: "power2.out",
+      gsap.set(card, {
+        opacity: 0,
+        y: 50,
+        scale: 0.95,
       });
-    };
 
-    const handleMouseLeave = () => {
       gsap.to(card, {
-        scale: 1,
+        opacity: 1,
         y: 0,
-        duration: 0.3,
+        scale: 1,
+        duration: 0.8,
         ease: "power2.out",
+        delay: index * 0.1,
+        scrollTrigger: {
+          trigger: card,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse",
+        },
       });
-    };
+    },
+    { scope: cardRef, dependencies: [index] },
+  );
 
-    card.addEventListener("mouseenter", handleMouseEnter);
-    card.addEventListener("mouseleave", handleMouseLeave);
+  const handleMouseEnter = contextSafe(() => {
+    gsap.to(cardRef.current, {
+      scale: 1.02,
+      y: -5,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  });
 
-    return () => {
-      card.removeEventListener("mouseenter", handleMouseEnter);
-      card.removeEventListener("mouseleave", handleMouseLeave);
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, [index]);
+  const handleMouseLeave = contextSafe(() => {
+    gsap.to(cardRef.current, {
+      scale: 1,
+      y: 0,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  });
 
   return (
     <div
       ref={cardRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className="bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow duration-300"
     >
       <div className="flex items-center mb-4">

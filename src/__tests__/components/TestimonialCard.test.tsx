@@ -22,6 +22,10 @@ jest.mock("gsap", () => {
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis(),
       })),
+      context: jest.fn((func) => {
+        func();
+        return { revert: jest.fn(), kill: jest.fn(), add: jest.fn() };
+      }),
     },
     default: {
       registerPlugin: jest.fn(),
@@ -30,6 +34,10 @@ jest.mock("gsap", () => {
       timeline: jest.fn(() => ({
         to: jest.fn().mockReturnThis(),
       })),
+      context: jest.fn((func) => {
+        func();
+        return { revert: jest.fn(), kill: jest.fn(), add: jest.fn() };
+      }),
     },
     registerPlugin: jest.fn(),
     set: jest.fn(),
