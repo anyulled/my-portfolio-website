@@ -21,3 +21,7 @@
 ## 2026-01-27 - [Scroll Performance: Global ScrollTrigger Integration]
 **Learning:** Initializing `ScrollTrigger.scrollerProxy` and `Lenis` listeners inside individual hooks (like `useFadeIn`) creates $O(N)$ listeners, causing severe performance degradation during scroll.
 **Action:** Centralized the integration in `ScrollContext`. Added `ScrollTrigger.refresh()` after setup to handle race conditions where child components initialize triggers before the proxy is ready.
+
+## 2026-01-27 - [Correctness: GSAP Cleanup]
+**Learning:** Using `ScrollTrigger.getAll().forEach(t => t.kill())` in a component's cleanup function destroys ALL scroll triggers on the page, causing broken interactions in other components.
+**Action:** Replaced manual cleanup with `useGSAP` hook (from `@gsap/react`), which automatically scopes and cleans up animations/triggers bound to the component. Refactored event listeners to use `contextSafe` for proper context tracking.
