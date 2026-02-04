@@ -18,10 +18,12 @@ export default function CookieConsent() {
       if (!consent) {
         setShowConsent(true);
       } else {
-        // If consent was previously likely given (based on logic, though 'cookieConsent' string check isn't perfect for granular consent,
-        // usually existence means yes here. In a stricter setup we'd check value).
-        // However, standard pattern: if consent exists, we assume opt-in if using this simple banner.
-        // Actually, looking at handleAccept, it sets "true".
+        /*
+         * If consent was previously likely given (based on logic, though 'cookieConsent' string check isn't perfect for granular consent,
+         * usually existence means yes here. In a stricter setup we'd check value).
+         * However, standard pattern: if consent exists, we assume opt-in if using this simple banner.
+         * Actually, looking at handleAccept, it sets "true".
+         */
         if (consent === "true") {
           mixpanel.opt_in_tracking();
         }

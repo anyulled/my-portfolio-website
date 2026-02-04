@@ -122,8 +122,10 @@ describe("TestimonialCard", () => {
   it("formats the date correctly", () => {
     render(<TestimonialCard testimonial={mockTestimonial} index={0} />);
 
-    // The date should be formatted using toLocaleDateString
-    // Since we mocked the date locale to 'en-US', we expect a formatted date
+    /*
+     * The date should be formatted using toLocaleDateString
+     * Since we mocked the date locale to 'en-US', we expect a formatted date
+     */
     const formattedDate = new Date(mockTestimonial.date).toLocaleDateString(
       "en-US",
       {
