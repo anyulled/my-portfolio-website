@@ -22,6 +22,8 @@ interface GCSFile {
       updated?: string;
       [key: string]: string | undefined;
     };
+    contentType?: string;
+    size?: string;
     format?: string;
 
     [key: string]: unknown;
@@ -51,11 +53,54 @@ function isValidImage(file: GCSFile): boolean {
   );
 }
 
+// eslint-disable-next-line complexity
+function shouldSkipImage(file: GCSFile): ProcessResult | null {
+  const metaWidth = parseInt(file.metadata.metadata?.width || "0");
+  const metaHeight = parseInt(file.metadata.metadata?.height || "0");
+  const knownDimensions =
+    !isNaN(metaWidth) &&
+    metaWidth > 0 &&
+    !isNaN(metaHeight) &&
+    metaHeight > 0;
+
+  if (!knownDimensions) {
+    return null;
+  }
+
+  const isTooLargeMetadata =
+    metaWidth > MAX_WIDTH_HEIGHT || metaHeight > MAX_WIDTH_HEIGHT;
+
+  if (isTooLargeMetadata) {
+    return null;
+  }
+
+  const contentType = file.metadata.contentType;
+  // Some implementations might store format in custom metadata
+  const customFormat = file.metadata.metadata?.format || file.metadata.format;
+  const isWebP = contentType === "image/webp" || customFormat === "webp";
+
+  if (isWebP) {
+    return {
+      status: "skipped",
+      originalBytes: parseInt(file.metadata.size || "0"),
+      newBytes: 0,
+      file: file.name,
+    };
+  }
+
+  return null;
+}
+
 async function processImage(
   file: GCSFile,
   bucket: GCSBucket,
 ): Promise<ProcessResult> {
   try {
+    const skipResult = shouldSkipImage(file);
+    if (skipResult) {
+      return skipResult;
+    }
+
     const [buffer] = await file.download();
     const originalBytes = buffer.length;
 
@@ -157,7 +202,7 @@ interface GCSStorage {
 
 import { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   console.log(
     chalk.cyan(
       "[Cron] Starting image resizing & WebP conversion job... (VERSION 3)",
