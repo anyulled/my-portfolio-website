@@ -61,7 +61,7 @@ describe("testimonials", () => {
     });
   });
 
-  describe("getTestimonials", () => {
+  describe("Testimonials Error Handling", () => {
     it("should return an array of testimonials", async () => {
       const testimonials = await getTestimonials();
 
@@ -100,8 +100,10 @@ describe("testimonials", () => {
     });
 
     it("should be wrapped with cache", async () => {
-      // We can't directly test the cache function since we're mocking the module
-      // Instead, we'll verify that getTestimonials is a function that returns a Promise
+      /*
+       * We can't directly test the cache function since we're mocking the module
+       * Instead, we'll verify that getTestimonials is a function that returns a Promise
+       */
       expect(typeof getTestimonials).toBe("function");
       const result = getTestimonials();
       expect(result instanceof Promise).toBe(true);
