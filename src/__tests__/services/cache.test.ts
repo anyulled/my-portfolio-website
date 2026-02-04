@@ -83,7 +83,7 @@ describe("Cache Service", () => {
       const result = await getCachedData(mockKey);
 
       // Check that list was called
-      expect(list).toHaveBeenCalled();
+      expect(list).toHaveBeenCalledWith({ prefix: mockSanitizedKey });
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
@@ -110,7 +110,7 @@ describe("Cache Service", () => {
       const result = await getCachedData(mockKey);
 
       // Check that list was called
-      expect(list).toHaveBeenCalled();
+      expect(list).toHaveBeenCalledWith({ prefix: mockSanitizedKey });
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
@@ -132,7 +132,7 @@ describe("Cache Service", () => {
       const result = await getCachedData(mockKey);
 
       // Check that list was called
-      expect(list).toHaveBeenCalled();
+      expect(list).toHaveBeenCalledWith({ prefix: mockSanitizedKey });
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
@@ -152,7 +152,7 @@ describe("Cache Service", () => {
       const result = await getCachedData(mockKey);
 
       // Check that list was called
-      expect(list).toHaveBeenCalled();
+      expect(list).toHaveBeenCalledWith({ prefix: mockSanitizedKey });
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
@@ -174,7 +174,7 @@ describe("Cache Service", () => {
       const result = await getCachedData(mockKey);
 
       // Check that list was called
-      expect(list).toHaveBeenCalled();
+      expect(list).toHaveBeenCalledWith({ prefix: mockSanitizedKey });
 
       // Check that sanitizeKey was called with the correct key
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);

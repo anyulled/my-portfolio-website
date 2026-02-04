@@ -10,7 +10,7 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
   );
 
   try {
-    const response = await list();
+    const response = await list({ prefix: sanitizedKey });
     const matchingBlob = response.blobs.find(
       (b) => b.pathname === sanitizedKey,
     );
