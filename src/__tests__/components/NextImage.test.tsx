@@ -10,8 +10,10 @@ jest.mock("next/image", () => ({
 }));
 
 jest.mock("@/components/NextImage", () => (props: RenderImageProps, context: RenderImageContext) => {
-  // This mock simulates the behavior of the original renderNextImage function
-  // which returns a Next.js Image component or a div if srcSet is missing.
+  /*
+   * This mock simulates the behavior of the original renderNextImage function
+   * which returns a Next.js Image component or a div if srcSet is missing.
+   */
   if (context.photo.srcSet && context.photo.srcSet.length > 0) {
     return (
       // Mock the Next.js Image component's output
@@ -20,8 +22,6 @@ jest.mock("@/components/NextImage", () => (props: RenderImageProps, context: Ren
         title={props.title}
         sizes={props.sizes}
         src={props.src}
-        placeholder="blur"
-        blurDataURL={context.photo.srcSet[0].src}
       />
     );
   } else {
@@ -136,37 +136,4 @@ describe("renderNextImage", () => {
     expect(image).toBeInTheDocument();
   });
 
-  it("uses correct blur data URL", () => {
-    const props: RenderImageProps = {
-      alt: "Test image",
-      title: "Test title",
-      sizes: "(max-width: 768px) 100vw, 50vw",
-      src: "test-image.jpg",
-    };
-
-    const context: RenderImageContext = {
-      photo: {
-        src: "test-image.jpg",
-        srcSet: [
-          {
-            src: "test-image-small.jpg",
-            width: 100,
-            height: 100,
-          },
-        ],
-        width: 800,
-        height: 600,
-      },
-      index: 0,
-      width: 800,
-      height: 600,
-    };
-
-    render(renderNextImage(props, context));
-
-    const image = screen.getByAltText("Test image");
-    expect(image).toHaveAttribute("placeholder", "blur");
-    expect(image).toHaveAttribute("src", props.src);
-    expect(image).toHaveAttribute("blurDataURL", "test-image-small.jpg");
-  });
 });
