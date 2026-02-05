@@ -25,3 +25,7 @@
 ## 2026-01-27 - [Correctness: GSAP Cleanup]
 **Learning:** Using `ScrollTrigger.getAll().forEach(t => t.kill())` in a component's cleanup function destroys ALL scroll triggers on the page, causing broken interactions in other components.
 **Action:** Replaced manual cleanup with `useGSAP` hook (from `@gsap/react`), which automatically scopes and cleans up animations/triggers bound to the component. Refactored event listeners to use `contextSafe` for proper context tracking.
+
+## 2026-01-28 - [Performance: Server-Side Request Waterfalls]
+**Learning:** Sequential `await` calls for independent data (e.g., gallery and hero images) in Server Components create a request waterfall, increasing server response time by the sum of latencies.
+**Action:** Use `Promise.all` to execute independent asynchronous operations concurrently, reducing the total wait time to the duration of the slowest request.
