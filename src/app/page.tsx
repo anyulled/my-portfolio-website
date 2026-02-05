@@ -15,7 +15,12 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const fetchedGallery = await getPhotosFromStorage("", 12);
+  // Parallelize data fetching to reduce waterfall effect and improve LCP
+  const [fetchedGallery, heroPhotosRaw] = await Promise.all([
+    getPhotosFromStorage("", 12),
+    getPhotosFromStorage("hero", 6),
+  ]);
+
   const galleryPhotos =
     fetchedGallery && fetchedGallery.length > 0
       ? fetchedGallery
@@ -42,7 +47,7 @@ export default async function HomePage() {
         },
       ];
 
-  const heroPhotos = (await getPhotosFromStorage("hero", 6)) || [];
+  const heroPhotos = heroPhotosRaw || [];
 
   const formattedHeroImages =
     heroPhotos.length > 0
