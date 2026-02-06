@@ -68,8 +68,6 @@ const BoudoirSection = ({
         <Image
           priority
           src={imageSrc}
-          blurDataURL={imageSrc}
-          placeholder="blur"
           alt={imageAlt}
           width={600}
           height={400}
