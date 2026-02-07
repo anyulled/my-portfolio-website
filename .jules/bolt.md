@@ -29,3 +29,7 @@
 ## 2026-01-28 - [Performance: Server-Side Request Waterfalls]
 **Learning:** Sequential `await` calls for independent data (e.g., gallery and hero images) in Server Components create a request waterfall, increasing server response time by the sum of latencies.
 **Action:** Use `Promise.all` to execute independent asynchronous operations concurrently, reducing the total wait time to the duration of the slowest request.
+
+## 2026-01-28 - [LCP Optimization: Hero Image Opacity]
+**Learning:** Even with `next/image` and `priority`, wrapping the LCP element (Hero image) in a container with `style={{ opacity: 0 }}` for entrance animations effectively hides it until JavaScript loads and executes. This delays LCP significantly, defeating the purpose of server-side rendering and preloading.
+**Action:** Removed `opacity: 0` from the initial styles and the `from` state of the GSAP animation. Retained only the scale animation (which doesn't affect visibility) to ensure the image is painted immediately upon HTML parsing.

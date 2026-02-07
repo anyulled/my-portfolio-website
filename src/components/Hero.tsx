@@ -31,9 +31,8 @@ export default function Hero({ image }: Readonly<HeroProps>) {
     if (backgroundRef.current) {
       gsap.fromTo(
         backgroundRef.current,
-        { opacity: 0, scale: 1.1 },
+        { scale: 1.1 },
         {
-          opacity: 1,
           scale: 1,
           duration: 1.5,
           ease: "power2.out",
@@ -92,8 +91,6 @@ export default function Hero({ image }: Readonly<HeroProps>) {
           className="absolute inset-0 z-0"
           style={{
             mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
-            // Initial state for animation
-            opacity: 0,
           }}
         >
           <Image
