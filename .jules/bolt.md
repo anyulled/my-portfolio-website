@@ -33,3 +33,7 @@
 ## 2026-01-28 - [LCP Optimization: Hero Image Opacity]
 **Learning:** Even with `next/image` and `priority`, wrapping the LCP element (Hero image) in a container with `style={{ opacity: 0 }}` for entrance animations effectively hides it until JavaScript loads and executes. This delays LCP significantly, defeating the purpose of server-side rendering and preloading.
 **Action:** Removed `opacity: 0` from the initial styles and the `from` state of the GSAP animation. Retained only the scale animation (which doesn't affect visibility) to ensure the image is painted immediately upon HTML parsing.
+
+## 2026-01-28 - [LCP Optimization: Hidden Container Animation]
+**Learning:** Fading in a container element (like a Hero section) from `opacity: 0` implicitly hides all its children, including the LCP candidate (Hero image), even if the children themselves don't have opacity styles. This negates `priority` loading.
+**Action:** Removed the container-level fade-in animation. To maintain visual polish without hurting LCP, applied initial `transform: scale(1.1)` inline to the background image wrapper to match the JS animation start state, preventing layout shifts/jumps when JS loads.

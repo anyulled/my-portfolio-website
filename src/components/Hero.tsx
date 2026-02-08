@@ -68,16 +68,6 @@ export default function Hero({ image }: Readonly<HeroProps>) {
       );
     }
 
-    if (containerRef.current) {
-      gsap.fromTo(
-        containerRef.current,
-        { autoAlpha: 0 },
-        {
-          autoAlpha: 1,
-          duration: 0.5,
-        },
-      );
-    }
   }, []);
 
   return (
@@ -91,6 +81,7 @@ export default function Hero({ image }: Readonly<HeroProps>) {
           className="absolute inset-0 z-0"
           style={{
             mask: "linear-gradient(to bottom, white 66%, transparent 95%)",
+            transform: "scale(1.1)",
           }}
         >
           <Image
