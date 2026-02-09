@@ -1,9 +1,14 @@
 import { Photo } from "@/types/photos";
 import { Image } from "react-photo-album";
 
+export interface LightboxImage extends Image {
+  title?: string;
+  description?: string;
+}
+
 export interface GalleryImages {
   galleryPhotos: Image[] | undefined;
-  lightboxPhotos: Image[] | undefined;
+  lightboxPhotos: LightboxImage[] | undefined;
 }
 
 /*
@@ -21,7 +26,7 @@ export const mapPhotosToGalleryImages = (
   }
 
   const galleryPhotos: Image[] = [];
-  const lightboxPhotos: Image[] = [];
+  const lightboxPhotos: LightboxImage[] = [];
 
   for (const photo of photos) {
     const baseImage = {

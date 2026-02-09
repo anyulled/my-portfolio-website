@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { getCachedData, setCachedData } from "@/services/cache";
+import { getCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Storage } from "@google-cloud/storage";

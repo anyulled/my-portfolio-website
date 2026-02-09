@@ -195,6 +195,19 @@ const filterInvalidPhotos = (photos: Photo[]): Photo[] =>
       !p.srcSet[0].src.endsWith("%2F"),
   );
 
+const filterAndLimitFiles = (
+  files: StorageFileLike[],
+  limit?: number,
+): StorageFileLike[] => {
+  const filtered = files.filter(
+    (file) =>
+      !file.name.endsWith("/") &&
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+  );
+
+  return limit && limit > 0 ? filtered.slice(0, limit) : filtered;
+};
+
 const retrievePhotosFromCache = async (
   cacheKey: string,
 ): Promise<Photo[] | null> => {
@@ -299,18 +312,10 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    let filteredFiles = files.filter(
-      (file) =>
-        !file.name.endsWith("/") &&
-        /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-    );
-
-    if (limit && limit > 0) {
-      filteredFiles = filteredFiles.slice(0, limit);
-    }
+    const filesToProcess = filterAndLimitFiles(files, limit);
 
     const mapped = await Promise.all(
-      filteredFiles
+      filesToProcess
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((file) => mapFileToPhoto(file as any)),
     );
