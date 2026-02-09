@@ -37,3 +37,11 @@
 ## 2026-01-28 - [LCP Optimization: Hidden Container Animation]
 **Learning:** Fading in a container element (like a Hero section) from `opacity: 0` implicitly hides all its children, including the LCP candidate (Hero image), even if the children themselves don't have opacity styles. This negates `priority` loading.
 **Action:** Removed the container-level fade-in animation. To maintain visual polish without hurting LCP, applied initial `transform: scale(1.1)` inline to the background image wrapper to match the JS animation start state, preventing layout shifts/jumps when JS loads.
+
+## 2026-02-09 - [Test Environment: Backend Tests]
+**Learning:** Jest tests for backend code (services, API routes) using `undici` or `next/server` fail with `ReferenceError: ReadableStream is not defined` in the default `jsdom` environment.
+**Action:** Add `/** @jest-environment node */` directive to the top of these test files to use the Node.js environment where `ReadableStream` is available globally.
+
+## 2026-02-09 - [Performance: GCS Fetching]
+**Learning:** Fetching all files from GCS to satisfy a small `limit` request (e.g. homepage hero) creates massive overhead (fetches 1000+ files, generates 1000+ signed URLs) and delays response.
+**Action:** Push the `limit` parameter down to the GCS fetching service (`fetchPhotosFromGCS`). Apply the limit to the file list *before* processing/mapping (generating signed URLs), reducing latency from O(N) to O(limit). Implement tiered caching (full list vs limit-specific list) to avoid cache fragmentation while optimizing common queries.

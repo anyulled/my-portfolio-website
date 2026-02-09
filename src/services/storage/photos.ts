@@ -195,6 +195,24 @@ const filterInvalidPhotos = (photos: Photo[]): Photo[] =>
       !p.srcSet[0].src.endsWith("%2F"),
   );
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+const filterAndLimitFiles = (files: any[], limit?: number) => {
+  const filtered = files.filter(
+    (file: any) =>
+      !file.name.endsWith("/") &&
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+  );
+
+  return limit && limit > 0 ? filtered.slice(0, limit) : filtered;
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
+/* eslint-enable @typescript-eslint/no-unsafe-member-access */
+/* eslint-enable @typescript-eslint/no-unsafe-call */
+/* eslint-enable @typescript-eslint/no-unsafe-return */
+
 const retrievePhotosFromCache = async (
   cacheKey: string,
 ): Promise<Photo[] | null> => {
@@ -265,11 +283,12 @@ const storePhotosInCache = async (
 const fetchPhotosFromGCS = async (
   prefix: string,
   storageClient?: StorageClient,
+  limit?: number,
 ): Promise<Photo[] | null> => {
   const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
   console.log(
     chalk.cyan(
-      `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}`,
+      `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}, limit: ${limit}`,
     ),
   );
 
@@ -298,13 +317,10 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
+    const filesToProcess = filterAndLimitFiles(files, limit);
+
     const mapped = await Promise.all(
-      files
-        .filter(
-          (file) =>
-            !file.name.endsWith("/") &&
-            /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-        )
+      filesToProcess
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((file) => mapFileToPhoto(file as any)),
     );
@@ -312,7 +328,7 @@ const fetchPhotosFromGCS = async (
     const photos = mapped.filter((photo): photo is Photo => photo !== null);
     console.log(
       chalk.green(
-        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${files.length} files`,
+        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${files.length} files (limit: ${limit})`,
       ),
     );
 
@@ -339,28 +355,37 @@ export const getPhotosFromStorage = async (
   limit?: number,
   storageClient?: StorageClient,
 ): Promise<Photo[] | null> => {
-  const cacheKey = `photos-${prefix}`;
+  const fullCacheKey = `photos-${prefix}`;
+  const limitCacheKey = limit ? `photos-${prefix}-limit-${limit}` : null;
 
-  // 1. Try cache retrieval
-  const cachedPhotos = await retrievePhotosFromCache(cacheKey);
-
-  // 2. Fetch from GCS if not in cache
-  const photos =
-    cachedPhotos ??
-    (await (async () => {
-      const fetchedPhotos = await fetchPhotosFromGCS(prefix, storageClient);
-
-      // 3. Store in cache if fetch was successful
-      if (fetchedPhotos) {
-        await storePhotosInCache(cacheKey, fetchedPhotos);
-      }
-      return fetchedPhotos;
-    })());
-
-  // 4. Apply limit and return
-  if (photos && limit && limit > 0) {
-    return photos.slice(0, limit);
+  // 1. Try full cache retrieval first (contains superset of data)
+  const fullCachedPhotos = await retrievePhotosFromCache(fullCacheKey);
+  if (fullCachedPhotos) {
+    if (limit && limit > 0) return fullCachedPhotos.slice(0, limit);
+    return fullCachedPhotos;
   }
 
-  return photos;
+  // 2. Try limit-specific cache retrieval
+  if (limitCacheKey) {
+    const limitCachedPhotos = await retrievePhotosFromCache(limitCacheKey);
+    if (limitCachedPhotos) return limitCachedPhotos;
+  }
+
+  // 3. Fetch from GCS
+  const fetchedPhotos = await fetchPhotosFromGCS(prefix, storageClient, limit);
+
+  // 4. Store in appropriate cache
+  if (fetchedPhotos) {
+    if (limit && limit > 0) {
+      // If we fetched a limited subset, only cache it as such
+      if (limitCacheKey) {
+        await storePhotosInCache(limitCacheKey, fetchedPhotos);
+      }
+    } else {
+      // If we fetched everything, cache it as full set
+      await storePhotosInCache(fullCacheKey, fetchedPhotos);
+    }
+  }
+
+  return fetchedPhotos;
 };

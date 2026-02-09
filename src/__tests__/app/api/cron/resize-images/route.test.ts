@@ -1,4 +1,7 @@
 
+/**
+ * @jest-environment node
+ */
 // Mock next/server
 jest.mock("next/server", () => ({
   NextResponse: {
