@@ -195,18 +195,23 @@ const filterInvalidPhotos = (photos: Photo[]): Photo[] =>
       !p.srcSet[0].src.endsWith("%2F"),
   );
 
-const filterAndLimitFiles = (
-  files: StorageFileLike[],
-  limit?: number,
-): StorageFileLike[] => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+const filterAndLimitFiles = (files: any[], limit?: number) => {
   const filtered = files.filter(
-    (file) =>
+    (file: any) =>
       !file.name.endsWith("/") &&
       /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
   );
 
   return limit && limit > 0 ? filtered.slice(0, limit) : filtered;
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
+/* eslint-enable @typescript-eslint/no-unsafe-member-access */
+/* eslint-enable @typescript-eslint/no-unsafe-call */
+/* eslint-enable @typescript-eslint/no-unsafe-return */
 
 const retrievePhotosFromCache = async (
   cacheKey: string,
