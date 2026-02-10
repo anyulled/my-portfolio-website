@@ -1,3 +1,4 @@
+/** @jest-environment node */
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { getPhotosFromStorage } from "@/services/storage/photos";
@@ -135,5 +136,37 @@ describe("Photos Storage Service", () => {
     expect(result).toHaveLength(1);
     expect(result?.[0].id).toBeGreaterThan(0);
     expect(result?.[0].title).toBe("photo-without-id.jpg");
+  });
+
+  it("should respect limit parameter and process only subset of files", async () => {
+    // Mock credentials to ensure getSignedUrl is called
+    process.env.GCP_CLIENT_EMAIL = "test@example.com";
+    process.env.GCP_PRIVATE_KEY = "test-key";
+
+    (getRedisCachedData as jest.Mock).mockResolvedValue(null);
+    (getCachedData as jest.Mock).mockResolvedValue(null);
+
+    const createMockFile = (name: string) => ({
+      ...mockFile,
+      name,
+      getSignedUrl: jest.fn().mockResolvedValue(["https://signed-url.com/" + name]),
+      publicUrl: jest.fn().mockReturnValue("https://example.com/" + name),
+      isPublic: jest.fn().mockResolvedValue([true]),
+    });
+
+    const file1 = createMockFile("photo1.jpg");
+    const file2 = createMockFile("photo2.jpg");
+    const file3 = createMockFile("photo3.jpg");
+
+    mockBucket.getFiles.mockResolvedValue([[file1, file2, file3]]);
+
+    const result = await getPhotosFromStorage("test-prefix", 2);
+
+    expect(result).toHaveLength(2);
+    // Should only process first 2 files
+    expect(file1.getSignedUrl).toHaveBeenCalled();
+    expect(file2.getSignedUrl).toHaveBeenCalled();
+    // Third file should NOT be processed
+    expect(file3.getSignedUrl).not.toHaveBeenCalled();
   });
 });
