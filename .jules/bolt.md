@@ -37,3 +37,7 @@
 ## 2026-01-28 - [LCP Optimization: Hidden Container Animation]
 **Learning:** Fading in a container element (like a Hero section) from `opacity: 0` implicitly hides all its children, including the LCP candidate (Hero image), even if the children themselves don't have opacity styles. This negates `priority` loading.
 **Action:** Removed the container-level fade-in animation. To maintain visual polish without hurting LCP, applied initial `transform: scale(1.1)` inline to the background image wrapper to match the JS animation start state, preventing layout shifts/jumps when JS loads.
+
+## 2026-02-11 - [Performance: GCS Metadata Fetching]
+**Learning:** Google Cloud Storage `bucket.getFiles()` fetches the default page size (1000 items) of metadata even when `autoPaginate` is false, unless `maxResults` is explicitly set. This causes significant overhead (large payload parsing and network latency) when only a few items are needed.
+**Action:** Always set `maxResults` to a reasonable buffer (e.g., limit + 20) when fetching a subset of files from GCS to minimize payload size and processing time.
