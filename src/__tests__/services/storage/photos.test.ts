@@ -168,5 +168,12 @@ describe("Photos Storage Service", () => {
     expect(file2.getSignedUrl).toHaveBeenCalled();
     // Third file should NOT be processed
     expect(file3.getSignedUrl).not.toHaveBeenCalled();
+
+    // Verify limit implementation in GCS (limit + 20 buffer)
+    expect(mockBucket.getFiles).toHaveBeenCalledWith(
+      expect.objectContaining({
+        maxResults: 22,
+      }),
+    );
   });
 });
