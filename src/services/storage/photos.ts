@@ -262,6 +262,8 @@ const storePhotosInCache = async (
   }
 };
 
+
+/* eslint-disable complexity */
 const fetchPhotosFromGCS = async (
   prefix: string,
   limit?: number,
@@ -277,10 +279,23 @@ const fetchPhotosFromGCS = async (
   try {
     const client = storageClient ?? createGCPStorageClient();
     const bucket = client.bucket(bucketName);
-    const options = {
+    const options: {
+      autoPaginate: boolean;
+      prefix: string;
+      maxResults?: number;
+    } = {
       autoPaginate: false,
       prefix,
     };
+
+    if (limit && limit > 0) {
+      /*
+       * Fetch a buffer of extra files to account for directories or non-image files
+       * that might be filtered out later.
+       */
+      options.maxResults = limit + 20;
+    }
+
     console.log(
       chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
       options,
@@ -339,6 +354,7 @@ const fetchPhotosFromGCS = async (
   }
 };
 
+/* eslint-enable complexity */
 export const getPhotosFromStorage = async (
   prefix: string,
   limit?: number,
