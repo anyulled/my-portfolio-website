@@ -135,26 +135,7 @@ body {
     @apply text-foreground border-input;
   }
 
-  img {
-    animation: linear fadeIn both;
-    animation-timeline: view();
-    animation-timeline-axis: block;
-    animation-range: entry 5% cover 30%;
-  }
-
   button {
     @apply bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground;
-  }
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      translate: 0 100px;
-    }
-
-    100% {
-      opacity: 1;
-      translate: 0 0;
-    }
   }
 }
