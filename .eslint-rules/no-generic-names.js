@@ -7,7 +7,7 @@ module.exports = {
         },
     },
     create(context) {
-        const filename = context.getFilename()
+        const filename = context.filename || context.getFilename()
 
         const forbiddenWordsWithSuggestions = {
             'utils': 'Use domain-specific name describing what it does',

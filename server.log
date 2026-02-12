@@ -15,9 +15,9 @@ This information is used to shape Next.js' roadmap and prioritize features.
 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
 https://nextjs.org/telemetry
 
-✓ Ready in 4.5s
+✓ Ready in 4.4s
 ○ Compiling / ...
-(node:3769) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///app/tailwind.config.ts?id=1770467191808 is not specified and it doesn't parse as CommonJS.
+(node:3385) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///app/tailwind.config.ts?id=1770898118944 is not specified and it doesn't parse as CommonJS.
 Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
 To eliminate this warning, add "type": "module" to /app/package.json.
 (Use `node --trace-warnings ...` to show where the warning was created)
@@ -35,43 +35,70 @@ To eliminate this warning, add "type": "module" to /app/package.json.
 [Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
 [ i18n ] loading messages for locale en
 [ i18n ] Successfully loaded messages for locale: en
-(node:3053) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(node:2890) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
 [Redis] Error getting cache: Failed to parse URL from /pipeline
 [VercelBlob] Getting cache for key: photos
 [Redis] Error getting cache: Failed to parse URL from /pipeline
 [VercelBlob] Getting cache for key: photoshero
 [VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
+[Redis] Getting cache for key: photoslimit12
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
+[Redis] Getting cache for key: photosherolimit6
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+ GET / 200 in 30.0s (compile: 21.6s, render: 8.4s)
+[Redis] Error getting cache: Failed to parse URL from /pipeline
+[VercelBlob] Getting cache for key: photoslimit12
+[Redis] Error getting cache: Failed to parse URL from /pipeline
+[VercelBlob] Getting cache for key: photosherolimit6
+[VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
 [PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix:
 [GCP] Missing explicit credentials. clientEmail: Missing, privateKey: Missing
 [GCP] Falling back to Application Default Credentials (ADC).
-[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: '' }
+[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: '', maxResults: 32 }
 [VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
 [PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix: hero
 [GCP] Missing explicit credentials. clientEmail: Missing, privateKey: Missing
 [GCP] Falling back to Application Default Credentials (ADC).
-[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: 'hero' }
-[PhotosStorage] GCS returned 47 files
-[PhotosStorage] Successfully mapped 47 photos from 47 files
-[PhotosStorage] Writing 47 photos to cache layers
+[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: 'hero', maxResults: 26 }
+[PhotosStorage] GCS returned 26 files
+[PhotosStorage] Successfully mapped 6 photos from 6 processed files (total available: 26)
+[PhotosStorage] Writing 6 photos to cache layers
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
 [Upstash Redis] The 'url' property is missing or undefined in your Redis config.
 [Upstash Redis] The 'token' property is missing or undefined in your Redis config.
 [Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
-[PhotosStorage] GCS returned 272 files
-[PhotosStorage] Successfully mapped 266 photos from 272 files
-[PhotosStorage] Writing 266 photos to cache layers
+[PhotosStorage] GCS returned 32 files
+[PhotosStorage] Successfully mapped 12 photos from 12 processed files (total available: 30)
+[PhotosStorage] Writing 12 photos to cache layers
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
 [Upstash Redis] The 'url' property is missing or undefined in your Redis config.
 [Upstash Redis] The 'token' property is missing or undefined in your Redis config.
 [Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
 [Redis] Error writing cache: Failed to parse URL from /pipeline
-[VercelBlob] Error writing cache for key photoshero: Vercel Blob: Access denied, please provide a valid token for this resource.
 [Redis] Error writing cache: Failed to parse URL from /pipeline
-[VercelBlob] Error writing cache for key photos: Vercel Blob: Access denied, please provide a valid token for this resource.
- GET / 200 in 36.8s (compile: 22.4s, render: 14.4s)
+[VercelBlob] Error writing cache for key photosherolimit6: Vercel Blob: Access denied, please provide a valid token for this resource.
+[VercelBlob] Error writing cache for key photoslimit12: Vercel Blob: Access denied, please provide a valid token for this resource.
 [ i18n ] loading messages for locale en
 [ i18n ] Successfully loaded messages for locale: en
- GET / 200 in 399ms (compile: 37ms, render: 363ms)
+ GET / 200 in 565ms (compile: 33ms, render: 532ms)
+[ i18n ] loading messages for locale en
+[ i18n ] Successfully loaded messages for locale: en
+ GET / 200 in 361ms (compile: 25ms, render: 336ms)
+✓ Compiled in 1604ms
+✓ Compiled in 976ms
+✓ Compiled in 244ms
+✓ Compiled in 1478ms
+✓ Compiled in 149ms
+✓ Compiled in 128ms

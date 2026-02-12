@@ -41,3 +41,7 @@
 ## 2026-02-11 - [Performance: GCS Metadata Fetching]
 **Learning:** Google Cloud Storage `bucket.getFiles()` fetches the default page size (1000 items) of metadata even when `autoPaginate` is false, unless `maxResults` is explicitly set. This causes significant overhead (large payload parsing and network latency) when only a few items are needed.
 **Action:** Always set `maxResults` to a reasonable buffer (e.g., limit + 20) when fetching a subset of files from GCS to minimize payload size and processing time.
+
+## 2026-02-12 - [LCP Optimization: Global CSS Animations]
+**Learning:** Applying `animation: fadeIn` globally to `img` tags in `globals.css` forces ALL images, including LCP candidates (like Hero), to start at `opacity: 0` and wait for a scroll-timeline event. This defeats `next/image` optimizations (`priority`) and significantly delays LCP.
+**Action:** Removed the global `img` animation rule. Relied on component-level animations (e.g., `useFadeIn`, `Gallery`) which are more controlled and allow excluding critical images from initial hiding.

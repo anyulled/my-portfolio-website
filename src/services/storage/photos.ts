@@ -1,7 +1,4 @@
 import { createGCPStorageClient, getGCPCredentials } from "@/lib/gcp/storage-client";
-
-
-
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import type { Photo } from "@/types/photos";
@@ -12,12 +9,11 @@ import chalk from "chalk";
 // Backward compatibility export
 export const createStorageClient = createGCPStorageClient;
 
-
 export const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
-// 1 hour
 const SIGNED_URL_TTL_MS = 1000 * 60 * 60;
-// 24 hours
+// 1 hour
 const CACHE_TTL_SECONDS = 60 * 60 * 24;
+// 24 hours
 
 export type StorageClient = Pick<Storage, "bucket">;
 
@@ -38,8 +34,6 @@ export type StorageFileLike = {
   isPublic(): Promise<[boolean]>;
 };
 
-
-
 const parseNumber = (value: string | undefined, fallback = 0): number => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -55,7 +49,6 @@ const extractTrailingDigits = (value: string): string | null => {
   if (!matches || matches.length === 0) {
     return null;
   }
-
   return matches.at(-1) ?? null;
 };
 
@@ -79,10 +72,8 @@ const parsePhotoId = (value: string | undefined): number | null => {
 const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
   // Skip signing attempt if using ADC without explicit credentials - use public URL directly
   if (!getGCPCredentials().hasCredentials) {
-    // Construct URL manually to avoid double-encoding issues
     const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
-    const url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
-    return url;
+    return `https://storage.googleapis.com/${bucketName}/${file.name}`;
   }
 
   try {
@@ -92,7 +83,6 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
     });
 
     const [signedUrl] = Array.isArray(result) ? result : [result];
-
     return signedUrl;
   } catch (error) {
     console.warn(
@@ -118,6 +108,22 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
   }
 };
 
+const generateIdFromFilename = (filename: string): number => {
+  const hash = Array.from(filename).reduce((acc, char) => {
+    const charCode = char.codePointAt(0) ?? 0;
+    const newHash = (acc << 5) - acc + charCode;
+    // Keeping original logic
+    return newHash & newHash;
+  }, 0);
+  const generatedId = Math.abs(hash);
+  console.log(
+    chalk.cyan(
+      `[PhotosStorage] Generated ID ${generatedId} from filename hash for ${filename}`,
+    ),
+  );
+  return generatedId;
+};
+
 const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const resourceMetadata = file.metadata ?? {};
   const userMetadata = resourceMetadata.metadata ?? {};
@@ -129,41 +135,20 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const height = parseNumber(userMetadata.height, 0);
   const fallbackUrl = file.publicUrl();
 
-  // Use user-provided date, or fallback to file update time
   const dateUpload = parseDate(
     userMetadata.dateUploaded ?? resourceMetadata.updated,
     new Date(0),
   );
 
-  // Try to get ID from metadata first, then fallback to extracting from filename, then to hash
   const metadataId = parsePhotoId(userMetadata.id);
   const filenameId = metadataId ?? parsePhotoId(file.name);
-
-  const id =
-    filenameId ??
-    (() => {
-      const hash = Array.from(file.name).reduce((acc, char) => {
-        const charCode = char.codePointAt(0) ?? 0;
-        const newHash = (acc << 5) - acc + charCode;
-        // Keeping original logic
-        return newHash & newHash;
-      }, 0);
-      const generatedId = Math.abs(hash);
-      console.log(
-        chalk.cyan(
-          `[PhotosStorage] Generated ID ${generatedId} from filename hash for ${file.name}`,
-        ),
-      );
-      return generatedId;
-    })();
+  const id = filenameId ?? generateIdFromFilename(file.name);
 
   const views = parseNumber(userMetadata.views);
-
   const signedUrl = await getSignedUrlForFile(file);
-
   const url = signedUrl || fallbackUrl;
 
-  const photo: Photo = {
+  return {
     id,
     description,
     dateTaken: dateUpload,
@@ -183,8 +168,6 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
       },
     ],
   };
-
-  return photo;
 };
 
 const filterInvalidPhotos = (photos: Photo[]): Photo[] =>
@@ -262,6 +245,68 @@ const storePhotosInCache = async (
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fetchFilesFromGCS = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  bucket: any,
+  prefix: string,
+  limit?: number,
+) => {
+  const options: {
+    autoPaginate: boolean;
+    prefix: string;
+    maxResults?: number;
+  } = {
+    autoPaginate: false,
+    prefix,
+  };
+
+  if (limit && limit > 0) {
+    /* Fetch a buffer of extra files to account for directories or non-image files that might be filtered out later. */
+    options.maxResults = limit + 20;
+  }
+
+  console.log(
+    chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
+    options,
+  );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+  const [files] = await bucket.getFiles(options);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return files;
+};
+
+const processFiles = async (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    files: any[],
+    limit?: number
+): Promise<Photo[]> => {
+    const filteredFiles = files.filter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+        (file: any) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+          !file.name.endsWith("/") &&
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+      );
+
+    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
+
+    const mapped = await Promise.all(
+      filesToProcess
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((file: any) => mapFileToPhoto(file)),
+    );
+
+    const photos = mapped.filter((photo): photo is Photo => photo !== null);
+    console.log(
+      chalk.green(
+        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
+      ),
+    );
+    return photos;
+}
+
 const fetchPhotosFromGCS = async (
   prefix: string,
   limit?: number,
@@ -277,26 +322,10 @@ const fetchPhotosFromGCS = async (
   try {
     const client = storageClient ?? createGCPStorageClient();
     const bucket = client.bucket(bucketName);
-    const options: {
-      autoPaginate: boolean;
-      prefix: string;
-      maxResults?: number;
-    } = {
-      autoPaginate: false,
-      prefix,
-    };
 
-    if (limit && limit > 0) {
-      // Fetch a buffer of extra files to account for directories or non-image files
-      // that might be filtered out later.
-      options.maxResults = limit + 20;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const files = await fetchFilesFromGCS(bucket, prefix, limit) as any[];
 
-    console.log(
-      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
-      options,
-    );
-    const [files] = await bucket.getFiles(options);
     console.log(
       chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
     );
@@ -310,29 +339,8 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    const filteredFiles = files
-      .filter(
-        (file) =>
-          !file.name.endsWith("/") &&
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-      );
+    return processFiles(files, limit);
 
-    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
-
-    const mapped = await Promise.all(
-      filesToProcess
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((file) => mapFileToPhoto(file as any)),
-    );
-
-    const photos = mapped.filter((photo): photo is Photo => photo !== null);
-    console.log(
-      chalk.green(
-        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
-      ),
-    );
-
-    return photos;
   } catch (error) {
     captureException(error);
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -377,10 +385,10 @@ export const getPhotosFromStorage = async (
   // 4. Store
   if (fetchedPhotos) {
       if (limit && limit > 0 && partialCacheKey) {
-          // We fetched a partial list, store in partial cache
+          /* We fetched a partial list, store in partial cache */
            await storePhotosInCache(partialCacheKey, fetchedPhotos);
       } else {
-          // We fetched full list, store in full cache
+          /* We fetched full list, store in full cache */
           await storePhotosInCache(fullCacheKey, fetchedPhotos);
       }
   }
