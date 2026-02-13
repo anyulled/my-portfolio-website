@@ -262,6 +262,40 @@ const storePhotosInCache = async (
   }
 };
 
+const getGCSFiles = async (
+  bucket: ReturnType<StorageClient["bucket"]>,
+  prefix: string,
+  limit?: number,
+) => {
+  const options: {
+    autoPaginate: boolean;
+    prefix: string;
+    maxResults?: number;
+  } = {
+    autoPaginate: false,
+    prefix,
+  };
+
+  if (limit && limit > 0) {
+    /*
+     * Fetch a buffer of extra files to account for directories or non-image files
+     * that might be filtered out later.
+     */
+    options.maxResults = limit + 20;
+  }
+
+  console.log(
+    chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
+    options,
+  );
+  const [files] = await bucket.getFiles(options);
+  console.log(
+    chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
+  );
+
+  return files || [];
+};
+
 const fetchPhotosFromGCS = async (
   prefix: string,
   limit?: number,
@@ -277,31 +311,10 @@ const fetchPhotosFromGCS = async (
   try {
     const client = storageClient ?? createGCPStorageClient();
     const bucket = client.bucket(bucketName);
-    const options: {
-      autoPaginate: boolean;
-      prefix: string;
-      maxResults?: number;
-    } = {
-      autoPaginate: false,
-      prefix,
-    };
 
-    if (limit && limit > 0) {
-      // Fetch a buffer of extra files to account for directories or non-image files
-      // that might be filtered out later.
-      options.maxResults = limit + 20;
-    }
+    const files = await getGCSFiles(bucket, prefix, limit);
 
-    console.log(
-      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
-      options,
-    );
-    const [files] = await bucket.getFiles(options);
-    console.log(
-      chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
-    );
-
-    if (!files || files.length === 0) {
+    if (files.length === 0) {
       console.warn(
         chalk.yellow(
           `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
@@ -310,14 +323,14 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    const filteredFiles = files
-      .filter(
-        (file) =>
-          !file.name.endsWith("/") &&
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-      );
+    const filteredFiles = files.filter(
+      (file) =>
+        !file.name.endsWith("/") &&
+        /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+    );
 
-    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
+    const filesToProcess =
+      limit && limit > 0 ? filteredFiles.slice(0, limit) : filteredFiles;
 
     const mapped = await Promise.all(
       filesToProcess
