@@ -47,11 +47,10 @@ const createPublicDbClient = () =>
     },
   );
 
-export const Testimonials = async (): Promise<Array<Testimonial>> => {
-  const cookieStore = await cookies();
-  const supabase = createDbClient(cookieStore);
+const fetchTestimonials = async (): Promise<Array<Testimonial>> => {
+  const supabase = createPublicDbClient();
 
-  (chalk.gray("[ supabase ] retrieving testimonials from database"));
+  console.log(chalk.gray("[ supabase ] retrieving testimonials from database"));
   const { data: testimonials, error } = await supabase
     .from("testimonials")
     .select("id, name, content, location, rating, featured, date:created_at")
@@ -71,6 +70,19 @@ export const Testimonials = async (): Promise<Array<Testimonial>> => {
   );
 
   return testimonials || [];
+};
+
+const getCachedTestimonials = unstable_cache(
+  fetchTestimonials,
+  ["testimonials-list"],
+  {
+    tags: ["testimonials"],
+    revalidate: 3600,
+  },
+);
+
+export const Testimonials = async (): Promise<Array<Testimonial>> => {
+  return getCachedTestimonials();
 };
 
 export interface PricingPackageRecord {
