@@ -95,7 +95,7 @@ export default function Gallery({
         once: true,
       });
     },
-    { scope: containerRef }
+    { scope: containerRef, dependencies: [photos] },
   );
 
   const handleImageClick = useCallback(

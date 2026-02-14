@@ -20,23 +20,25 @@ export const mapPhotosToGalleryImages = (
     return { galleryPhotos: undefined, lightboxPhotos: undefined };
   }
 
-  const galleryPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-  }));
+  const galleryPhotos: Image[] = [];
+  const lightboxPhotos: Image[] = [];
 
-  const lightboxPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-    title: photo.title,
-    description: photo.description,
-  }));
+  for (const photo of photos) {
+    const baseImage = {
+      src: photo.srcSet[0]?.src || "",
+      srcSet: photo.srcSet,
+      alt: photo.title,
+      width: photo.width || DEFAULT_WIDTH,
+      height: photo.height || DEFAULT_HEIGHT,
+    };
+
+    galleryPhotos.push(baseImage);
+    lightboxPhotos.push({
+      ...baseImage,
+      title: photo.title,
+      description: photo.description,
+    });
+  }
 
   return { galleryPhotos, lightboxPhotos };
 };

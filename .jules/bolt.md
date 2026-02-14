@@ -45,3 +45,7 @@
 ## 2026-02-12 - [LCP Optimization: Global CSS Animations]
 **Learning:** Applying `animation: fadeIn` globally to `img` tags in `globals.css` forces ALL images, including LCP candidates (like Hero), to start at `opacity: 0` and wait for a scroll-timeline event. This defeats `next/image` optimizations (`priority`) and significantly delays LCP.
 **Action:** Removed the global `img` animation rule. Relied on component-level animations (e.g., `useFadeIn`, `Gallery`) which are more controlled and allow excluding critical images from initial hiding.
+
+## 2026-02-13 - [Performance: GSAP React Dependencies]
+**Learning:** Using `useGSAP` (v2.1+) without a dependency array (or config object) causes it to run on every render. When combined with `ScrollTrigger.batch`, this creates expensive initialization logic on every re-render (e.g., lightbox open/close), degrading interaction performance.
+**Action:** Always provide a configuration object with a `dependencies` array (e.g., `{ dependencies: [data] }`) as the second argument to `useGSAP` if the animation depends on state/props, ensuring it only re-runs when necessary.
