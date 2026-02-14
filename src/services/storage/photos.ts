@@ -118,6 +118,33 @@ const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
   }
 };
 
+const generatePhotoId = (
+  fileName: string,
+  userMetadataId?: string,
+): number => {
+  // Try to get ID from metadata first, then fallback to extracting from filename, then to hash
+  const metadataId = parsePhotoId(userMetadataId);
+  const filenameId = metadataId ?? parsePhotoId(fileName);
+
+  if (filenameId) {
+    return filenameId;
+  }
+
+  const hash = Array.from(fileName).reduce((acc, char) => {
+    const charCode = char.codePointAt(0) ?? 0;
+    const newHash = (acc << 5) - acc + charCode;
+    // Keeping original logic
+    return newHash & newHash;
+  }, 0);
+  const generatedId = Math.abs(hash);
+  console.log(
+    chalk.cyan(
+      `[PhotosStorage] Generated ID ${generatedId} from filename hash for ${fileName}`,
+    ),
+  );
+  return generatedId;
+};
+
 const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const resourceMetadata = file.metadata ?? {};
   const userMetadata = resourceMetadata.metadata ?? {};
@@ -135,28 +162,7 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
     new Date(0),
   );
 
-  // Try to get ID from metadata first, then fallback to extracting from filename, then to hash
-  const metadataId = parsePhotoId(userMetadata.id);
-  const filenameId = metadataId ?? parsePhotoId(file.name);
-
-  const id =
-    filenameId ??
-    (() => {
-      const hash = Array.from(file.name).reduce((acc, char) => {
-        const charCode = char.codePointAt(0) ?? 0;
-        const newHash = (acc << 5) - acc + charCode;
-        // Keeping original logic
-        return newHash & newHash;
-      }, 0);
-      const generatedId = Math.abs(hash);
-      console.log(
-        chalk.cyan(
-          `[PhotosStorage] Generated ID ${generatedId} from filename hash for ${file.name}`,
-        ),
-      );
-      return generatedId;
-    })();
-
+  const id = generatePhotoId(file.name, userMetadata.id);
   const views = parseNumber(userMetadata.views);
 
   const signedUrl = await getSignedUrlForFile(file);
@@ -287,8 +293,10 @@ const fetchPhotosFromGCS = async (
     };
 
     if (limit && limit > 0) {
-      // Fetch a buffer of extra files to account for directories or non-image files
-      // that might be filtered out later.
+      /*
+       * Fetch a buffer of extra files to account for directories or non-image files
+       * that might be filtered out later.
+       */
       options.maxResults = limit + 20;
     }
 
@@ -310,43 +318,29 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    const filteredFiles = files
-      .filter(
-        (file) =>
-          !file.name.endsWith("/") &&
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-      );
-
-    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
-
-    const mapped = await Promise.all(
-      filesToProcess
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((file) => mapFileToPhoto(file as any)),
-    );
-
-    const photos = mapped.filter((photo): photo is Photo => photo !== null);
-    console.log(
-      chalk.green(
-        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
-      ),
-    );
-
-    return photos;
+    return await processGCSFiles(files as unknown as StorageFileLike[], limit);
   } catch (error) {
-    captureException(error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : undefined;
-    console.error(
-      chalk.red(
-        `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
-      ),
-    );
-    console.error(chalk.red(`[PhotosStorage] Error message: ${errorMessage}`));
-    if (errorStack) {
-      console.error(chalk.red(`[PhotosStorage] Stack trace: ${errorStack}`));
-    }
+    handleGCSError(error, bucketName, prefix);
     return null;
+  }
+};
+
+const handleGCSError = (
+  error: unknown,
+  bucketName: string,
+  prefix: string,
+): void => {
+  captureException(error);
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  const errorStack = error instanceof Error ? error.stack : undefined;
+  console.error(
+    chalk.red(
+      `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
+    ),
+  );
+  console.error(chalk.red(`[PhotosStorage] Error message: ${errorMessage}`));
+  if (errorStack) {
+    console.error(chalk.red(`[PhotosStorage] Stack trace: ${errorStack}`));
   }
 };
 
@@ -386,4 +380,31 @@ export const getPhotosFromStorage = async (
   }
 
   return fetchedPhotos;
+};
+
+const processGCSFiles = async (
+  files: StorageFileLike[],
+  limit?: number,
+): Promise<Photo[]> => {
+  const filteredFiles = files.filter(
+    (file) =>
+      !file.name.endsWith("/") &&
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+  );
+
+  const filesToProcess =
+    limit && limit > 0 ? filteredFiles.slice(0, limit) : filteredFiles;
+
+  const mapped = await Promise.all(
+    filesToProcess.map((file) => mapFileToPhoto(file)),
+  );
+
+  const photos = mapped.filter((photo): photo is Photo => photo !== null);
+  console.log(
+    chalk.green(
+      `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
+    ),
+  );
+
+  return photos;
 };
