@@ -25,7 +25,7 @@ const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
   transformIgnorePatterns: [
-    "/node_modules/(?!(chalk|@upstash|@sentry|next-intl|uncrypto|isows|@supabase)/)",
+    "/node_modules/(?!(chalk|@upstash|@sentry|next-intl|uncrypto|isows|@supabase|gsap)/)",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
   collectCoverage: true,

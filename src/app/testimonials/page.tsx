@@ -1,6 +1,6 @@
 import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
-import TestimonialCard from "@/components/TestimonialCard";
+import TestimonialsGrid from "@/components/TestimonialsGrid";
 import { getTestimonials, Testimonial } from "@/lib/testimonials";
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { Metadata } from "next";
@@ -96,15 +96,10 @@ export default async function TestimonialsPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {featuredTestimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={testimonial.id}
-                testimonial={testimonial}
-                index={index}
-              />
-            ))}
-          </div>
+          <TestimonialsGrid
+            testimonials={featuredTestimonials}
+            className="mb-16"
+          />
         </section>
 
         <TestimonialsCTA />
@@ -116,15 +111,11 @@ export default async function TestimonialsPage() {
             >
               {t("more_client_stories")}
             </h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              {regularTestimonials.map((testimonial, index) => (
-                <TestimonialCard
-                  key={testimonial.id}
-                  testimonial={testimonial}
-                  index={index + featuredTestimonials.length}
-                />
-              ))}
-            </div>
+            <TestimonialsGrid
+              testimonials={regularTestimonials}
+              className="md:grid-cols-2 lg:grid-cols-2"
+              startIndex={featuredTestimonials.length}
+            />
           </section>
         )}
       </div>
