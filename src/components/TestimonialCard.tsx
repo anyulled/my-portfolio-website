@@ -3,13 +3,10 @@
 import type { Testimonial } from "@/lib/testimonials";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRef } from "react";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface TestimonialCardProps {
   testimonial: Testimonial;
@@ -18,39 +15,12 @@ interface TestimonialCardProps {
 
 export default function TestimonialCard({
   testimonial,
-  index,
+  index: _index,
 }: TestimonialCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("locale");
 
-  const { contextSafe } = useGSAP(
-    () => {
-      const card = cardRef.current;
-      if (!card) return;
-
-      gsap.set(card, {
-        opacity: 0,
-        y: 50,
-        scale: 0.95,
-      });
-
-      gsap.to(card, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        ease: "power2.out",
-        delay: index * 0.1,
-        scrollTrigger: {
-          trigger: card,
-          start: "top 80%",
-          end: "bottom 20%",
-          toggleActions: "play none none reverse",
-        },
-      });
-    },
-    { scope: cardRef, dependencies: [index] },
-  );
+  const { contextSafe } = useGSAP({ scope: cardRef });
 
   const handleMouseEnter = contextSafe(() => {
     gsap.to(cardRef.current, {
@@ -75,7 +45,7 @@ export default function TestimonialCard({
       ref={cardRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow duration-300"
+      className="testimonial-card bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow duration-300"
     >
       <div className="flex items-center mb-4">
         {testimonial.image && (
