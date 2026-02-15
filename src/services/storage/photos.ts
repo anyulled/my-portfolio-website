@@ -262,6 +262,68 @@ const storePhotosInCache = async (
   }
 };
 
+const getGCSBucketOptions = (prefix: string, limit?: number) => {
+    const options: {
+      autoPaginate: boolean;
+      prefix: string;
+      maxResults?: number;
+    } = {
+      autoPaginate: false,
+      prefix,
+    };
+
+    if (limit && limit > 0) {
+      /*
+       * Fetch a buffer of extra files to account for directories or non-image files
+       * that might be filtered out later.
+       */
+      options.maxResults = limit + 20;
+    }
+    return options;
+}
+
+const mapFilesToPhotos = async (files: StorageFileLike[]): Promise<Photo[]> => {
+    const mapped = await Promise.all(
+      files
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((file) => mapFileToPhoto(file as any)),
+    );
+
+    return mapped.filter((photo): photo is Photo => photo !== null);
+}
+
+const handlePhotosError = (error: unknown, bucketName: string, prefix: string): null => {
+    captureException(error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error(
+      chalk.red(
+        `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
+      ),
+    );
+    console.error(chalk.red(`[PhotosStorage] Error message: ${errorMessage}`));
+    if (errorStack) {
+      console.error(chalk.red(`[PhotosStorage] Stack trace: ${errorStack}`));
+    }
+    return null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fetchFilesFromBucket = async (bucket: any, options: any): Promise<any[]> => {
+    console.log(
+      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
+      options,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+    const [files] = await bucket.getFiles(options);
+    console.log(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return files || [];
+}
+
 const fetchPhotosFromGCS = async (
   prefix: string,
   limit?: number,
@@ -277,31 +339,10 @@ const fetchPhotosFromGCS = async (
   try {
     const client = storageClient ?? createGCPStorageClient();
     const bucket = client.bucket(bucketName);
-    const options: {
-      autoPaginate: boolean;
-      prefix: string;
-      maxResults?: number;
-    } = {
-      autoPaginate: false,
-      prefix,
-    };
+    const options = getGCSBucketOptions(prefix, limit);
+    const files = await fetchFilesFromBucket(bucket, options);
 
-    if (limit && limit > 0) {
-      // Fetch a buffer of extra files to account for directories or non-image files
-      // that might be filtered out later.
-      options.maxResults = limit + 20;
-    }
-
-    console.log(
-      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
-      options,
-    );
-    const [files] = await bucket.getFiles(options);
-    console.log(
-      chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
-    );
-
-    if (!files || files.length === 0) {
+    if (files.length === 0) {
       console.warn(
         chalk.yellow(
           `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
@@ -312,20 +353,18 @@ const fetchPhotosFromGCS = async (
 
     const filteredFiles = files
       .filter(
-        (file) =>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (file: any) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
           !file.name.endsWith("/") &&
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
       );
 
     const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
 
-    const mapped = await Promise.all(
-      filesToProcess
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((file) => mapFileToPhoto(file as any)),
-    );
+    const photos = await mapFilesToPhotos(filesToProcess);
 
-    const photos = mapped.filter((photo): photo is Photo => photo !== null);
     console.log(
       chalk.green(
         `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
@@ -334,27 +373,11 @@ const fetchPhotosFromGCS = async (
 
     return photos;
   } catch (error) {
-    captureException(error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : undefined;
-    console.error(
-      chalk.red(
-        `[PhotosStorage] Failed to list objects from bucket ${bucketName} with prefix ${prefix}:`,
-      ),
-    );
-    console.error(chalk.red(`[PhotosStorage] Error message: ${errorMessage}`));
-    if (errorStack) {
-      console.error(chalk.red(`[PhotosStorage] Stack trace: ${errorStack}`));
-    }
-    return null;
+    return handlePhotosError(error, bucketName, prefix);
   }
 };
 
-export const getPhotosFromStorage = async (
-  prefix: string,
-  limit?: number,
-  storageClient?: StorageClient,
-): Promise<Photo[] | null> => {
+const retrievePhotosWithCacheCheck = async (prefix: string, limit?: number): Promise<Photo[] | null> => {
   const fullCacheKey = `photos-${prefix}`;
 
   // 1. Try full cache first (most valuable if present)
@@ -371,16 +394,33 @@ export const getPhotosFromStorage = async (
      if (partialCached) return partialCached;
   }
 
+  return null;
+}
+
+export const getPhotosFromStorage = async (
+  prefix: string,
+  limit?: number,
+  storageClient?: StorageClient,
+): Promise<Photo[] | null> => {
+  /*
+   * Try to retrieve from cache first.
+   * If successful, return cached data.
+   */
+  const cached = await retrievePhotosWithCacheCheck(prefix, limit);
+  if (cached) return cached;
+
   // 3. Fetch from GCS
   const fetchedPhotos = await fetchPhotosFromGCS(prefix, limit, storageClient);
 
   // 4. Store
   if (fetchedPhotos) {
+      const partialCacheKey = (limit && limit > 0) ? `photos-${prefix}-limit-${limit}` : null;
       if (limit && limit > 0 && partialCacheKey) {
           // We fetched a partial list, store in partial cache
            await storePhotosInCache(partialCacheKey, fetchedPhotos);
       } else {
           // We fetched full list, store in full cache
+          const fullCacheKey = `photos-${prefix}`;
           await storePhotosInCache(fullCacheKey, fetchedPhotos);
       }
   }

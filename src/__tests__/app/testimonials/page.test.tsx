@@ -29,17 +29,16 @@ jest.mock("@/app/testimonials/TestimonialsCTA", () => ({
   default: () => <div data-testid="testimonials-cta">Mocked CTA</div>,
 }));
 
-jest.mock("@/components/TestimonialCard", () => ({
+// Mock TestimonialsGrid to avoid loading GSAP in tests and to isolate the page test
+jest.mock("@/components/TestimonialsGrid", () => ({
   __esModule: true,
-  default: ({
-    testimonial,
-    index,
-  }: {
-    testimonial: Testimonial;
-    index: number;
-  }) => (
-    <div data-testid={`testimonial-card-${testimonial.id}`}>
-      Mocked Card for {testimonial.name} (Index: {index})
+  default: ({ testimonials, startIndex = 0 }: { testimonials: Testimonial[], startIndex?: number }) => (
+    <div data-testid="testimonials-grid">
+      {testimonials.map((t, i) => (
+        <div key={t.id} data-testid={`testimonial-card-${t.id}`}>
+          Mocked Card for {t.name} (Index: {startIndex + i})
+        </div>
+      ))}
     </div>
   ),
 }));
