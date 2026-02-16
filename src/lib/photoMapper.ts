@@ -1,9 +1,9 @@
 import { Photo } from "@/types/photos";
-import { Image } from "react-photo-album";
+import { Photo as AlbumPhoto } from "react-photo-album";
 
 export interface GalleryImages {
-  galleryPhotos: Image[] | undefined;
-  lightboxPhotos: Image[] | undefined;
+  galleryPhotos: AlbumPhoto[] | undefined;
+  lightboxPhotos: AlbumPhoto[] | undefined;
 }
 
 /*
@@ -20,8 +20,8 @@ export const mapPhotosToGalleryImages = (
     return { galleryPhotos: undefined, lightboxPhotos: undefined };
   }
 
-  const galleryPhotos: Image[] = [];
-  const lightboxPhotos: Image[] = [];
+  const galleryPhotos: AlbumPhoto[] = [];
+  const lightboxPhotos: AlbumPhoto[] = [];
 
   // Optimized to use a single loop for O(n) performance instead of O(2n) with multiple .map() calls
   for (const photo of photos) {
@@ -45,7 +45,7 @@ export const mapPhotosToGalleryImages = (
       height,
       title: photo.title,
       description: photo.description,
-    });
+    } as AlbumPhoto & { description?: string });
   }
 
   return { galleryPhotos, lightboxPhotos };

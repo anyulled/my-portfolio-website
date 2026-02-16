@@ -61,7 +61,7 @@ describe("mapPhotosToGalleryImages", () => {
     expect(result.galleryPhotos).toHaveLength(2);
     expect(result.lightboxPhotos).toHaveLength(2);
 
-    // Verify Gallery Photos
+    /* Verify Gallery Photos */
     expect(result.galleryPhotos?.[0]).toEqual({
       src: "image1.jpg",
       srcSet: mockPhotos[0].srcSet,
@@ -69,11 +69,13 @@ describe("mapPhotosToGalleryImages", () => {
       width: 1000,
       height: 800,
     });
-    // Gallery photos should NOT have title/description properties (based on current implementation)
+    /*
+     * Gallery photos should NOT have title/description properties (based on current implementation)
+     */
     expect(result.galleryPhotos?.[0]).not.toHaveProperty("title");
     expect(result.galleryPhotos?.[0]).not.toHaveProperty("description");
 
-    // Verify Lightbox Photos
+    /* Verify Lightbox Photos */
     expect(result.lightboxPhotos?.[0]).toEqual({
       src: "image1.jpg",
       srcSet: mockPhotos[0].srcSet,
@@ -90,8 +92,10 @@ describe("mapPhotosToGalleryImages", () => {
       id: 1,
       title: "Photo 1",
       description: "",
-      width: 0, // Should trigger default
-      height: 0, // Should trigger default
+      // Should trigger default
+      width: 0,
+      // Should trigger default
+      height: 0,
       dateTaken: new Date(),
       dateUpload: new Date(),
       views: 0,
@@ -101,8 +105,10 @@ describe("mapPhotosToGalleryImages", () => {
 
     const result = mapPhotosToGalleryImages([mockPhoto]);
 
-    // Check defaults (based on current implementation constants)
-    // expected defaults are 1200 and 800
+    /*
+     * Check defaults (based on current implementation constants)
+     * Expected defaults are 1200 and 800
+     */
     expect(result.galleryPhotos?.[0].width).toBe(1200);
     expect(result.galleryPhotos?.[0].height).toBe(800);
     expect(result.lightboxPhotos?.[0].width).toBe(1200);
