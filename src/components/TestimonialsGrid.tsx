@@ -27,28 +27,22 @@ export default function TestimonialsGrid({
 
   useGSAP(
     () => {
-      // Set initial state for all cards to be hidden
-      gsap.set(".testimonial-card", { opacity: 0, y: 50, scale: 0.95 });
-
       ScrollTrigger.batch(".testimonial-card", {
         onEnter: (elements) => {
-          gsap.to(
-            elements,
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: "power2.out",
-              overwrite: "auto",
-            },
-          );
+          gsap.to(elements, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
         },
         once: true,
       });
     },
-    { scope: containerRef },
+    { scope: containerRef, dependencies: [testimonials] },
   );
 
   return (
@@ -61,6 +55,7 @@ export default function TestimonialsGrid({
           key={testimonial.id}
           testimonial={testimonial}
           index={startIndex + index}
+          className="opacity-0 translate-y-12 scale-95"
         />
       ))}
     </div>
