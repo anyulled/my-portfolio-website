@@ -2,6 +2,7 @@
 
 import type { Testimonial } from "@/lib/testimonials";
 import { useGSAP } from "@gsap/react";
+import { clsx } from "clsx";
 import { gsap } from "gsap";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -11,11 +12,13 @@ import { useRef } from "react";
 interface TestimonialCardProps {
   testimonial: Testimonial;
   index: number;
+  className?: string;
 }
 
 export default function TestimonialCard({
   testimonial,
   index: _index,
+  className,
 }: TestimonialCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("locale");
@@ -45,7 +48,10 @@ export default function TestimonialCard({
       ref={cardRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="testimonial-card bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow duration-300"
+      className={clsx(
+        "testimonial-card bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-xl transition-shadow duration-300",
+        className,
+      )}
     >
       <div className="flex items-center mb-4">
         {testimonial.image && (
