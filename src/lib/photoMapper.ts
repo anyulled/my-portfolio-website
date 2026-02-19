@@ -1,9 +1,13 @@
 import { Photo } from "@/types/photos";
-import { Image } from "react-photo-album";
+import { Photo as AlbumPhoto } from "react-photo-album";
+
+export interface GalleryPhoto extends AlbumPhoto {
+  description?: string;
+}
 
 export interface GalleryImages {
-  galleryPhotos: Image[] | undefined;
-  lightboxPhotos: Image[] | undefined;
+  galleryPhotos: AlbumPhoto[] | undefined;
+  lightboxPhotos: GalleryPhoto[] | undefined;
 }
 
 /*
@@ -20,23 +24,32 @@ export const mapPhotosToGalleryImages = (
     return { galleryPhotos: undefined, lightboxPhotos: undefined };
   }
 
-  const galleryPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-  }));
+  const galleryPhotos: AlbumPhoto[] = [];
+  const lightboxPhotos: GalleryPhoto[] = [];
 
-  const lightboxPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-    title: photo.title,
-    description: photo.description,
-  }));
+  for (const photo of photos) {
+    const src = photo.srcSet[0]?.src || "";
+    const width = photo.width || DEFAULT_WIDTH;
+    const height = photo.height || DEFAULT_HEIGHT;
+
+    galleryPhotos.push({
+      src,
+      srcSet: photo.srcSet,
+      alt: photo.title,
+      width,
+      height,
+    });
+
+    lightboxPhotos.push({
+      src,
+      srcSet: photo.srcSet,
+      alt: photo.title,
+      width,
+      height,
+      title: photo.title,
+      description: photo.description,
+    });
+  }
 
   return { galleryPhotos, lightboxPhotos };
 };
