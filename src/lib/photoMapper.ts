@@ -1,9 +1,13 @@
 import { Photo } from "@/types/photos";
-import { Image } from "react-photo-album";
+import { Photo as AlbumPhoto } from "react-photo-album";
+
+export interface GalleryPhoto extends AlbumPhoto {
+  description?: string;
+}
 
 export interface GalleryImages {
-  galleryPhotos: Image[] | undefined;
-  lightboxPhotos: Image[] | undefined;
+  galleryPhotos: AlbumPhoto[] | undefined;
+  lightboxPhotos: GalleryPhoto[] | undefined;
 }
 
 /*
@@ -20,8 +24,8 @@ export const mapPhotosToGalleryImages = (
     return { galleryPhotos: undefined, lightboxPhotos: undefined };
   }
 
-  const galleryPhotos: Image[] = [];
-  const lightboxPhotos: Image[] = [];
+  const galleryPhotos: AlbumPhoto[] = [];
+  const lightboxPhotos: GalleryPhoto[] = [];
 
   for (const photo of photos) {
     const src = photo.srcSet[0]?.src || "";
