@@ -344,7 +344,8 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    return await processFetchedFiles(files, limit);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return await processFetchedFiles(files as any[], limit);
   } catch (error) {
     captureException(error);
     const errorMessage = error instanceof Error ? error.message : String(error);
