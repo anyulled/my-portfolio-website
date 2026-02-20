@@ -10,8 +10,8 @@ export interface GalleryImages {
  * Default dimensions for images without metadata
  * Using a common aspect ratio (3:2) with reasonable default size
  */
-const DEFAULT_WIDTH = 1200;
-const DEFAULT_HEIGHT = 800;
+export const DEFAULT_WIDTH = 1200;
+export const DEFAULT_HEIGHT = 800;
 
 export const mapPhotosToGalleryImages = (
   photos: Array<Photo> | null,
@@ -20,23 +20,25 @@ export const mapPhotosToGalleryImages = (
     return { galleryPhotos: undefined, lightboxPhotos: undefined };
   }
 
-  const galleryPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-  }));
+  const galleryPhotos: Image[] = [];
+  const lightboxPhotos: Image[] = [];
 
-  const lightboxPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-    title: photo.title,
-    description: photo.description,
-  }));
+  for (const photo of photos) {
+    const base = {
+      src: photo.srcSet[0]?.src || "",
+      srcSet: photo.srcSet,
+      alt: photo.title,
+      width: photo.width || DEFAULT_WIDTH,
+      height: photo.height || DEFAULT_HEIGHT,
+    };
+
+    galleryPhotos.push(base);
+    lightboxPhotos.push({
+      ...base,
+      title: photo.title,
+      description: photo.description,
+    });
+  }
 
   return { galleryPhotos, lightboxPhotos };
 };
