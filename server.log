@@ -15,9 +15,9 @@ This information is used to shape Next.js' roadmap and prioritize features.
 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
 https://nextjs.org/telemetry
 
-✓ Ready in 4.4s
+✓ Ready in 4.2s
 ○ Compiling / ...
-(node:3385) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///app/tailwind.config.ts?id=1770898118944 is not specified and it doesn't parse as CommonJS.
+(node:3556) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///app/tailwind.config.ts?id=1771589832542 is not specified and it doesn't parse as CommonJS.
 Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
 To eliminate this warning, add "type": "module" to /app/package.json.
 (Use `node --trace-warnings ...` to show where the warning was created)
@@ -35,7 +35,7 @@ To eliminate this warning, add "type": "module" to /app/package.json.
 [Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
 [ i18n ] loading messages for locale en
 [ i18n ] Successfully loaded messages for locale: en
-(node:2890) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(node:2982) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
 [Redis] Error getting cache: Failed to parse URL from /pipeline
 [VercelBlob] Getting cache for key: photos
@@ -55,11 +55,12 @@ To eliminate this warning, add "type": "module" to /app/package.json.
 [Upstash Redis] The 'url' property is missing or undefined in your Redis config.
 [Upstash Redis] The 'token' property is missing or undefined in your Redis config.
 [Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
- GET / 200 in 30.0s (compile: 21.6s, render: 8.4s)
+ GET / 200 in 30.0s (compile: 21.3s, render: 8.7s)
 [Redis] Error getting cache: Failed to parse URL from /pipeline
 [VercelBlob] Getting cache for key: photoslimit12
 [Redis] Error getting cache: Failed to parse URL from /pipeline
 [VercelBlob] Getting cache for key: photosherolimit6
+✓ Finished writing to filesystem cache in 11.0s
 [VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
 [PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix:
 [GCP] Missing explicit credentials. clientEmail: Missing, privateKey: Missing
@@ -92,7 +93,6 @@ To eliminate this warning, add "type": "module" to /app/package.json.
 [VercelBlob] Error writing cache for key photoslimit12: Vercel Blob: Access denied, please provide a valid token for this resource.
 [ i18n ] loading messages for locale en
 [ i18n ] Successfully loaded messages for locale: en
- GET / 200 in 565ms (compile: 33ms, render: 532ms)
-[ i18n ] loading messages for locale en
-[ i18n ] Successfully loaded messages for locale: en
- GET / 200 in 361ms (compile: 25ms, render: 336ms)
+ GET / 200 in 462ms (compile: 31ms, render: 431ms)
+✓ Compiled in 327ms
+✓ Compiled in 230ms
