@@ -122,7 +122,8 @@ describe("mapPhotosToGalleryImages", () => {
       dateUpload: new Date(),
       views: 0,
       tags: "",
-      width: 0, // treating 0 as missing/default based on mapper logic if it checks falsy
+      /* Treating 0 as missing/default based on mapper logic if it checks falsy */
+      width: 0,
       height: 0,
       srcSet: [
         {

@@ -262,12 +262,74 @@ const storePhotosInCache = async (
   }
 };
 
+const processFetchedFiles = async (
+  files: StorageFileLike[],
+  limit?: number,
+): Promise<{ photos: Photo[]; processedCount: number; totalCount: number }> => {
+  const filteredFiles = files.filter(
+    (file) =>
+      !file.name.endsWith("/") &&
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+  );
+
+  const filesToProcess =
+    limit && limit > 0 ? filteredFiles.slice(0, limit) : filteredFiles;
+
+  const mapped = await Promise.all(
+    filesToProcess
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((file) => mapFileToPhoto(file as any)),
+  );
+
+  const photos = mapped.filter((photo): photo is Photo => photo !== null);
+
+  return {
+    photos,
+    processedCount: filesToProcess.length,
+    totalCount: filteredFiles.length,
+  };
+};
+
+const getGCSBucketAndOptions = (
+  prefix: string,
+  limit?: number,
+  storageClient?: StorageClient,
+) => {
+  const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
+  const client = storageClient ?? createGCPStorageClient();
+  const bucket = client.bucket(bucketName);
+
+  const options: {
+    autoPaginate: boolean;
+    prefix: string;
+    maxResults?: number;
+  } = {
+    autoPaginate: false,
+    prefix,
+  };
+
+  if (limit && limit > 0) {
+    /*
+     * Fetch a buffer of extra files to account for directories or non-image files
+     * that might be filtered out later.
+     */
+    options.maxResults = limit + 20;
+  }
+
+  return { bucket, options, bucketName };
+};
+
 const fetchPhotosFromGCS = async (
   prefix: string,
   limit?: number,
   storageClient?: StorageClient,
 ): Promise<Photo[] | null> => {
-  const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
+  const { bucket, options, bucketName } = getGCSBucketAndOptions(
+    prefix,
+    limit,
+    storageClient,
+  );
+
   console.log(
     chalk.cyan(
       `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}`,
@@ -275,23 +337,6 @@ const fetchPhotosFromGCS = async (
   );
 
   try {
-    const client = storageClient ?? createGCPStorageClient();
-    const bucket = client.bucket(bucketName);
-    const options: {
-      autoPaginate: boolean;
-      prefix: string;
-      maxResults?: number;
-    } = {
-      autoPaginate: false,
-      prefix,
-    };
-
-    if (limit && limit > 0) {
-      // Fetch a buffer of extra files to account for directories or non-image files
-      // that might be filtered out later.
-      options.maxResults = limit + 20;
-    }
-
     console.log(
       chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
       options,
@@ -310,25 +355,15 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    const filteredFiles = files
-      .filter(
-        (file) =>
-          !file.name.endsWith("/") &&
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-      );
-
-    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
-
-    const mapped = await Promise.all(
-      filesToProcess
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((file) => mapFileToPhoto(file as any)),
+    // Explicitly cast files to StorageFileLike[] as we only use properties defined in that interface
+    const { photos, processedCount, totalCount } = await processFetchedFiles(
+      files as unknown as StorageFileLike[],
+      limit,
     );
 
-    const photos = mapped.filter((photo): photo is Photo => photo !== null);
     console.log(
       chalk.green(
-        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
+        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${processedCount} processed files (total available: ${totalCount})`,
       ),
     );
 

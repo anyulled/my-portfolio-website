@@ -94,3 +94,5 @@ To eliminate this warning, add "type": "module" to /app/package.json.
 [ i18n ] loading messages for locale en
 [ i18n ] Successfully loaded messages for locale: en
  GET / 200 in 462ms (compile: 31ms, render: 431ms)
+✓ Compiled in 327ms
+✓ Compiled in 230ms
