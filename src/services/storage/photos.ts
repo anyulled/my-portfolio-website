@@ -142,12 +142,13 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const id =
     filenameId ??
     (() => {
-      const hash = Array.from(file.name).reduce((acc, char) => {
+      let hash = 0;
+      for (const char of file.name) {
         const charCode = char.codePointAt(0) ?? 0;
-        const newHash = (acc << 5) - acc + charCode;
+        const newHash = (hash << 5) - hash + charCode;
         // Keeping original logic
-        return newHash & newHash;
-      }, 0);
+        hash = newHash & newHash;
+      }
       const generatedId = Math.abs(hash);
       console.log(
         chalk.cyan(
