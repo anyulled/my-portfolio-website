@@ -1,9 +1,19 @@
-import { Photo } from "@/types/photos";
+import { Photo, PhotoSource } from "@/types/photos";
 import { Image } from "react-photo-album";
+
+/*
+ * Interface for Lightbox images which require additional metadata
+ * beyond the standard react-photo-album Image interface
+ */
+export interface LightboxImage extends Image {
+  title: string;
+  description: string;
+  srcSet?: PhotoSource[];
+}
 
 export interface GalleryImages {
   galleryPhotos: Image[] | undefined;
-  lightboxPhotos: Image[] | undefined;
+  lightboxPhotos: LightboxImage[] | undefined;
 }
 
 /*
@@ -21,7 +31,7 @@ export const mapPhotosToGalleryImages = (
   }
 
   const galleryPhotos: Image[] = [];
-  const lightboxPhotos: Image[] = [];
+  const lightboxPhotos: LightboxImage[] = [];
 
   for (const photo of photos) {
     const galleryImage = {

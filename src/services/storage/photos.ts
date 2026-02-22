@@ -296,7 +296,7 @@ const getFilesFromGCS = async (
     chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
   );
 
-  return files || [];
+  return (files as unknown as StorageFileLike[]) || [];
 };
 
 const processFetchedFiles = async (
