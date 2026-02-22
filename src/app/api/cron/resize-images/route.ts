@@ -224,11 +224,12 @@ export async function GET(_request: NextRequest) {
     const CONCURRENCY = 5;
 
     // Process files with concurrency limit
-    const queue = [...files];
+    let currentIndex = 0;
 
     // Simple semaphore for concurrency control
     const processNext = async (): Promise<ProcessResult | null> => {
-      const file = queue.shift();
+      if (currentIndex >= files.length) return null;
+      const file = files[currentIndex++];
       if (!file) return null;
 
       if (!isValidImage(file)) {
@@ -244,7 +245,7 @@ export async function GET(_request: NextRequest) {
     };
 
     const worker = async (): Promise<void> => {
-      while (queue.length > 0) {
+      while (currentIndex < files.length) {
         const result = await processNext();
         if (result) results.push(result);
       }
