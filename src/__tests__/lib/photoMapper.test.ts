@@ -55,7 +55,8 @@ describe('mapPhotosToGalleryImages', () => {
       id: 2,
       title: 'Test Photo 2',
       description: '',
-      width: 0, // treating 0 as falsy/missing effectively for the test logic based on implementation
+      // Treating 0 as falsy/missing effectively for the test logic based on implementation
+      width: 0,
       height: 0,
       srcSet: [{ src: 'test2.jpg', width: 0, height: 0, title: '', description: '' }],
       dateTaken: new Date(),
