@@ -262,6 +262,33 @@ const storePhotosInCache = async (
   }
 };
 
+const processFetchedFiles = async (
+  files: StorageFileLike[],
+  limit?: number,
+): Promise<Photo[]> => {
+  const filteredFiles = files.filter(
+    (file) =>
+      !file.name.endsWith("/") &&
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+  );
+
+  const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
+
+  const mapped = await Promise.all(
+    filesToProcess.map((file) => mapFileToPhoto(file)),
+  );
+
+  const photos = mapped.filter((photo): photo is Photo => photo !== null);
+
+  console.log(
+    chalk.green(
+      `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
+    ),
+  );
+
+  return photos;
+};
+
 const fetchPhotosFromGCS = async (
   prefix: string,
   limit?: number,
@@ -287,8 +314,10 @@ const fetchPhotosFromGCS = async (
     };
 
     if (limit && limit > 0) {
-      // Fetch a buffer of extra files to account for directories or non-image files
-      // that might be filtered out later.
+      /*
+       * Fetch a buffer of extra files to account for directories or non-image files
+       * that might be filtered out later.
+       */
       options.maxResults = limit + 20;
     }
 
@@ -296,7 +325,9 @@ const fetchPhotosFromGCS = async (
       chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
       options,
     );
-    const [files] = await bucket.getFiles(options);
+    const [files] = (await bucket.getFiles(options)) as unknown as [
+      StorageFileLike[],
+    ];
     console.log(
       chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
     );
@@ -310,29 +341,7 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    const filteredFiles = files
-      .filter(
-        (file) =>
-          !file.name.endsWith("/") &&
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-      );
-
-    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
-
-    const mapped = await Promise.all(
-      filesToProcess
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((file) => mapFileToPhoto(file as any)),
-    );
-
-    const photos = mapped.filter((photo): photo is Photo => photo !== null);
-    console.log(
-      chalk.green(
-        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
-      ),
-    );
-
-    return photos;
+    return processFetchedFiles(files, limit);
   } catch (error) {
     captureException(error);
     const errorMessage = error instanceof Error ? error.message : String(error);
