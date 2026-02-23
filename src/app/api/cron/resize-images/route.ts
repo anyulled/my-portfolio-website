@@ -223,13 +223,16 @@ export async function GET(_request: NextRequest) {
     // Concurrency limit to optimize throughput without OOM
     const CONCURRENCY = 5;
 
-    // Process files with concurrency limit
-    let currentIndex = 0;
+    /*
+     * Process files with concurrency limit
+     * Use an object to hold the index so it can be mutated inside the closure without reassigning the variable
+     */
+    const state = { currentIndex: 0 };
 
     // Simple semaphore for concurrency control
     const processNext = async (): Promise<ProcessResult | null> => {
-      if (currentIndex >= files.length) return null;
-      const file = files[currentIndex++];
+      if (state.currentIndex >= files.length) return null;
+      const file = files[state.currentIndex++];
       if (!file) return null;
 
       if (!isValidImage(file)) {
@@ -245,7 +248,7 @@ export async function GET(_request: NextRequest) {
     };
 
     const worker = async (): Promise<void> => {
-      while (currentIndex < files.length) {
+      while (state.currentIndex < files.length) {
         const result = await processNext();
         if (result) results.push(result);
       }

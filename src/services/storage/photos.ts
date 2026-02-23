@@ -1,7 +1,4 @@
 import { createGCPStorageClient, getGCPCredentials } from "@/lib/gcp/storage-client";
-
-
-
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import type { Photo } from "@/types/photos";
@@ -262,6 +259,68 @@ const storePhotosInCache = async (
   }
 };
 
+const getFilesFromGCS = async (
+    prefix: string,
+    limit?: number,
+    storageClient?: StorageClient
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any[]> => {
+    const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
+    const client = storageClient ?? createGCPStorageClient();
+    const bucket = client.bucket(bucketName);
+    const options: {
+      autoPaginate: boolean;
+      prefix: string;
+      maxResults?: number;
+    } = {
+      autoPaginate: false,
+      prefix,
+    };
+
+    if (limit && limit > 0) {
+      options.maxResults = limit + 20;
+    }
+
+    console.log(chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`), options);
+    const [files] = await bucket.getFiles(options);
+    console.log(chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`));
+
+    return files || [];
+};
+
+const processFiles = async (
+    files: unknown[],
+    limit?: number
+): Promise<Photo[]> => {
+    if (!files || files.length === 0) return [];
+
+    const storageFiles = files as StorageFileLike[];
+
+    const filteredFiles = storageFiles
+      .filter(
+        (file) =>
+          !file.name.endsWith("/") &&
+          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+      );
+
+    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
+
+    const mapped = await Promise.all(
+      filesToProcess
+        .map((file) => mapFileToPhoto(file)),
+    );
+
+    const photos = mapped.filter((photo): photo is Photo => photo !== null);
+
+    console.log(
+      chalk.green(
+        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
+      ),
+    );
+
+    return photos;
+};
+
 const fetchPhotosFromGCS = async (
   prefix: string,
   limit?: number,
@@ -275,33 +334,12 @@ const fetchPhotosFromGCS = async (
   );
 
   try {
-    const client = storageClient ?? createGCPStorageClient();
-    const bucket = client.bucket(bucketName);
-    const options: {
-      autoPaginate: boolean;
-      prefix: string;
-      maxResults?: number;
-    } = {
-      autoPaginate: false,
-      prefix,
-    };
+    const files = await getFilesFromGCS(prefix, limit, storageClient);
 
-    if (limit && limit > 0) {
-      // Fetch a buffer of extra files to account for directories or non-image files
-      // that might be filtered out later.
-      options.maxResults = limit + 20;
-    }
-
-    console.log(
-      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
-      options,
-    );
-    const [files] = await bucket.getFiles(options);
-    console.log(
-      chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
-    );
-
-    if (!files || files.length === 0) {
+    if (files.length === 0) {
+      /*
+       * No files found in GCS for prefix: ${prefix}
+       */
       console.warn(
         chalk.yellow(
           `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
@@ -310,29 +348,8 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    const filteredFiles = files
-      .filter(
-        (file) =>
-          !file.name.endsWith("/") &&
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-      );
+    return processFiles(files, limit);
 
-    const filesToProcess = (limit && limit > 0) ? filteredFiles.slice(0, limit) : filteredFiles;
-
-    const mapped = await Promise.all(
-      filesToProcess
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((file) => mapFileToPhoto(file as any)),
-    );
-
-    const photos = mapped.filter((photo): photo is Photo => photo !== null);
-    console.log(
-      chalk.green(
-        `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
-      ),
-    );
-
-    return photos;
   } catch (error) {
     captureException(error);
     const errorMessage = error instanceof Error ? error.message : String(error);
