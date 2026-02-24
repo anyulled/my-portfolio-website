@@ -262,10 +262,54 @@ const storePhotosInCache = async (
   }
 };
 
-const processFetchedFiles = async (
-  files: StorageFileLike[],
-  limit?: number
-): Promise<Photo[]> => {
+const fetchPhotosFromGCS = async (
+  prefix: string,
+  limit?: number,
+  storageClient?: StorageClient,
+): Promise<Photo[] | null> => {
+  const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
+  console.log(
+    chalk.cyan(
+      `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}`,
+    ),
+  );
+
+  try {
+    const client = storageClient ?? createGCPStorageClient();
+    const bucket = client.bucket(bucketName);
+    const options: {
+      autoPaginate: boolean;
+      prefix: string;
+      maxResults?: number;
+    } = {
+      autoPaginate: false,
+      prefix,
+    };
+
+    if (limit && limit > 0) {
+      // Fetch a buffer of extra files to account for directories or non-image files
+      // that might be filtered out later.
+      options.maxResults = limit + 20;
+    }
+
+    console.log(
+      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
+      options,
+    );
+    const [files] = await bucket.getFiles(options);
+    console.log(
+      chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
+    );
+
+    if (!files || files.length === 0) {
+      console.warn(
+        chalk.yellow(
+          `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
+        ),
+      );
+      return [];
+    }
+
     const filteredFiles = files
       .filter(
         (file) =>
@@ -289,29 +333,7 @@ const processFetchedFiles = async (
     );
 
     return photos;
-};
-
-const getFetchOptions = (prefix: string, limit?: number): { autoPaginate: boolean; prefix: string; maxResults?: number } => {
-    const options: {
-      autoPaginate: boolean;
-      prefix: string;
-      maxResults?: number;
-    } = {
-      autoPaginate: false,
-      prefix,
-    };
-
-    if (limit && limit > 0) {
-      /*
-       * Fetch a buffer of extra files to account for directories or non-image files
-       * that might be filtered out later.
-       */
-      options.maxResults = limit + 20;
-    }
-    return options;
-};
-
-const handleGCSError = (error: unknown, bucketName: string, prefix: string): null => {
+  } catch (error) {
     captureException(error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -325,50 +347,6 @@ const handleGCSError = (error: unknown, bucketName: string, prefix: string): nul
       console.error(chalk.red(`[PhotosStorage] Stack trace: ${errorStack}`));
     }
     return null;
-};
-
-const fetchPhotosFromGCS = async (
-  prefix: string,
-  limit?: number,
-  storageClient?: StorageClient,
-): Promise<Photo[] | null> => {
-  const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
-  console.log(
-    chalk.cyan(
-      `[PhotosStorage] Fetching from GCS bucket: ${bucketName}, prefix: ${prefix}`,
-    ),
-  );
-
-  try {
-    const client = storageClient ?? createGCPStorageClient();
-    const bucket = client.bucket(bucketName);
-    const options = getFetchOptions(prefix, limit);
-
-    console.log(
-      chalk.cyan(`[PhotosStorage] Calling bucket.getFiles with options:`),
-      options,
-    );
-    const [files] = await bucket.getFiles(options);
-    console.log(
-      chalk.cyan(`[PhotosStorage] GCS returned ${files?.length ?? 0} files`),
-    );
-
-    if (!files || files.length === 0) {
-      console.warn(
-        chalk.yellow(
-          `[PhotosStorage] No files found in GCS for prefix: ${prefix}`,
-        ),
-      );
-      return [];
-    }
-
-    /*
-     * Use helper function to process files and reduce complexity
-     * Cast to StorageFileLike[] to avoid any type safety issues, asserting the shape matches
-     */
-    return processFetchedFiles(files as unknown as StorageFileLike[], limit);
-  } catch (error) {
-    return handleGCSError(error, bucketName, prefix);
   }
 };
 

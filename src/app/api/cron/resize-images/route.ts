@@ -223,14 +223,14 @@ export async function GET(_request: NextRequest) {
     // Concurrency limit to optimize throughput without OOM
     const CONCURRENCY = 5;
 
-    // Use an iterator to avoid shared mutable state (let currentIndex)
-    const fileIterator = files.values();
+    // Process files with concurrency limit
+    let currentIndex = 0;
 
     // Simple semaphore for concurrency control
     const processNext = async (): Promise<ProcessResult | null> => {
-      const next = fileIterator.next();
-      if (next.done) return null;
-      const file = next.value;
+      if (currentIndex >= files.length) return null;
+      const file = files[currentIndex++];
+      if (!file) return null;
 
       if (!isValidImage(file)) {
         return {
@@ -245,10 +245,9 @@ export async function GET(_request: NextRequest) {
     };
 
     const worker = async (): Promise<void> => {
-      while (true) {
+      while (currentIndex < files.length) {
         const result = await processNext();
-        if (!result) break;
-        results.push(result);
+        if (result) results.push(result);
       }
     };
 
