@@ -1,9 +1,11 @@
 import { Photo } from "@/types/photos";
-import { Image } from "react-photo-album";
+import { Photo as AlbumPhoto } from "react-photo-album";
+
+export type LightboxPhoto = AlbumPhoto & { description?: string };
 
 export interface GalleryImages {
-  galleryPhotos: Image[] | undefined;
-  lightboxPhotos: Image[] | undefined;
+  galleryPhotos: AlbumPhoto[] | undefined;
+  lightboxPhotos: LightboxPhoto[] | undefined;
 }
 
 /*
@@ -20,8 +22,8 @@ export const mapPhotosToGalleryImages = (
     return { galleryPhotos: undefined, lightboxPhotos: undefined };
   }
 
-  const galleryPhotos: Image[] = [];
-  const lightboxPhotos: Image[] = [];
+  const galleryPhotos: AlbumPhoto[] = [];
+  const lightboxPhotos: LightboxPhoto[] = [];
 
   /*
    * Use a single loop to generate both arrays, reducing iteration overhead
@@ -32,7 +34,10 @@ export const mapPhotosToGalleryImages = (
     const height = photo.height || DEFAULT_HEIGHT;
     const src = photo.srcSet[0]?.src || "";
 
-    // Construct gallery image (react-photo-album)
+    /*
+     * Construct gallery image (react-photo-album)
+     * Note: AlbumPhoto includes srcSet, so this is now type-safe
+     */
     galleryPhotos.push({
       src,
       srcSet: photo.srcSet,
