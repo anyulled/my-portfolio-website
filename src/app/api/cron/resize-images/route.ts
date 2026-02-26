@@ -224,37 +224,30 @@ export async function GET(_request: NextRequest) {
     const CONCURRENCY = 5;
 
     // Process files with concurrency limit
-    let currentIndex = 0;
-
-    // Simple semaphore for concurrency control
-    const processNext = async (): Promise<ProcessResult | null> => {
-      if (currentIndex >= files.length) return null;
-      const file = files[currentIndex++];
-      if (!file) return null;
-
-      if (!isValidImage(file)) {
-        return {
-          status: "skipped",
-          file: file.name,
-          originalBytes: 0,
-          newBytes: 0,
-        };
-      }
-
-      return processImage(file, bucket);
-    };
+    const fileIterator = files.values();
 
     const worker = async (): Promise<void> => {
-      while (currentIndex < files.length) {
-        const result = await processNext();
-        if (result) results.push(result);
+      for (const file of fileIterator) {
+        if (!isValidImage(file)) {
+          results.push({
+            status: "skipped",
+            file: file.name,
+            originalBytes: 0,
+            newBytes: 0,
+          });
+          continue;
+        }
+
+        const result = await processImage(file, bucket);
+        results.push(result);
       }
     };
 
     // Start workers
-    const workers = new Array(Math.min(files.length, CONCURRENCY))
-      .fill(null)
-      .map(worker);
+    const workers = Array.from(
+      { length: Math.min(files.length, CONCURRENCY) },
+      () => worker(),
+    );
     await Promise.all(workers);
 
     const processed = results.filter((r) => r.status === "processed");
