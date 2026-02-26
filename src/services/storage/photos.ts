@@ -19,6 +19,9 @@ const SIGNED_URL_TTL_MS = 1000 * 60 * 60;
 // 24 hours
 const CACHE_TTL_SECONDS = 60 * 60 * 24;
 
+const FALLBACK_DATE = new Date(0);
+const IMAGE_EXTENSION_REGEX = /\.(jpg|jpeg|png|gif|webp)$/i;
+
 export type StorageClient = Pick<Storage, "bucket">;
 
 type SignedUrlResult = string | [string];
@@ -91,6 +94,19 @@ const parsePhotoId = (value: string | undefined): number | null => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
+const generatePhotoIdFromFilename = (filename: string): number => {
+  // eslint-disable-next-line no-restricted-syntax
+  let hash = 0;
+  // eslint-disable-next-line no-restricted-syntax
+  for (let i = 0; i < filename.length; i++) {
+    const charCode = filename.charCodeAt(i);
+    hash = (hash << 5) - hash + charCode;
+    // Convert to 32bit integer
+    hash |= 0;
+  }
+  return Math.abs(hash);
+};
+
 const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
   // Skip signing attempt if using ADC without explicit credentials - use public URL directly
   if (!getGCPCredentials().hasCredentials) {
@@ -142,38 +158,24 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const tags = userMetadata.tags ?? "";
   const width = parseNumber(userMetadata.width, 0);
   const height = parseNumber(userMetadata.height, 0);
-  const fallbackUrl = file.publicUrl();
 
   // Use user-provided date, or fallback to file update time
   const dateUpload = parseDate(
     userMetadata.dateUploaded ?? resourceMetadata.updated,
-    new Date(0),
+    FALLBACK_DATE,
   );
 
   // Try to get ID from metadata first, then fallback to extracting from filename, then to hash
   const metadataId = parsePhotoId(userMetadata.id);
   const filenameId = metadataId ?? parsePhotoId(file.name);
 
-  const id =
-    filenameId ??
-    (() => {
-      // eslint-disable-next-line no-restricted-syntax
-      let hash = 0;
-      // eslint-disable-next-line no-restricted-syntax
-      for (let i = 0; i < file.name.length; i++) {
-        const charCode = file.name.charCodeAt(i);
-        hash = (hash << 5) - hash + charCode;
-        // Convert to 32bit integer
-        hash |= 0;
-      }
-      return Math.abs(hash);
-    })();
+  const id = filenameId ?? generatePhotoIdFromFilename(file.name);
 
   const views = parseNumber(userMetadata.views);
 
   const signedUrl = await getSignedUrlForFile(file);
 
-  const url = signedUrl || fallbackUrl;
+  const url = signedUrl;
 
   const photo: Photo = {
     id,
@@ -278,23 +280,25 @@ const processFetchedFiles = async (
   files: StorageFileLike[],
   limit?: number,
 ): Promise<Photo[]> => {
-  const filteredFiles = files.filter(
-    (file) =>
-      !file.name.endsWith("/") &&
-      /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
-  );
+  const filesToProcess: StorageFileLike[] = [];
 
-  const filesToProcess =
-    limit && limit > 0 ? filteredFiles.slice(0, limit) : filteredFiles;
+  // Optimized loop: filter and slice in one pass to avoid intermediate arrays
+  for (const file of files) {
+    if (limit && limit > 0 && filesToProcess.length >= limit) {
+      break;
+    }
 
-  const mapped = await Promise.all(
-    filesToProcess.map((file) => mapFileToPhoto(file)),
-  );
+    if (!file.name.endsWith("/") && IMAGE_EXTENSION_REGEX.test(file.name)) {
+      filesToProcess.push(file);
+    }
+  }
+
+  const mapped = await Promise.all(filesToProcess.map(mapFileToPhoto));
 
   const photos = mapped.filter((photo): photo is Photo => photo !== null);
   console.log(
     chalk.green(
-      `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total available: ${filteredFiles.length})`,
+      `[PhotosStorage] Successfully mapped ${photos.length} photos from ${filesToProcess.length} processed files (total scanned: ${files.length})`,
     ),
   );
 
