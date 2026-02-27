@@ -1,9 +1,14 @@
 import { Photo } from "@/types/photos";
 import { Image } from "react-photo-album";
 
+export type LightboxImage = Image & {
+  title?: string;
+  description?: string;
+};
+
 export interface GalleryImages {
   galleryPhotos: Image[] | undefined;
-  lightboxPhotos: Image[] | undefined;
+  lightboxPhotos: LightboxImage[] | undefined;
 }
 
 /*
@@ -21,7 +26,7 @@ export const mapPhotosToGalleryImages = (
   }
 
   const galleryPhotos: Image[] = [];
-  const lightboxPhotos: Image[] = [];
+  const lightboxPhotos: LightboxImage[] = [];
 
   // Optimized loop: map to both formats in a single pass to reduce iterations and allocations
   for (const photo of photos) {
