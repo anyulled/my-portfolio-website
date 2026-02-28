@@ -138,8 +138,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-  const messages = await getMessages();
+  /*
+   * ⚡ Bolt: Execute independent asynchronous operations concurrently
+   * to eliminate request waterfalls and reduce server response time.
+   */
+  const [locale, messages] = await Promise.all([
+    getLocale(),
+    getMessages(),
+  ]);
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={"bg-background dark:bg-background"}>

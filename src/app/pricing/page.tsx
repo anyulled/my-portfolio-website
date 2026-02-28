@@ -158,9 +158,16 @@ const getPackages = (
   ];
 
 export default async function PricingPage() {
-  const t = await getTranslations("pricing");
-  const latestPricing = await getPricing();
-  const pricingPhotos = (await getPhotosFromStorage("pricing")) || [];
+  /*
+   * ⚡ Bolt: Fetch pricing details, translations, and photos concurrently
+   * rather than sequentially to avoid request waterfalls and improve LCP.
+   */
+  const [t, latestPricing, pricingPhotosRaw] = await Promise.all([
+    getTranslations("pricing"),
+    getPricing(),
+    getPhotosFromStorage("pricing"),
+  ]);
+  const pricingPhotos = pricingPhotosRaw || [];
 
   // Shuffle photos to get random selection
   const shuffledPhotos = [...pricingPhotos].sort(() => 0.5 - Math.random());

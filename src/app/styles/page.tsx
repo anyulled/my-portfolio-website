@@ -15,8 +15,14 @@ export const metadata: Metadata = {
 };
 
 export default async function PhotographyStylesPage() {
-  const res = await getPhotosFromStorage("styles", 500);
-  const t = await getTranslations("styles-index");
+  /*
+   * ⚡ Bolt: Concurrently load photos and translations to prevent
+   * sequential data waterfalls and drastically speed up time to first byte.
+   */
+  const [res, t] = await Promise.all([
+    getPhotosFromStorage("styles", 500),
+    getTranslations("styles-index"),
+  ]);
 
   const photoStyles: Array<{
     name: string;

@@ -1,7 +1,7 @@
 import TestimonialsHero from "@/app/testimonials/TestimonialHero";
 import TestimonialsCTA from "@/app/testimonials/TestimonialsCTA";
 import TestimonialsGrid from "@/components/TestimonialsGrid";
-import { getTestimonials, Testimonial } from "@/lib/testimonials";
+import { getTestimonials } from "@/lib/testimonials";
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -64,13 +64,19 @@ const structuredData: WithContext<WebPage> = {
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 
 export default async function TestimonialsPage() {
-  const testimonials: Testimonial[] = await getTestimonials();
-  const heroPhotos = await getPhotosFromStorage("hero");
+  /*
+   * ⚡ Bolt: Prevent independent data loads from causing a request waterfall.
+   * We fetch testimonials, photos, and translations concurrently via Promise.all
+   * to minimize overall latency and improve server response time.
+   */
+  const [testimonials, heroPhotos, t] = await Promise.all([
+    getTestimonials(),
+    getPhotosFromStorage("hero"),
+    getTranslations("testimonials"),
+  ]);
   const heroImage =
     heroPhotos?.[0]?.srcSet[0]?.src ||
     "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.webp";
-
-  const t = await getTranslations("testimonials");
 
   const featuredTestimonials = testimonials.filter((t) => t.featured);
   const regularTestimonials = testimonials.filter((t) => !t.featured);
