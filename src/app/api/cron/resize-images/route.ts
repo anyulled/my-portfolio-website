@@ -224,6 +224,7 @@ export async function GET(_request: NextRequest) {
     const CONCURRENCY = 5;
 
     // Process files with concurrency limit
+    // eslint-disable-next-line no-restricted-syntax
     let currentIndex = 0;
 
     // Simple semaphore for concurrency control

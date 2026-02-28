@@ -47,8 +47,14 @@ const fetchCollaborationPhotos = async () => {
 };
 
 export default async function BioPage() {
-  const images = await fetchCoverPhotos();
-  const collaborationImages = await fetchCollaborationPhotos();
+  /*
+   * ⚡ Bolt: Execute independent photo fetches concurrently
+   * to avoid blocking operations and improve rendering speed.
+   */
+  const [images, collaborationImages] = await Promise.all([
+    fetchCoverPhotos(),
+    fetchCollaborationPhotos(),
+  ]);
 
   if (images == null) {
     console.error("[ About ] Error fetching cover photos");
