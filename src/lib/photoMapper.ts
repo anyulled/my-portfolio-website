@@ -20,23 +20,36 @@ export const mapPhotosToGalleryImages = (
     return { galleryPhotos: undefined, lightboxPhotos: undefined };
   }
 
-  const galleryPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-  }));
+  const galleryPhotos: Image[] = [];
+  /*
+   * Using any or casting to Image to allow extra properties like title and description
+   * for yet-another-react-lightbox
+   */
+  const lightboxPhotos: Image[] = [];
 
-  const lightboxPhotos: Image[] = photos.map((photo: Photo) => ({
-    src: photo.srcSet[0]?.src || "",
-    srcSet: photo.srcSet,
-    alt: photo.title,
-    width: photo.width || DEFAULT_WIDTH,
-    height: photo.height || DEFAULT_HEIGHT,
-    title: photo.title,
-    description: photo.description,
-  }));
+  for (const photo of photos) {
+    const src = photo.srcSet[0]?.src || "";
+    const width = photo.width || DEFAULT_WIDTH;
+    const height = photo.height || DEFAULT_HEIGHT;
+
+    galleryPhotos.push({
+      src,
+      srcSet: photo.srcSet,
+      alt: photo.title,
+      width,
+      height,
+    } as Image);
+
+    lightboxPhotos.push({
+      src,
+      srcSet: photo.srcSet,
+      alt: photo.title,
+      width,
+      height,
+      title: photo.title,
+      description: photo.description,
+    } as Image);
+  }
 
   return { galleryPhotos, lightboxPhotos };
 };
