@@ -38,7 +38,7 @@ export const mapPhotosToGalleryImages = (
       alt: photo.title,
       width,
       height,
-    });
+    } as Image);
 
     lightboxPhotos.push({
       src,
