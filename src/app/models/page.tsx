@@ -27,6 +27,13 @@ const fetchPhotos = async (): Promise<Photo[]> => {
 export default async function ModelIndexPage() {
   const allPhotos = await fetchPhotos();
 
+  /*
+   * ⚡ Bolt: Hoisted the sorting of photos outside the models map loop to avoid
+   * redundant array allocations and O(M * N log N) time complexity.
+   * This reduces CPU overhead when rendering the models index page.
+   */
+  const sortedPhotos = allPhotos.toSorted((a, b) => b.views - a.views);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 text-neutral-100">
       <div className="container mx-auto px-4 py-16">
@@ -43,9 +50,9 @@ export default async function ModelIndexPage() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {models.map((model) => {
-            const matchedPhoto = allPhotos
-              .toSorted((a, b) => b.views - a.views)
-              .find((photo) => photo.tags.includes(model.tag.replace("-", "")));
+            const matchedPhoto = sortedPhotos.find((photo) =>
+              photo.tags.includes(model.tag.replace("-", "")),
+            );
 
             return (
               <div key={model.tag} className="group">
