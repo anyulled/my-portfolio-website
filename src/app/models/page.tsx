@@ -50,8 +50,14 @@ export default async function ModelIndexPage() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {models.map((model) => {
+            /*
+             * ⚡ Bolt: Hoisted the invariant `replace` operation out of the `.find()` callback.
+             * This prevents O(M * N) redundant string allocations and regex evaluations,
+             * reducing it to O(M) and significantly lowering CPU overhead and garbage collection.
+             */
+            const searchTag = model.tag.replace("-", "");
             const matchedPhoto = sortedPhotos.find((photo) =>
-              photo.tags.includes(model.tag.replace("-", "")),
+              photo.tags.includes(searchTag),
             );
 
             return (

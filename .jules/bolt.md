@@ -45,3 +45,7 @@
 ## 2026-02-12 - [LCP Optimization: Global CSS Animations]
 **Learning:** Applying `animation: fadeIn` globally to `img` tags in `globals.css` forces ALL images, including LCP candidates (like Hero), to start at `opacity: 0` and wait for a scroll-timeline event. This defeats `next/image` optimizations (`priority`) and significantly delays LCP.
 **Action:** Removed the global `img` animation rule. Relied on component-level animations (e.g., `useFadeIn`, `Gallery`) which are more controlled and allow excluding critical images from initial hiding.
+
+## 2026-02-12 - [Performance: Hoisting Invariant Operations from Array Callbacks]
+**Learning:** Placing invariant operations, like string replacement (`model.tag.replace("-", "")`), inside the callback of an array iteration method (e.g., `.find()`) forces the runtime to repeatedly allocate memory and execute the logic on every item. In nested loops (e.g., `.map()` containing `.find()`), this transforms an $O(N)$ string allocation into an $O(M \times N)$ performance bottleneck.
+**Action:** Always extract and evaluate invariant variables before entering iterative callbacks to ensure they are computed only once.
