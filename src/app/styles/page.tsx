@@ -24,6 +24,25 @@ export default async function PhotographyStylesPage() {
     getTranslations("styles-index"),
   ]);
 
+  /*
+   * ⚡ Bolt: Pre-compute photo tags into a Map for O(1) lookups.
+   * This eliminates the O(M * N) nested loop and redundant photo.tags.split(" ")
+   * string allocations on every iteration, significantly improving rendering performance.
+   */
+  const photoTagMap = new Map<string, string>();
+  for (const photo of res ?? []) {
+    if (!photo.tags) continue;
+    const tags = photo.tags.split(" ");
+    const src = photo.srcSet[0]?.src;
+    if (!src) continue;
+
+    for (const tag of tags) {
+      if (tag && !photoTagMap.has(tag)) {
+        photoTagMap.set(tag, src);
+      }
+    }
+  }
+
   const photoStyles: Array<{
     name: string;
     image: string;
@@ -38,9 +57,7 @@ export default async function PhotographyStylesPage() {
 
     return {
       name: style.tag.replace("-", " "),
-      image:
-        res?.find((photo) => photo.tags.split(" ").includes(searchTag))
-          ?.srcSet[0]?.src ?? "",
+      image: photoTagMap.get(searchTag) ?? "",
       link: `styles/${style.name}`,
     };
   });
