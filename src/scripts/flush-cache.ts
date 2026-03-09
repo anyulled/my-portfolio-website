@@ -6,8 +6,7 @@ import { Redis } from "@upstash/redis";
 import chalk from "chalk";
 
 /**
- * Simple .env loader to ensure local execution has access to secrets.
- * Next.js does this automatically, but standalone scripts need it.
+ * Robust .env loader to handle local execution.
  */
 const loadEnv = () => {
   const envFiles = [".env.local", ".env"];
@@ -16,55 +15,73 @@ const loadEnv = () => {
     const filePath = path.resolve(process.cwd(), file);
     if (!fs.existsSync(filePath)) return;
 
-    const content = fs.readFileSync(filePath, "utf-8");
-    content.split("\n").forEach((line) => {
-      const trimmedLine = line.trim();
-      if (!trimmedLine || trimmedLine.startsWith("#")) return;
+    try {
+      const content = fs.readFileSync(filePath, "utf-8");
+      content.split(/\r?\n/).forEach((line) => {
+        const trimmedLine = line.trim();
+        if (!trimmedLine || trimmedLine.startsWith("#")) return;
 
-      const [key, ...valueParts] = trimmedLine.split("=");
-      const keyTrimmed = key?.trim();
-      if (!keyTrimmed) return;
+        const match = trimmedLine.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+        if (match) {
+          const key = match[1];
+          let value = match[2] || "";
 
-      let value = valueParts.join("=").trim();
-      // Remove surrounding quotes if present
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
-        value = value.slice(1, -1);
-      }
+          // Remove surrounding quotes
+          if (
+            (value.startsWith('"') && value.endsWith('"')) ||
+            (value.startsWith("'") && value.endsWith("'"))
+          ) {
+            value = value.slice(1, -1);
+          }
 
-      if (!(keyTrimmed in process.env)) {
-        process.env[keyTrimmed] = value;
-      }
-    });
+          if (!(key in process.env)) {
+            process.env[key] = value;
+          }
+        }
+      });
+    } catch (e) {
+      console.warn(`Failed to read ${file}:`, e);
+    }
   });
 };
 
 loadEnv();
 
 const flushRedis = async (): Promise<void> => {
-  const { UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN } = process.env;
+  // Try multiple common names for the same thing
+  const url =
+    process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.KV_REST_API_URL ||
+    process.env.REDIS_URL;
+  const token =
+    process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
 
-  if (!UPSTASH_REDIS_REST_URL || !UPSTASH_REDIS_REST_TOKEN) {
+  if (!url || !token) {
     console.warn(
-      chalk.yellow("⚠️ Redis credentials missing. Skipping Redis flush."),
+      chalk.yellow(
+        "⚠️ Redis credentials missing (tried UPSTASH_REDIS_REST_URL, KV_REST_API_URL, REDIS_URL). Skipping Redis flush.",
+      ),
     );
     return;
   }
 
   const redis = new Redis({
-    url: UPSTASH_REDIS_REST_URL,
-    token: UPSTASH_REDIS_REST_TOKEN,
+    url,
+    token,
   });
 
   try {
-    const keys = await redis.keys("photos-*");
+    // Try both with and without sanitization matching
+    const keys = await redis.keys("photos*");
     if (keys.length > 0) {
       await redis.del(...keys);
-      console.log(chalk.green(`✅ Redis: deleted ${keys.length} keys.`));
+      console.log(
+        chalk.green(
+          `✅ Redis: deleted ${keys.length} keys starting with 'photos'.`,
+        ),
+      );
     } else {
-      console.log(chalk.green("✅ Redis: no 'photos-*' keys to delete."));
+      console.log(chalk.green("✅ Redis: no 'photos*' keys found."));
     }
   } catch (error) {
     console.error(chalk.red("❌ Redis flush failed:"), error);
@@ -84,6 +101,7 @@ const flushVercelBlob = async (
 
   try {
     const result: ListBlobResult = await list({ cursor, limit: 100 });
+    // Match sanitized keys (no dashes) and original keys
     const photoBlobs = result.blobs.filter((b) =>
       b.pathname.startsWith("photos"),
     );
