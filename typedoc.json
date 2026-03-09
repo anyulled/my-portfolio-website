@@ -1,0 +1,8 @@
+{
+  "entryPoints": ["src"],
+  "out": "docs",
+  "name": "My Portfolio Website",
+  "readme": "none",
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"],
+  "plugin": []
+}

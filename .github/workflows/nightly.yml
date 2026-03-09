@@ -1,0 +1,44 @@
+name: Nightly Checks
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Run at 2 AM UTC every night
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: |
+          npm ci --legacy-peer-deps
+
+      - name: Strict Lints
+        run: npm run lint:ci
+
+      - name: Security Audit
+        run: npm run audit:ci
+
+      - name: Mutation Tests
+        run: npm run test:mutation
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress './**/*.md' './**/*.html'
+          fail: true
+
+      - name: Docs Generation Scan
+        run: npm run docs

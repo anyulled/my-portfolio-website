@@ -6,6 +6,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
 import jestPlugin from 'eslint-plugin-jest';
+import securityPlugin from 'eslint-plugin-security';
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import noGenericNames from './.eslint-rules/no-generic-names.js';
@@ -26,7 +27,8 @@ const customRules = {
             },
         },
         import: importPlugin,
-        '@next/next': nextPlugin
+        '@next/next': nextPlugin,
+        security: securityPlugin
     },
 };
 
@@ -80,6 +82,7 @@ export default [
             '@eslint-community/eslint-comments/no-use': ['error', { allow: ['eslint-disable', 'eslint-enable', 'eslint-disable-next-line'] }],
         },
     },
+    securityPlugin.configs.recommended,
     customRules,
     {
         files: ['**/*.ts', '**/*.tsx'],

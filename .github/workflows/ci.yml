@@ -37,9 +37,23 @@ jobs:
           npm config set fetch-retry-maxtimeout 120000
           npm ci --legacy-peer-deps
 
-      - run: npm run lint
+      - run: npm run lint:ci
+      - run: npm run format:check
+      - run: npm run audit:ci
       - run: npm run test
+      - run: npm run test:mutation
       - run: npm run build
+      - run: npm run docs
+
+  link-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress './**/*.md' './**/*.html'
+          fail: true
 
   scorecard:
     runs-on: ubuntu-latest

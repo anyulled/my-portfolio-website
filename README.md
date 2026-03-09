@@ -8,6 +8,10 @@
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Architecture & RFCs
+
+For significant architectural changes, new features, or major refactoring, we use a Request for Comments (RFCs) process. You can find our active and past proposals in the [docs/rfcs](./docs/rfcs) directory and read the [RFC Process Documentation](./docs/rfcs/README.md) to learn how to propose changes.
+
 ## Getting Started
 
 First, run the development server:
