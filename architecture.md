@@ -53,3 +53,26 @@ The `hooks` folder contains custom **React Hooks**. These are strongly tied to t
 - When you need to tap into React's state management (`useState`, `useReducer`).
 - When you need to interact with the component lifecycle (`useEffect`).
 - When interacting with the DOM (Refs, window events) inside a `'use client'` component.
+
+## Module Dependencies & Constraints
+
+To maintain a clean architecture, we enforce strict dependency boundaries between modules. **The following rules dictate which modules must NOT depend on each other:**
+
+1. **`src/lib/` (Core Utilities)**
+   - **MUST NOT** depend on `src/services/` (Business Logic).
+   - **MUST NOT** depend on `src/hooks/` (React State).
+   - **MUST NOT** depend on `src/app/` or `src/components/` (UI layer).
+   - _Rationale_: Utilities must remain pure, isolated, and framework-agnostic.
+
+2. **`src/hooks/` (Client React State)**
+   - **MUST NOT** depend on `src/services/` (Server-side Business Logic).
+   - _Rationale_: Hooks run on the client, whereas services are strictly for the server environment (e.g., database, secret APIs). Mixing them causes build errors or security leaks.
+
+3. **`src/services/` (Server Business Logic)**
+   - **MUST NOT** depend on `src/hooks/` (React State).
+   - **MUST NOT** depend on `src/components/` or `src/app/` (UI layer).
+   - _Rationale_: Business logic must remain decoupled from the presentation layer.
+
+4. **`src/components/` (Shared UI Components)**
+   - **MUST NOT** depend on `src/app/` (Next.js Application Routing layer).
+   - _Rationale_: Components should be reusable across different routes. Tying them to specific app route logic reduces their reusability.
