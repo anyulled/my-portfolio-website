@@ -4,7 +4,7 @@
 
 - **Repository**: `/home/runner/work/my-portfolio-website/my-portfolio-website`
 - **Languages**: javascript, typescript
-- **Assessed**: 2026-03-09 18:26 UTC
+- **Assessed**: 2026-03-09 18:30 UTC
 - **Checks**: 18/31 passed
 
 ## Summary
@@ -23,7 +23,7 @@
 
 _matklad ARCHITECTURE.md guide_
 
-**Evidence**: Found: docs/architecture.md
+**Evidence**: Found: architecture.md
 
 ### [PASS] Agent Instructions (5/5)
 
