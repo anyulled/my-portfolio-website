@@ -67,7 +67,6 @@ export default function Hero({ image }: Readonly<HeroProps>) {
         },
       );
     }
-
   }, []);
 
   return (

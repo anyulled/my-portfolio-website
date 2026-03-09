@@ -13,17 +13,17 @@ import chalk from "chalk";
  * and handling quotes that might be included in the environment variable.
  */
 const sanitizePrivateKey = (key: string | undefined): string => {
-    if (!key) return "";
+  if (!key) return "";
 
-    // Replace literal \n with actual newlines
-    const sanitized = key.replaceAll(String.raw`\n`, "\n");
+  // Replace literal \n with actual newlines
+  const sanitized = key.replaceAll(String.raw`\n`, "\n");
 
-    // Remove wrapping quotes if they exist (sometimes Vercel Env UI adds them)
-    if (sanitized.startsWith('"') && sanitized.endsWith('"')) {
-        return sanitized.slice(1, -1);
-    }
+  // Remove wrapping quotes if they exist (sometimes Vercel Env UI adds them)
+  if (sanitized.startsWith('"') && sanitized.endsWith('"')) {
+    return sanitized.slice(1, -1);
+  }
 
-    return sanitized;
+  return sanitized;
 };
 
 /**
@@ -31,17 +31,17 @@ const sanitizePrivateKey = (key: string | undefined): string => {
  * Checks both GCP_CLIENT_EMAIL and GCP_SERVICE_ACCOUNT_EMAIL for compatibility
  */
 export const getGCPCredentials = () => {
-    const clientEmail =
-        process.env.GCP_CLIENT_EMAIL || process.env.GCP_SERVICE_ACCOUNT_EMAIL;
-    const privateKey = process.env.GCP_PRIVATE_KEY;
-    const projectId = process.env.GCP_PROJECT_ID;
+  const clientEmail =
+    process.env.GCP_CLIENT_EMAIL || process.env.GCP_SERVICE_ACCOUNT_EMAIL;
+  const privateKey = process.env.GCP_PRIVATE_KEY;
+  const projectId = process.env.GCP_PROJECT_ID;
 
-    return {
-        clientEmail,
-        privateKey,
-        projectId,
-        hasCredentials: Boolean(clientEmail && privateKey),
-    };
+  return {
+    clientEmail,
+    privateKey,
+    projectId,
+    hasCredentials: Boolean(clientEmail && privateKey),
+  };
 };
 
 /**
@@ -49,32 +49,30 @@ export const getGCPCredentials = () => {
  * Prioritizes explicit Service Account credentials from environment variables.
  */
 export const createGCPStorageClient = (): Storage => {
-    const { clientEmail, privateKey, projectId, hasCredentials } =
-        getGCPCredentials();
+  const { clientEmail, privateKey, projectId, hasCredentials } =
+    getGCPCredentials();
 
-    if (!hasCredentials) {
-        console.log(
-            chalk.yellow(
-                `[GCP] Missing explicit credentials. clientEmail: ${clientEmail ? "Present" : "Missing"}, privateKey: ${privateKey ? "Present" : "Missing"}`,
-            ),
-        );
-        console.log(
-            chalk.cyan(
-                "[GCP] Falling back to Application Default Credentials (ADC).",
-            ),
-        );
-        return new Storage();
-    }
-
+  if (!hasCredentials) {
     console.log(
-        chalk.green("[GCP] Using explicit Service Account credentials."),
+      chalk.yellow(
+        `[GCP] Missing explicit credentials. clientEmail: ${clientEmail ? "Present" : "Missing"}, privateKey: ${privateKey ? "Present" : "Missing"}`,
+      ),
     );
+    console.log(
+      chalk.cyan(
+        "[GCP] Falling back to Application Default Credentials (ADC).",
+      ),
+    );
+    return new Storage();
+  }
 
-    return new Storage({
-        projectId,
-        credentials: {
-            client_email: clientEmail,
-            private_key: sanitizePrivateKey(privateKey),
-        },
-    });
+  console.log(chalk.green("[GCP] Using explicit Service Account credentials."));
+
+  return new Storage({
+    projectId,
+    credentials: {
+      client_email: clientEmail,
+      private_key: sanitizePrivateKey(privateKey),
+    },
+  });
 };

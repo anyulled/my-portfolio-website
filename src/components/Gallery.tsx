@@ -12,7 +12,11 @@ import dynamic from "next/dynamic";
 import { Aref_Ruqaa } from "next/font/google";
 import Image from "next/image";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { RenderImageContext, RenderImageProps, RowsPhotoAlbum } from "react-photo-album";
+import {
+  RenderImageContext,
+  RenderImageProps,
+  RowsPhotoAlbum,
+} from "react-photo-album";
 import "react-photo-album/rows.css";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/plugins/captions.css";
@@ -95,7 +99,7 @@ export default function Gallery({
         once: true,
       });
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   const handleImageClick = useCallback(
@@ -109,7 +113,7 @@ export default function Gallery({
 
   const { galleryPhotos, lightboxPhotos } = useMemo(
     () => mapPhotosToGalleryImages(photos),
-    [photos]
+    [photos],
   );
 
   const render = useMemo(
@@ -126,7 +130,10 @@ export default function Gallery({
 
   return (
     <>
-      <section ref={containerRef} className="py-6 md:py-3 bg-background dark:bg-background">
+      <section
+        ref={containerRef}
+        className="py-6 md:py-3 bg-background dark:bg-background"
+      >
         <div className="container mx-auto px-6">
           {showTitle && (
             <FadeInTitle>

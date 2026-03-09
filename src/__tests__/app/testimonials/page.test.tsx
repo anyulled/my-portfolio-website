@@ -32,7 +32,13 @@ jest.mock("@/app/testimonials/TestimonialsCTA", () => ({
 // Mock TestimonialsGrid to avoid loading GSAP in tests and to isolate the page test
 jest.mock("@/components/TestimonialsGrid", () => ({
   __esModule: true,
-  default: ({ testimonials, startIndex = 0 }: { testimonials: Testimonial[], startIndex?: number }) => (
+  default: ({
+    testimonials,
+    startIndex = 0,
+  }: {
+    testimonials: Testimonial[];
+    startIndex?: number;
+  }) => (
     <div data-testid="testimonials-grid">
       {testimonials.map((t, i) => (
         <div key={t.id} data-testid={`testimonial-card-${t.id}`}>

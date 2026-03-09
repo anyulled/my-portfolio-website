@@ -60,7 +60,9 @@ const ProfileSection = ({ profileImageUrl, t }: ProfileSectionProps) => (
               {t("h3")}
             </h3>
           </FadeInTitle>
-          <p className=" my-2 text-foreground dark:text-foreground">{t("p1")}</p>
+          <p className=" my-2 text-foreground dark:text-foreground">
+            {t("p1")}
+          </p>
           <p className=" my-2 text-foreground dark:text-foreground">
             {t("p2")}
             <Link href={"https://efacontigo.com/"} target={"_blank"}>
@@ -83,8 +85,12 @@ const ProfileSection = ({ profileImageUrl, t }: ProfileSectionProps) => (
             </Link>
             , Dominante, {t("p5")}
           </p>
-          <p className=" my-2 text-foreground dark:text-foreground">{t("p6")}</p>
-          <p className=" my-2 text-foreground dark:text-foreground">{t("p7")}</p>
+          <p className=" my-2 text-foreground dark:text-foreground">
+            {t("p6")}
+          </p>
+          <p className=" my-2 text-foreground dark:text-foreground">
+            {t("p7")}
+          </p>
           <p className=" my-2 text-foreground dark:text-foreground">
             {t("p8")}
             <strong>

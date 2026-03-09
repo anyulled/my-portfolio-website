@@ -5,7 +5,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
-import vitest from '@vitest/eslint-plugin';
+
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import noGenericNames from './.eslint-rules/no-generic-names.js';
@@ -52,6 +52,7 @@ export default [
     },
     {
         ignores: [
+            ".agent/**",
             ".next/**",
             "node_modules/**",
             "coverage/**",
@@ -239,16 +240,7 @@ export default [
             '@typescript-eslint/no-require-imports': 'off',
         },
     },
-    {
-        files: ['src/__tests__/**/*.ts', 'src/__tests__/**/*.tsx'],
-        plugins: {
-            vitest
-        },
-        rules: {
-            ...vitest.configs.recommended.rules,
-            'vitest/max-nested-describe': ['error', { max: 3 }],
-        },
-    },
+
     {
         files: ['**/*.ts', '**/*.tsx'],
         languageOptions: {

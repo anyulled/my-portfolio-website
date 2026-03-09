@@ -149,7 +149,9 @@ describe("Photos Storage Service", () => {
     const createMockFile = (name: string) => ({
       ...mockFile,
       name,
-      getSignedUrl: jest.fn().mockResolvedValue(["https://signed-url.com/" + name]),
+      getSignedUrl: jest
+        .fn()
+        .mockResolvedValue(["https://signed-url.com/" + name]),
       publicUrl: jest.fn().mockReturnValue("https://example.com/" + name),
       isPublic: jest.fn().mockResolvedValue([true]),
     });

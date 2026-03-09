@@ -1,4 +1,3 @@
-
 /** @jest-environment node */
 // Mock next/server
 jest.mock("next/server", () => ({
@@ -69,8 +68,8 @@ describe("Image Resizing Cron Route", () => {
     });
 
     // Mock console
-    jest.spyOn(console, "log").mockImplementation(() => { });
-    jest.spyOn(console, "error").mockImplementation(() => { });
+    jest.spyOn(console, "log").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     // Import route
     const route = require("@/app/api/cron/resize-images/route");
@@ -81,7 +80,9 @@ describe("Image Resizing Cron Route", () => {
     const file1 = mockFile("image1.jpg");
     const file2 = mockFile("image2.png");
     context.mockBucket.getFiles.mockResolvedValue([[file1, file2]]);
-    context.mockBucket.file.mockImplementation((name: string) => mockFile(name));
+    context.mockBucket.file.mockImplementation((name: string) =>
+      mockFile(name),
+    );
 
     const response = await context.GET();
     const json = await response.json();

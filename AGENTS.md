@@ -6,7 +6,7 @@
 - **Never remove or comment out Git hook commands.** Our goal is to deliver with quality.
 - **Never bypass Git hooks** (e.g., using `--no-verify`). We prioritize quality code over delivery speed.
 - **NO inline comments, doc comments, or line comments of ANY kind** explaining what the code does.
-- Code MUST be self-documenting through clear variable and function names.
+- **Code MUST be self-documenting** through clear variable and function names.
 - **Code comments ONLY explain WHY**, never WHAT. Only write comments explaining why a non-obvious decision was made.
 
 ## Project Context & Stack
