@@ -110,7 +110,8 @@
     "test:mutation": "stryker run",
     "audit:ci": "npm audit --audit-level=high",
     "docs": "typedoc",
-    "api:lint": "redocly lint docs/openapi.yaml"
+    "api:lint": "redocly lint docs/openapi.yaml",
+    "cache:flush": "npx tsx src/scripts/flush-cache.ts"
   },
   "version": "0.1.0"
 }

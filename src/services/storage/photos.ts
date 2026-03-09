@@ -11,13 +11,13 @@ import { captureException } from "@sentry/nextjs";
 import chalk from "chalk";
 
 // Backward compatibility export
-export const createStorageClient = createGCPStorageClient;
+export { createGCPStorageClient as createStorageClient } from "@/lib/gcp/storage-client";
 
 export const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
-// 1 hour
-const SIGNED_URL_TTL_MS = 1000 * 60 * 60;
 // 24 hours
-const CACHE_TTL_SECONDS = 60 * 60 * 24;
+const SIGNED_URL_TTL_MS = 1000 * 60 * 60 * 24;
+// 12 hours (Safety margin)
+const CACHE_TTL_SECONDS = 60 * 60 * 12;
 
 const FALLBACK_DATE = new Date(0);
 const IMAGE_EXTENSION_REGEX = /\.(jpg|jpeg|png|gif|webp)$/i;
@@ -56,17 +56,19 @@ const extractTrailingDigits = (value: string): string | null => {
   let end = -1;
   // eslint-disable-next-line no-restricted-syntax
   for (let i = value.length - 1; i >= 0; i--) {
-    const code = value.charCodeAt(i);
+    const code = value.codePointAt(i) ?? 0;
     // '0'-'9'
     const isDigit = code >= 48 && code <= 57;
-
-    if (isDigit) {
-      if (end === -1) end = i;
-    } else {
+    if (!isDigit) {
       if (end !== -1) {
         // Found the end of the digit sequence (since we are going backwards, it's the start)
         return value.substring(i + 1, end + 1);
       }
+      continue;
+    }
+
+    if (end === -1) {
+      end = i;
     }
   }
   if (end !== -1) {
@@ -97,10 +99,10 @@ const generatePhotoIdFromFilename = (filename: string): number => {
   let hash = 0;
   // eslint-disable-next-line no-restricted-syntax
   for (let i = 0; i < filename.length; i++) {
-    const charCode = filename.charCodeAt(i);
+    const charCode = filename.codePointAt(i) ?? 0;
     hash = (hash << 5) - hash + charCode;
     // Convert to 32bit integer
-    hash |= 0;
+    hash = Math.trunc(hash);
   }
   return Math.abs(hash);
 };
