@@ -64,8 +64,12 @@ jobs:
           cp scorecard-badge.json /tmp/scorecard-badge.json
           cp scorecard-report.md /tmp/scorecard-report.md
           rm -f scorecard-badge.json scorecard-report.md
-          git fetch origin scorecard
-          git checkout scorecard
+          if git fetch origin scorecard; then
+            git checkout scorecard
+          else
+            git checkout --orphan scorecard
+            git rm -rf .
+          fi
           cp /tmp/scorecard-badge.json scorecard-badge.json
           cp /tmp/scorecard-report.md scorecard-report.md
           git add scorecard-badge.json scorecard-report.md
