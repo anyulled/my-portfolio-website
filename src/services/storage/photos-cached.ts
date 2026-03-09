@@ -23,8 +23,8 @@ export const getPhotosFromStorage = async (
     // Cache key parts including arguments to prevent collisions
     ["photos-storage", prefix, limit?.toString() ?? "all"],
     {
-      // 1 week in seconds
-      revalidate: 604800,
+      // 12 hours in seconds (aligned with Signed URL fix)
+      revalidate: 43200,
       tags: ["photos"],
     },
   )();

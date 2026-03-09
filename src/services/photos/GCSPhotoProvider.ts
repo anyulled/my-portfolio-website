@@ -14,8 +14,8 @@ import type { ListPhotosOptions, PhotoProvider } from "./PhotoInterfaces";
 import { DEFAULT_LIST_OPTIONS } from "./PhotoInterfaces";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-website";
-// 1 hour
-const SIGNED_URL_TTL_MS = 1000 * 60 * 60;
+// 24 hours
+const SIGNED_URL_TTL_MS = 1000 * 60 * 60 * 24;
 
 interface GCSPhotoProviderOptions {
   /** GCS bucket name. Defaults to env var GCP_HOMEPAGE_BUCKET or DEFAULT_BUCKET_NAME */
@@ -52,14 +52,14 @@ const extractIdFromFilename = (filename: string): number | null => {
   const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
 
   // Match pattern: anything_NUMBER_o
-  const match = RegExp(/_(\d+)_o$/).exec(nameWithoutExt);
+  const match = new RegExp(/_(\d+)_o$/).exec(nameWithoutExt);
   if (match?.[1]) {
     const parsed = Number(match[1]);
     return Number.isFinite(parsed) ? parsed : null;
   }
 
   // Fallback: trailing number sequence
-  const fallbackMatch = RegExp(/(\d+)$/).exec(nameWithoutExt);
+  const fallbackMatch = new RegExp(/(\d+)$/).exec(nameWithoutExt);
   if (fallbackMatch?.[1]) {
     const parsed = Number(fallbackMatch[1]);
     return Number.isFinite(parsed) ? parsed : null;
