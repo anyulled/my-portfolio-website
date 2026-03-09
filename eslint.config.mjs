@@ -5,7 +5,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
-
+import jestPlugin from 'eslint-plugin-jest';
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import noGenericNames from './.eslint-rules/no-generic-names.js';
@@ -240,7 +240,19 @@ export default [
             '@typescript-eslint/no-require-imports': 'off',
         },
     },
-
+    {
+        files: ['src/__tests__/**/*.ts', 'src/__tests__/**/*.tsx'],
+        plugins: {
+            jest: jestPlugin
+        },
+        languageOptions: {
+            globals: jestPlugin.environments.globals.globals,
+        },
+        rules: {
+            ...jestPlugin.configs.recommended.rules,
+            'jest/max-nested-describe': ['error', { max: 3 }],
+        },
+    },
     {
         files: ['**/*.ts', '**/*.tsx'],
         languageOptions: {
