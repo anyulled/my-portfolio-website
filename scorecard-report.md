@@ -1,23 +1,23 @@
 # AI Harness Scorecard: my-portfolio-website
 
-**Grade: D** (51.1/100) | Significant gaps. AI code likely accumulating undetected debt.
+**Grade: C** (63.1/100) | Basic practices present but insufficient for safe AI scaling.
 
 - **Repository**: `/home/runner/work/my-portfolio-website/my-portfolio-website`
 - **Languages**: javascript, typescript
-- **Assessed**: 2026-03-09 18:30 UTC
-- **Checks**: 18/31 passed
+- **Assessed**: 2026-03-09 18:41 UTC
+- **Checks**: 22/31 passed
 
 ## Summary
 
 | Category | Weight | Score | Checks |
 |----------|--------|-------|--------|
-| Architectural Documentation | 20% | 65% [######----] | 3/5 |
+| Architectural Documentation | 20% | 80% [########--] | 4/5 |
 | Mechanical Constraints | 25% | 36% [####------] | 3/7 |
-| Testing & Stability | 25% | 34% [###-------] | 4/8 |
-| Review & Drift Prevention | 15% | 67% [#######---] | 4/6 |
-| AI-Specific Safeguards | 15% | 70% [#######---] | 4/5 |
+| Testing & Stability | 25% | 46% [#####-----] | 5/8 |
+| Review & Drift Prevention | 15% | 87% [#########-] | 5/6 |
+| AI-Specific Safeguards | 15% | 90% [#########-] | 5/5 |
 
-## Architectural Documentation (65%)
+## Architectural Documentation (80%)
 
 ### [PASS] Architecture Documentation (5/5)
 
@@ -45,13 +45,11 @@ _matklad ARCHITECTURE.md - constraints as absences_
 
 **Remediation**: Document which modules must NOT depend on each other in ARCHITECTURE.md. Example: 'The fields crate never depends on any other workspace crate.'
 
-### [FAIL] API Documentation (0/3)
+### [PASS] API Documentation (3/3)
 
 _DORA 2025 - AI-accessible documentation_
 
-**Evidence**: No API documentation generation or spec files found
-
-**Remediation**: Add doc generation to CI (cargo doc, typedoc, sphinx) or maintain OpenAPI/Swagger specs.
+**Evidence**: Doc generation config found: typedoc.json
 
 
 ## Mechanical Constraints (36%)
@@ -60,7 +58,7 @@ _DORA 2025 - AI-accessible documentation_
 
 _DORA 2025 Report_
 
-**Evidence**: CI detected: github, github, github, github
+**Evidence**: CI detected: github, github, github, github, github
 
 ### [FAIL] Linter Enforcement (0/4)
 
@@ -107,7 +105,7 @@ _Blog: 80% problem in AI-generated code_
 **Remediation**: Add unsafe_code = forbid (Rust), security linting (semgrep/bandit), or ESLint rules against dangerous patterns.
 
 
-## Testing & Stability (34%)
+## Testing & Stability (46%)
 
 ### [PASS] Test Suite (2/3)
 
@@ -139,13 +137,11 @@ _SlopCodeBench - code that 'appears correct but is unreliable'_
 
 **Remediation**: Add cargo-mutants (Rust), Stryker (JS/TS), mutmut (Python), or PIT (Java). Mutation testing catches tests that pass without verifying behavior.
 
-### [FAIL] Property-Based Testing (0/3)
+### [PASS] Property-Based Testing (3/3)
 
 _Blog: catching edge cases in AI-generated code_
 
-**Evidence**: No property-based testing found
-
-**Remediation**: Add proptest (Rust), hypothesis (Python), or fast-check (JS/TS) for testing invariants with random structured inputs.
+**Evidence**: Property-based testing library found in package.json
 
 ### [FAIL] Fuzz Testing (0/3)
 
@@ -167,10 +163,10 @@ _OpenAI Harness Engineering - mechanical constraints_
 
 _DORA 2025 - stability metrics_
 
-**Evidence**: All test jobs are blocking: main
+**Evidence**: All test jobs are blocking: main, nightly
 
 
-## Review & Drift Prevention (67%)
+## Review & Drift Prevention (87%)
 
 ### [PASS] Code Review Required (4/4)
 
@@ -178,13 +174,11 @@ _OpenAI Harness Engineering - author/reviewer separation_
 
 **Evidence**: CODEOWNERS file found: CODEOWNERS
 
-### [FAIL] Scheduled CI Jobs (0/3)
+### [PASS] Scheduled CI Jobs (3/3)
 
 _OpenAI Harness Engineering - garbage collection agents_
 
-**Evidence**: No scheduled CI jobs found
-
-**Remediation**: Add scheduled/nightly CI pipelines for drift detection: stricter lints, dependency freshness, doc coverage scans.
+**Evidence**: Scheduled CI pipeline found
 
 ### [FAIL] Stale Documentation Detection (0/2)
 
@@ -213,7 +207,7 @@ _OpenAI Harness Engineering - curated knowledge base_
 **Evidence**: Documentation sync job found in CI
 
 
-## AI-Specific Safeguards (70%)
+## AI-Specific Safeguards (90%)
 
 ### [PASS] AI Usage Norms (4/4)
 
@@ -227,13 +221,11 @@ _DORA 2025 - working in small batches_
 
 **Evidence**: Small batch guidelines found in CONTRIBUTING.md
 
-### [FAIL] Design-Before-Code Culture (0/3)
+### [PASS] Design-Before-Code Culture (3/3)
 
 _Blog: cognitive offloading guardrails_
 
-**Evidence**: No design-before-code process found
-
-**Remediation**: Create docs/rfcs/ or docs/designs/ directory. Document a process where significant changes start with a design doc or plan before implementation.
+**Evidence**: RFC/design document directory found: docs/rfcs
 
 ### [PASS] Error Handling Policy (2/3)
 
