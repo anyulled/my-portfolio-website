@@ -1,23 +1,23 @@
 # AI Harness Scorecard: my-portfolio-website
 
-**Grade: C** (63.1/100) | Basic practices present but insufficient for safe AI scaling.
+**Grade: C** (67.1/100) | Basic practices present but insufficient for safe AI scaling.
 
 - **Repository**: `/home/runner/work/my-portfolio-website/my-portfolio-website`
 - **Languages**: javascript, typescript
-- **Assessed**: 2026-03-09 18:48 UTC
-- **Checks**: 22/31 passed
+- **Assessed**: 2026-03-09 18:52 UTC
+- **Checks**: 23/31 passed
 
 ## Summary
 
 | Category | Weight | Score | Checks |
 |----------|--------|-------|--------|
-| Architectural Documentation | 20% | 80% [########--] | 4/5 |
+| Architectural Documentation | 20% | 100% [##########] | 5/5 |
 | Mechanical Constraints | 25% | 36% [####------] | 3/7 |
 | Testing & Stability | 25% | 46% [#####-----] | 5/8 |
 | Review & Drift Prevention | 15% | 87% [#########-] | 5/6 |
 | AI-Specific Safeguards | 15% | 90% [#########-] | 5/5 |
 
-## Architectural Documentation (80%)
+## Architectural Documentation (100%)
 
 ### [PASS] Architecture Documentation (5/5)
 
@@ -37,13 +37,11 @@ _DORA 2025 Report - AI-accessible documentation_
 
 **Evidence**: Found ADR directory: docs/adr
 
-### [FAIL] Module Boundary Documentation (0/4)
+### [PASS] Module Boundary Documentation (4/4)
 
 _matklad ARCHITECTURE.md - constraints as absences_
 
-**Evidence**: No module boundary constraints documented
-
-**Remediation**: Document which modules must NOT depend on each other in ARCHITECTURE.md. Example: 'The fields crate never depends on any other workspace crate.'
+**Evidence**: Module boundary constraints found in architecture.md
 
 ### [PASS] API Documentation (3/3)
 
