@@ -134,15 +134,6 @@ const PublishedWorks = ({ images, t }: PublishedWorksProps) => (
                 height={400}
                 className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105 rounded-lg"
               />
-              <div className="absolute inset-0 flex items-end justify-center">
-                <div className="w-full bg-black bg-opacity-50 backdrop-blur-md rounded-b-lg">
-                  <p
-                    className={`${arefRuqaa.className} text-xs sm:text-xs md:text-sm text-white text-center py-2`}
-                  >
-                    {cover.title}
-                  </p>
-                </div>
-              </div>
             </FadeInImage>
           </div>
         ))}
