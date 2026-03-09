@@ -1,12 +1,47 @@
+/* eslint-disable no-restricted-syntax, security/detect-non-literal-fs-filename, security/detect-object-injection */
+import fs from "node:fs";
+import path from "node:path";
 import { list, del, ListBlobResult } from "@vercel/blob";
 import { Redis } from "@upstash/redis";
 import chalk from "chalk";
 
 /**
- * Cleanup script to flush cache layers.
- *
- * Usage: npx tsx src/scripts/flush-cache.ts
+ * Simple .env loader to ensure local execution has access to secrets.
+ * Next.js does this automatically, but standalone scripts need it.
  */
+const loadEnv = () => {
+  const envFiles = [".env.local", ".env"];
+
+  envFiles.forEach((file) => {
+    const filePath = path.resolve(process.cwd(), file);
+    if (!fs.existsSync(filePath)) return;
+
+    const content = fs.readFileSync(filePath, "utf-8");
+    content.split("\n").forEach((line) => {
+      const trimmedLine = line.trim();
+      if (!trimmedLine || trimmedLine.startsWith("#")) return;
+
+      const [key, ...valueParts] = trimmedLine.split("=");
+      const keyTrimmed = key?.trim();
+      if (!keyTrimmed) return;
+
+      let value = valueParts.join("=").trim();
+      // Remove surrounding quotes if present
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+
+      if (!(keyTrimmed in process.env)) {
+        process.env[keyTrimmed] = value;
+      }
+    });
+  });
+};
+
+loadEnv();
 
 const flushRedis = async (): Promise<void> => {
   const { UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN } = process.env;
@@ -50,7 +85,7 @@ const flushVercelBlob = async (
   try {
     const result: ListBlobResult = await list({ cursor, limit: 100 });
     const photoBlobs = result.blobs.filter((b) =>
-      b.pathname.startsWith("photos-"),
+      b.pathname.startsWith("photos"),
     );
 
     if (photoBlobs.length > 0) {
@@ -84,3 +119,4 @@ main().catch((err) => {
   console.error(chalk.red("💥 Fatal error:"), err);
   process.exit(1);
 });
+/* eslint-enable no-restricted-syntax, security/detect-non-literal-fs-filename, security/detect-object-injection */
