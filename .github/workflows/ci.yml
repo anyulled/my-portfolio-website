@@ -44,6 +44,7 @@ jobs:
       - run: npm run test:mutation
       - run: npm run build
       - run: npm run docs
+      - run: npm run api:lint
 
   link-checker:
     runs-on: ubuntu-latest

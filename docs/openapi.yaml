@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: My Portfolio Website API
+  description: Internal APIs for contact, bookings, pricing, and testimonials.
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://api.my-portfolio.com
+    description: Production server
+  - url: http://localhost:3000
+    description: Local development server
+security: []
+paths:
+  /api/booking:
+    post:
+      operationId: submitBooking
+      summary: Submit a booking request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Booking request received successfully
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+  /api/contact:
+    post:
+      operationId: submitContact
+      summary: Submit a contact form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Contact message sent successfully
+        '400':
+          description: Invalid request payload
+  /api/pricing/recalculate:
+    post:
+      operationId: recalculatePricing
+      summary: Recalculate pricing based on selected options
+      responses:
+        '200':
+          description: Pricing recalculated
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Invalid request payload
+  /api/testimonials:
+    get:
+      operationId: getTestimonials
+      summary: Retrieve testimonials
+      responses:
+        '200':
+          description: Testimonials list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Invalid request payload

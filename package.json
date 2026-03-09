@@ -55,6 +55,7 @@
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.1.1",
+    "@redocly/cli": "^2.20.4",
     "@stryker-mutator/core": "^9.6.0",
     "@stryker-mutator/jest-runner": "^9.6.0",
     "@supabase/supabase-js": "^2.93.3",
@@ -108,7 +109,8 @@
     "test:watch": "jest --watch",
     "test:mutation": "stryker run",
     "audit:ci": "npm audit --audit-level=high",
-    "docs": "typedoc"
+    "docs": "typedoc",
+    "api:lint": "redocly lint docs/openapi.yaml"
   },
   "version": "0.1.0"
 }

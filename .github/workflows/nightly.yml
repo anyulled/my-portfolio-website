@@ -33,6 +33,9 @@ jobs:
 
       - name: Mutation Tests
         run: npm run test:mutation
+        
+      - name: API OpenAPI Specs Validation
+        run: npm run api:lint
 
       - name: Link Checker
         uses: lycheeverse/lychee-action@v2
