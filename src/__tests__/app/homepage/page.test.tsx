@@ -108,7 +108,10 @@ describe("HomePage", () => {
     await renderHomePage();
 
     // Verify calls - gallery fetches from root (empty prefix), hero from "hero" folder
-    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith(
+      "boudoir",
+      12,
+    );
     expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
@@ -128,7 +131,10 @@ describe("HomePage", () => {
     await renderHomePage();
 
     // Verify calls with correct limits - updated loop in component logic restores limits
-    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith(
+      "boudoir",
+      12,
+    );
     expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     // Expect 1 fallback photo (id 0)
@@ -140,7 +146,10 @@ describe("HomePage", () => {
 
     await renderHomePage();
 
-    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("", 12);
+    expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith(
+      "boudoir",
+      12,
+    );
     expect(screen.getByTestId("gallery")).toHaveTextContent("0");
   });
 });

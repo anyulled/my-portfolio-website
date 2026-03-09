@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   // Parallelize data fetching to reduce waterfall effect and improve LCP
   const [fetchedGallery, heroPhotosRaw] = await Promise.all([
-    getPhotosFromStorage("", 12),
+    getPhotosFromStorage("boudoir", 12),
     getPhotosFromStorage("hero", 6),
   ]);
 
