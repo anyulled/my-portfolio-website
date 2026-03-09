@@ -128,7 +128,7 @@ describe("GCSPhotoProvider", () => {
       ];
       mockBucketContainer.getFiles.mockResolvedValue([mockFiles]);
 
-      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => { });
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
 
       const provider = new GCSPhotoProvider({ useSignedUrls: false });
       const photos = await provider.listPhotos();
@@ -157,11 +157,13 @@ describe("GCSPhotoProvider", () => {
     });
 
     it("returns null on error", async () => {
-      mockBucketContainer.getFiles.mockRejectedValue(new Error("Network error"));
+      mockBucketContainer.getFiles.mockRejectedValue(
+        new Error("Network error"),
+      );
 
       const errorSpy = jest
         .spyOn(console, "error")
-        .mockImplementation(() => { });
+        .mockImplementation(() => {});
 
       const provider = new GCSPhotoProvider();
       const photos = await provider.listPhotos();

@@ -11,30 +11,29 @@ export const runtime = "nodejs";
 export const revalidate = 3600;
 export const dynamic = "force-static";
 
-
 /**
  * Generates a simple fallback OG image.
  */
 function generateFallbackImage() {
   return new ImageResponse(
-    (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "1200px",
-          height: "630px",
-          backgroundColor: "#1a1a2e",
-          color: "#fff",
-          fontFamily: "sans-serif",
-        }}
-      >
-        <div style={{ fontSize: 72, fontWeight: "bold" }}>Sensuelle Boudoir</div>
-        <div style={{ fontSize: 32, marginTop: 20, color: "#a0a0a0" }}>Pricing & Experiences</div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "1200px",
+        height: "630px",
+        backgroundColor: "#1a1a2e",
+        color: "#fff",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div style={{ fontSize: 72, fontWeight: "bold" }}>Sensuelle Boudoir</div>
+      <div style={{ fontSize: 32, marginTop: 20, color: "#a0a0a0" }}>
+        Pricing & Experiences
       </div>
-    ),
+    </div>,
     { ...size },
   );
 }
@@ -43,7 +42,9 @@ export default async function PricingImage() {
   console.log("[PricingOG] Starting image generation...");
   try {
     const photos = await getPhotosFromStorage("pricing");
-    console.log(`[PricingOG] Fetched ${photos?.length ?? 0} photos from storage.`);
+    console.log(
+      `[PricingOG] Fetched ${photos?.length ?? 0} photos from storage.`,
+    );
 
     if (!photos || photos.length === 0) {
       console.warn("[PricingOG] No photos found, using fallback.");
@@ -71,21 +72,19 @@ export default async function PricingImage() {
     const imgStyle = { flex: 1, height: "100%", objectFit: "cover" as const };
 
     return new ImageResponse(
-      (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "1200px",
-            height: "630px",
-            backgroundColor: "#1a1a2e",
-          }}
-        >
-          {img0 && <img src={img0} alt="" style={imgStyle} />}
-          {img1 && <img src={img1} alt="" style={imgStyle} />}
-          {img2 && <img src={img2} alt="" style={imgStyle} />}
-        </div>
-      ),
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          width: "1200px",
+          height: "630px",
+          backgroundColor: "#1a1a2e",
+        }}
+      >
+        {img0 && <img src={img0} alt="" style={imgStyle} />}
+        {img1 && <img src={img1} alt="" style={imgStyle} />}
+        {img2 && <img src={img2} alt="" style={imgStyle} />}
+      </div>,
       { ...size },
     );
   } catch (error) {

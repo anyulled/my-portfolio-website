@@ -1,4 +1,3 @@
-
 import { render, screen } from "@testing-library/react";
 import TestimonialCard from "@/components/TestimonialCard";
 import { Testimonial } from "@/lib/testimonials";

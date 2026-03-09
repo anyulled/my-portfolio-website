@@ -4,6 +4,8 @@
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/anyulled/my-portfolio-website)
 
+[![AI Harness Scorecard](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanyulled%2Fmy-portfolio-website%2Fscorecard%2Fscorecard-badge.json)](https://github.com/anyulled/my-portfolio-website/blob/scorecard/scorecard-report.md)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

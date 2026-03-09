@@ -18,4 +18,3 @@ export async function deleteAllBlobs() {
 
   console.log("All blobs were deleted");
 }
-

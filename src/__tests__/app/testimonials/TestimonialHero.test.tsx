@@ -1,4 +1,3 @@
-
 import { commonBeforeEach } from "@/__tests__/utils/testUtils";
 import TestimonialHero from "@/app/testimonials/TestimonialHero";
 import { render, screen } from "@testing-library/react";

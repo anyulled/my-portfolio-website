@@ -9,7 +9,10 @@ const customJestConfig = {
   // Use ts-jest for TypeScript files
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
-    "^.+\\.(js|jsx)$": ["babel-jest", { presets: ["next/babel"] }] as [string, Record<string, unknown>],
+    "^.+\\.(js|jsx)$": ["babel-jest", { presets: ["next/babel"] }] as [
+      string,
+      Record<string, unknown>,
+    ],
   },
   // Module name mappings for path aliases and mocks
   moduleNameMapper: {

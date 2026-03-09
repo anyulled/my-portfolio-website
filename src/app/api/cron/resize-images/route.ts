@@ -58,10 +58,7 @@ function shouldSkipImage(file: GCSFile): ProcessResult | null {
   const metaWidth = parseInt(file.metadata.metadata?.width || "0");
   const metaHeight = parseInt(file.metadata.metadata?.height || "0");
   const knownDimensions =
-    !isNaN(metaWidth) &&
-    metaWidth > 0 &&
-    !isNaN(metaHeight) &&
-    metaHeight > 0;
+    !isNaN(metaWidth) && metaWidth > 0 && !isNaN(metaHeight) && metaHeight > 0;
 
   if (!knownDimensions) {
     return null;
@@ -130,11 +127,11 @@ async function processImage(
 
     const pipeline = isTooLarge
       ? image.resize({
-        width: MAX_WIDTH_HEIGHT,
-        height: MAX_WIDTH_HEIGHT,
-        fit: "inside",
-        withoutEnlargement: true,
-      })
+          width: MAX_WIDTH_HEIGHT,
+          height: MAX_WIDTH_HEIGHT,
+          fit: "inside",
+          withoutEnlargement: true,
+        })
       : image;
 
     const convertedBuffer = await pipeline.webp({ quality: 80 }).toBuffer();

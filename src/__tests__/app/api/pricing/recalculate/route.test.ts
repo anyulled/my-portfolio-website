@@ -73,14 +73,11 @@ describe("Pricing Recalculate Route", () => {
   });
 
   it("should return 401 if unauthorized", async () => {
-    const request = new Request(
-      "http://localhost/api/pricing/recalculate",
-      {
-        headers: {
-          authorization: "Bearer invalid",
-        },
+    const request = new Request("http://localhost/api/pricing/recalculate", {
+      headers: {
+        authorization: "Bearer invalid",
       },
-    );
+    });
 
     const response = await context.GET(request);
     const data = await response.json();
@@ -108,14 +105,11 @@ describe("Pricing Recalculate Route", () => {
     });
 
     // Auth expects x-cron-secret header
-    const request = new Request(
-      "http://localhost/api/pricing/recalculate",
-      {
-        headers: {
-          "x-cron-secret": "test-secret",
-        },
+    const request = new Request("http://localhost/api/pricing/recalculate", {
+      headers: {
+        "x-cron-secret": "test-secret",
       },
-    );
+    });
 
     const response = await context.GET(request);
     const data = await response.json();
@@ -145,14 +139,11 @@ describe("Pricing Recalculate Route", () => {
     });
 
     // Auth expects x-cron-secret header
-    const request = new Request(
-      "http://localhost/api/pricing/recalculate",
-      {
-        headers: {
-          "x-cron-secret": "test-secret",
-        },
+    const request = new Request("http://localhost/api/pricing/recalculate", {
+      headers: {
+        "x-cron-secret": "test-secret",
       },
-    );
+    });
 
     const response = await context.GET(request);
     const data = await response.json();

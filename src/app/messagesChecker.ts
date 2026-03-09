@@ -2,7 +2,6 @@ import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 
-
 const referenceFilePath = path.join("src/messages", "en.json");
 const messagesFolderPath = path.join("src/messages");
 
@@ -17,10 +16,7 @@ const getKeysFromJsonFile = (filePath: string): string[] => {
   }
   const jsonData = jsonDataRaw;
 
-  const collectKeys = (
-    obj: Record<string, unknown>,
-    prefix = "",
-  ): string[] => {
+  const collectKeys = (obj: Record<string, unknown>, prefix = ""): string[] => {
     const isRecord = (val: unknown): val is Record<string, unknown> =>
       typeof val === "object" && val !== null;
 

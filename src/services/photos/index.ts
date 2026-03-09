@@ -31,12 +31,8 @@ export {
   getPhotoLibrary,
   PhotoLibrary,
   tagsToPrefix,
-  tagToPrefix
+  tagToPrefix,
 };
 
 // Aliases for compatibility
-export {
-  getPhotoLibrary as getPhotoService,
-  PhotoLibrary as PhotoService
-};
-
+export { getPhotoLibrary as getPhotoService, PhotoLibrary as PhotoService };

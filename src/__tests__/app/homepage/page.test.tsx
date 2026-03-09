@@ -101,7 +101,9 @@ describe("HomePage", () => {
   });
 
   it("renders gallery photos returned by storage", async () => {
-    context.getPhotosFromStorageMock.mockResolvedValue([createPhoto({ id: 5 })]);
+    context.getPhotosFromStorageMock.mockResolvedValue([
+      createPhoto({ id: 5 }),
+    ]);
 
     await renderHomePage();
 

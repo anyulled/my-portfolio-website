@@ -1,6 +1,7 @@
-import { createGCPStorageClient, getGCPCredentials } from "@/lib/gcp/storage-client";
-
-
+import {
+  createGCPStorageClient,
+  getGCPCredentials,
+} from "@/lib/gcp/storage-client";
 
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
@@ -11,7 +12,6 @@ import chalk from "chalk";
 
 // Backward compatibility export
 export const createStorageClient = createGCPStorageClient;
-
 
 export const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
 // 1 hour
@@ -40,8 +40,6 @@ export type StorageFileLike = {
   makePublic?(): Promise<void> | void;
   isPublic(): Promise<[boolean]>;
 };
-
-
 
 const parseNumber = (value: string | undefined, fallback = 0): number => {
   const parsed = Number(value);
@@ -375,7 +373,10 @@ const fetchPhotosFromGCS = async (
       return [];
     }
 
-    return await processFetchedFiles(files as unknown as StorageFileLike[], limit);
+    return await processFetchedFiles(
+      files as unknown as StorageFileLike[],
+      limit,
+    );
   } catch (error) {
     return handleGCSError(error, bucketName, prefix);
   }
@@ -391,15 +392,16 @@ export const getPhotosFromStorage = async (
   // 1. Try full cache first (most valuable if present)
   const fullCached = await retrievePhotosFromCache(fullCacheKey);
   if (fullCached) {
-     if (limit && limit > 0) return fullCached.slice(0, limit);
-     return fullCached;
+    if (limit && limit > 0) return fullCached.slice(0, limit);
+    return fullCached;
   }
 
   // 2. Try partial cache if limit exists
-  const partialCacheKey = (limit && limit > 0) ? `photos-${prefix}-limit-${limit}` : null;
+  const partialCacheKey =
+    limit && limit > 0 ? `photos-${prefix}-limit-${limit}` : null;
   if (partialCacheKey) {
-     const partialCached = await retrievePhotosFromCache(partialCacheKey);
-     if (partialCached) return partialCached;
+    const partialCached = await retrievePhotosFromCache(partialCacheKey);
+    if (partialCached) return partialCached;
   }
 
   // 3. Fetch from GCS
@@ -407,13 +409,13 @@ export const getPhotosFromStorage = async (
 
   // 4. Store
   if (fetchedPhotos) {
-      if (limit && limit > 0 && partialCacheKey) {
-          // We fetched a partial list, store in partial cache
-           await storePhotosInCache(partialCacheKey, fetchedPhotos);
-      } else {
-          // We fetched full list, store in full cache
-          await storePhotosInCache(fullCacheKey, fetchedPhotos);
-      }
+    if (limit && limit > 0 && partialCacheKey) {
+      // We fetched a partial list, store in partial cache
+      await storePhotosInCache(partialCacheKey, fetchedPhotos);
+    } else {
+      // We fetched full list, store in full cache
+      await storePhotosInCache(fullCacheKey, fetchedPhotos);
+    }
   }
 
   return fetchedPhotos;

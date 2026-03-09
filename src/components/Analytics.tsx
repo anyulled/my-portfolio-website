@@ -9,12 +9,12 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
  * Uses Script component with afterInteractive strategy to avoid blocking initial page load.
  */
 export default function Analytics() {
-    return (
-        <>
-            <SpeedInsights />
-            <VercelAnalytics />
-            <GoogleAnalytics />
-            {/* Mixpanel is loaded via MixpanelLayout which wraps children */}
-        </>
-    );
+  return (
+    <>
+      <SpeedInsights />
+      <VercelAnalytics />
+      <GoogleAnalytics />
+      {/* Mixpanel is loaded via MixpanelLayout which wraps children */}
+    </>
+  );
 }

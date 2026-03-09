@@ -29,7 +29,10 @@ export default function ContactForm() {
       });
 
       const resultRaw: unknown = await res.json();
-      const isResult = (val: unknown): val is { success: boolean; message: string } => typeof val === "object" && val !== null && "success" in val;
+      const isResult = (
+        val: unknown,
+      ): val is { success: boolean; message: string } =>
+        typeof val === "object" && val !== null && "success" in val;
       if (!isResult(resultRaw)) {
         throw new Error("Invalid response");
       }

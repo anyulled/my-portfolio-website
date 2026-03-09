@@ -25,46 +25,46 @@ export default async function HomePage() {
     fetchedGallery && fetchedGallery.length > 0
       ? fetchedGallery
       : [
-        {
-          id: 0,
-          description: "Boudoir Session",
-          dateTaken: new Date(),
-          dateUpload: new Date(),
-          height: 1080,
-          title: "Boudoir Session",
-          views: 0,
-          width: 1920,
-          tags: "boudoir, portrait",
-          srcSet: [
-            {
-              src: "/images/DSC_7028.jpg",
-              width: 1920,
-              height: 1080,
-              title: "Boudoir Session",
-              description: "Boudoir Session",
-            },
-          ],
-        },
-      ];
+          {
+            id: 0,
+            description: "Boudoir Session",
+            dateTaken: new Date(),
+            dateUpload: new Date(),
+            height: 1080,
+            title: "Boudoir Session",
+            views: 0,
+            width: 1920,
+            tags: "boudoir, portrait",
+            srcSet: [
+              {
+                src: "/images/DSC_7028.jpg",
+                width: 1920,
+                height: 1080,
+                title: "Boudoir Session",
+                description: "Boudoir Session",
+              },
+            ],
+          },
+        ];
 
   const heroPhotos = heroPhotosRaw || [];
 
   const formattedHeroImages =
     heroPhotos.length > 0
       ? heroPhotos.map((p) => ({
-        image: p.srcSet[0].src,
-        // Default position as GCS doesn't store position data yet
-        position: "center center",
-        alt: p.description || p.title || "Boudoir Session",
-      }))
+          image: p.srcSet[0].src,
+          // Default position as GCS doesn't store position data yet
+          position: "center center",
+          alt: p.description || p.title || "Boudoir Session",
+        }))
       : [
-        {
-          // Fallback if no images found
-          image: "/images/DSC_7028.jpg",
-          position: "left top",
-          alt: "Boudoir Session",
-        },
-      ];
+          {
+            // Fallback if no images found
+            image: "/images/DSC_7028.jpg",
+            position: "left top",
+            alt: "Boudoir Session",
+          },
+        ];
 
   // Select a random image on the server to avoid hydration mismatch and improve LCP
   const heroImage =

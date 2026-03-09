@@ -40,3 +40,34 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run build
+
+  scorecard:
+    runs-on: ubuntu-latest
+    name: AI Hardness Scorecard
+    if: github.event_name != 'pull_request'
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: markmishaev76/ai-harness-scorecard@v1
+        id: scorecard
+
+      - name: Commit badge and report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp scorecard-badge.json /tmp/scorecard-badge.json
+          cp scorecard-report.md /tmp/scorecard-report.md
+          rm -f scorecard-badge.json scorecard-report.md
+          git fetch origin scorecard
+          git checkout scorecard
+          cp /tmp/scorecard-badge.json scorecard-badge.json
+          cp /tmp/scorecard-report.md scorecard-report.md
+          git add scorecard-badge.json scorecard-report.md
+          git diff --cached --quiet || git commit -m "chore: update scorecard badge and report"
+          git push origin scorecard

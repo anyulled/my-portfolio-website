@@ -9,11 +9,9 @@ import { createGCPStorageClient } from "@/lib/gcp/storage-client";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
 
-
 import type { Photo } from "@/types/photos";
 import type { ListPhotosOptions, PhotoProvider } from "./PhotoInterfaces";
 import { DEFAULT_LIST_OPTIONS } from "./PhotoInterfaces";
-
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-website";
 // 1 hour
@@ -91,7 +89,6 @@ const parseDate = (value: string | undefined, fallback: Date): Date => {
   const date = value ? new Date(value) : fallback;
   return Number.isNaN(date.getTime()) ? fallback : date;
 };
-
 
 export class GCSPhotoProvider implements PhotoProvider {
   readonly name = "GCS";

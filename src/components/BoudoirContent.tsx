@@ -146,7 +146,9 @@ export default function BoudoirContent({
           title={t("what_is_boudoir")}
           p1={t("p1")}
           p2={t("p2")}
-          imageSrc={randomPhotos?.at(1)?.srcSet[0]?.src ?? "/images/DSC_7028.webp"}
+          imageSrc={
+            randomPhotos?.at(1)?.srcSet[0]?.src ?? "/images/DSC_7028.webp"
+          }
           imageAlt={t("boudoir_photography")}
           textRef={textRef1}
           imageRef={imageRef1}
@@ -156,7 +158,9 @@ export default function BoudoirContent({
           title={t("art_boudoir")}
           p1={t("p3")}
           p2={t("p4")}
-          imageSrc={randomPhotos?.at(2)?.srcSet[0]?.src ?? "/images/DSC_7028.webp"}
+          imageSrc={
+            randomPhotos?.at(2)?.srcSet[0]?.src ?? "/images/DSC_7028.webp"
+          }
           imageAlt={t("boudoir_photography")}
           reverse
           textRef={textRef2}
