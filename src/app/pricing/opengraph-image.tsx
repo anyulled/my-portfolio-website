@@ -81,9 +81,15 @@ export default async function PricingImage() {
           backgroundColor: "#1a1a2e",
         }}
       >
-        {img0 && <img src={img0} alt="" style={imgStyle} />}
-        {img1 && <img src={img1} alt="" style={imgStyle} />}
-        {img2 && <img src={img2} alt="" style={imgStyle} />}
+        {img0 && (
+          <img src={img0} alt="" style={imgStyle} width="400" height="630" />
+        )}
+        {img1 && (
+          <img src={img1} alt="" style={imgStyle} width="400" height="630" />
+        )}
+        {img2 && (
+          <img src={img2} alt="" style={imgStyle} width="400" height="630" />
+        )}
       </div>,
       { ...size },
     );
