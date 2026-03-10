@@ -78,8 +78,21 @@ export default async function TestimonialsPage() {
     heroPhotos?.[0]?.srcSet[0]?.src ||
     "https://storage.googleapis.com/sensuelle-boudoir-homepage/andrea-cano-montull_54701383010_o.webp";
 
-  const featuredTestimonials = testimonials.filter((t) => t.featured);
-  const regularTestimonials = testimonials.filter((t) => !t.featured);
+  /*
+   * ⚡ Bolt: Use a single for...of loop to partition the array instead of calling
+   * .filter() twice. This avoids iterating over the entire array twice and reduces
+   * intermediate memory allocations, improving performance for large data sets.
+   */
+  const featuredTestimonials = [];
+  const regularTestimonials = [];
+  for (const t of testimonials) {
+    if (t.featured) {
+      featuredTestimonials.push(t);
+    } else {
+      regularTestimonials.push(t);
+    }
+  }
+
   return (
     <>
       <script

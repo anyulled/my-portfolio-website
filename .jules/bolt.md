@@ -62,3 +62,8 @@
 
 **Learning:** Placing invariant operations, like string replacement (`model.tag.replace("-", "")`), inside the callback of an array iteration method (e.g., `.find()`) forces the runtime to repeatedly allocate memory and execute the logic on every item. In nested loops (e.g., `.map()` containing `.find()`), this transforms an $O(N)$ string allocation into an $O(M \times N)$ performance bottleneck.
 **Action:** Always extract and evaluate invariant variables before entering iterative callbacks to ensure they are computed only once.
+
+## 2026-02-13 - [Performance: Array Partitioning]
+
+**Learning:** When partitioning a single array into two or more distinct arrays based on a condition, performing multiple sequential `.filter()` operations iterates over the entire dataset multiple times and increases memory overhead through intermediate array creations.
+**Action:** Use a single `for...of` loop to iterate through the array once, pushing items into their respective destination arrays based on the condition. This reduces iteration time and memory overhead.
