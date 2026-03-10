@@ -82,8 +82,15 @@ describe("testimonials", () => {
     it("should include both featured and non-featured testimonials", async () => {
       const testimonials = await getTestimonials();
 
-      const featuredTestimonials = testimonials.filter((t) => t.featured);
-      const nonFeaturedTestimonials = testimonials.filter((t) => !t.featured);
+      const featuredTestimonials = [];
+      const nonFeaturedTestimonials = [];
+      for (const t of testimonials) {
+        if (t.featured) {
+          featuredTestimonials.push(t);
+        } else {
+          nonFeaturedTestimonials.push(t);
+        }
+      }
 
       expect(featuredTestimonials.length).toBeGreaterThan(0);
       expect(nonFeaturedTestimonials.length).toBeGreaterThan(0);
