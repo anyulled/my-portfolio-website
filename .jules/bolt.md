@@ -66,4 +66,6 @@
 ## 2026-02-13 - [Performance: Array Partitioning]
 
 **Learning:** When partitioning a single array into two or more distinct arrays based on a condition, performing multiple sequential `.filter()` operations iterates over the entire dataset multiple times and increases memory overhead through intermediate array creations.
-**Action:** Use a single `for...of` loop to iterate through the array once, pushing items into their respective destination arrays based on the condition. This reduces iteration time and memory overhead.
+**Action:** Use a single `for...of` loop to iterate through the array once, pushing items into their respective destination arrays based on the condition. This reduces iteration time and memory overhead.## 2026-02-13 - [Performance: Pre-computing Map keys for O(1) Substring Match]
+**Learning:** Replacing an O(M*N) nested loop `.find(photo => photo.tags.includes(searchTag))` with an O(1) Map lookup requires care if the original logic relied on substring matching (`String.prototype.includes`). A naive `photo.tags.split()` approach may fail or change behavior depending on the `tags` data type (e.g., if it's a single string vs an array) and matching rules (exact word vs substring).
+**Action:** To preserve substring matching exactly while enabling O(1) lookup, iterate over the known search targets (e.g., `models`), evaluate the `.includes()` condition once per photo, and pre-populate the Map with the specific `searchTag` keys. This retains exact behavior while eliminating the inner loop during rendering.
