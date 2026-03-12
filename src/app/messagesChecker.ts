@@ -42,6 +42,8 @@ fs.readdir(messagesFolderPath, (err, files) => {
   }
 
   const referenceKeysSet = new Set(referenceKeys);
+  // Hoist the array conversion outside the loop to prevent redundant O(N) allocations
+  const referenceKeysArray = [...referenceKeysSet];
 
   files.forEach((file) => {
     if (path.extname(file) === ".json" && file !== "en.json") {
@@ -52,7 +54,7 @@ fs.readdir(messagesFolderPath, (err, files) => {
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const missingKeys = [...referenceKeysSet].filter(
+      const missingKeys = referenceKeysArray.filter(
         (key) => !fileKeysSet.has(key),
       );
 
