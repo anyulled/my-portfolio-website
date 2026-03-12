@@ -6,6 +6,7 @@ const referenceFilePath = path.join("src/messages", "en.json");
 const messagesFolderPath = path.join("src/messages");
 
 const getKeysFromJsonFile = (filePath: string): string[] => {
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   const data = fs.readFileSync(filePath, "utf-8");
   const jsonDataRaw: unknown = JSON.parse(data);
   const isRecord = (val: unknown): val is Record<string, unknown> =>
@@ -22,6 +23,7 @@ const getKeysFromJsonFile = (filePath: string): string[] => {
 
     return Object.keys(obj).flatMap((key) => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
+      // eslint-disable-next-line security/detect-object-injection
       const value = obj[key];
       if (isRecord(value)) {
         return collectKeys(value, fullKey);
@@ -42,6 +44,8 @@ fs.readdir(messagesFolderPath, (err, files) => {
   }
 
   const referenceKeysSet = new Set(referenceKeys);
+  // Hoist the array conversion outside the loop to prevent redundant O(N) allocations
+  const referenceKeysArray = [...referenceKeysSet];
 
   files.forEach((file) => {
     if (path.extname(file) === ".json" && file !== "en.json") {
@@ -52,7 +56,7 @@ fs.readdir(messagesFolderPath, (err, files) => {
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const missingKeys = [...referenceKeysSet].filter(
+      const missingKeys = referenceKeysArray.filter(
         (key) => !fileKeysSet.has(key),
       );
 
