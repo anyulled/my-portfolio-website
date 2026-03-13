@@ -12,26 +12,23 @@ module.exports = {
       context.filename ||
       (typeof context.getFilename === "function" ? context.getFilename() : "");
 
-    const forbiddenWordsWithSuggestions = {
-      utils: "Use domain-specific name describing what it does",
-      helpers: 'Try "fixtures" for test data, or name by purpose',
-      helper: 'Try "fixtures" for test data, or name by purpose',
-      service: "Name by domain action (e.g., OrderSubmitter, PaymentGateway)",
-      services: "Name by domain action (e.g., OrderSubmitter, PaymentGateway)",
-      manager: "Name by responsibility (e.g., ConnectionPool, SessionStore)",
-      managers: "Name by responsibility (e.g., ConnectionPool, SessionStore)",
-      processor:
-        "Name by what it processes (e.g., OrderFulfiller, EventDispatcher)",
-      processors:
-        "Name by what it processes (e.g., OrderFulfiller, EventDispatcher)",
-      data: "Name by domain concept (e.g., OrderDetails, CustomerProfile)",
-    };
+    const forbiddenWordsWithSuggestions = new Map([
+      ["utils", "Use domain-specific name describing what it does"],
+      ["helpers", 'Try "fixtures" for test data, or name by purpose'],
+      ["helper", 'Try "fixtures" for test data, or name by purpose'],
+      ["service", "Name by domain action (e.g., OrderSubmitter, PaymentGateway)"],
+      ["services", "Name by domain action (e.g., OrderSubmitter, PaymentGateway)"],
+      ["manager", "Name by responsibility (e.g., ConnectionPool, SessionStore)"],
+      ["managers", "Name by responsibility (e.g., ConnectionPool, SessionStore)"],
+      ["processor", "Name by what it processes (e.g., OrderFulfiller, EventDispatcher)"],
+      ["processors", "Name by what it processes (e.g., OrderFulfiller, EventDispatcher)"],
+      ["data", "Name by domain concept (e.g., OrderDetails, CustomerProfile)"],
+    ]);
 
-    const forbiddenWords = Object.keys(forbiddenWordsWithSuggestions);
-    const forbiddenPattern = new RegExp(
-      `(^|/|-)(${forbiddenWords.join("|")})(-|[.]ts$|[.]tsx$|/|$)`,
-      "i",
-    );
+    const forbiddenWords = Array.from(forbiddenWordsWithSuggestions.keys());
+
+    // Hardcoded regex to satisfy security/detect-non-literal-regexp
+    const forbiddenPattern = /(^|\/|-)(utils|helpers|helper|service|services|manager|managers|processor|processors|data)(-|[.]ts$|[.]tsx$|\/|$)/i;
 
     const findForbiddenWord = (text) => {
       const lowerText = text.toLowerCase();
@@ -54,7 +51,7 @@ module.exports = {
     const getFilenameMessage = (filepath) => {
       const matchedWord = findForbiddenWord(filepath);
       if (matchedWord) {
-        const suggestion = forbiddenWordsWithSuggestions[matchedWord];
+        const suggestion = forbiddenWordsWithSuggestions.get(matchedWord);
         return `Generic word "${matchedWord}" in filename. ${suggestion}`;
       }
       return "Generic filename. Use domain-specific naming.";
@@ -63,7 +60,7 @@ module.exports = {
     const getClassMessage = (className) => {
       const matchedWord = findForbiddenWord(className);
       if (matchedWord) {
-        const suggestion = forbiddenWordsWithSuggestions[matchedWord];
+        const suggestion = forbiddenWordsWithSuggestions.get(matchedWord);
         return `Generic word "${matchedWord}" in class "${className}". ${suggestion}`;
       }
       return `Generic class name "${className}". Use domain-specific naming.`;
