@@ -19,9 +19,16 @@ function getRandomElements(arr: Photo[], num: number) {
 }
 
 export default async function BoudoirStylePage() {
-  const photos = await getPhotosFromStorage("boudoir/");
+  /*
+   * ⚡ Bolt: Execute independent asynchronous operations concurrently
+   * to eliminate request waterfalls and reduce server response time.
+   */
+  const [photos] = await Promise.all([
+    getPhotosFromStorage("boudoir/"),
+    getTranslations("what_is_boudoir"),
+  ]);
+
   const randomPhotos = getRandomElements(photos ?? [], 10);
-  await getTranslations("what_is_boudoir");
 
   return <BoudoirContent randomPhotos={randomPhotos} />;
 }

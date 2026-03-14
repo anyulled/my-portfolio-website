@@ -157,6 +157,43 @@ const getPackages = (
   },
 ];
 
+const getRandomPhotosForPricing = (
+  pricingPhotos: { srcSet: { src: string }[] }[],
+): [string, string, string] => {
+  const images: [string, string, string] = ["", "", ""];
+  const photosCount = pricingPhotos.length;
+
+  if (photosCount === 0) {
+    return images;
+  }
+
+  const selectedIndices = new Set<number>();
+  const indices = [0, 1, 2];
+  for (const i of indices) {
+    if (selectedIndices.size >= photosCount) {
+      // Fallback: if we have fewer than 3 photos total, reuse the first selected image
+      const fallbackIndex = Array.from(selectedIndices)[0];
+      const fallbackUrl =
+        pricingPhotos[fallbackIndex ?? 0]?.srcSet[0]?.src || "";
+      images.splice(i, 1, fallbackUrl);
+      continue;
+    }
+
+    const getRandomIndex = () => Math.floor(Math.random() * photosCount);
+    const findUniqueIndex = (): number => {
+      const idx = getRandomIndex();
+      return selectedIndices.has(idx) ? findUniqueIndex() : idx;
+    };
+
+    const randomIndex = findUniqueIndex();
+    selectedIndices.add(randomIndex);
+    const selectedUrl = pricingPhotos[randomIndex]?.srcSet[0]?.src || "";
+    images.splice(i, 1, selectedUrl);
+  }
+
+  return images;
+};
+
 export default async function PricingPage() {
   /*
    * ⚡ Bolt: Fetch pricing details, translations, and photos concurrently
@@ -169,20 +206,12 @@ export default async function PricingPage() {
   ]);
   const pricingPhotos = pricingPhotosRaw || [];
 
-  // Shuffle photos to get random selection
-  const shuffledPhotos = [...pricingPhotos].sort(() => 0.5 - Math.random());
-
-  // Ensure we have at least 3 photos
-  const getPhotoUrl = (index: number) => {
-    if (shuffledPhotos.length === 0) return "";
-    return shuffledPhotos[index % shuffledPhotos.length]?.srcSet[0]?.src || "";
-  };
-
-  const images: [string, string, string] = [
-    getPhotoUrl(0),
-    getPhotoUrl(1),
-    getPhotoUrl(2),
-  ];
+  /*
+   * ⚡ Bolt: Removed O(N log N) array sorting with Math.random() biased shuffle.
+   * Instead, we use an O(1) random index selection with a Set to ensure up to 3 unique
+   * images are picked without redundant memory allocation or excessive CPU cycles.
+   */
+  const images = getRandomPhotosForPricing(pricingPhotos);
 
   const packages = getPackages((key: string) => t(key), latestPricing, images);
 
