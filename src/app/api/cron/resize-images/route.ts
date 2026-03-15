@@ -255,15 +255,29 @@ export async function GET(_request: NextRequest) {
       .map(worker);
     await Promise.all(workers);
 
-    const processed = results.filter((r) => r.status === "processed");
-    const errors = results.filter((r) => r.status === "error");
-    const skipped = results.length - processed.length - errors.length;
+    /*
+     * ⚡ Bolt: Single pass iteration over the results array instead of
+     * multiple O(N) calls to .filter() and .reduce(). This avoids iterating
+     * over the data four separate times and reduces intermediate array allocations.
+     */
+    const processed: ProcessResult[] = [];
+    const errors: ProcessResult[] = [];
+    // eslint-disable-next-line no-restricted-syntax
+    let totalOriginalBytes = 0;
+    // eslint-disable-next-line no-restricted-syntax
+    let totalNewBytes = 0;
 
-    const totalOriginalBytes = processed.reduce(
-      (sum, r) => sum + r.originalBytes,
-      0,
-    );
-    const totalNewBytes = processed.reduce((sum, r) => sum + r.newBytes, 0);
+    for (const r of results) {
+      if (r.status === "processed") {
+        processed.push(r);
+        totalOriginalBytes += r.originalBytes;
+        totalNewBytes += r.newBytes;
+      } else if (r.status === "error") {
+        errors.push(r);
+      }
+    }
+
+    const skipped = results.length - processed.length - errors.length;
     const totalBytesSaved = totalOriginalBytes - totalNewBytes;
 
     const endTime = Date.now();
