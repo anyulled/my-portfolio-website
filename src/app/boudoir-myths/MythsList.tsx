@@ -88,6 +88,7 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
 
         return {
           ...base,
+          // eslint-disable-next-line security/detect-object-injection
           ...mythsTexts[index],
           image: photo ?? fallbackPhoto,
         };

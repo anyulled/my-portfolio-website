@@ -217,6 +217,7 @@ const getCollabItem = (
   label: string,
 ) => ({
   index,
+  // eslint-disable-next-line security/detect-object-injection
   src: images?.[index]?.srcSet[0]?.src || fallback,
   alt,
   label,
