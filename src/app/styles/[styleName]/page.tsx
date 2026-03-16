@@ -52,16 +52,25 @@ export const generateMetadata = async ({
 
 export default async function StylePage({ params }: Readonly<Props>) {
   const { styleName } = await params;
-  const t = await getTranslations("styles");
+
   const extractedStyleName = extractNameFromTag(styles, styleName);
   if (extractedStyleName === undefined) {
     return NotFound();
   }
+
   const convertedStyleName = styleName ?? "boudoir";
+
+  /*
+   * ⚡ Bolt: Execute independent asynchronous operations concurrently
+   * to eliminate request waterfalls and reduce server response time.
+   */
+  const [t, photos] = await Promise.all([
+    getTranslations("styles"),
+    getPhotosFromStorage(`styles/${convertedStyleName}`, 36),
+  ]);
+
   console.log(chalk.cyan(`[Styles] Param styleName: ${extractedStyleName}`));
   console.log(chalk.cyan(`[Styles] to Storage: ${styleName}`));
-
-  const photos = await getPhotosFromStorage(`styles/${convertedStyleName}`, 36);
 
   if (!styleName || !photos) {
     return NotFound();
