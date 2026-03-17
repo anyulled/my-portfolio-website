@@ -189,6 +189,9 @@ export default [
             'max-depth': ['error', 3],
             complexity: ['error', 12],
 
+            // Globally disable this noisy rule
+            'security/detect-object-injection': 'off',
+
             // Naming conventions
             '@typescript-eslint/naming-convention': [
                 'error',
