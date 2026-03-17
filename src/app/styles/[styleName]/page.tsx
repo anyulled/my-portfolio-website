@@ -51,6 +51,13 @@ export const generateMetadata = async ({
 };
 
 export default async function StylePage({ params }: Readonly<Props>) {
+  /*
+   * ⚡ Bolt: Start fetching translations immediately before awaiting `params`
+   * to eliminate the request waterfall. `getTranslations` doesn't depend on params,
+   * so it can run concurrently with the params resolution.
+   */
+  const tPromise = getTranslations("styles");
+
   const { styleName } = await params;
 
   const extractedStyleName = extractNameFromTag(styles, styleName);
@@ -65,7 +72,7 @@ export default async function StylePage({ params }: Readonly<Props>) {
    * to eliminate request waterfalls and reduce server response time.
    */
   const [t, photos] = await Promise.all([
-    getTranslations("styles"),
+    tPromise,
     getPhotosFromStorage(`styles/${convertedStyleName}`, 36),
   ]);
 
