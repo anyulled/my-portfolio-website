@@ -71,3 +71,7 @@
 **Action:** To preserve substring matching exactly while enabling O(1) lookup, iterate over the known search targets (e.g., `models`), evaluate the `.includes()` condition once per photo, and pre-populate the Map with the specific `searchTag` keys. This retains exact behavior while eliminating the inner loop during rendering.## 2026-03-12 - [Performance: Server-Side Request Waterfalls in dynamic routes]
 **Learning:** Sequential `await` calls for independent data fetching operations in dynamic route parameters (e.g. `getTranslations` and `getPhotosFromStorage`) in Server Components construct a request waterfall. This delays server response since requests execute one after another.
 **Action:** Use `Promise.all` to execute the independent data-fetching calls concurrently and eliminate the request waterfall.
+
+## 2026-03-22 - [Performance: Server-Side Request Waterfalls in API Routes]
+**Learning:** Sequential `await` calls for independent data fetching operations in API routes (e.g. `getLatestPricing` and `fetchLatestIpc` in `src/app/api/pricing/recalculate/route.ts`) construct a request waterfall. This delays server response since requests execute one after another.
+**Action:** Use `Promise.all` to execute the independent asynchronous calls concurrently and eliminate the request waterfall.

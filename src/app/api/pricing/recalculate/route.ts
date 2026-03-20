@@ -90,9 +90,17 @@ export async function GET(req: Request) {
 
   try {
     console.log(
-      chalk.gray("[ pricing:recalculate ] Fetching latest stored pricing"),
+      chalk.gray("[ pricing:recalculate ] Fetching latest stored pricing and IPC percentage concurrently"),
     );
-    const latestPricing = await getLatestPricing();
+
+    /*
+     * ⚡ Bolt: Execute independent asynchronous operations concurrently
+     * to eliminate request waterfalls and reduce server response time.
+     */
+    const [latestPricing, ipcPercentage] = await Promise.all([
+      getLatestPricing(),
+      fetchLatestIpc(),
+    ]);
 
     if (!latestPricing) {
       console.warn(
@@ -109,10 +117,6 @@ export async function GET(req: Request) {
       );
     }
 
-    console.log(
-      chalk.gray("[ pricing:recalculate ] Fetching latest IPC percentage"),
-    );
-    const ipcPercentage = await fetchLatestIpc();
     const adjustmentFactor = 1 + ipcPercentage / 100;
 
     const recalculated: PricingPackageInsert = {
