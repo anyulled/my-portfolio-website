@@ -66,12 +66,20 @@
 ## 2026-02-13 - [Performance: Array Partitioning]
 
 **Learning:** When partitioning a single array into two or more distinct arrays based on a condition, performing multiple sequential `.filter()` operations iterates over the entire dataset multiple times and increases memory overhead through intermediate array creations.
-**Action:** Use a single `for...of` loop to iterate through the array once, pushing items into their respective destination arrays based on the condition. This reduces iteration time and memory overhead.## 2026-02-13 - [Performance: Pre-computing Map keys for O(1) Substring Match]
+**Action:** Use a single `for...of` loop to iterate through the array once, pushing items into their respective destination arrays based on the condition. This reduces iteration time and memory overhead.
+
+## 2026-02-13 - [Performance: Pre-computing Map keys for O(1) Substring Match]
 **Learning:** Replacing an O(M*N) nested loop `.find(photo => photo.tags.includes(searchTag))` with an O(1) Map lookup requires care if the original logic relied on substring matching (`String.prototype.includes`). A naive `photo.tags.split()` approach may fail or change behavior depending on the `tags` data type (e.g., if it's a single string vs an array) and matching rules (exact word vs substring).
-**Action:** To preserve substring matching exactly while enabling O(1) lookup, iterate over the known search targets (e.g., `models`), evaluate the `.includes()` condition once per photo, and pre-populate the Map with the specific `searchTag` keys. This retains exact behavior while eliminating the inner loop during rendering.## 2026-03-12 - [Performance: Server-Side Request Waterfalls in dynamic routes]
+**Action:** To preserve substring matching exactly while enabling O(1) lookup, iterate over the known search targets (e.g., `models`), evaluate the `.includes()` condition once per photo, and pre-populate the Map with the specific `searchTag` keys. This retains exact behavior while eliminating the inner loop during rendering.
+
+## 2026-03-12 - [Performance: Server-Side Request Waterfalls in dynamic routes]
 **Learning:** Sequential `await` calls for independent data fetching operations in dynamic route parameters (e.g. `getTranslations` and `getPhotosFromStorage`) in Server Components construct a request waterfall. This delays server response since requests execute one after another.
 **Action:** Use `Promise.all` to execute the independent data-fetching calls concurrently and eliminate the request waterfall.
 
 ## 2026-03-22 - [Performance: Server-Side Request Waterfalls in API Routes]
 **Learning:** Sequential `await` calls for independent data fetching operations in API routes (e.g. `getLatestPricing` and `fetchLatestIpc` in `src/app/api/pricing/recalculate/route.ts`) construct a request waterfall. This delays server response since requests execute one after another.
 **Action:** Use `Promise.all` to execute the independent asynchronous calls concurrently and eliminate the request waterfall.
+
+## 2026-03-22 - [LCP Optimization: Client-Side Content Initialization]
+**Learning:** Initializing component state that maps static data to translations or derived content as an empty array and populating it within a `useEffect` hook forces the component to render initially without data. This delays content rendering until after hydration, negatively impacting Largest Contentful Paint (LCP) and causing layout shifts.
+**Action:** To improve LCP and enable Server-Side Rendering (SSR) for static or synchronous data mappings, construct the derived state synchronously during the component's render cycle.

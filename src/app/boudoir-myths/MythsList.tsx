@@ -41,60 +41,63 @@ interface MythListProps {
 }
 
 export default function MythsList({ photos }: Readonly<MythListProps>) {
-  const [mythsWithImages, setMythsWithImages] = React.useState<
-    Array<MythsWithImages>
-  >([]);
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const t = useTranslations("myths.list");
 
+  /*
+   * ⚡ Bolt: Construct `mythsWithImages` synchronously during render instead of
+   * inside a `useEffect`. This ensures the content is Server-Side Rendered (SSR)
+   * and immediately visible to the user, eliminating layout shifts and dramatically
+   * improving Largest Contentful Paint (LCP) performance.
+   */
+  const itemKey = <K extends "myth" | "truth" | "explanation" | "stats">(
+    id: MythId,
+    key: K,
+  ) => `items.${id}.${key}` as const;
+
+  const mythsTexts: MythTexts[] = mythBases.map((base) => ({
+    myth: t(itemKey(base.id, "myth")),
+    truth: t(itemKey(base.id, "truth")),
+    explanation: t(itemKey(base.id, "explanation")),
+    stats: t(itemKey(base.id, "stats")),
+  }));
+
+  const mythsWithImages: Array<MythsWithImages> = mythBases.map(
+    (base, index) => {
+      const photo = photos.at(index);
+      const fallbackPhoto: Photo = {
+        id: 0,
+        description: "Fallback photo",
+        dateTaken: new Date(),
+        dateUpload: new Date(),
+        height: 400,
+        width: 600,
+        title: "Fallback",
+        views: 0,
+        tags: "",
+        srcSet: [
+          {
+            src: "/images/DSC_7028.webp",
+            width: 600,
+            height: 400,
+            title: "Fallback",
+            description: "Fallback",
+          },
+        ],
+      };
+
+      return {
+        ...base,
+        ...mythsTexts[index],
+        image: photo ?? fallbackPhoto,
+      };
+    },
+  );
+
   useEffect(() => {
     const section = sectionRef.current;
     const title = titleRef.current;
-    const itemKey = <K extends "myth" | "truth" | "explanation" | "stats">(
-      id: MythId,
-      key: K,
-    ) => `items.${id}.${key}` as const;
-    const mythsTexts: MythTexts[] = mythBases.map((base) => ({
-      myth: t(itemKey(base.id, "myth")),
-      truth: t(itemKey(base.id, "truth")),
-      explanation: t(itemKey(base.id, "explanation")),
-      stats: t(itemKey(base.id, "stats")),
-    }));
-
-    const mythsWithPhotos: Array<MythsWithImages> = mythBases.map(
-      (base, index) => {
-        const photo = photos.at(index);
-        const fallbackPhoto: Photo = {
-          id: 0,
-          description: "Fallback photo",
-          dateTaken: new Date(),
-          dateUpload: new Date(),
-          height: 400,
-          width: 600,
-          title: "Fallback",
-          views: 0,
-          tags: "",
-          srcSet: [
-            {
-              src: "/images/DSC_7028.webp",
-              width: 600,
-              height: 400,
-              title: "Fallback",
-              description: "Fallback",
-            },
-          ],
-        };
-
-        return {
-          ...base,
-          ...mythsTexts[index],
-          image: photo ?? fallbackPhoto,
-        };
-      },
-    );
-
-    setMythsWithImages(mythsWithPhotos);
 
     if (!section || !title) return;
 
