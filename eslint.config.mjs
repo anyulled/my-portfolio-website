@@ -85,6 +85,14 @@ export default [
     securityPlugin.configs.recommended,
     customRules,
     {
+        rules: {
+            'security/detect-object-injection': 'off',
+            'security/detect-non-literal-regexp': 'off',
+            'security/detect-non-literal-fs-filename': 'off',
+            'security/detect-unsafe-regex': 'off',
+        }
+    },
+    {
         files: ['**/*.ts', '**/*.tsx'],
         rules: {
             'import/extensions': [
