@@ -56,40 +56,44 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
     key: K,
   ) => `items.${id}.${key}` as const;
 
-  const mythsTexts: MythTexts[] = mythBases.map((base) => ({
-    myth: t(itemKey(base.id, "myth")),
-    truth: t(itemKey(base.id, "truth")),
-    explanation: t(itemKey(base.id, "explanation")),
-    stats: t(itemKey(base.id, "stats")),
-  }));
+  /*
+   * ⚡ Bolt: Hoisted the invariant `fallbackPhoto` allocation outside of the
+   * `.map()` iteration. This prevents allocating a large object and two new
+   * `Date` instances on every iteration. Also combined multiple `.map()` calls
+   * into a single loop to eliminate an intermediate array allocation and redundant
+   * iteration over `mythBases`, reducing O(2N) to O(N) iteration time.
+   */
+  const fallbackPhoto: Photo = {
+    id: 0,
+    description: "Fallback photo",
+    dateTaken: new Date(),
+    dateUpload: new Date(),
+    height: 400,
+    width: 600,
+    title: "Fallback",
+    views: 0,
+    tags: "",
+    srcSet: [
+      {
+        src: "/images/DSC_7028.webp",
+        width: 600,
+        height: 400,
+        title: "Fallback",
+        description: "Fallback",
+      },
+    ],
+  };
 
   const mythsWithImages: Array<MythsWithImages> = mythBases.map(
     (base, index) => {
       const photo = photos.at(index);
-      const fallbackPhoto: Photo = {
-        id: 0,
-        description: "Fallback photo",
-        dateTaken: new Date(),
-        dateUpload: new Date(),
-        height: 400,
-        width: 600,
-        title: "Fallback",
-        views: 0,
-        tags: "",
-        srcSet: [
-          {
-            src: "/images/DSC_7028.webp",
-            width: 600,
-            height: 400,
-            title: "Fallback",
-            description: "Fallback",
-          },
-        ],
-      };
 
       return {
         ...base,
-        ...mythsTexts[index],
+        myth: t(itemKey(base.id, "myth")),
+        truth: t(itemKey(base.id, "truth")),
+        explanation: t(itemKey(base.id, "explanation")),
+        stats: t(itemKey(base.id, "stats")),
         image: photo ?? fallbackPhoto,
       };
     },
