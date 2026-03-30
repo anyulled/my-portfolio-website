@@ -72,7 +72,7 @@
     "@vercel/toolbar": "^0.2.1",
     "babel-jest": "^30.2.0",
     "eslint": "^10.1.0",
-    "eslint-config-next": "^16.1.1",
+    "eslint-config-next": "^16.2.1",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jest": "^29.15.0",
     "eslint-plugin-security": "^4.0.0",
