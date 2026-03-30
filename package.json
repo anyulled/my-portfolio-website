@@ -51,7 +51,7 @@
     "@babel/preset-typescript": "^7.28.5",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
-    "@eslint-community/eslint-plugin-eslint-comments": "^4.6.0",
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.2.1",
