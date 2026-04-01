@@ -2,19 +2,16 @@
 
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import { Dancing_Script } from "next/font/google";
-import { useEffect, useState } from "react";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export default function Loading() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
+  /*
+   * ⚡ Bolt: Removed the `mounted` state check that was forcing the component
+   * to render `null` on the server. This allows the loading fallback to be
+   * Server-Side Rendered (SSR) and immediately visible to the user,
+   * significantly improving Largest Contentful Paint (LCP) performance.
+   */
   return (
     <div className="flex items-center justify-center h-screen w-full">
       <LazyMotion features={domAnimation} strict>

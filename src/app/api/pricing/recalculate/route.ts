@@ -90,7 +90,9 @@ export async function GET(req: Request) {
 
   try {
     console.log(
-      chalk.gray("[ pricing:recalculate ] Fetching latest stored pricing and IPC percentage concurrently"),
+      chalk.gray(
+        "[ pricing:recalculate ] Fetching latest stored pricing and IPC percentage concurrently",
+      ),
     );
 
     /*
