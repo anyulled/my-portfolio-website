@@ -83,3 +83,7 @@
 ## 2026-03-22 - [LCP Optimization: Client-Side Content Initialization]
 **Learning:** Initializing component state that maps static data to translations or derived content as an empty array and populating it within a `useEffect` hook forces the component to render initially without data. This delays content rendering until after hydration, negatively impacting Largest Contentful Paint (LCP) and causing layout shifts.
 **Action:** To improve LCP and enable Server-Side Rendering (SSR) for static or synchronous data mappings, construct the derived state synchronously during the component's render cycle.
+
+## 2026-03-23 - [LCP Optimization: Server-Side Rendering for Loading Component]
+**Learning:** Wrapping purely visual/layout components (like a `Loading` fallback with Framer Motion animations) in a client-side `mounted` state check (e.g., `if (!mounted) return null;`) prevents the component from being server-side rendered (SSR). This delays its visibility until after React hydration, which severely degrades Largest Contentful Paint (LCP) and introduces visual pop-ins or delays for the user.
+**Action:** Remove `mounted` checks for components that are purely presentational and rely on SSR-compatible libraries (like `framer-motion`'s `LazyMotion` or static CSS). This allows the initial HTML structure to be sent from the server and immediately displayed, ensuring a fast LCP.

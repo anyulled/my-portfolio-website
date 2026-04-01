@@ -2,26 +2,31 @@
 > boudoir-barcelona@0.1.0 dev
 > next dev --turbopack
 
-▲ Next.js 16.1.6 (Turbopack)
+▲ Next.js 16.2.1 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
 - Environments: .env
-- Experiments (use with caution):
-  · clientTraceMetadata
-
-✓ Starting...
+✓ Ready in 579ms
 Attention: Next.js now collects completely anonymous telemetry regarding usage.
 This information is used to shape Next.js' roadmap and prioritize features.
 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
 https://nextjs.org/telemetry
 
-✓ Ready in 4.3s
-○ Compiling /models ...
-(node:3635) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///app/tailwind.config.ts?id=1773232799113 is not specified and it doesn't parse as CommonJS.
+- Experiments (use with caution):
+  · clientTraceMetadata
+
+○ Compiling / ...
+(node:3713) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///app/tailwind.config.ts?id=1775042363288 is not specified and it doesn't parse as CommonJS.
 Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
 To eliminate this warning, add "type": "module" to /app/package.json.
 (Use `node --trace-warnings ...` to show where the warning was created)
-[Redis] Getting cache for key: photosmodels
+[Redis] Getting cache for key: photosboudoir
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[Redis] Getting cache for key: photoshero
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
 [Upstash Redis] The 'url' property is missing or undefined in your Redis config.
@@ -29,24 +34,58 @@ To eliminate this warning, add "type": "module" to /app/package.json.
 [Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
 [ i18n ] loading messages for locale en
 [ i18n ] Successfully loaded messages for locale: en
-(node:3201) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
+[browser] Mixpanel token is missing! Check your .env file. (src/lib/mixpanelClient.ts:14:13)
 [Redis] Error getting cache: Failed to parse URL from /pipeline
-[VercelBlob] Getting cache for key: photosmodels
+[VercelBlob] Getting cache for key: photosboudoir
+[Redis] Error getting cache: Failed to parse URL from /pipeline
+[VercelBlob] Getting cache for key: photoshero
 [VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
-[Redis] Getting cache for key: photosmodelslimit200
+[Redis] Getting cache for key: photosherolimit6
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
 [Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
 [Upstash Redis] The 'url' property is missing or undefined in your Redis config.
 [Upstash Redis] The 'token' property is missing or undefined in your Redis config.
 [Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
-[Redis] Error getting cache: Failed to parse URL from /pipeline
-[VercelBlob] Getting cache for key: photosmodelslimit200
 [VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
-[PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix: models
+[Redis] Getting cache for key: photosboudoirlimit12
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+✓ Finished writing to filesystem cache in 10.7s
+[Redis] Error getting cache: Failed to parse URL from /pipeline
+[VercelBlob] Getting cache for key: photosherolimit6
+[VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
+[PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix: hero
 [GCP] Missing explicit credentials. clientEmail: Missing, privateKey: Missing
 [GCP] Falling back to Application Default Credentials (ADC).
-[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: 'models', maxResults: 220 }
-[PhotosStorage] GCS returned 0 files
-[PhotosStorage] No files found in GCS for prefix: models
- GET /models 200 in 28.8s (compile: 17.1s, render: 11.7s)
+[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: 'hero', maxResults: 26 }
+[Redis] Error getting cache: Failed to parse URL from /pipeline
+[VercelBlob] Getting cache for key: photosboudoirlimit12
+[VercelBlob] Error getting cache: Vercel Blob: Access denied, please provide a valid token for this resource.
+[PhotosStorage] Fetching from GCS bucket: sensuelle-boudoir-homepage, prefix: boudoir
+[GCP] Missing explicit credentials. clientEmail: Missing, privateKey: Missing
+[GCP] Falling back to Application Default Credentials (ADC).
+[PhotosStorage] Calling bucket.getFiles with options: { autoPaginate: false, prefix: 'boudoir', maxResults: 32 }
+[PhotosStorage] GCS returned 26 files
+[PhotosStorage] Successfully mapped 6 photos from 6 processed files (total scanned: 26)
+[PhotosStorage] Writing 6 photos to cache layers
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[PhotosStorage] GCS returned 32 files
+[PhotosStorage] Successfully mapped 12 photos from 12 processed files (total scanned: 32)
+[PhotosStorage] Writing 12 photos to cache layers
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_URL`
+[Upstash Redis] Unable to find environment variable: `UPSTASH_REDIS_REST_TOKEN`
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] Redis client was initialized without url or token. Failed to execute command.
+[Redis] Error writing cache: Failed to parse URL from /pipeline
+[VercelBlob] Error writing cache for key photosherolimit6: Vercel Blob: Access denied, please provide a valid token for this resource.
+[Redis] Error writing cache: Failed to parse URL from /pipeline
+[VercelBlob] Error writing cache for key photosboudoirlimit12: Vercel Blob: Access denied, please provide a valid token for this resource.
+ GET / 200 in 48s (next.js: 27.6s, application-code: 20.5s)
