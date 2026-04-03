@@ -31,7 +31,6 @@ const navLinks = [
 ];
 
 export default function NavBar() {
-  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { lenis } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,7 +42,6 @@ export default function NavBar() {
   const t = useTranslations();
 
   useEffect(() => {
-    setMounted(true);
     if (!theme) {
       setTheme("light");
     }
@@ -120,11 +118,8 @@ export default function NavBar() {
             onClick={handleThemeChange}
             aria-label={t("nav_bar.toggle_theme")}
           >
-            {mounted && theme === "dark" ? (
-              <Sun className="h-6 w-6" />
-            ) : (
-              <Moon className="h-6 w-6" />
-            )}
+            <Sun className="hidden h-6 w-6 dark:block" />
+            <Moon className="block h-6 w-6 dark:hidden" />
           </Button>
           <div className="hidden md:flex space-x-4 items-center">
             <NavLinks navLinks={navLinks} handleNavClick={handleNavClick} />
