@@ -87,3 +87,6 @@
 ## 2026-03-23 - [LCP Optimization: Server-Side Rendering for Loading Component]
 **Learning:** Wrapping purely visual/layout components (like a `Loading` fallback with Framer Motion animations) in a client-side `mounted` state check (e.g., `if (!mounted) return null;`) prevents the component from being server-side rendered (SSR). This delays its visibility until after React hydration, which severely degrades Largest Contentful Paint (LCP) and introduces visual pop-ins or delays for the user.
 **Action:** Remove `mounted` checks for components that are purely presentational and rely on SSR-compatible libraries (like `framer-motion`'s `LazyMotion` or static CSS). This allows the initial HTML structure to be sent from the server and immediately displayed, ensuring a fast LCP.
+## 2026-03-24 - [LCP Optimization: Client-Side Theme Icons]
+**Learning:** Checking client-side hydration state (`mounted`) to render theme toggle icons prevents server rendering and degrades Largest Contentful Paint (LCP) because the icons are absent in the initial HTML and pop-in after hydration.
+**Action:** Remove hydration blocks (`mounted`) and use CSS-based media queries or class variants (e.g., `hidden dark:block`, `block dark:hidden`) to handle theme-specific rendering instantly, allowing the entire component to be server rendered.
