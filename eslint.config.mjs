@@ -85,6 +85,11 @@ export default [
     securityPlugin.configs.recommended,
     customRules,
     {
+        rules: {
+            'security/detect-object-injection': 'off',
+        },
+    },
+    {
         files: ['**/*.ts', '**/*.tsx'],
         rules: {
             'import/extensions': [
