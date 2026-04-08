@@ -34,7 +34,7 @@ interface GCSFile {
 }
 
 interface GCSBucket {
-  getFiles(): Promise<[GCSFile[]]>;
+  getFilesStream(): AsyncIterable<GCSFile>;
   file(name: string): GCSFile;
 }
 
@@ -212,48 +212,52 @@ export async function GET(_request: NextRequest) {
   const bucket = storage.bucket(bucketName);
 
   try {
-    const [files] = await bucket.getFiles();
-    console.log(chalk.cyan(`[Cron] Found ${files.length} files in bucket.`));
+    console.log(chalk.cyan(`[Cron] Streaming files from bucket...`));
+    /*
+     * ⚡ Bolt: Using getFilesStream() instead of getFiles() prevents Out-Of-Memory
+     * errors on large buckets by streaming metadata instead of loading all items into a single array.
+     */
+    const fileStream = bucket.getFilesStream();
+    const fileIterator = fileStream[Symbol.asyncIterator]();
 
     const results: ProcessResult[] = [];
 
     // Concurrency limit to optimize throughput without OOM
     const CONCURRENCY = 5;
-
-    // Process files with concurrency limit
     // eslint-disable-next-line no-restricted-syntax
-    let currentIndex = 0;
-
-    // Simple semaphore for concurrency control
-    const processNext = async (): Promise<ProcessResult | null> => {
-      if (currentIndex >= files.length) return null;
-      const file = files[currentIndex++];
-      if (!file) return null;
-
-      if (!isValidImage(file)) {
-        return {
-          status: "skipped",
-          file: file.name,
-          originalBytes: 0,
-          newBytes: 0,
-        };
-      }
-
-      return processImage(file, bucket);
-    };
+    let filesProcessedCount = 0;
 
     const worker = async (): Promise<void> => {
-      while (currentIndex < files.length) {
-        const result = await processNext();
-        if (result) results.push(result);
+      while (true) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const { value: file, done } = await fileIterator.next();
+        if (done) {
+          break;
+        }
+
+        filesProcessedCount++;
+
+        if (!isValidImage(file)) {
+          results.push({
+            status: "skipped",
+            file: file.name,
+            originalBytes: 0,
+            newBytes: 0,
+          });
+          continue;
+        }
+
+        const result = await processImage(file, bucket);
+        results.push(result);
       }
     };
 
     // Start workers
-    const workers = new Array(Math.min(files.length, CONCURRENCY))
+    const workers = new Array(CONCURRENCY)
       .fill(null)
       .map(worker);
     await Promise.all(workers);
+    console.log(chalk.cyan(`[Cron] Processed stream of ${filesProcessedCount} total files in bucket.`));
 
     /*
      * ⚡ Bolt: Single pass iteration over the results array instead of

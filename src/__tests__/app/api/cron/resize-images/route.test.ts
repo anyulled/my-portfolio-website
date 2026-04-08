@@ -59,7 +59,7 @@ describe("Image Resizing Cron Route", () => {
     context.photosStorage = require("@/services/storage/photos");
 
     context.mockBucket = {
-      getFiles: jest.fn(),
+      getFilesStream: jest.fn(),
       file: jest.fn(),
     };
 
@@ -79,7 +79,12 @@ describe("Image Resizing Cron Route", () => {
   it("should process images and send email summary", async () => {
     const file1 = mockFile("image1.jpg");
     const file2 = mockFile("image2.png");
-    context.mockBucket.getFiles.mockResolvedValue([[file1, file2]]);
+    context.mockBucket.getFilesStream.mockReturnValue({
+      [Symbol.asyncIterator]: async function* () {
+        yield file1;
+        yield file2;
+      },
+    });
     context.mockBucket.file.mockImplementation((name: string) =>
       mockFile(name),
     );
