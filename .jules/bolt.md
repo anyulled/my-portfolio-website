@@ -90,3 +90,7 @@
 ## 2026-03-24 - [LCP Optimization: Client-Side Theme Icons]
 **Learning:** Checking client-side hydration state (`mounted`) to render theme toggle icons prevents server rendering and degrades Largest Contentful Paint (LCP) because the icons are absent in the initial HTML and pop-in after hydration.
 **Action:** Remove hydration blocks (`mounted`) and use CSS-based media queries or class variants (e.g., `hidden dark:block`, `block dark:hidden`) to handle theme-specific rendering instantly, allowing the entire component to be server rendered.
+
+## 2026-03-24 - [Performance: GCS Metadata Streaming]
+**Learning:** Calling `bucket.getFiles()` loads the entire result set of file metadata into a single array in memory. For buckets with thousands of files, this causes massive memory allocation spikes and can lead to Out-Of-Memory (OOM) crashes in serverless/cron environments.
+**Action:** Replace `bucket.getFiles()` with `bucket.getFilesStream()`. Use the async iterator protocol (`const iterator = stream[Symbol.asyncIterator]()`) combined with a worker pool to process files sequentially or with bounded concurrency, drastically reducing memory footprint while maintaining high throughput.
