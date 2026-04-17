@@ -94,3 +94,7 @@
 ## 2026-03-24 - [Performance: GCS Metadata Streaming]
 **Learning:** Calling `bucket.getFiles()` loads the entire result set of file metadata into a single array in memory. For buckets with thousands of files, this causes massive memory allocation spikes and can lead to Out-Of-Memory (OOM) crashes in serverless/cron environments.
 **Action:** Replace `bucket.getFiles()` with `bucket.getFilesStream()`. Use the async iterator protocol (`const iterator = stream[Symbol.asyncIterator]()`) combined with a worker pool to process files sequentially or with bounded concurrency, drastically reducing memory footprint while maintaining high throughput.
+
+## 2026-03-24 - [Performance: I/O Operation Concurrency in Batch Processing]
+**Learning:** Using `Promise.all` directly with large arrays to perform I/O-bound operations (like generating signed URLs or mapping files) causes all operations to start concurrently. This can lead to resource exhaustion, memory issues, or hitting API rate limits.
+**Action:** Replace unbounded `Promise.all` with a concurrency-controlled utility like `concurrentMap` (using a worker pattern) to limit the number of simultaneous asynchronous tasks.
