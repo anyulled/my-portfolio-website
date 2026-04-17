@@ -3,6 +3,7 @@ import {
   getGCPCredentials,
 } from "@/lib/gcp/storage-client";
 
+import { concurrentMap } from "@/lib/async";
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import type { Photo } from "@/types/photos";
@@ -293,7 +294,8 @@ const processFetchedFiles = async (
     }
   }
 
-  const mapped = await Promise.all(filesToProcess.map(mapFileToPhoto));
+  // ⚡ Bolt: Limit concurrency to 10 to avoid GCP rate limits and memory spikes
+  const mapped = await concurrentMap(filesToProcess, mapFileToPhoto, 10);
 
   const photos = mapped.filter((photo): photo is Photo => photo !== null);
   console.log(

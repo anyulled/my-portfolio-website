@@ -5,6 +5,7 @@
  * Supports prefix-based organization for multiple galleries within a single bucket.
  */
 
+import { concurrentMap } from "@/lib/async";
 import { createGCPStorageClient } from "@/lib/gcp/storage-client";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
@@ -130,9 +131,14 @@ export class GCSPhotoProvider implements PhotoProvider {
         /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
       );
 
-      // Map files to photos
-      const mapped = await Promise.all(
-        imageFiles.map((file) => this.mapFileToPhoto(file)),
+      /*
+       * ⚡ Bolt: Limit concurrency to 10 to avoid GCP rate limits and memory spikes
+       * Map files to photos
+       */
+      const mapped = await concurrentMap(
+        imageFiles,
+        (file) => this.mapFileToPhoto(file),
+        10,
       );
 
       const p0 = mapped.filter((photo): photo is Photo => photo !== null);
