@@ -28,7 +28,7 @@
     "framer-motion": "^12.38.0",
     "gsap": "^3.13.0",
     "lenis": "latest",
-    "lucide-react": "^1.7.0",
+    "lucide-react": "^1.8.0",
     "mixpanel-browser": "^2.78.0",
     "next": "^16.2.3",
     "next-intl": "^4.9.1",
