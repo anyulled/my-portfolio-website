@@ -63,6 +63,7 @@ jest.mock("next-intl/server", () => ({
         discover_transformative_experiences: "Mocked Discover Experiences",
         more_client_stories: "Mocked More Client Stories",
       };
+      // eslint-disable-next-line security/detect-object-injection
       return translations[key] || key;
     }),
   ),

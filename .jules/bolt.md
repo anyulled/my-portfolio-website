@@ -98,3 +98,7 @@
 ## 2026-03-24 - [Performance: I/O Operation Concurrency in Batch Processing]
 **Learning:** Using `Promise.all` directly with large arrays to perform I/O-bound operations (like generating signed URLs or mapping files) causes all operations to start concurrently. This can lead to resource exhaustion, memory issues, or hitting API rate limits.
 **Action:** Replace unbounded `Promise.all` with a concurrency-controlled utility like `concurrentMap` (using a worker pattern) to limit the number of simultaneous asynchronous tasks.
+
+## 2026-04-25 - [Performance: React Component Re-renders]
+**Learning:** Passing a newly created inline array or object as a prop (e.g., `items={[...]}`) forces the child component to re-render every time the parent renders, as the reference changes.
+**Action:** In React components, prevent unnecessary re-renders of child components by memoizing inline array or object props (e.g., using `useMemo` for static items like a language list passed to a Select component).

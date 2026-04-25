@@ -6,6 +6,7 @@ const referenceFilePath = path.join("src/messages", "en.json");
 const messagesFolderPath = path.join("src/messages");
 
 const getKeysFromJsonFile = (filePath: string): string[] => {
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   const data = fs.readFileSync(filePath, "utf-8");
   const jsonDataRaw: unknown = JSON.parse(data);
   const isRecord = (val: unknown): val is Record<string, unknown> =>
@@ -22,6 +23,7 @@ const getKeysFromJsonFile = (filePath: string): string[] => {
 
     return Object.keys(obj).flatMap((key) => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
+      // eslint-disable-next-line security/detect-object-injection
       const value = obj[key];
       if (isRecord(value)) {
         return collectKeys(value, fullKey);

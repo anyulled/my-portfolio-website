@@ -15,6 +15,7 @@ describe("extractNameFromTag (property-based)", () => {
         fc.integer({ min: 0 }),
         (data, indexOffset) => {
           const targetIndex = indexOffset % data.length;
+          // eslint-disable-next-line security/detect-object-injection
           const targetTag = data[targetIndex].tag;
 
           /*
