@@ -14,6 +14,35 @@ export const metadata: Metadata = {
     "Intimate, elegant boudoir photography in Barcelona. Empowering portraits with expert guidance, luxe styling, and a private experience. Book today.",
 };
 
+/*
+ * ⚡ Bolt: Hoisted the invariant `fallbackGalleryPhotos` array out of the
+ * `HomePage` render function. This prevents allocating an array, a large
+ * photo object, and two `Date` instances on every server render when
+ * fetched gallery photos are unavailable.
+ */
+const fallbackGalleryPhotos = [
+  {
+    id: 0,
+    description: "Boudoir Session",
+    dateTaken: new Date(),
+    dateUpload: new Date(),
+    height: 1080,
+    title: "Boudoir Session",
+    views: 0,
+    width: 1920,
+    tags: "boudoir, portrait",
+    srcSet: [
+      {
+        src: "/images/DSC_7028.jpg",
+        width: 1920,
+        height: 1080,
+        title: "Boudoir Session",
+        description: "Boudoir Session",
+      },
+    ],
+  },
+];
+
 export default async function HomePage() {
   // Parallelize data fetching to reduce waterfall effect and improve LCP
   const [fetchedGallery, heroPhotosRaw] = await Promise.all([
@@ -24,28 +53,7 @@ export default async function HomePage() {
   const galleryPhotos =
     fetchedGallery && fetchedGallery.length > 0
       ? fetchedGallery
-      : [
-          {
-            id: 0,
-            description: "Boudoir Session",
-            dateTaken: new Date(),
-            dateUpload: new Date(),
-            height: 1080,
-            title: "Boudoir Session",
-            views: 0,
-            width: 1920,
-            tags: "boudoir, portrait",
-            srcSet: [
-              {
-                src: "/images/DSC_7028.jpg",
-                width: 1920,
-                height: 1080,
-                title: "Boudoir Session",
-                description: "Boudoir Session",
-              },
-            ],
-          },
-        ];
+      : fallbackGalleryPhotos;
 
   const heroPhotos = heroPhotosRaw || [];
 

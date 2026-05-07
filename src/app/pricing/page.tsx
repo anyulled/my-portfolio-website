@@ -219,6 +219,7 @@ export default async function PricingPage() {
     "@context": "https://schema.org",
     "@type": "Offer",
     name: pkg.name,
+
     price: pkg.price.replace(" €", ""),
     priceCurrency: "EUR",
     image: pkg.image,

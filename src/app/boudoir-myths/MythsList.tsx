@@ -36,6 +36,33 @@ const mythBases = [
   { id: "5", icon: Heart },
 ] as const satisfies ReadonlyArray<MythsBase>;
 
+/*
+ * ⚡ Bolt: Hoisted the invariant `fallbackPhoto` allocation outside of the
+ * component entirely into the module scope. This prevents allocating a large
+ * object and two new `Date` instances on every single render, significantly
+ * improving rendering performance.
+ */
+const fallbackPhoto: Photo = {
+  id: 0,
+  description: "Fallback photo",
+  dateTaken: new Date(),
+  dateUpload: new Date(),
+  height: 400,
+  width: 600,
+  title: "Fallback",
+  views: 0,
+  tags: "",
+  srcSet: [
+    {
+      src: "/images/DSC_7028.webp",
+      width: 600,
+      height: 400,
+      title: "Fallback",
+      description: "Fallback",
+    },
+  ],
+};
+
 interface MythListProps {
   photos: Array<Photo>;
 }
@@ -57,33 +84,10 @@ export default function MythsList({ photos }: Readonly<MythListProps>) {
   ) => `items.${id}.${key}` as const;
 
   /*
-   * ⚡ Bolt: Hoisted the invariant `fallbackPhoto` allocation outside of the
-   * `.map()` iteration. This prevents allocating a large object and two new
-   * `Date` instances on every iteration. Also combined multiple `.map()` calls
-   * into a single loop to eliminate an intermediate array allocation and redundant
-   * iteration over `mythBases`, reducing O(2N) to O(N) iteration time.
+   * ⚡ Bolt: Combined multiple `.map()` calls into a single loop to eliminate
+   * an intermediate array allocation and redundant iteration over `mythBases`,
+   * reducing O(2N) to O(N) iteration time.
    */
-  const fallbackPhoto: Photo = {
-    id: 0,
-    description: "Fallback photo",
-    dateTaken: new Date(),
-    dateUpload: new Date(),
-    height: 400,
-    width: 600,
-    title: "Fallback",
-    views: 0,
-    tags: "",
-    srcSet: [
-      {
-        src: "/images/DSC_7028.webp",
-        width: 600,
-        height: 400,
-        title: "Fallback",
-        description: "Fallback",
-      },
-    ],
-  };
-
   const mythsWithImages: Array<MythsWithImages> = mythBases.map(
     (base, index) => {
       const photo = photos.at(index);
