@@ -102,3 +102,7 @@
 ## 2026-04-25 - [Performance: React Component Re-renders]
 **Learning:** Passing a newly created inline array or object as a prop (e.g., `items={[...]}`) forces the child component to re-render every time the parent renders, as the reference changes.
 **Action:** In React components, prevent unnecessary re-renders of child components by memoizing inline array or object props (e.g., using `useMemo` for static items like a language list passed to a Select component).
+
+## 2026-05-07 - [Performance: React Component Redundant Memory Allocations]
+**Learning:** In React components, initializing invariant fallback data structures (like arrays or objects containing `new Date()`) inside the component body forces redundant memory allocation and CPU overhead on every render cycle.
+**Action:** Hoist invariant fallback data structures (e.g., fallback arrays or objects containing `new Date()`) outside the component to the module scope to prevent re-allocation on every render.
