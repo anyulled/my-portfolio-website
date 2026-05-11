@@ -97,6 +97,9 @@ export class GCSPhotoProvider implements PhotoProvider {
   private readonly storage: Storage;
   private readonly bucketName: string;
   private readonly useSignedUrls: boolean;
+  private fileCache: Map<number | string, GCSFile> | null = null;
+  private isCacheInitialized: boolean = false;
+  private cacheInitPromise: Promise<void> | null = null;
 
   constructor(options: GCSPhotoProviderOptions = {}) {
     const {
@@ -184,18 +187,51 @@ export class GCSPhotoProvider implements PhotoProvider {
     }
   }
 
-  async getPhoto(id: string | number): Promise<Photo | null> {
-    try {
+  private async ensureCacheInitialized(): Promise<void> {
+    if (this.isCacheInitialized) return;
+
+    // Concurrent protection
+    if (this.cacheInitPromise) {
+      return this.cacheInitPromise;
+    }
+
+    this.cacheInitPromise = (async () => {
+      /* ⚡ Bolt: Cache file IDs to transform O(N) scans into O(1) lookups */
+      this.fileCache = new Map<number | string, GCSFile>();
       const bucket = this.storage.bucket(this.bucketName);
       const [files] = await bucket.getFiles({ autoPaginate: false });
 
-      const targetId = typeof id === "string" ? Number(id) : id;
-
       for (const file of files) {
         const fileId = extractIdFromFilename(file.name);
-        if (fileId === targetId) {
-          return this.mapFileToPhoto(file);
-        }
+        if (fileId === null) continue;
+
+        this.fileCache.set(fileId, file);
+        this.fileCache.set(String(fileId), file);
+      }
+
+      this.isCacheInitialized = true;
+      this.cacheInitPromise = null;
+
+      // Cache invalidation: we clear the cache after 5 minutes so it doesn't serve stale data indefinitely
+      setTimeout(() => {
+        this.fileCache = null;
+        this.isCacheInitialized = false;
+      }, 5 * 60 * 1000);
+    })();
+
+    return this.cacheInitPromise;
+  }
+
+  async getPhoto(id: string | number): Promise<Photo | null> {
+    try {
+      await this.ensureCacheInitialized();
+
+      const targetId = typeof id === "string" ? Number(id) : id;
+
+      const file = this.fileCache?.get(targetId) || this.fileCache?.get(id);
+
+      if (file) {
+        return this.mapFileToPhoto(file);
       }
 
       return null;
