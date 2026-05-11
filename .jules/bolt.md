@@ -106,3 +106,7 @@
 ## 2026-05-07 - [Performance: React Component Redundant Memory Allocations]
 **Learning:** In React components, initializing invariant fallback data structures (like arrays or objects containing `new Date()`) inside the component body forces redundant memory allocation and CPU overhead on every render cycle.
 **Action:** Hoist invariant fallback data structures (e.g., fallback arrays or objects containing `new Date()`) outside the component to the module scope to prevent re-allocation on every render.
+
+## 2026-05-18 - [Performance: Cache Initialization Concurrency]
+**Learning:** When initializing an asynchronous, in-memory cache for stateful services (like `GCSPhotoProvider`), failing to lock the initialization process can cause a race condition where simultaneous concurrent requests trigger redundant initialization cycles (e.g. redundant network calls to fetch metadata).
+**Action:** Include concurrent initialization protection (e.g., storing a `cacheInitPromise`) to prevent race conditions and redundant network calls from simultaneous requests.
