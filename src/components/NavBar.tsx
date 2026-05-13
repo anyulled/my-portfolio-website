@@ -63,7 +63,13 @@ export default function NavBar() {
     const handleWindowScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleWindowScroll);
+    /*
+     * ⚡ Bolt: Added `{ passive: true }` to the scroll event listener.
+     * This explicitly tells the browser that the listener will not call `preventDefault()`,
+     * allowing it to scroll smoothly without waiting for the JS execution, significantly
+     * improving scroll frame rates (FPS) and scrolling responsiveness.
+     */
+    window.addEventListener("scroll", handleWindowScroll, { passive: true });
     handleWindowScroll();
     return () => {
       window.removeEventListener("scroll", handleWindowScroll);

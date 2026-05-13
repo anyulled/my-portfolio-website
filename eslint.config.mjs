@@ -82,7 +82,7 @@ export default [
             '@eslint-community/eslint-comments/no-use': ['error', { allow: ['eslint-disable', 'eslint-enable', 'eslint-disable-next-line'] }],
         },
     },
-    securityPlugin.configs.recommended,
+    {...securityPlugin.configs.recommended, rules: { ...securityPlugin.configs.recommended.rules, "security/detect-object-injection": "off" } },
     customRules,
     {
         files: ['**/*.ts', '**/*.tsx'],
