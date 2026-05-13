@@ -110,3 +110,7 @@
 ## 2026-05-18 - [Performance: Cache Initialization Concurrency]
 **Learning:** When initializing an asynchronous, in-memory cache for stateful services (like `GCSPhotoProvider`), failing to lock the initialization process can cause a race condition where simultaneous concurrent requests trigger redundant initialization cycles (e.g. redundant network calls to fetch metadata).
 **Action:** Include concurrent initialization protection (e.g., storing a `cacheInitPromise`) to prevent race conditions and redundant network calls from simultaneous requests.
+
+## 2024-05-18 - Passive Scroll Event Listeners
+**Learning:** Adding `{ passive: true }` to `window.addEventListener("scroll", ...)` is a critical frontend optimization. It tells the browser the listener won't call `preventDefault()`, allowing smooth scrolling without blocking the main thread.
+**Action:** Always verify if `scroll` event listeners use `{ passive: true }` when reviewing or creating scroll-dependent components like sticky navbars or scroll trackers.
