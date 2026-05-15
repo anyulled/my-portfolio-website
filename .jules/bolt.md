@@ -69,47 +69,61 @@
 **Action:** Use a single `for...of` loop to iterate through the array once, pushing items into their respective destination arrays based on the condition. This reduces iteration time and memory overhead.
 
 ## 2026-02-13 - [Performance: Pre-computing Map keys for O(1) Substring Match]
-**Learning:** Replacing an O(M*N) nested loop `.find(photo => photo.tags.includes(searchTag))` with an O(1) Map lookup requires care if the original logic relied on substring matching (`String.prototype.includes`). A naive `photo.tags.split()` approach may fail or change behavior depending on the `tags` data type (e.g., if it's a single string vs an array) and matching rules (exact word vs substring).
+
+**Learning:** Replacing an O(M\*N) nested loop `.find(photo => photo.tags.includes(searchTag))` with an O(1) Map lookup requires care if the original logic relied on substring matching (`String.prototype.includes`). A naive `photo.tags.split()` approach may fail or change behavior depending on the `tags` data type (e.g., if it's a single string vs an array) and matching rules (exact word vs substring).
 **Action:** To preserve substring matching exactly while enabling O(1) lookup, iterate over the known search targets (e.g., `models`), evaluate the `.includes()` condition once per photo, and pre-populate the Map with the specific `searchTag` keys. This retains exact behavior while eliminating the inner loop during rendering.
 
 ## 2026-03-12 - [Performance: Server-Side Request Waterfalls in dynamic routes]
+
 **Learning:** Sequential `await` calls for independent data fetching operations in dynamic route parameters (e.g. `getTranslations` and `getPhotosFromStorage`) in Server Components construct a request waterfall. This delays server response since requests execute one after another.
 **Action:** Use `Promise.all` to execute the independent data-fetching calls concurrently and eliminate the request waterfall.
 
 ## 2026-03-22 - [Performance: Server-Side Request Waterfalls in API Routes]
+
 **Learning:** Sequential `await` calls for independent data fetching operations in API routes (e.g. `getLatestPricing` and `fetchLatestIpc` in `src/app/api/pricing/recalculate/route.ts`) construct a request waterfall. This delays server response since requests execute one after another.
 **Action:** Use `Promise.all` to execute the independent asynchronous calls concurrently and eliminate the request waterfall.
 
 ## 2026-03-22 - [LCP Optimization: Client-Side Content Initialization]
+
 **Learning:** Initializing component state that maps static data to translations or derived content as an empty array and populating it within a `useEffect` hook forces the component to render initially without data. This delays content rendering until after hydration, negatively impacting Largest Contentful Paint (LCP) and causing layout shifts.
 **Action:** To improve LCP and enable Server-Side Rendering (SSR) for static or synchronous data mappings, construct the derived state synchronously during the component's render cycle.
 
 ## 2026-03-23 - [LCP Optimization: Server-Side Rendering for Loading Component]
+
 **Learning:** Wrapping purely visual/layout components (like a `Loading` fallback with Framer Motion animations) in a client-side `mounted` state check (e.g., `if (!mounted) return null;`) prevents the component from being server-side rendered (SSR). This delays its visibility until after React hydration, which severely degrades Largest Contentful Paint (LCP) and introduces visual pop-ins or delays for the user.
 **Action:** Remove `mounted` checks for components that are purely presentational and rely on SSR-compatible libraries (like `framer-motion`'s `LazyMotion` or static CSS). This allows the initial HTML structure to be sent from the server and immediately displayed, ensuring a fast LCP.
+
 ## 2026-03-24 - [LCP Optimization: Client-Side Theme Icons]
+
 **Learning:** Checking client-side hydration state (`mounted`) to render theme toggle icons prevents server rendering and degrades Largest Contentful Paint (LCP) because the icons are absent in the initial HTML and pop-in after hydration.
 **Action:** Remove hydration blocks (`mounted`) and use CSS-based media queries or class variants (e.g., `hidden dark:block`, `block dark:hidden`) to handle theme-specific rendering instantly, allowing the entire component to be server rendered.
 
 ## 2026-03-24 - [Performance: GCS Metadata Streaming]
+
 **Learning:** Calling `bucket.getFiles()` loads the entire result set of file metadata into a single array in memory. For buckets with thousands of files, this causes massive memory allocation spikes and can lead to Out-Of-Memory (OOM) crashes in serverless/cron environments.
 **Action:** Replace `bucket.getFiles()` with `bucket.getFilesStream()`. Use the async iterator protocol (`const iterator = stream[Symbol.asyncIterator]()`) combined with a worker pool to process files sequentially or with bounded concurrency, drastically reducing memory footprint while maintaining high throughput.
 
 ## 2026-03-24 - [Performance: I/O Operation Concurrency in Batch Processing]
+
 **Learning:** Using `Promise.all` directly with large arrays to perform I/O-bound operations (like generating signed URLs or mapping files) causes all operations to start concurrently. This can lead to resource exhaustion, memory issues, or hitting API rate limits.
 **Action:** Replace unbounded `Promise.all` with a concurrency-controlled utility like `concurrentMap` (using a worker pattern) to limit the number of simultaneous asynchronous tasks.
 
 ## 2026-04-25 - [Performance: React Component Re-renders]
+
 **Learning:** Passing a newly created inline array or object as a prop (e.g., `items={[...]}`) forces the child component to re-render every time the parent renders, as the reference changes.
 **Action:** In React components, prevent unnecessary re-renders of child components by memoizing inline array or object props (e.g., using `useMemo` for static items like a language list passed to a Select component).
 
 ## 2026-05-07 - [Performance: React Component Redundant Memory Allocations]
+
 **Learning:** In React components, initializing invariant fallback data structures (like arrays or objects containing `new Date()`) inside the component body forces redundant memory allocation and CPU overhead on every render cycle.
 **Action:** Hoist invariant fallback data structures (e.g., fallback arrays or objects containing `new Date()`) outside the component to the module scope to prevent re-allocation on every render.
 
 ## 2026-05-18 - [Performance: Cache Initialization Concurrency]
+
 **Learning:** When initializing an asynchronous, in-memory cache for stateful services (like `GCSPhotoProvider`), failing to lock the initialization process can cause a race condition where simultaneous concurrent requests trigger redundant initialization cycles (e.g. redundant network calls to fetch metadata).
 **Action:** Include concurrent initialization protection (e.g., storing a `cacheInitPromise`) to prevent race conditions and redundant network calls from simultaneous requests.
+
 ## 2026-05-19 - [Performance: Scroll Event Listener Rendering Impact]
+
 **Learning:** Attaching a scroll or wheel event listener without the `{ passive: true }` option implicitly forces the browser to wait for the JavaScript handler to finish executing before it can render the scroll update. This blocks the main thread and can cause severe scroll jank, especially in components observing scroll position frequently.
 **Action:** Always include `{ passive: true }` when attaching `scroll`, `wheel`, or `touchstart` event listeners (e.g., `window.addEventListener('scroll', handler, { passive: true })`) when the handler does not need to call `preventDefault()`.

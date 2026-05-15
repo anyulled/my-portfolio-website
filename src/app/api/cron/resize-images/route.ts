@@ -253,11 +253,13 @@ export async function GET(_request: NextRequest) {
     };
 
     // Start workers
-    const workers = new Array(CONCURRENCY)
-      .fill(null)
-      .map(worker);
+    const workers = new Array(CONCURRENCY).fill(null).map(worker);
     await Promise.all(workers);
-    console.log(chalk.cyan(`[Cron] Processed stream of ${filesProcessedCount} total files in bucket.`));
+    console.log(
+      chalk.cyan(
+        `[Cron] Processed stream of ${filesProcessedCount} total files in bucket.`,
+      ),
+    );
 
     /*
      * ⚡ Bolt: Single pass iteration over the results array instead of
