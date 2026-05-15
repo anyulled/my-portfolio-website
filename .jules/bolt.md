@@ -110,3 +110,6 @@
 ## 2026-05-18 - [Performance: Cache Initialization Concurrency]
 **Learning:** When initializing an asynchronous, in-memory cache for stateful services (like `GCSPhotoProvider`), failing to lock the initialization process can cause a race condition where simultaneous concurrent requests trigger redundant initialization cycles (e.g. redundant network calls to fetch metadata).
 **Action:** Include concurrent initialization protection (e.g., storing a `cacheInitPromise`) to prevent race conditions and redundant network calls from simultaneous requests.
+## 2026-05-19 - [Performance: Scroll Event Listener Rendering Impact]
+**Learning:** Attaching a scroll or wheel event listener without the `{ passive: true }` option implicitly forces the browser to wait for the JavaScript handler to finish executing before it can render the scroll update. This blocks the main thread and can cause severe scroll jank, especially in components observing scroll position frequently.
+**Action:** Always include `{ passive: true }` when attaching `scroll`, `wheel`, or `touchstart` event listeners (e.g., `window.addEventListener('scroll', handler, { passive: true })`) when the handler does not need to call `preventDefault()`.
