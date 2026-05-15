@@ -213,10 +213,13 @@ export class GCSPhotoProvider implements PhotoProvider {
       this.cacheInitPromise = null;
 
       // Cache invalidation: we clear the cache after 5 minutes so it doesn't serve stale data indefinitely
-      setTimeout(() => {
-        this.fileCache = null;
-        this.isCacheInitialized = false;
-      }, 5 * 60 * 1000);
+      setTimeout(
+        () => {
+          this.fileCache = null;
+          this.isCacheInitialized = false;
+        },
+        5 * 60 * 1000,
+      );
     })();
 
     return this.cacheInitPromise;

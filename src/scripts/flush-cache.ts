@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, security/detect-non-literal-fs-filename, security/detect-object-injection */
+/* eslint-disable no-restricted-syntax */
 import fs from "node:fs";
 import path from "node:path";
 import { list, del, ListBlobResult } from "@vercel/blob";
@@ -137,4 +137,4 @@ main().catch((err) => {
   console.error(chalk.red("💥 Fatal error:"), err);
   process.exit(1);
 });
-/* eslint-enable no-restricted-syntax, security/detect-non-literal-fs-filename, security/detect-object-injection */
+/* eslint-enable no-restricted-syntax */
