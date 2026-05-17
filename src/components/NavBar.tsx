@@ -60,11 +60,25 @@ export default function NavBar() {
       };
     }
 
+    let ticking = false;
+
     const handleWindowScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("scroll", handleWindowScroll);
-    handleWindowScroll();
+    /*
+     * ⚡ Bolt: Throttled the native scroll event handler using requestAnimationFrame
+     * to prevent redundant state updates and main thread blocking on rapid scroll events.
+     * Also added { passive: true } to explicitly tell the browser this listener
+     * won't call preventDefault, allowing the compositor thread to scroll immediately.
+     */
+    window.addEventListener("scroll", handleWindowScroll, { passive: true });
+    handleWindowScroll(); // Initial check
     return () => {
       window.removeEventListener("scroll", handleWindowScroll);
     };
