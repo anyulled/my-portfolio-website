@@ -110,3 +110,6 @@
 ## 2026-05-18 - [Performance: Cache Initialization Concurrency]
 **Learning:** When initializing an asynchronous, in-memory cache for stateful services (like `GCSPhotoProvider`), failing to lock the initialization process can cause a race condition where simultaneous concurrent requests trigger redundant initialization cycles (e.g. redundant network calls to fetch metadata).
 **Action:** Include concurrent initialization protection (e.g., storing a `cacheInitPromise`) to prevent race conditions and redundant network calls from simultaneous requests.
+## 2026-05-17 - [Performance: Scroll Event Throttling]
+**Learning:** Attaching native DOM `scroll` event listeners that trigger React state updates (e.g., `setIsScrolled`) can overwhelm the main thread, causing frame drops and scroll jank, because `scroll` fires synchronously at a higher frequency than the browser can paint. Adding `{ passive: true }` helps compositor thread scrolling, but does not solve the main thread blocking issue.
+**Action:** Throttle the state updates inside the native scroll event handler using `window.requestAnimationFrame()` and a ticking flag to ensure state updates only occur once per animation frame.
