@@ -70,7 +70,7 @@
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
     "@vercel/toolbar": "^0.2.1",
-    "babel-jest": "^30.2.0",
+    "babel-jest": "^30.4.1",
     "eslint": "^10.3.0",
     "eslint-config-next": "^16.2.1",
     "eslint-plugin-import": "^2.32.0",
