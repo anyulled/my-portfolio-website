@@ -113,3 +113,7 @@
 ## 2026-05-17 - [Performance: Scroll Event Throttling]
 **Learning:** Attaching native DOM `scroll` event listeners that trigger React state updates (e.g., `setIsScrolled`) can overwhelm the main thread, causing frame drops and scroll jank, because `scroll` fires synchronously at a higher frequency than the browser can paint. Adding `{ passive: true }` helps compositor thread scrolling, but does not solve the main thread blocking issue.
 **Action:** Throttle the state updates inside the native scroll event handler using `window.requestAnimationFrame()` and a ticking flag to ensure state updates only occur once per animation frame.
+
+## 2026-05-18 - [Performance: Redundant Array Transformations Before Selection]
+**Learning:** Mapping over an entire array (e.g., `heroPhotos.map()`) to format objects, only to immediately select a single random element and discard the rest, causes an $O(N)$ redundant memory allocation and processing overhead on every server render.
+**Action:** Always extract the selection logic (e.g., finding the random index) to pick the specific raw element *first*, and then apply the data transformation/formatting only to that single $O(1)$ element.
