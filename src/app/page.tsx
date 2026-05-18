@@ -57,26 +57,29 @@ export default async function HomePage() {
 
   const heroPhotos = heroPhotosRaw || [];
 
-  const formattedHeroImages =
-    heroPhotos.length > 0
-      ? heroPhotos.map((p) => ({
-          image: p.srcSet[0].src,
-          // Default position as GCS doesn't store position data yet
-          position: "center center",
-          alt: p.description || p.title || "Boudoir Session",
-        }))
-      : [
-          {
-            // Fallback if no images found
-            image: "/images/DSC_7028.jpg",
-            position: "left top",
-            alt: "Boudoir Session",
-          },
-        ];
+  /*
+   * ⚡ Bolt: Selected the random photo FIRST, and then formatted only that single photo
+   * into `heroImage`. This prevents mapping over the entire `heroPhotos` array, converting
+   * an O(N) allocation into an O(1) allocation and eliminating redundant object creations
+   * on every server render.
+   */
+  const selectedPhoto = heroPhotos.length > 0
+    ? heroPhotos[Math.floor(Math.random() * heroPhotos.length)]
+    : null;
 
-  // Select a random image on the server to avoid hydration mismatch and improve LCP
-  const heroImage =
-    formattedHeroImages[Math.floor(Math.random() * formattedHeroImages.length)];
+  const heroImage = selectedPhoto
+    ? {
+        image: selectedPhoto.srcSet[0].src,
+        // Default position as GCS doesn't store position data yet
+        position: "center center",
+        alt: selectedPhoto.description || selectedPhoto.title || "Boudoir Session",
+      }
+    : {
+        // Fallback if no images found
+        image: "/images/DSC_7028.jpg",
+        position: "left top",
+        alt: "Boudoir Session",
+      };
 
   return (
     <main>
