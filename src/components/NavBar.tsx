@@ -60,15 +60,15 @@ export default function NavBar() {
       };
     }
 
-    let ticking = false;
+    const ticking = { current: false };
 
     const handleWindowScroll = () => {
-      if (!ticking) {
+      if (!ticking.current) {
         window.requestAnimationFrame(() => {
           setIsScrolled(window.scrollY > 50);
-          ticking = false;
+          ticking.current = false;
         });
-        ticking = true;
+        ticking.current = true;
       }
     };
     /*
@@ -78,7 +78,7 @@ export default function NavBar() {
      * won't call preventDefault, allowing the compositor thread to scroll immediately.
      */
     window.addEventListener("scroll", handleWindowScroll, { passive: true });
-    handleWindowScroll(); // Initial check
+    handleWindowScroll();
     return () => {
       window.removeEventListener("scroll", handleWindowScroll);
     };
