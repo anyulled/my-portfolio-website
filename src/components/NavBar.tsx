@@ -60,7 +60,7 @@ export default function NavBar() {
       };
     }
 
-    let ticking = false;
+    const ticking = false;
 
     const handleWindowScroll = () => {
       if (!ticking) {
@@ -78,7 +78,7 @@ export default function NavBar() {
      * won't call preventDefault, allowing the compositor thread to scroll immediately.
      */
     window.addEventListener("scroll", handleWindowScroll, { passive: true });
-    handleWindowScroll(); // Initial check
+    handleWindowScroll();
     return () => {
       window.removeEventListener("scroll", handleWindowScroll);
     };

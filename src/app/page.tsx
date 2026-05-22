@@ -63,16 +63,18 @@ export default async function HomePage() {
    * an O(N) allocation into an O(1) allocation and eliminating redundant object creations
    * on every server render.
    */
-  const selectedPhoto = heroPhotos.length > 0
-    ? heroPhotos[Math.floor(Math.random() * heroPhotos.length)]
-    : null;
+  const selectedPhoto =
+    heroPhotos.length > 0
+      ? heroPhotos[Math.floor(Math.random() * heroPhotos.length)]
+      : null;
 
   const heroImage = selectedPhoto
     ? {
         image: selectedPhoto.srcSet[0].src,
         // Default position as GCS doesn't store position data yet
         position: "center center",
-        alt: selectedPhoto.description || selectedPhoto.title || "Boudoir Session",
+        alt:
+          selectedPhoto.description || selectedPhoto.title || "Boudoir Session",
       }
     : {
         // Fallback if no images found
