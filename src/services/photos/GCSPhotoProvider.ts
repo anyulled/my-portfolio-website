@@ -45,6 +45,9 @@ interface GCSFile {
   getSignedUrl?(config: { action: string; expires: number }): Promise<[string]>;
 }
 
+const ID_PATTERN = /_(\d+)_o$/;
+const FALLBACK_ID_PATTERN = /(\d+)$/;
+
 /**
  * Extracts the photo ID from a filename.
  * Expected format: "name_flickrid_o.jpg" (e.g., "andrea-cano-montull_54701383010_o.jpg")
@@ -53,14 +56,14 @@ const extractIdFromFilename = (filename: string): number | null => {
   const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
 
   // Match pattern: anything_NUMBER_o
-  const match = new RegExp(/_(\d+)_o$/).exec(nameWithoutExt);
+  const match = ID_PATTERN.exec(nameWithoutExt);
   if (match?.[1]) {
     const parsed = Number(match[1]);
     return Number.isFinite(parsed) ? parsed : null;
   }
 
   // Fallback: trailing number sequence
-  const fallbackMatch = new RegExp(/(\d+)$/).exec(nameWithoutExt);
+  const fallbackMatch = FALLBACK_ID_PATTERN.exec(nameWithoutExt);
   if (fallbackMatch?.[1]) {
     const parsed = Number(fallbackMatch[1]);
     return Number.isFinite(parsed) ? parsed : null;
@@ -213,10 +216,13 @@ export class GCSPhotoProvider implements PhotoProvider {
       this.cacheInitPromise = null;
 
       // Cache invalidation: we clear the cache after 5 minutes so it doesn't serve stale data indefinitely
-      setTimeout(() => {
-        this.fileCache = null;
-        this.isCacheInitialized = false;
-      }, 5 * 60 * 1000);
+      setTimeout(
+        () => {
+          this.fileCache = null;
+          this.isCacheInitialized = false;
+        },
+        5 * 60 * 1000,
+      );
     })();
 
     return this.cacheInitPromise;
