@@ -265,10 +265,14 @@ const storePhotosInCache = async (
         `[PhotosStorage] Writing ${photos.length} photos to cache layers`,
       ),
     );
-    // Write to Redis (Fast access)
-    await setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
-    // Write to Vercel Blob (Persistence)
-    await setCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
+    /*
+     * ⚡ Bolt: Execute independent cache writes concurrently via Promise.all
+     * to eliminate a request waterfall and reduce latency.
+     */
+    await Promise.all([
+      setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS),
+      setCachedData(cacheKey, photos, CACHE_TTL_SECONDS),
+    ]);
   } catch (error) {
     console.warn(
       chalk.yellow(`[PhotosStorage] Failed to write to cache for ${cacheKey}:`),
