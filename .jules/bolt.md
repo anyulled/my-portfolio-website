@@ -136,3 +136,7 @@
 ## 2026-05-22 - [Performance: Redundant RegExp Allocations in Batch Processing]
 **Learning:** Re-instantiating `RegExp` patterns inside utility functions (like `extractIdFromFilename`) that are called iteratively for every item during batch processing (e.g., scanning thousands of GCS files) causes redundant memory allocations, garbage collection overhead, and degrades CPU performance.
 **Action:** Hoist `RegExp` patterns to the module level to ensure they are created only once and reused across all function calls.
+## 2026-05-23 - [Performance: I/O Operation Concurrency in Cache Writing]
+
+**Learning:** When a service writes data to multiple independent caching layers (e.g., Redis and Vercel Blob), awaiting these operations sequentially creates an unnecessary request waterfall that slows down the overall hydration process.
+**Action:** Use `Promise.all` to execute independent cache write operations concurrently, eliminating the request waterfall and reducing total latency.

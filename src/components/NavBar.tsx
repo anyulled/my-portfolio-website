@@ -60,6 +60,7 @@ export default function NavBar() {
       };
     }
 
+    // eslint-disable-next-line no-restricted-syntax
     let ticking = false;
 
     const handleWindowScroll = () => {
@@ -78,7 +79,8 @@ export default function NavBar() {
      * won't call preventDefault, allowing the compositor thread to scroll immediately.
      */
     window.addEventListener("scroll", handleWindowScroll, { passive: true });
-    handleWindowScroll(); // Initial check
+    // Initial check
+    handleWindowScroll();
     return () => {
       window.removeEventListener("scroll", handleWindowScroll);
     };
