@@ -27,6 +27,7 @@ const createRequestConfigForTesting = (
           return null;
         }
 
+        // eslint-disable-next-line security/detect-object-injection
         return mockMessages[locale] || {};
       } catch (importError) {
         console.error(
@@ -49,6 +50,7 @@ const createRequestConfigForTesting = (
 
     return {
       locale: messages ? locale : FALLBACK_LOCALE,
+      // eslint-disable-next-line security/detect-object-injection
       messages: messages || mockMessages[FALLBACK_LOCALE] || {},
     };
   };

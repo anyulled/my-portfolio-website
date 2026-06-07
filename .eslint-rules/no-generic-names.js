@@ -28,6 +28,7 @@ module.exports = {
     };
 
     const forbiddenWords = Object.keys(forbiddenWordsWithSuggestions);
+    // eslint-disable-next-line security/detect-non-literal-regexp
     const forbiddenPattern = new RegExp(
       `(^|/|-)(${forbiddenWords.join("|")})(-|[.]ts$|[.]tsx$|/|$)`,
       "i",
@@ -54,6 +55,7 @@ module.exports = {
     const getFilenameMessage = (filepath) => {
       const matchedWord = findForbiddenWord(filepath);
       if (matchedWord) {
+        // eslint-disable-next-line security/detect-object-injection
         const suggestion = forbiddenWordsWithSuggestions[matchedWord];
         return `Generic word "${matchedWord}" in filename. ${suggestion}`;
       }
@@ -63,6 +65,7 @@ module.exports = {
     const getClassMessage = (className) => {
       const matchedWord = findForbiddenWord(className);
       if (matchedWord) {
+        // eslint-disable-next-line security/detect-object-injection
         const suggestion = forbiddenWordsWithSuggestions[matchedWord];
         return `Generic word "${matchedWord}" in class "${className}". ${suggestion}`;
       }

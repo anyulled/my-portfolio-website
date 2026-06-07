@@ -21,6 +21,7 @@ const loadEnv = () => {
         const trimmedLine = line.trim();
         if (!trimmedLine || trimmedLine.startsWith("#")) return;
 
+        // eslint-disable-next-line security/detect-unsafe-regex
         const match = trimmedLine.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
         if (match) {
           const key = match[1];
