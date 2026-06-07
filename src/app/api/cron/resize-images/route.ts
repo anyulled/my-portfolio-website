@@ -12,6 +12,9 @@ export const dynamic = "force-dynamic";
 
 const MAX_WIDTH_HEIGHT = 2560;
 
+const VALID_IMAGE_PATTERN = /\.(jpg|jpeg|png|gif|tiff|avif)$/i;
+const FILE_EXT_PATTERN = /\.[^/.]+$/;
+
 // Define minimal interfaces to avoid library export issues
 interface GCSFile {
   name: string;
@@ -49,7 +52,7 @@ interface ProcessResult {
 function isValidImage(file: GCSFile): boolean {
   return (
     !file.name.endsWith("/") &&
-    !!file.name.match(/\.(jpg|jpeg|png|gif|tiff|avif)$/i)
+    VALID_IMAGE_PATTERN.test(file.name)
   );
 }
 
@@ -118,7 +121,7 @@ async function processImage(
       };
     }
 
-    const newFileName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+    const newFileName = file.name.replace(FILE_EXT_PATTERN, "") + ".webp";
     console.log(
       chalk.yellow(
         `[Cron] Processing ${file.name} -> ${newFileName} (Original: ${metadata.width}x${metadata.height}, ${metadata.format})`,

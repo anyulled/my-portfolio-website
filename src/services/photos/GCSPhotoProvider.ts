@@ -47,13 +47,17 @@ interface GCSFile {
 
 const ID_PATTERN = /_(\d+)_o$/;
 const FALLBACK_ID_PATTERN = /(\d+)$/;
+const FILE_EXT_PATTERN = /\.[^/.]+$/;
+const SUFFIX_PATTERN = /_\d+_o$/;
+const DASH_UNDERSCORE_PATTERN = /[-_]/g;
+const IMAGE_EXT_PATTERN = /\.(jpg|jpeg|png|gif|webp)$/i;
 
 /**
  * Extracts the photo ID from a filename.
  * Expected format: "name_flickrid_o.jpg" (e.g., "andrea-cano-montull_54701383010_o.jpg")
  */
 const extractIdFromFilename = (filename: string): number | null => {
-  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+  const nameWithoutExt = filename.replace(FILE_EXT_PATTERN, "");
 
   // Match pattern: anything_NUMBER_o
   const match = ID_PATTERN.exec(nameWithoutExt);
@@ -77,11 +81,11 @@ const extractIdFromFilename = (filename: string): number | null => {
  * "name-with-dashes_flickrid_o.jpg" → "Name With Dashes"
  */
 const extractTitleFromFilename = (filename: string): string => {
-  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
-  const nameWithoutSuffix = nameWithoutExt.replace(/_\d+_o$/, "");
+  const nameWithoutExt = filename.replace(FILE_EXT_PATTERN, "");
+  const nameWithoutSuffix = nameWithoutExt.replace(SUFFIX_PATTERN, "");
 
   const title = nameWithoutSuffix
-    .replaceAll(/[-_]/g, " ")
+    .replaceAll(DASH_UNDERSCORE_PATTERN, " ")
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
@@ -93,6 +97,8 @@ const parseDate = (value: string | undefined, fallback: Date): Date => {
   const date = value ? new Date(value) : fallback;
   return Number.isNaN(date.getTime()) ? fallback : date;
 };
+
+const FALLBACK_DATE = new Date(0);
 
 export class GCSPhotoProvider implements PhotoProvider {
   readonly name = "GCS";
@@ -134,7 +140,7 @@ export class GCSPhotoProvider implements PhotoProvider {
 
       // Filter to only image files
       const imageFiles = files.filter((file) =>
-        /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name),
+        IMAGE_EXT_PATTERN.test(file.name),
       );
 
       /*
@@ -261,7 +267,7 @@ export class GCSPhotoProvider implements PhotoProvider {
     const metadata = file.metadata;
     const dateUpload = parseDate(
       metadata?.updated ?? metadata?.timeCreated,
-      new Date(0),
+      FALLBACK_DATE,
     );
 
     const url = await this.getUrlForFile(file);

@@ -140,3 +140,8 @@
 
 **Learning:** When a service writes data to multiple independent caching layers (e.g., Redis and Vercel Blob), awaiting these operations sequentially creates an unnecessary request waterfall that slows down the overall hydration process.
 **Action:** Use `Promise.all` to execute independent cache write operations concurrently, eliminating the request waterfall and reducing total latency.
+
+## 2026-06-15 - [Performance: Hoisting RegExp and primitive allocations in batch processing loops]
+
+**Learning:** Declaring regular expression literals (e.g., `/\.[^/.]+$/`) and static primitive wrapper objects (e.g., `new Date(0)`) inside a function that is called iteratively during a batch process (like mapping thousands of GCS files) forces the JavaScript engine to allocate memory and garbage collect these objects repeatedly, degrading throughput and increasing memory overhead. Additionally, using `.match()` for boolean checks allocates an array of results, while `.test()` only returns a boolean.
+**Action:** Extract invariant RegExp literals and primitive instantiations into module-level constants. When only a boolean check is needed, prefer `RegExp.prototype.test()` over `String.prototype.match()`.
