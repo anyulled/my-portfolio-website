@@ -18,7 +18,16 @@ const createDbClient = (cookies: ReadonlyRequestCookies) =>
           cookie: { name: string; value: string; options: CookieOptions }[],
         ) {
           try {
-            for (const { name, value, options } of cookie) {
+            /*
+             * ⚡ Bolt: Deduplicate cookie updates by name to prevent redundant internal
+             * state re-evaluations and minimize synchronous overhead from `cookies.set()`.
+             */
+            const uniqueCookies = new Map<string, { name: string; value: string; options: CookieOptions }>();
+            for (const c of cookie) {
+              uniqueCookies.set(c.name, c);
+            }
+
+            for (const { name, value, options } of uniqueCookies.values()) {
               cookies.set(name, value, options);
             }
           } catch {

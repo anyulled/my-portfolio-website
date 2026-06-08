@@ -145,3 +145,6 @@
 
 **Learning:** Declaring regular expression literals (e.g., `/\.[^/.]+$/`) and static primitive wrapper objects (e.g., `new Date(0)`) inside a function that is called iteratively during a batch process (like mapping thousands of GCS files) forces the JavaScript engine to allocate memory and garbage collect these objects repeatedly, degrading throughput and increasing memory overhead. Additionally, using `.match()` for boolean checks allocates an array of results, while `.test()` only returns a boolean.
 **Action:** Extract invariant RegExp literals and primitive instantiations into module-level constants. When only a boolean check is needed, prefer `RegExp.prototype.test()` over `String.prototype.match()`.
+## 2026-06-25 - [Performance: Next.js/Supabase SSR Cookie deduplication micro-optimization]
+**Learning:** Avoid deduplicating small cookie arrays using a `Map` before calling `cookies().set()` in Next.js/Supabase SSR handlers. This is a counterproductive micro-optimization, as the Map allocation overhead typically exceeds the cost of redundant setter calls.
+**Action:** Do not deduplicate small cookie arrays; allow `cookies().set()` to be called sequentially even if it means some redundant calls.
