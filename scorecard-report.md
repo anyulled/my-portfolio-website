@@ -1,20 +1,20 @@
 # AI Harness Scorecard: my-portfolio-website
 
-**Grade: C** (67.1/100) | Basic practices present but insufficient for safe AI scaling.
+**Grade: A** (87.1/100) | Strong harness. AI-generated code has robust mechanical safeguards.
 
 - **Repository**: `/home/runner/work/my-portfolio-website/my-portfolio-website`
 - **Languages**: javascript, typescript
-- **Assessed**: 2026-03-09 20:47 UTC
-- **Checks**: 23/31 passed
+- **Assessed**: 2026-06-12 21:02 UTC
+- **Checks**: 28/31 passed
 
 ## Summary
 
 | Category | Weight | Score | Checks |
 |----------|--------|-------|--------|
 | Architectural Documentation | 20% | 100% [##########] | 5/5 |
-| Mechanical Constraints | 25% | 36% [####------] | 3/7 |
-| Testing & Stability | 25% | 46% [#####-----] | 5/8 |
-| Review & Drift Prevention | 15% | 87% [#########-] | 5/6 |
+| Mechanical Constraints | 25% | 86% [#########-] | 6/7 |
+| Testing & Stability | 25% | 68% [#######---] | 6/8 |
+| Review & Drift Prevention | 15% | 100% [##########] | 6/6 |
 | AI-Specific Safeguards | 15% | 90% [#########-] | 5/5 |
 
 ## Architectural Documentation (100%)
@@ -47,10 +47,10 @@ _matklad ARCHITECTURE.md - constraints as absences_
 
 _DORA 2025 - AI-accessible documentation_
 
-**Evidence**: Doc generation config found: typedoc.json
+**Evidence**: Doc generation found in CI
 
 
-## Mechanical Constraints (36%)
+## Mechanical Constraints (86%)
 
 ### [PASS] CI Pipeline (3/3)
 
@@ -58,21 +58,17 @@ _DORA 2025 Report_
 
 **Evidence**: CI detected: github, github, github, github, github
 
-### [FAIL] Linter Enforcement (0/4)
+### [PASS] Linter Enforcement (4/4)
 
 _OpenAI Harness Engineering - mechanical constraints_
 
-**Evidence**: No linter found in CI
+**Evidence**: Blocking linter found in CI: eslint
 
-**Remediation**: Add a linter to CI that blocks merges on violations (e.g. cargo clippy -- -D warnings, eslint --max-warnings 0).
-
-### [FAIL] Formatter Enforcement (0/3)
+### [PASS] Formatter Enforcement (3/3)
 
 _OpenAI Harness Engineering - mechanical constraints_
 
-**Evidence**: No formatter check found in CI
-
-**Remediation**: Add a formatter check to CI (e.g. cargo fmt --all -- --check, prettier --check).
+**Evidence**: Formatter check found in CI: prettier\s+--check
 
 ### [PASS] Type Safety (3/3)
 
@@ -80,13 +76,11 @@ _SlopCodeBench - preventing subtle type errors_
 
 **Evidence**: TypeScript strict mode enabled
 
-### [FAIL] Dependency Auditing (0/4)
+### [PASS] Dependency Auditing (4/4)
 
 _Blog: security infrastructure reliability_
 
-**Evidence**: No dependency auditing found
-
-**Remediation**: Add cargo deny/audit, npm audit, pip-audit, or Snyk to CI as a blocking check.
+**Evidence**: Blocking dependency audit in CI: npm\s+audit
 
 ### [PASS] Conventional Commits (2/2)
 
@@ -103,15 +97,13 @@ _Blog: 80% problem in AI-generated code_
 **Remediation**: Add unsafe_code = forbid (Rust), security linting (semgrep/bandit), or ESLint rules against dangerous patterns.
 
 
-## Testing & Stability (46%)
+## Testing & Stability (68%)
 
-### [PASS] Test Suite (2/3)
+### [PASS] Test Suite (3/3)
 
 _Kent Beck - tests define what correct means_
 
-**Evidence**: Tests found but not confirmed in CI
-
-**Remediation**: Add test execution to your CI pipeline.
+**Evidence**: Tests present and executed in CI
 
 ### [PASS] Feature Matrix Testing (3/3)
 
@@ -127,13 +119,11 @@ _DORA 2025 - stability feedback loops_
 
 **Remediation**: Add coverage reporting to your CI pipeline.
 
-### [FAIL] Mutation Testing (0/4)
+### [PASS] Mutation Testing (4/4)
 
 _SlopCodeBench - code that 'appears correct but is unreliable'_
 
-**Evidence**: No mutation testing found
-
-**Remediation**: Add cargo-mutants (Rust), Stryker (JS/TS), mutmut (Python), or PIT (Java). Mutation testing catches tests that pass without verifying behavior.
+**Evidence**: Mutation testing found in CI
 
 ### [PASS] Property-Based Testing (3/3)
 
@@ -164,7 +154,7 @@ _DORA 2025 - stability metrics_
 **Evidence**: All test jobs are blocking: main, nightly
 
 
-## Review & Drift Prevention (87%)
+## Review & Drift Prevention (100%)
 
 ### [PASS] Code Review Required (4/4)
 
@@ -178,13 +168,11 @@ _OpenAI Harness Engineering - garbage collection agents_
 
 **Evidence**: Scheduled CI pipeline found
 
-### [FAIL] Stale Documentation Detection (0/2)
+### [PASS] Stale Documentation Detection (2/2)
 
 _OpenAI Harness Engineering - quality drift_
 
-**Evidence**: No stale documentation detection found
-
-**Remediation**: Add TODO/FIXME scanning, link checking (lychee), or prose linting (vale) to CI.
+**Evidence**: Documentation quality check in CI: link.check|markdown.link|lychee|linkinator
 
 ### [PASS] PR/MR Template (2/2)
 
