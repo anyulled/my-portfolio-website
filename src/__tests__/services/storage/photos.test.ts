@@ -100,6 +100,7 @@ describe("Photos Storage Service", () => {
 
     expect(result).toHaveLength(1);
     expect(result?.[0].title).toBe("Test Photo");
+    expect(result?.[0].srcSet[0].src).toBe("https://example.com/photo.jpg");
     expect(mockBucket.getFiles).toHaveBeenCalledWith({
       autoPaginate: false,
       prefix: "test-prefix",
@@ -139,10 +140,6 @@ describe("Photos Storage Service", () => {
   });
 
   it("should respect limit parameter and process only subset of files", async () => {
-    // Mock credentials to ensure getSignedUrl is called
-    process.env.GCP_CLIENT_EMAIL = "test@example.com";
-    process.env.GCP_PRIVATE_KEY = "test-key";
-
     (getRedisCachedData as jest.Mock).mockResolvedValue(null);
     (getCachedData as jest.Mock).mockResolvedValue(null);
 
@@ -165,13 +162,10 @@ describe("Photos Storage Service", () => {
     const result = await getPhotosFromStorage("test-prefix", 2);
 
     expect(result).toHaveLength(2);
-    // Should only process first 2 files
-    expect(file1.getSignedUrl).toHaveBeenCalled();
-    expect(file2.getSignedUrl).toHaveBeenCalled();
-    // Third file should NOT be processed
-    expect(file3.getSignedUrl).not.toHaveBeenCalled();
+    expect(file1.publicUrl).toHaveBeenCalled();
+    expect(file2.publicUrl).toHaveBeenCalled();
+    expect(file3.publicUrl).not.toHaveBeenCalled();
 
-    // Verify limit implementation in GCS (limit + 20 buffer)
     expect(mockBucket.getFiles).toHaveBeenCalledWith(
       expect.objectContaining({
         maxResults: 22,

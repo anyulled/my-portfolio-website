@@ -1,7 +1,4 @@
-import {
-  createGCPStorageClient,
-  getGCPCredentials,
-} from "@/lib/gcp/storage-client";
+import { createGCPStorageClient } from "@/lib/gcp/storage-client";
 
 import { concurrentMap } from "@/lib/async";
 import { getCachedData, setCachedData } from "@/services/cache";
@@ -15,8 +12,6 @@ import chalk from "chalk";
 export { createGCPStorageClient as createStorageClient } from "@/lib/gcp/storage-client";
 
 export const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-homepage";
-// 24 hours
-const SIGNED_URL_TTL_MS = 1000 * 60 * 60 * 24;
 // 12 hours (Safety margin)
 const CACHE_TTL_SECONDS = 60 * 60 * 12;
 
@@ -25,8 +20,6 @@ const IMAGE_EXTENSION_REGEX = /\.(jpg|jpeg|png|gif|webp)$/i;
 
 export type StorageClient = Pick<Storage, "bucket">;
 
-type SignedUrlResult = string | [string];
-
 export type StorageFileLike = {
   name: string;
   metadata?: {
@@ -34,12 +27,6 @@ export type StorageFileLike = {
     updated?: string;
   };
   publicUrl(): string;
-  getSignedUrl(config: {
-    action: "read";
-    expires: number | string | Date;
-  }): Promise<SignedUrlResult> | SignedUrlResult;
-  makePublic?(): Promise<void> | void;
-  isPublic(): Promise<[boolean]>;
 };
 
 const parseNumber = (value: string | undefined, fallback = 0): number => {
@@ -108,47 +95,7 @@ const generatePhotoIdFromFilename = (filename: string): number => {
   return Math.abs(hash);
 };
 
-const getSignedUrlForFile = async (file: StorageFileLike): Promise<string> => {
-  // Skip signing attempt if using ADC without explicit credentials - use public URL directly
-  if (!getGCPCredentials().hasCredentials) {
-    // Construct URL manually to avoid double-encoding issues
-    const bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME;
-    const url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
-    return url;
-  }
-
-  try {
-    const result = await file.getSignedUrl({
-      action: "read",
-      expires: Date.now() + SIGNED_URL_TTL_MS,
-    });
-
-    const [signedUrl] = Array.isArray(result) ? result : [result];
-
-    return signedUrl;
-  } catch (error) {
-    console.warn(
-      chalk.yellow(`[PhotosStorage] Failed to sign URL for ${file.name}`),
-      error,
-    );
-
-    const [isPublic] = await file.isPublic();
-    if (!isPublic && typeof file.makePublic === "function") {
-      try {
-        await file.makePublic();
-      } catch (makePublicError) {
-        console.warn(
-          chalk.yellow(
-            `[PhotosStorage] Failed to make ${file.name} public before falling back to public URL`,
-          ),
-          makePublicError,
-        );
-      }
-    }
-
-    return file.publicUrl();
-  }
-};
+const getPublicUrlForFile = (file: StorageFileLike): string => file.publicUrl();
 
 const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
   const resourceMetadata = file.metadata ?? {};
@@ -174,9 +121,7 @@ const mapFileToPhoto = async (file: StorageFileLike): Promise<Photo | null> => {
 
   const views = parseNumber(userMetadata.views);
 
-  const signedUrl = await getSignedUrlForFile(file);
-
-  const url = signedUrl;
+  const url = getPublicUrlForFile(file);
 
   const photo: Photo = {
     id,

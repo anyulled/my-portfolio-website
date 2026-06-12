@@ -1,10 +1,3 @@
-/**
- * Google Cloud Storage Photo Provider
- *
- * Implements PhotoProvider interface for fetching photos from GCS buckets.
- * Supports prefix-based organization for multiple galleries within a single bucket.
- */
-
 import { concurrentMap } from "@/lib/async";
 import { createGCPStorageClient } from "@/lib/gcp/storage-client";
 import { Storage } from "@google-cloud/storage";
@@ -15,25 +8,17 @@ import type { ListPhotosOptions, PhotoProvider } from "./PhotoInterfaces";
 import { DEFAULT_LIST_OPTIONS } from "./PhotoInterfaces";
 
 const DEFAULT_BUCKET_NAME = "sensuelle-boudoir-website";
-// 24 hours
-const SIGNED_URL_TTL_MS = 1000 * 60 * 60 * 24;
+const ID_PATTERN = /_(\d+)_o$/;
+const FALLBACK_ID_PATTERN = /(\d+)$/;
+const FILE_EXT_PATTERN = /\.[^/.]+$/;
+const SUFFIX_PATTERN = /_\d+_o$/;
+const DASH_UNDERSCORE_PATTERN = /[-_]/g;
+const IMAGE_EXT_PATTERN = /\.(jpg|jpeg|png|gif|webp)$/i;
 
 interface GCSPhotoProviderOptions {
-  /** GCS bucket name. Defaults to env var GCP_HOMEPAGE_BUCKET or DEFAULT_BUCKET_NAME */
   bucketName?: string;
-  /** GCP project ID */
-  projectId?: string;
-  /** Service account email for signed URLs */
-  clientEmail?: string;
-  /** Service account private key for signed URLs */
-  privateKey?: string;
-  /** Whether to use signed URLs (requires credentials) */
-  useSignedUrls?: boolean;
 }
 
-/**
- * Type representing a Google Cloud Storage file object
- */
 interface GCSFile {
   name: string;
   metadata?: {
@@ -42,31 +27,17 @@ interface GCSFile {
     timeCreated?: string;
   };
   publicUrl(): string;
-  getSignedUrl?(config: { action: string; expires: number }): Promise<[string]>;
 }
 
-const ID_PATTERN = /_(\d+)_o$/;
-const FALLBACK_ID_PATTERN = /(\d+)$/;
-const FILE_EXT_PATTERN = /\.[^/.]+$/;
-const SUFFIX_PATTERN = /_\d+_o$/;
-const DASH_UNDERSCORE_PATTERN = /[-_]/g;
-const IMAGE_EXT_PATTERN = /\.(jpg|jpeg|png|gif|webp)$/i;
-
-/**
- * Extracts the photo ID from a filename.
- * Expected format: "name_flickrid_o.jpg" (e.g., "andrea-cano-montull_54701383010_o.jpg")
- */
 const extractIdFromFilename = (filename: string): number | null => {
   const nameWithoutExt = filename.replace(FILE_EXT_PATTERN, "");
 
-  // Match pattern: anything_NUMBER_o
   const match = ID_PATTERN.exec(nameWithoutExt);
   if (match?.[1]) {
     const parsed = Number(match[1]);
     return Number.isFinite(parsed) ? parsed : null;
   }
 
-  // Fallback: trailing number sequence
   const fallbackMatch = FALLBACK_ID_PATTERN.exec(nameWithoutExt);
   if (fallbackMatch?.[1]) {
     const parsed = Number(fallbackMatch[1]);
@@ -76,21 +47,17 @@ const extractIdFromFilename = (filename: string): number | null => {
   return null;
 };
 
-/**
- * Extracts and formats a title from a filename.
- * "name-with-dashes_flickrid_o.jpg" → "Name With Dashes"
- */
 const extractTitleFromFilename = (filename: string): string => {
   const nameWithoutExt = filename.replace(FILE_EXT_PATTERN, "");
   const nameWithoutSuffix = nameWithoutExt.replace(SUFFIX_PATTERN, "");
 
-  const title = nameWithoutSuffix
-    .replaceAll(DASH_UNDERSCORE_PATTERN, " ")
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-
-  return title || filename;
+  return (
+    nameWithoutSuffix
+      .replaceAll(DASH_UNDERSCORE_PATTERN, " ")
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ") || filename
+  );
 };
 
 const parseDate = (value: string | undefined, fallback: Date): Date => {
@@ -105,22 +72,17 @@ export class GCSPhotoProvider implements PhotoProvider {
 
   private readonly storage: Storage;
   private readonly bucketName: string;
-  private readonly useSignedUrls: boolean;
   private fileCache: Map<number | string, GCSFile> | null = null;
-  private isCacheInitialized: boolean = false;
+  private isCacheInitialized = false;
   private cacheInitPromise: Promise<void> | null = null;
 
   constructor(options: GCSPhotoProviderOptions = {}) {
     const {
       bucketName = process.env.GCP_HOMEPAGE_BUCKET ?? DEFAULT_BUCKET_NAME,
-      useSignedUrls,
     } = options;
 
     this.bucketName = bucketName;
     this.storage = createGCPStorageClient();
-
-    // Use signed URLs if explicitly requested or if credentials are available
-    this.useSignedUrls = useSignedUrls ?? true;
   }
 
   async listPhotos(options: ListPhotosOptions = {}): Promise<Photo[] | null> {
@@ -138,54 +100,41 @@ export class GCSPhotoProvider implements PhotoProvider {
         return [];
       }
 
-      // Filter to only image files
-      const imageFiles = files.filter((file) =>
-        IMAGE_EXT_PATTERN.test(file.name),
-      );
-
-      /*
-       * ⚡ Bolt: Limit concurrency to 10 to avoid GCP rate limits and memory spikes
-       * Map files to photos
-       */
+      const imageFiles = files.filter((file) => IMAGE_EXT_PATTERN.test(file.name));
       const mapped = await concurrentMap(
         imageFiles,
         (file) => this.mapFileToPhoto(file),
         10,
       );
+      const photos = mapped.filter((photo): photo is Photo => photo !== null);
 
-      const p0 = mapped.filter((photo): photo is Photo => photo !== null);
-
-      // Sort
-      const p1 = (() => {
+      const sortedPhotos = (() => {
         if (opts.orderBy === "date") {
-          return [...p0].sort((a, b) =>
+          return [...photos].sort((a, b) =>
             opts.orderDirection === "asc"
               ? a.dateUpload.getTime() - b.dateUpload.getTime()
               : b.dateUpload.getTime() - a.dateUpload.getTime(),
           );
         }
+
         if (opts.orderBy === "views") {
-          return [...p0].sort((a, b) =>
-            opts.orderDirection === "asc"
-              ? a.views - b.views
-              : b.views - a.views,
+          return [...photos].sort((a, b) =>
+            opts.orderDirection === "asc" ? a.views - b.views : b.views - a.views,
           );
         }
+
         if (opts.orderBy === "name") {
-          return [...p0].sort((a, b) =>
+          return [...photos].sort((a, b) =>
             opts.orderDirection === "asc"
               ? a.title.localeCompare(b.title)
               : b.title.localeCompare(a.title),
           );
         }
-        return p0;
+
+        return photos;
       })();
 
-      // Apply limit
-      const photos =
-        opts.limit && opts.limit > 0 ? p1.slice(0, opts.limit) : p1;
-
-      return photos;
+      return opts.limit && opts.limit > 0 ? sortedPhotos.slice(0, opts.limit) : sortedPhotos;
     } catch (error) {
       captureException(error);
       console.error(
@@ -199,13 +148,11 @@ export class GCSPhotoProvider implements PhotoProvider {
   private async ensureCacheInitialized(): Promise<void> {
     if (this.isCacheInitialized) return;
 
-    // Concurrent protection
     if (this.cacheInitPromise) {
       return this.cacheInitPromise;
     }
 
     this.cacheInitPromise = (async () => {
-      /* ⚡ Bolt: Cache file IDs to transform O(N) scans into O(1) lookups */
       this.fileCache = new Map<number | string, GCSFile>();
       const bucket = this.storage.bucket(this.bucketName);
       const [files] = await bucket.getFiles({ autoPaginate: false });
@@ -221,14 +168,10 @@ export class GCSPhotoProvider implements PhotoProvider {
       this.isCacheInitialized = true;
       this.cacheInitPromise = null;
 
-      // Cache invalidation: we clear the cache after 5 minutes so it doesn't serve stale data indefinitely
-      setTimeout(
-        () => {
-          this.fileCache = null;
-          this.isCacheInitialized = false;
-        },
-        5 * 60 * 1000,
-      );
+      setTimeout(() => {
+        this.fileCache = null;
+        this.isCacheInitialized = false;
+      }, 5 * 60 * 1000);
     })();
 
     return this.cacheInitPromise;
@@ -239,7 +182,6 @@ export class GCSPhotoProvider implements PhotoProvider {
       await this.ensureCacheInitialized();
 
       const targetId = typeof id === "string" ? Number(id) : id;
-
       const file = this.fileCache?.get(targetId) || this.fileCache?.get(id);
 
       if (file) {
@@ -265,12 +207,7 @@ export class GCSPhotoProvider implements PhotoProvider {
 
     const title = extractTitleFromFilename(file.name);
     const metadata = file.metadata;
-    const dateUpload = parseDate(
-      metadata?.updated ?? metadata?.timeCreated,
-      FALLBACK_DATE,
-    );
-
-    const url = await this.getUrlForFile(file);
+    const dateUpload = parseDate(metadata?.updated ?? metadata?.timeCreated, FALLBACK_DATE);
 
     return {
       id,
@@ -284,7 +221,7 @@ export class GCSPhotoProvider implements PhotoProvider {
       tags: "",
       srcSet: [
         {
-          src: url,
+          src: file.publicUrl(),
           width: 0,
           height: 0,
           title,
@@ -293,25 +230,8 @@ export class GCSPhotoProvider implements PhotoProvider {
       ],
     };
   }
-
-  private async getUrlForFile(file: GCSFile): Promise<string> {
-    if (this.useSignedUrls && file.getSignedUrl) {
-      try {
-        const [signedUrl] = await file.getSignedUrl({
-          action: "read",
-          expires: Date.now() + SIGNED_URL_TTL_MS,
-        });
-        return signedUrl;
-      } catch {
-        // Silently fall back to public URL
-      }
-    }
-
-    return file.publicUrl();
-  }
 }
 
-// Factory function for convenience
 export const createGCSPhotoProvider = (
   options?: GCSPhotoProviderOptions,
 ): PhotoProvider => new GCSPhotoProvider(options);
