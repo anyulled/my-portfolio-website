@@ -90,11 +90,26 @@ export class GCSPhotoProvider implements PhotoProvider {
 
     try {
       const bucket = this.storage.bucket(this.bucketName);
-      const [files] = await bucket.getFiles({
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const getFilesOptions: any = {
         prefix: opts.prefix,
         autoPaginate: false,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any);
+      };
+
+      if (opts.limit && opts.limit > 0) {
+        /*
+         * ⚡ Bolt: Always set maxResults to a reasonable buffer (e.g., limit + 20)
+         * when fetching a subset of files from GCS. This prevents bucket.getFiles()
+         * from loading the default page size (1000 items) of metadata into memory
+         * when only a few items are needed, drastically minimizing payload size,
+         * network latency, and parsing overhead.
+         */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        getFilesOptions.maxResults = opts.limit + 20;
+      }
+
+      const [files] = await bucket.getFiles(getFilesOptions);
 
       if (!files || files.length === 0) {
         return [];
