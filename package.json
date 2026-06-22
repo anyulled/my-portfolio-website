@@ -90,7 +90,7 @@
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.17",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.60.0"
+    "typescript-eslint": "^8.61.1"
   },
   "name": "boudoir-barcelona",
   "private": true,
