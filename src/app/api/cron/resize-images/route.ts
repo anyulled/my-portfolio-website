@@ -50,10 +50,7 @@ interface ProcessResult {
 }
 
 function isValidImage(file: GCSFile): boolean {
-  return (
-    !file.name.endsWith("/") &&
-    VALID_IMAGE_PATTERN.test(file.name)
-  );
+  return !file.name.endsWith("/") && VALID_IMAGE_PATTERN.test(file.name);
 }
 
 // eslint-disable-next-line complexity

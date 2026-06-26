@@ -102,7 +102,8 @@ describe("GCSPhotoProvider", () => {
       expect(mockBucketContainer.getFiles).toHaveBeenCalledWith({
         prefix: "styles/boudoir/",
         autoPaginate: false,
-        maxResults: 120, // default limit is 100, buffer is 20
+        // Default limit is 100, buffer is 20
+        maxResults: 120,
       });
     });
 

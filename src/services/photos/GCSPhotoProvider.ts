@@ -91,7 +91,11 @@ export class GCSPhotoProvider implements PhotoProvider {
     try {
       const bucket = this.storage.bucket(this.bucketName);
 
-      const getFilesOptions: any = {
+      const getFilesOptions: {
+        autoPaginate?: boolean;
+        maxResults?: number;
+        prefix?: string;
+      } = {
         prefix: opts.prefix,
         autoPaginate: false,
       };
@@ -113,7 +117,9 @@ export class GCSPhotoProvider implements PhotoProvider {
         return [];
       }
 
-      const imageFiles = files.filter((file) => IMAGE_EXT_PATTERN.test(file.name));
+      const imageFiles = files.filter((file) =>
+        IMAGE_EXT_PATTERN.test(file.name),
+      );
       const mapped = await concurrentMap(
         imageFiles,
         (file) => this.mapFileToPhoto(file),
@@ -132,7 +138,9 @@ export class GCSPhotoProvider implements PhotoProvider {
 
         if (opts.orderBy === "views") {
           return [...photos].sort((a, b) =>
-            opts.orderDirection === "asc" ? a.views - b.views : b.views - a.views,
+            opts.orderDirection === "asc"
+              ? a.views - b.views
+              : b.views - a.views,
           );
         }
 
@@ -147,7 +155,9 @@ export class GCSPhotoProvider implements PhotoProvider {
         return photos;
       })();
 
-      return opts.limit && opts.limit > 0 ? sortedPhotos.slice(0, opts.limit) : sortedPhotos;
+      return opts.limit && opts.limit > 0
+        ? sortedPhotos.slice(0, opts.limit)
+        : sortedPhotos;
     } catch (error) {
       captureException(error);
       console.error(
@@ -181,10 +191,13 @@ export class GCSPhotoProvider implements PhotoProvider {
       this.isCacheInitialized = true;
       this.cacheInitPromise = null;
 
-      setTimeout(() => {
-        this.fileCache = null;
-        this.isCacheInitialized = false;
-      }, 5 * 60 * 1000);
+      setTimeout(
+        () => {
+          this.fileCache = null;
+          this.isCacheInitialized = false;
+        },
+        5 * 60 * 1000,
+      );
     })();
 
     return this.cacheInitPromise;
@@ -220,7 +233,10 @@ export class GCSPhotoProvider implements PhotoProvider {
 
     const title = extractTitleFromFilename(file.name);
     const metadata = file.metadata;
-    const dateUpload = parseDate(metadata?.updated ?? metadata?.timeCreated, FALLBACK_DATE);
+    const dateUpload = parseDate(
+      metadata?.updated ?? metadata?.timeCreated,
+      FALLBACK_DATE,
+    );
 
     return {
       id,
