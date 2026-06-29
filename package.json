@@ -77,7 +77,7 @@
     "eslint-plugin-jest": "^29.15.0",
     "eslint-plugin-security": "^4.0.0",
     "fast-check": "^4.8.0",
-    "globals": "^17.6.0",
+    "globals": "^17.7.0",
     "husky": "^9.1.6",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
