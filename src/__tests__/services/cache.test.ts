@@ -2,10 +2,11 @@ import { sanitizeKey } from "@/lib/sanitizer";
 import { getCachedData, setCachedData } from "@/services/cache";
 import { Photo } from "@/types/photos";
 // Import the mocked functions after mocking
-import { list, put } from "@vercel/blob";
+import { del, list, put } from "@vercel/blob";
 
 // Mock the dependencies
 jest.mock("@vercel/blob", () => ({
+  del: jest.fn(),
   list: jest.fn(),
   put: jest.fn(),
 }));
@@ -41,6 +42,7 @@ describe("Cache Service", () => {
   // Mock Vercel Blob response
   const mockBlob = {
     pathname: mockSanitizedKey,
+    url: "https://example.com/blob",
     downloadUrl: "https://example.com/download",
     contentType: "application/json",
     contentLength: 1000,
@@ -63,12 +65,17 @@ describe("Cache Service", () => {
     // Mock global fetch
     global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
-        json: () => Promise.resolve(mockPhotos),
+        json: () =>
+          Promise.resolve({
+            data: mockPhotos,
+            expiresAt: Date.now() + 3600 * 1000,
+          }),
       }),
     );
   });
 
   afterEach(() => {
+    jest.useRealTimers();
     jest.restoreAllMocks();
   });
 
@@ -93,6 +100,38 @@ describe("Cache Service", () => {
 
       // Check the result
       expect(result).toEqual(mockPhotos);
+    });
+
+    it("should discard legacy cache entries without an expiration", async () => {
+      (list as jest.Mock).mockResolvedValue({
+        blobs: [mockBlob],
+      });
+      global.fetch = jest.fn().mockResolvedValue({
+        json: () => Promise.resolve(mockPhotos),
+      });
+
+      const result = await getCachedData(mockKey);
+
+      expect(result).toBeNull();
+      expect(del).toHaveBeenCalledWith(mockBlob.url);
+    });
+
+    it("should discard expired cache entries", async () => {
+      (list as jest.Mock).mockResolvedValue({
+        blobs: [mockBlob],
+      });
+      global.fetch = jest.fn().mockResolvedValue({
+        json: () =>
+          Promise.resolve({
+            data: mockPhotos,
+            expiresAt: Date.now() - 1,
+          }),
+      });
+
+      const result = await getCachedData(mockKey);
+
+      expect(result).toBeNull();
+      expect(del).toHaveBeenCalledWith(mockBlob.url);
     });
 
     it("should return null when no matching blob is found", async () => {
@@ -188,7 +227,9 @@ describe("Cache Service", () => {
   });
 
   describe("setCachedData", () => {
-    it("should set data in Vercel Blob with the correct parameters", async () => {
+    it("should set data in Vercel Blob with an expiration snapshot", async () => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date("2026-07-25T12:00:00.000Z"));
       // Mock put to return a success response
       (put as jest.Mock).mockResolvedValue(mockPutResponse);
 
@@ -199,17 +240,46 @@ describe("Cache Service", () => {
       expect(sanitizeKey).toHaveBeenCalledWith(mockKey);
 
       // Check that put was called with the correct parameters
+      const serializedCacheEntry = (put as jest.Mock).mock.calls[0][1];
+      expect(JSON.parse(serializedCacheEntry)).toMatchInlineSnapshot(`
+        {
+          "data": [
+            {
+              "dateTaken": "2023-01-01T12:00:00.000Z",
+              "dateUpload": "2023-01-01T00:00:00.000Z",
+              "description": "Test Description",
+              "height": 768,
+              "id": 123,
+              "srcSet": [
+                {
+                  "description": "Test Description",
+                  "height": 768,
+                  "src": "http://example.com/large.jpg",
+                  "title": "Test Photo",
+                  "width": 1024,
+                },
+              ],
+              "tags": "test",
+              "title": "Test Photo",
+              "views": 100,
+              "width": 1024,
+            },
+          ],
+          "expiresAt": 1784984400000,
+        }
+      `);
       expect(put).toHaveBeenCalledWith(
         mockSanitizedKey,
-        JSON.stringify(mockPhotos),
-        {
+        serializedCacheEntry,
+        expect.objectContaining({
           contentType: "application/json",
           access: "public",
           cacheControlMaxAge: 3600,
           addRandomSuffix: false,
           multipart: false,
-        },
+        }),
       );
+      jest.useRealTimers();
     });
 
     it("should handle errors from put gracefully", async () => {
@@ -225,7 +295,7 @@ describe("Cache Service", () => {
       // Check that put was called with the correct parameters
       expect(put).toHaveBeenCalledWith(
         mockSanitizedKey,
-        JSON.stringify(mockPhotos),
+        expect.stringContaining('"expiresAt":'),
         {
           contentType: "application/json",
           access: "public",

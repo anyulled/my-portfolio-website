@@ -1,7 +1,19 @@
-import { list, put } from "@vercel/blob";
+import { del, list, put } from "@vercel/blob";
 import chalk from "chalk";
 
 import { sanitizeKey } from "@/lib/sanitizer";
+
+type CacheEntry<T> = {
+  data: T;
+  expiresAt: number;
+};
+
+const isCacheEntry = <T>(value: unknown): value is CacheEntry<T> => {
+  if (!value || typeof value !== "object") return false;
+
+  const entry = value as Partial<CacheEntry<T>>;
+  return "data" in entry && Number.isFinite(entry.expiresAt);
+};
 
 export async function getCachedData<T>(key: string): Promise<T | null> {
   const sanitizedKey = sanitizeKey(key);
@@ -24,8 +36,13 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
     console.log(chalk.green(`[VercelBlob] Cache hit for key: ${sanitizedKey}`));
 
     const res = await fetch(matchingBlob.downloadUrl);
-    const data: unknown = await res.json();
-    return data as T;
+    const cachedValue: unknown = await res.json();
+    if (!isCacheEntry<T>(cachedValue) || cachedValue.expiresAt <= Date.now()) {
+      await del(matchingBlob.url);
+      return null;
+    }
+
+    return cachedValue.data;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(
@@ -43,7 +60,10 @@ export async function setCachedData<T>(
   const sanitizedKey = sanitizeKey(key);
 
   try {
-    const serializedData = JSON.stringify(data);
+    const serializedData = JSON.stringify({
+      data,
+      expiresAt: Date.now() + expiryInSeconds * 1000,
+    });
     const result = await put(sanitizedKey, serializedData, {
       contentType: "application/json",
       access: "public",
