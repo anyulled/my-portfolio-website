@@ -2,6 +2,8 @@ import { getPhotosFromStorage as getPhotosFromStorageUncached } from "@/services
 import type { Photo } from "@/types/photos";
 import { unstable_cache } from "next/cache";
 
+const CACHE_KEY_VERSION = "public-urls-v1";
+
 /**
  * Cached version of getPhotosFromStorage using Next.js ISR.
  * Revalidates every 1 week (604800 seconds).
@@ -21,7 +23,7 @@ export const getPhotosFromStorage = async (
       return getPhotosFromStorageUncached(prefix, limit);
     },
     // Cache key parts including arguments to prevent collisions
-    ["photos-storage", prefix, limit?.toString() ?? "all"],
+    ["photos-storage", CACHE_KEY_VERSION, prefix, limit?.toString() ?? "all"],
     {
       // 12 hours in seconds (aligned with Signed URL fix)
       revalidate: 43200,

@@ -29,6 +29,7 @@ describe("getPhotosFromStorage (cached)", () => {
       expect.any(Function),
       expect.arrayContaining([
         expect.stringContaining("photos-storage"),
+        expect.stringContaining("public-urls-v1"),
         expect.stringContaining("hero"),
         expect.stringContaining("6"),
       ]),

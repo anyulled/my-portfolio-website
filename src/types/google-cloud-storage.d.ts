@@ -8,7 +8,11 @@ declare module "@google-cloud/storage" {
       };
     });
     bucket(name: string): {
-      getFiles(options?: { autoPaginate?: boolean }): Promise<
+      getFiles(options?: {
+        autoPaginate?: boolean;
+        maxResults?: number;
+        prefix?: string;
+      }): Promise<
         [
           Array<{
             name: string;
