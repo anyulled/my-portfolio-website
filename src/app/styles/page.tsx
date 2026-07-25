@@ -43,25 +43,6 @@ export default async function PhotographyStylesPage() {
     }
   }
 
-  const photoStyles: Array<{
-    name: string;
-    image: string;
-    link: string;
-  }> = styles.map((style) => {
-    /*
-     * ⚡ Bolt: Hoisted the invariant `replace` operation out of the `.find()` callback.
-     * This prevents O(M * N) redundant string allocations and regex evaluations,
-     * reducing it to O(M) and significantly lowering CPU overhead and garbage collection.
-     */
-    const searchTag = style.tag.replace("-", "");
-
-    return {
-      name: style.tag.replace("-", " "),
-      image: photoTagMap.get(searchTag) ?? "",
-      link: `styles/${style.name}`,
-    };
-  });
-
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-16">
@@ -77,27 +58,40 @@ export default async function PhotographyStylesPage() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {photoStyles.map((style, index) => (
-            <Link href={style.link} key={index + style.name} className="group">
-              <div className="relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105">
-                <Image
-                  src={style.image}
-                  alt={`${style.name} photography`}
-                  width={300}
-                  height={400}
-                  className="object-cover w-full h-[400px]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2
-                    className={`${playfair.className} text-2xl md:text-3xl text-primary-foreground group-hover:text-primary transition-colors duration-300 capitalize`}
-                  >
-                    {style.name}
-                  </h2>
+          {styles.map((style, index) => {
+            /*
+             * ⚡ Bolt: Removed the intermediate `photoStyles` array allocation.
+             * Doing string replacements and object lookups directly inside the
+             * original single pass is faster and consumes less memory than
+             * allocating intermediate arrays and iterating multiple times.
+             */
+            const searchTag = style.tag.replace("-", "");
+            const name = style.tag.replace("-", " ");
+            const image = photoTagMap.get(searchTag) ?? "";
+            const link = `styles/${style.name}`;
+
+            return (
+              <Link href={link} key={index + style.name} className="group">
+                <div className="relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105">
+                  <Image
+                    src={image}
+                    alt={`${name} photography`}
+                    width={300}
+                    height={400}
+                    className="object-cover w-full h-[400px]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h2
+                      className={`${playfair.className} text-2xl md:text-3xl text-primary-foreground group-hover:text-primary transition-colors duration-300 capitalize`}
+                    >
+                      {name}
+                    </h2>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

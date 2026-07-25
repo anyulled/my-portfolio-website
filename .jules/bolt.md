@@ -148,3 +148,7 @@
 ## 2026-06-25 - [Performance: Next.js/Supabase SSR Cookie deduplication micro-optimization]
 **Learning:** Avoid deduplicating small cookie arrays using a `Map` before calling `cookies().set()` in Next.js/Supabase SSR handlers. This is a counterproductive micro-optimization, as the Map allocation overhead typically exceeds the cost of redundant setter calls.
 **Action:** Do not deduplicate small cookie arrays; allow `cookies().set()` to be called sequentially even if it means some redundant calls.
+## 2026-06-13 - [Performance: GCS Metadata Fetching]
+
+**Learning:** When fetching a limited subset of files from Google Cloud Storage, calling `bucket.getFiles()` without specifying `maxResults` causes the library to fetch the default page size (up to 1000 items) of metadata. This results in significant overhead through large payload parsing, unnecessary network latency, and memory allocation.
+**Action:** Always set `maxResults` to a reasonable buffer (e.g., limit + 20) in the options object passed to `bucket.getFiles` when only a subset of items is needed.

@@ -40,21 +40,15 @@ export default async function ModelIndexPage() {
    * string allocations on every iteration, significantly improving rendering performance.
    * We use the specific tag format expected from models to preserve the exact matching mechanics.
    */
-  const searchTags = models.map((model) => model.tag.replace("-", ""));
   const photoMap = new Map<string, Photo>();
 
-  for (const photo of sortedPhotos) {
-    if (!photo.tags) continue;
-
-    for (const searchTag of searchTags) {
-      if (photo.tags.includes(searchTag) && !photoMap.has(searchTag)) {
+  for (const model of models) {
+    const searchTag = model.tag.replace("-", "");
+    for (const photo of sortedPhotos) {
+      if (photo.tags?.includes(searchTag)) {
         photoMap.set(searchTag, photo);
+        break;
       }
-    }
-
-    // Early exit if we have found a photo for every model
-    if (photoMap.size === searchTags.length) {
-      break;
     }
   }
 
