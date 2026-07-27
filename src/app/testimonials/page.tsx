@@ -11,7 +11,7 @@ import { WebPage, WithContext } from "schema-dts";
 export const metadata: Metadata = {
   title: "Client Testimonials",
   description:
-    "Read authentic testimonials from our boudoir photography clients. Discover how our empowering sessions boost confidence and celebrate feminine beauty.",
+    "Read authentic client stories from boudoir photography sessions in Barcelona and discover how a guided experience builds confidence and celebrates your beauty.",
   keywords:
     "boudoir photography testimonials, client reviews, empowering photography, confidence boost, feminine portraits",
   openGraph: {

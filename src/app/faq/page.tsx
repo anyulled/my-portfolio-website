@@ -16,7 +16,7 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 export const metadata: Metadata = {
   title: "FAQ | Frequently Asked Questions",
   description:
-    "Find answers to frequently asked questions about boudoir photography sessions. Learn about preparation, pricing, privacy, and what to expect.",
+    "Get answers about boudoir photography sessions, including preparation, pricing, privacy, posing, and what to expect during and after your Barcelona shoot.",
   keywords:
     "boudoir FAQ, photography questions, session preparation, boudoir privacy, pricing questions",
 };

@@ -46,7 +46,7 @@ const formatPrice = (
 export const metadata: Metadata = {
   title: " Pricing ",
   description:
-    "Discover our pricing and book your experience today! We have three packages available: Express, Experience, and Deluxe Experience.",
+    "Explore boudoir photography pricing in Barcelona, compare our Express, Experience, and Deluxe Experience packages, and choose the session that suits you.",
   twitter: {
     title: "Pricing",
     description: "Discover our pricing and book your experience today!",

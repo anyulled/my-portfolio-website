@@ -19,7 +19,7 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 export const metadata: Metadata = {
   title: "Our Process | Boudoir Photography Experience",
   description:
-    "Discover our boudoir photography process from consultation to final delivery. Learn how we create a comfortable, empowering experience for every client.",
+    "Follow our Barcelona boudoir photography process from consultation through planning, your guided session, image selection, and final artwork delivery.",
   keywords:
     "boudoir process, photography experience, consultation, photo session, image delivery",
 };
