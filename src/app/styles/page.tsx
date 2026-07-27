@@ -11,7 +11,8 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Our Photography styles",
-  description: "Boudoir photography service in Barcelona",
+  description:
+    "Explore private boudoir photography styles in Barcelona, from soft and romantic to bold and editorial, and find the visual approach that feels most like you.",
 };
 
 export default async function PhotographyStylesPage() {

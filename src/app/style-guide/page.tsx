@@ -12,7 +12,7 @@ const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
 export const metadata: Metadata = {
   title: "Style Guide | Boudoir Session Preparation",
   description:
-    "Prepare for your boudoir session with our comprehensive style guide. Tips on wardrobe, makeup, and what to expect for your empowering experience.",
+    "Prepare for your boudoir session with our comprehensive Barcelona style guide, including wardrobe, makeup, posing, and tips for a confident experience.",
   keywords:
     "boudoir style guide, session preparation, wardrobe tips, boudoir photography tips",
 };

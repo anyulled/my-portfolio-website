@@ -11,7 +11,7 @@ import { Suspense } from "react";
 export const metadata: Metadata = {
   title: "Boudoir Barcelona - Home",
   description:
-    "Intimate, elegant boudoir photography in Barcelona. Empowering portraits with expert guidance, luxe styling, and a private experience. Book today.",
+    "Intimate, elegant boudoir photography in Barcelona, with empowering portraits, expert guidance, luxe styling, and a private experience tailored to you.",
 };
 
 /*
