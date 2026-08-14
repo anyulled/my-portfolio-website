@@ -25,7 +25,10 @@ jest.mock("sharp", () => {
       .mockResolvedValue({ width: 3000, height: 3000, format: "jpeg" }),
     resize: jest.fn().mockReturnThis(),
     webp: jest.fn().mockReturnThis(),
-    toBuffer: jest.fn().mockResolvedValue(Buffer.alloc(500)),
+    toBuffer: jest.fn().mockResolvedValue({
+      data: Buffer.alloc(500),
+      info: { width: 3000, height: 3000, format: "webp" },
+    }),
   };
   return jest.fn(() => mockSharpInstance);
 });

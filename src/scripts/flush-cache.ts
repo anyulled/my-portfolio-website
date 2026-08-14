@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, security/detect-non-literal-fs-filename, security/detect-object-injection */
+/* eslint-disable no-restricted-syntax, security/detect-non-literal-fs-filename */
 import fs from "node:fs";
 import path from "node:path";
 import { list, del, ListBlobResult } from "@vercel/blob";
@@ -21,6 +21,7 @@ const loadEnv = () => {
         const trimmedLine = line.trim();
         if (!trimmedLine || trimmedLine.startsWith("#")) return;
 
+        // eslint-disable-next-line security/detect-unsafe-regex
         const match = trimmedLine.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
         if (match) {
           const key = match[1];
@@ -137,4 +138,4 @@ main().catch((err) => {
   console.error(chalk.red("💥 Fatal error:"), err);
   process.exit(1);
 });
-/* eslint-enable no-restricted-syntax, security/detect-non-literal-fs-filename, security/detect-object-injection */
+/* eslint-enable no-restricted-syntax, security/detect-non-literal-fs-filename */

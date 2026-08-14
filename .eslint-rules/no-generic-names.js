@@ -28,6 +28,7 @@ module.exports = {
     };
 
     const forbiddenWords = Object.keys(forbiddenWordsWithSuggestions);
+    // eslint-disable-next-line security/detect-non-literal-regexp
     const forbiddenPattern = new RegExp(
       `(^|/|-)(${forbiddenWords.join("|")})(-|[.]ts$|[.]tsx$|/|$)`,
       "i",

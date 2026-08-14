@@ -21,7 +21,7 @@ export async function concurrentMap<T, R>(
       if (index >= array.length) {
         break;
       }
-      // eslint-disable-next-line security/detect-object-injection
+
       results[index] = await mapper(array[index], index);
     }
   };
