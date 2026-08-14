@@ -46,7 +46,7 @@ An RFC is a document that proposes a significant change to the project:
 
 ### Drawbacks
 
-[Why should we *not* do this? Consider maintenance, performance, or complexity.]
+[Why should we _not_ do this? Consider maintenance, performance, or complexity.]
 
 ### Alternatives
 

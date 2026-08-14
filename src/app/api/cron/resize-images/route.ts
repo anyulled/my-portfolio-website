@@ -50,10 +50,7 @@ interface ProcessResult {
 }
 
 function isValidImage(file: GCSFile): boolean {
-  return (
-    !file.name.endsWith("/") &&
-    VALID_IMAGE_PATTERN.test(file.name)
-  );
+  return !file.name.endsWith("/") && VALID_IMAGE_PATTERN.test(file.name);
 }
 
 // eslint-disable-next-line complexity
@@ -137,9 +134,15 @@ async function processImage(
         })
       : image;
 
-    const convertedBuffer = await pipeline.webp({ quality: 80 }).toBuffer();
+    /*
+     * ⚡ Bolt: Removed redundant `sharp(convertedBuffer).metadata()` call.
+     * By using `resolveWithObject: true`, we get both the buffer and metadata
+     * in a single pass, saving CPU and memory overhead.
+     */
+    const { data: convertedBuffer, info: newMetadata } = await pipeline
+      .webp({ quality: 80 })
+      .toBuffer({ resolveWithObject: true });
     const newBytes = convertedBuffer.length;
-    const newMetadata = await sharp(convertedBuffer).metadata();
 
     const newFile = bucket.file(newFileName);
     // Prepare metadata, filtering out 'name' to avoid conflicts
