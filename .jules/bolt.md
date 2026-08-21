@@ -161,3 +161,7 @@
 
 **Learning:** When generating a buffer from a `sharp` pipeline (e.g., `pipeline.webp().toBuffer()`), calling `sharp(convertedBuffer).metadata()` sequentially afterwards forces an unnecessary second object allocation and re-parses the newly created image buffer, causing CPU and memory overhead.
 **Action:** Use `toBuffer({ resolveWithObject: true })` to return both the generated buffer and its `info` (metadata) in a single pass: `const { data: convertedBuffer, info: newMetadata } = await pipeline.toBuffer({ resolveWithObject: true });`
+
+## 2024-05-18 - Early Exit in OpenGraph Image Generation
+**Learning:** Chained array methods (`.map().filter().slice()`) process the entire array even when only a few items are needed, causing O(N) overhead.
+**Action:** Replace chained array methods with a `for...of` loop and early exit (`break`) when extracting a limited subset of items to achieve O(limit) time complexity.
