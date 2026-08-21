@@ -52,13 +52,18 @@ export default async function PricingImage() {
     }
 
     /*
-     * Take up to 3 images - use remote URLs directly instead of encoding
-     * Satori doesn't support WebP, so filter to only JPEG/PNG
+     * ⚡ Bolt: Replaced chained .map(), .filter(), and .slice() with a single
+     * for...of loop. This extracts up to 3 valid non-WebP image URLs in one pass,
+     * avoiding redundant intermediate array allocations and O(N) iteration overhead.
      */
-    const imageUrls = photos
-      .map((p) => p.srcSet[0]?.src)
-      .filter((url): url is string => Boolean(url) && !url.endsWith(".webp"))
-      .slice(0, 3);
+    const imageUrls: string[] = [];
+    for (const photo of photos) {
+      if (imageUrls.length >= 3) break;
+      const url = photo.srcSet[0]?.src;
+      if (url && !url.endsWith(".webp")) {
+        imageUrls.push(url);
+      }
+    }
 
     if (imageUrls.length === 0) {
       console.warn("[PricingOG] No valid non-WebP image URLs, using fallback.");
