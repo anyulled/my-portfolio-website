@@ -157,7 +157,13 @@
 
 **Learning:** When fetching a limited subset of files from Google Cloud Storage, calling `bucket.getFiles()` without specifying `maxResults` causes the library to fetch the default page size (up to 1000 items) of metadata. This results in significant overhead through large payload parsing, unnecessary network latency, and memory allocation.
 **Action:** Always set `maxResults` to a reasonable buffer (e.g., limit + 20) in the options object passed to `bucket.getFiles` when only a subset of items is needed.
+
 ## 2026-06-25 - [Performance: Redundant Sharp Image Parsing]
 
 **Learning:** When generating a buffer from a `sharp` pipeline (e.g., `pipeline.webp().toBuffer()`), calling `sharp(convertedBuffer).metadata()` sequentially afterwards forces an unnecessary second object allocation and re-parses the newly created image buffer, causing CPU and memory overhead.
 **Action:** Use `toBuffer({ resolveWithObject: true })` to return both the generated buffer and its `info` (metadata) in a single pass: `const { data: convertedBuffer, info: newMetadata } = await pipeline.toBuffer({ resolveWithObject: true });`
+
+## 2024-05-18 - Early Exit in OpenGraph Image Generation
+
+**Learning:** Chained array methods (`.map().filter().slice()`) process the entire array even when only a few items are needed, causing O(N) overhead.
+**Action:** Replace chained array methods with a `for...of` loop and early exit (`break`) when extracting a limited subset of items to achieve O(limit) time complexity.

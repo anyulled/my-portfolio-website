@@ -5,6 +5,7 @@ import path from "path";
 const referenceFilePath = path.join("src/messages", "en.json");
 const messagesFolderPath = path.join("src/messages");
 
+// eslint-disable-next-line security/detect-non-literal-fs-filename
 const getKeysFromJsonFile = (filePath: string): string[] => {
   const data = fs.readFileSync(filePath, "utf-8");
   const jsonDataRaw: unknown = JSON.parse(data);
