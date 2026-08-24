@@ -57,7 +57,7 @@
     "@next/eslint-plugin-next": "^16.3.0",
     "@redocly/cli": "^2.43.1",
     "@stryker-mutator/core": "^10.0.0",
-    "@stryker-mutator/jest-runner": "^9.6.0",
+    "@stryker-mutator/jest-runner": "^10.0.0",
     "@supabase/supabase-js": "^2.112.2",
     "@tailwindcss/typography": "^0.5.19",
     "@testing-library/dom": "^10.4.0",
