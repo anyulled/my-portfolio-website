@@ -489,5 +489,61 @@
       "contact_button": "Contattaci",
       "process_button": "Scopri il Nostro Processo"
     }
+  },
+  "session_preparation": {
+    "meta_title": "How to Prepare for Your Boudoir Session",
+    "meta_description": "Simple preparation tips to help you feel comfortable, confident, and ready for your boudoir photography session in Barcelona.",
+    "meta_keywords": "boudoir session preparation, Barcelona boudoir photography, lingerie tips, boudoir grooming tips",
+    "image_alt": "Silk, lingerie, perfume, and hair brush prepared for a boudoir session",
+    "eyebrow": "Before we create together",
+    "title": "Prepare for your session",
+    "intro": "A few simple suggestions to help you arrive feeling comfortable, confident, and ready to enjoy the experience.",
+    "guide_title": "Your preparation guide",
+    "guides": {
+      "lingerie": {
+        "title": "Choose lingerie that feels like you",
+        "description": "Bring pieces you feel comfortable and beautiful wearing. Confidence comes from feeling at ease, so choose lingerie that lets you move, breathe, and enjoy the experience."
+      },
+      "variety": {
+        "title": "Bring variety",
+        "description": "Different colors, textures, and styles create a richer gallery. Consider bringing a mix of light and dark pieces, something delicate, and something with a little more drama."
+      },
+      "skin": {
+        "title": "Give your skin time to settle",
+        "description": "If you shave or trim, try to do it 24–48 hours before your session. That gives your skin time to calm down and helps minimize visible redness or irritation. Avoid trying new products or treatments right before we shoot."
+      },
+      "hair": {
+        "title": "Keep your hair humidity-ready",
+        "description": "Barcelona’s humidity can encourage frizz. Bring the hair products that already work for you, such as an anti-frizz cream or light finishing oil, plus a brush or comb. Avoid experimenting with a new style on the day of your session."
+      },
+      "vision": {
+        "title": "Share your vision",
+        "description": "Bring a few photo references showing the mood, poses, lighting, or styling you love. They help me understand what you are drawn to, while we create images that feel personal to you."
+      },
+      "music": {
+        "title": "Create your soundtrack",
+        "description": "Choose a few songs that make you feel empowered, feminine, and fully yourself. Music can shift the energy in the room and help you settle into the session."
+      },
+      "relax": {
+        "title": "Bring what helps you relax",
+        "description": "If you feel nervous, you can bring a trusted friend for support. Pack water, tea, or another favorite drink. If you choose alcohol, keep it light and only have something you already know agrees with you—you never need it to feel confident here."
+      }
+    },
+    "checklist_title": "The day-of checklist",
+    "checklist_intro": "You do not need to bring everything. This is simply a helpful reminder of the things that may make your session feel more like your own.",
+    "checklist": {
+      "item1": "Your favorite lingerie and a few different styles or colors",
+      "item2": "Any shoes, jewelry, stockings, robes, or personal pieces you want to include",
+      "item3": "Your hair products, brush, and makeup touch-up items",
+      "item4": "A short list of photo references and your session playlist",
+      "item5": "Water and anything that helps you feel comfortable"
+    },
+    "reassurance_title": "You do not have to know how to pose",
+    "reassurance_body": "Feeling nervous is completely normal. I will guide you through the poses, help you find your best angles, and make sure you feel respected and comfortable throughout the session. You only need to arrive as yourself.",
+    "cta": "Let’s plan your session",
+    "faq_link": "Read the FAQs",
+    "process_link": "See how the session works",
+    "how_to_name": "How to prepare for a boudoir photography session",
+    "how_to_description": "Practical preparation guidance for a comfortable and empowering boudoir photography session in Barcelona."
   }
 }
