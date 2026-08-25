@@ -492,59 +492,59 @@
     "why_boudoir": "¿Por qué elegir la fotografía Boudoir?"
   },
   "session_preparation": {
-    "meta_title": "How to Prepare for Your Boudoir Session",
-    "meta_description": "Simple preparation tips to help you feel comfortable, confident, and ready for your boudoir photography session in Barcelona.",
-    "meta_keywords": "boudoir session preparation, Barcelona boudoir photography, lingerie tips, boudoir grooming tips",
-    "image_alt": "Silk, lingerie, perfume, and hair brush prepared for a boudoir session",
-    "eyebrow": "Before we create together",
-    "title": "Prepare for your session",
-    "intro": "A few simple suggestions to help you arrive feeling comfortable, confident, and ready to enjoy the experience.",
-    "guide_title": "Your preparation guide",
+    "meta_title": "Cómo preparar tu sesión de boudoir",
+    "meta_description": "Consejos sencillos para ayudarte a sentirte cómoda, segura y preparada para tu sesión de fotografía boudoir en Barcelona.",
+    "meta_keywords": "preparación sesión boudoir, fotografía boudoir Barcelona, consejos de lencería, cuidados antes de una sesión boudoir",
+    "image_alt": "Seda, lencería, perfume y cepillo de pelo preparados para una sesión boudoir",
+    "eyebrow": "Antes de crear juntas",
+    "title": "Prepara tu sesión",
+    "intro": "Algunas sugerencias sencillas para que llegues cómoda, segura y lista para disfrutar de la experiencia.",
+    "guide_title": "Tu guía de preparación",
     "guides": {
       "lingerie": {
-        "title": "Choose lingerie that feels like you",
-        "description": "Bring pieces you feel comfortable and beautiful wearing. Confidence comes from feeling at ease, so choose lingerie that lets you move, breathe, and enjoy the experience."
+        "title": "Elige una lencería que te represente",
+        "description": "Trae prendas con las que te sientas cómoda y guapa. La confianza nace de sentirte a gusto, así que elige una lencería que te permita moverte, respirar y disfrutar de la experiencia."
       },
       "variety": {
-        "title": "Bring variety",
-        "description": "Different colors, textures, and styles create a richer gallery. Consider bringing a mix of light and dark pieces, something delicate, and something with a little more drama."
+        "title": "Aporta variedad",
+        "description": "Los distintos colores, tejidos y estilos crean una galería más completa. Considera traer prendas claras y oscuras, algo delicado y algo con un toque más atrevido."
       },
       "skin": {
-        "title": "Give your skin time to settle",
-        "description": "If you shave or trim, try to do it 24–48 hours before your session. That gives your skin time to calm down and helps minimize visible redness or irritation. Avoid trying new products or treatments right before we shoot."
+        "title": "Dale tiempo a tu piel para recuperarse",
+        "description": "Si te afeitas o recortas el vello, intenta hacerlo entre 24 y 48 horas antes de la sesión. Así tu piel tendrá tiempo de calmarse y se reducirá el enrojecimiento o la irritación visible. Evita probar productos o tratamientos nuevos justo antes de la sesión."
       },
       "hair": {
-        "title": "Keep your hair humidity-ready",
-        "description": "Barcelona’s humidity can encourage frizz. Bring the hair products that already work for you, such as an anti-frizz cream or light finishing oil, plus a brush or comb. Avoid experimenting with a new style on the day of your session."
+        "title": "Prepara tu pelo para la humedad",
+        "description": "La humedad de Barcelona puede favorecer el encrespamiento. Trae los productos que ya sabes que funcionan, como una crema antiencrespamiento o un aceite ligero, además de un cepillo o peine. Evita experimentar con un peinado nuevo el día de la sesión."
       },
       "vision": {
-        "title": "Share your vision",
-        "description": "Bring a few photo references showing the mood, poses, lighting, or styling you love. They help me understand what you are drawn to, while we create images that feel personal to you."
+        "title": "Comparte tu visión",
+        "description": "Trae algunas referencias de fotos que muestren el ambiente, las poses, la iluminación o el estilo que te gustan. Me ayudarán a entender tus preferencias mientras creamos imágenes personales para ti."
       },
       "music": {
-        "title": "Create your soundtrack",
-        "description": "Choose a few songs that make you feel empowered, feminine, and fully yourself. Music can shift the energy in the room and help you settle into the session."
+        "title": "Crea tu banda sonora",
+        "description": "Elige algunas canciones que te hagan sentir empoderada, femenina y plenamente tú. La música puede cambiar la energía de la habitación y ayudarte a relajarte durante la sesión."
       },
       "relax": {
-        "title": "Bring what helps you relax",
-        "description": "If you feel nervous, you can bring a trusted friend for support. Pack water, tea, or another favorite drink. If you choose alcohol, keep it light and only have something you already know agrees with you—you never need it to feel confident here."
+        "title": "Trae lo que te ayude a relajarte",
+        "description": "Si te sientes nerviosa, puedes traer a una amiga de confianza para que te acompañe. Trae agua, té u otra bebida que te guste. Si eliges alcohol, tómalo con moderación y solo si sabes que te sienta bien: no lo necesitas para sentirte segura aquí."
       }
     },
-    "checklist_title": "The day-of checklist",
-    "checklist_intro": "You do not need to bring everything. This is simply a helpful reminder of the things that may make your session feel more like your own.",
+    "checklist_title": "La lista para el día de la sesión",
+    "checklist_intro": "No tienes que traerlo todo. Es simplemente un recordatorio útil de las cosas que pueden hacer que tu sesión sea más tuya.",
     "checklist": {
-      "item1": "Your favorite lingerie and a few different styles or colors",
-      "item2": "Any shoes, jewelry, stockings, robes, or personal pieces you want to include",
-      "item3": "Your hair products, brush, and makeup touch-up items",
-      "item4": "A short list of photo references and your session playlist",
-      "item5": "Water and anything that helps you feel comfortable"
+      "item1": "Tu lencería favorita y varios estilos o colores diferentes",
+      "item2": "Los zapatos, joyas, medias, batas o prendas personales que quieras incluir",
+      "item3": "Tus productos para el pelo, cepillo y artículos para retocar el maquillaje",
+      "item4": "Una breve selección de referencias fotográficas y tu lista de reproducción",
+      "item5": "Agua y cualquier cosa que te ayude a sentirte cómoda"
     },
-    "reassurance_title": "You do not have to know how to pose",
-    "reassurance_body": "Feeling nervous is completely normal. I will guide you through the poses, help you find your best angles, and make sure you feel respected and comfortable throughout the session. You only need to arrive as yourself.",
-    "cta": "Let’s plan your session",
-    "faq_link": "Read the FAQs",
-    "process_link": "See how the session works",
-    "how_to_name": "How to prepare for a boudoir photography session",
-    "how_to_description": "Practical preparation guidance for a comfortable and empowering boudoir photography session in Barcelona."
+    "reassurance_title": "No tienes que saber posar",
+    "reassurance_body": "Es completamente normal sentirse nerviosa. Te guiaré en las poses, te ayudaré a encontrar tus mejores ángulos y me aseguraré de que te sientas respetada y cómoda durante toda la sesión. Solo tienes que venir tal como eres.",
+    "cta": "Planifiquemos tu sesión",
+    "faq_link": "Lee las preguntas frecuentes",
+    "process_link": "Descubre cómo funciona la sesión",
+    "how_to_name": "Cómo prepararse para una sesión de fotografía boudoir",
+    "how_to_description": "Consejos prácticos para prepararte para una sesión de fotografía boudoir cómoda y empoderadora en Barcelona."
   }
 }

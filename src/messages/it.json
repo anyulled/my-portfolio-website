@@ -491,59 +491,59 @@
     }
   },
   "session_preparation": {
-    "meta_title": "How to Prepare for Your Boudoir Session",
-    "meta_description": "Simple preparation tips to help you feel comfortable, confident, and ready for your boudoir photography session in Barcelona.",
-    "meta_keywords": "boudoir session preparation, Barcelona boudoir photography, lingerie tips, boudoir grooming tips",
-    "image_alt": "Silk, lingerie, perfume, and hair brush prepared for a boudoir session",
-    "eyebrow": "Before we create together",
-    "title": "Prepare for your session",
-    "intro": "A few simple suggestions to help you arrive feeling comfortable, confident, and ready to enjoy the experience.",
-    "guide_title": "Your preparation guide",
+    "meta_title": "Come prepararsi per la sessione boudoir",
+    "meta_description": "Semplici consigli per aiutarti a sentirti a tuo agio, sicura e pronta per la tua sessione di fotografia boudoir a Barcellona.",
+    "meta_keywords": "preparazione sessione boudoir, fotografia boudoir Barcellona, consigli lingerie, cura prima della sessione boudoir",
+    "image_alt": "Seta, lingerie, profumo e spazzola per capelli preparati per una sessione boudoir",
+    "eyebrow": "Prima di creare insieme",
+    "title": "Prepara la tua sessione",
+    "intro": "Alcuni semplici suggerimenti per arrivare a tuo agio, sicura e pronta a goderti l’esperienza.",
+    "guide_title": "La tua guida alla preparazione",
     "guides": {
       "lingerie": {
-        "title": "Choose lingerie that feels like you",
-        "description": "Bring pieces you feel comfortable and beautiful wearing. Confidence comes from feeling at ease, so choose lingerie that lets you move, breathe, and enjoy the experience."
+        "title": "Scegli una lingerie che ti rappresenti",
+        "description": "Porta capi con cui ti senti a tuo agio e bella. La sicurezza nasce dal sentirsi bene, quindi scegli una lingerie che ti permetta di muoverti, respirare e goderti l’esperienza."
       },
       "variety": {
-        "title": "Bring variety",
-        "description": "Different colors, textures, and styles create a richer gallery. Consider bringing a mix of light and dark pieces, something delicate, and something with a little more drama."
+        "title": "Porta varietà",
+        "description": "Colori, tessuti e stili diversi creeranno una galleria più ricca. Considera di portare un mix di capi chiari e scuri, qualcosa di delicato e qualcosa di più audace."
       },
       "skin": {
-        "title": "Give your skin time to settle",
-        "description": "If you shave or trim, try to do it 24–48 hours before your session. That gives your skin time to calm down and helps minimize visible redness or irritation. Avoid trying new products or treatments right before we shoot."
+        "title": "Dai alla tua pelle il tempo di calmarsi",
+        "description": "Se ti radi o accorci i peli, cerca di farlo 24–48 ore prima della sessione. In questo modo la pelle avrà il tempo di calmarsi e si ridurranno rossori o irritazioni visibili. Evita di provare prodotti o trattamenti nuovi subito prima della sessione."
       },
       "hair": {
-        "title": "Keep your hair humidity-ready",
-        "description": "Barcelona’s humidity can encourage frizz. Bring the hair products that already work for you, such as an anti-frizz cream or light finishing oil, plus a brush or comb. Avoid experimenting with a new style on the day of your session."
+        "title": "Prepara i capelli all’umidità",
+        "description": "L’umidità di Barcellona può favorire l’effetto crespo. Porta i prodotti per capelli che sai già funzionare, come una crema anticrespo o un olio leggero, oltre a una spazzola o un pettine. Evita di provare una nuova acconciatura il giorno della sessione."
       },
       "vision": {
-        "title": "Share your vision",
-        "description": "Bring a few photo references showing the mood, poses, lighting, or styling you love. They help me understand what you are drawn to, while we create images that feel personal to you."
+        "title": "Condividi la tua visione",
+        "description": "Porta alcuni riferimenti fotografici che mostrino l’atmosfera, le pose, la luce o lo stile che ami. Mi aiuteranno a capire i tuoi gusti mentre creiamo immagini personali per te."
       },
       "music": {
-        "title": "Create your soundtrack",
-        "description": "Choose a few songs that make you feel empowered, feminine, and fully yourself. Music can shift the energy in the room and help you settle into the session."
+        "title": "Crea la tua colonna sonora",
+        "description": "Scegli alcune canzoni che ti facciano sentire forte, femminile e completamente te stessa. La musica può cambiare l’energia della stanza e aiutarti a rilassarti durante la sessione."
       },
       "relax": {
-        "title": "Bring what helps you relax",
-        "description": "If you feel nervous, you can bring a trusted friend for support. Pack water, tea, or another favorite drink. If you choose alcohol, keep it light and only have something you already know agrees with you—you never need it to feel confident here."
+        "title": "Porta ciò che ti aiuta a rilassarti",
+        "description": "Se ti senti nervosa, puoi portare un’amica fidata per avere supporto. Porta acqua, tè o un’altra bevanda che ti piace. Se scegli di bere alcol, fallo con moderazione e solo con qualcosa che sai di tollerare bene: non ne hai bisogno per sentirti sicura qui."
       }
     },
-    "checklist_title": "The day-of checklist",
-    "checklist_intro": "You do not need to bring everything. This is simply a helpful reminder of the things that may make your session feel more like your own.",
+    "checklist_title": "La lista per il giorno della sessione",
+    "checklist_intro": "Non devi portare tutto. È semplicemente un promemoria utile delle cose che possono rendere la tua sessione più personale.",
     "checklist": {
-      "item1": "Your favorite lingerie and a few different styles or colors",
-      "item2": "Any shoes, jewelry, stockings, robes, or personal pieces you want to include",
-      "item3": "Your hair products, brush, and makeup touch-up items",
-      "item4": "A short list of photo references and your session playlist",
-      "item5": "Water and anything that helps you feel comfortable"
+      "item1": "La tua lingerie preferita e alcuni stili o colori diversi",
+      "item2": "Le scarpe, i gioielli, le calze, le vestaglie o gli oggetti personali che vuoi includere",
+      "item3": "I tuoi prodotti per capelli, la spazzola e gli articoli per ritoccare il trucco",
+      "item4": "Una breve selezione di riferimenti fotografici e la tua playlist",
+      "item5": "Acqua e tutto ciò che ti aiuta a sentirti a tuo agio"
     },
-    "reassurance_title": "You do not have to know how to pose",
-    "reassurance_body": "Feeling nervous is completely normal. I will guide you through the poses, help you find your best angles, and make sure you feel respected and comfortable throughout the session. You only need to arrive as yourself.",
-    "cta": "Let’s plan your session",
-    "faq_link": "Read the FAQs",
-    "process_link": "See how the session works",
-    "how_to_name": "How to prepare for a boudoir photography session",
-    "how_to_description": "Practical preparation guidance for a comfortable and empowering boudoir photography session in Barcelona."
+    "reassurance_title": "Non devi sapere come posare",
+    "reassurance_body": "È assolutamente normale sentirsi nervosa. Ti guiderò nelle pose, ti aiuterò a trovare i tuoi angoli migliori e mi assicurerò che tu ti senta rispettata e a tuo agio durante tutta la sessione. Devi solo arrivare così come sei.",
+    "cta": "Organizziamo la tua sessione",
+    "faq_link": "Leggi le domande frequenti",
+    "process_link": "Scopri come funziona la sessione",
+    "how_to_name": "Come prepararsi per una sessione di fotografia boudoir",
+    "how_to_description": "Consigli pratici per prepararti a una sessione di fotografia boudoir confortevole e valorizzante a Barcellona."
   }
 }

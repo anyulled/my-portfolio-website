@@ -491,59 +491,59 @@
     }
   },
   "session_preparation": {
-    "meta_title": "How to Prepare for Your Boudoir Session",
-    "meta_description": "Simple preparation tips to help you feel comfortable, confident, and ready for your boudoir photography session in Barcelona.",
-    "meta_keywords": "boudoir session preparation, Barcelona boudoir photography, lingerie tips, boudoir grooming tips",
-    "image_alt": "Silk, lingerie, perfume, and hair brush prepared for a boudoir session",
-    "eyebrow": "Before we create together",
-    "title": "Prepare for your session",
-    "intro": "A few simple suggestions to help you arrive feeling comfortable, confident, and ready to enjoy the experience.",
-    "guide_title": "Your preparation guide",
+    "meta_title": "Як підготуватися до будуарної фотосесії",
+    "meta_description": "Прості поради, які допоможуть вам почуватися комфортно, впевнено та бути готовою до будуарної фотосесії в Барселоні.",
+    "meta_keywords": "підготовка до будуарної фотосесії, будуарна фотографія Барселона, поради щодо білизни, догляд перед будуарною фотосесією",
+    "image_alt": "Шовк, білизна, парфуми та щітка для волосся, підготовлені для будуарної фотосесії",
+    "eyebrow": "Перед тим як ми почнемо творити разом",
+    "title": "Підготуйтеся до фотосесії",
+    "intro": "Кілька простих порад, які допоможуть вам прийти розслабленою, впевненою та готовою насолодитися процесом.",
+    "guide_title": "Ваш посібник із підготовки",
     "guides": {
       "lingerie": {
-        "title": "Choose lingerie that feels like you",
-        "description": "Bring pieces you feel comfortable and beautiful wearing. Confidence comes from feeling at ease, so choose lingerie that lets you move, breathe, and enjoy the experience."
+        "title": "Оберіть білизну, у якій ви відчуваєте себе собою",
+        "description": "Візьміть речі, у яких вам комфортно й красиво. Впевненість починається з відчуття легкості, тому обирайте білизну, яка дозволяє рухатися, дихати й насолоджуватися процесом."
       },
       "variety": {
-        "title": "Bring variety",
-        "description": "Different colors, textures, and styles create a richer gallery. Consider bringing a mix of light and dark pieces, something delicate, and something with a little more drama."
+        "title": "Додайте різноманіття",
+        "description": "Різні кольори, фактури та стилі зроблять галерею цікавішою. Спробуйте взяти світлі й темні речі, щось ніжне та щось трохи сміливіше."
       },
       "skin": {
-        "title": "Give your skin time to settle",
-        "description": "If you shave or trim, try to do it 24–48 hours before your session. That gives your skin time to calm down and helps minimize visible redness or irritation. Avoid trying new products or treatments right before we shoot."
+        "title": "Дайте шкірі час заспокоїтися",
+        "description": "Якщо ви голитеся або підстригаєте волосся, зробіть це за 24–48 годин до фотосесії. Так шкіра встигне заспокоїтися, а помітне почервоніння чи подразнення зменшиться. Не пробуйте нові засоби або процедури безпосередньо перед зйомкою."
       },
       "hair": {
-        "title": "Keep your hair humidity-ready",
-        "description": "Barcelona’s humidity can encourage frizz. Bring the hair products that already work for you, such as an anti-frizz cream or light finishing oil, plus a brush or comb. Avoid experimenting with a new style on the day of your session."
+        "title": "Підготуйте волосся до вологості",
+        "description": "Вологість у Барселоні може спричинити пухнастість волосся. Візьміть засоби, які вже добре вам підходять, наприклад крем проти пухнастості або легку олію, а також щітку чи гребінець. Не експериментуйте з новою зачіскою в день фотосесії."
       },
       "vision": {
-        "title": "Share your vision",
-        "description": "Bring a few photo references showing the mood, poses, lighting, or styling you love. They help me understand what you are drawn to, while we create images that feel personal to you."
+        "title": "Поділіться своїм баченням",
+        "description": "Візьміть кілька фото для натхнення — з настроєм, позами, освітленням або стилем, які вам подобаються. Вони допоможуть мені зрозуміти ваші вподобання, щоб ми створили особисті для вас знімки."
       },
       "music": {
-        "title": "Create your soundtrack",
-        "description": "Choose a few songs that make you feel empowered, feminine, and fully yourself. Music can shift the energy in the room and help you settle into the session."
+        "title": "Створіть свій саундтрек",
+        "description": "Оберіть кілька пісень, які допомагають вам відчути себе сильною, жіночною та справжньою. Музика змінює атмосферу й допомагає розслабитися під час фотосесії."
       },
       "relax": {
-        "title": "Bring what helps you relax",
-        "description": "If you feel nervous, you can bring a trusted friend for support. Pack water, tea, or another favorite drink. If you choose alcohol, keep it light and only have something you already know agrees with you—you never need it to feel confident here."
+        "title": "Візьміть те, що допомагає розслабитися",
+        "description": "Якщо ви хвилюєтеся, можете взяти із собою близьку подругу для підтримки. Візьміть воду, чай або інший улюблений напій. Якщо обираєте алкоголь, нехай його буде небагато й лише той, який ви добре переносите: він не потрібен, щоб почуватися впевнено."
       }
     },
-    "checklist_title": "The day-of checklist",
-    "checklist_intro": "You do not need to bring everything. This is simply a helpful reminder of the things that may make your session feel more like your own.",
+    "checklist_title": "Список речей на день фотосесії",
+    "checklist_intro": "Не обов’язково брати все. Це лише корисне нагадування про речі, які допоможуть зробити фотосесію більш особистою.",
     "checklist": {
-      "item1": "Your favorite lingerie and a few different styles or colors",
-      "item2": "Any shoes, jewelry, stockings, robes, or personal pieces you want to include",
-      "item3": "Your hair products, brush, and makeup touch-up items",
-      "item4": "A short list of photo references and your session playlist",
-      "item5": "Water and anything that helps you feel comfortable"
+      "item1": "Ваша улюблена білизна та кілька різних стилів або кольорів",
+      "item2": "Взуття, прикраси, панчохи, халати чи особисті речі, які ви хочете використати",
+      "item3": "Засоби для волосся, щітка та косметика для поправлення макіяжу",
+      "item4": "Кілька фото для натхнення та ваш плейлист",
+      "item5": "Вода й усе, що допомагає вам почуватися комфортно"
     },
-    "reassurance_title": "You do not have to know how to pose",
-    "reassurance_body": "Feeling nervous is completely normal. I will guide you through the poses, help you find your best angles, and make sure you feel respected and comfortable throughout the session. You only need to arrive as yourself.",
-    "cta": "Let’s plan your session",
-    "faq_link": "Read the FAQs",
-    "process_link": "See how the session works",
-    "how_to_name": "How to prepare for a boudoir photography session",
-    "how_to_description": "Practical preparation guidance for a comfortable and empowering boudoir photography session in Barcelona."
+    "reassurance_title": "Вам не потрібно вміти позувати",
+    "reassurance_body": "Хвилюватися — цілком нормально. Я проведу вас через пози, допоможу знайти найкращі ракурси й подбаю, щоб протягом усієї фотосесії ви почувалися комфортно та впевнено. Вам потрібно лише прийти такою, якою ви є.",
+    "cta": "Сплануймо вашу фотосесію",
+    "faq_link": "Прочитайте часті запитання",
+    "process_link": "Дізнайтеся, як проходить фотосесія",
+    "how_to_name": "Як підготуватися до будуарної фотосесії",
+    "how_to_description": "Практичні поради для комфортної та надихаючої будуарної фотосесії в Барселоні."
   }
 }
