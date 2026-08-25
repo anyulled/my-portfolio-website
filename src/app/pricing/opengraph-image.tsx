@@ -7,9 +7,6 @@ export const size = {
   width: 1200,
   height: 630,
 };
-/**
- * Generates a simple fallback OG image.
- */
 function generateFallbackImage() {
   return new ImageResponse(
     <div
@@ -34,6 +31,43 @@ function generateFallbackImage() {
   );
 }
 
+function getImageUrls(
+  photos: Awaited<ReturnType<typeof getPhotosFromStorage>>,
+) {
+  return (photos ?? [])
+    .map((photo) => photo.srcSet[0]?.src)
+    .filter((url): url is string => Boolean(url) && !url.endsWith(".webp"))
+    .slice(0, 3);
+}
+
+function generatePhotoImage(imageUrls: string[]) {
+  const imgStyle = { flex: 1, height: "100%", objectFit: "cover" as const };
+
+  return new ImageResponse(
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "1200px",
+        height: "630px",
+        backgroundColor: "#1a1a2e",
+      }}
+    >
+      {imageUrls.map((url) => (
+        <img
+          src={url}
+          alt=""
+          style={imgStyle}
+          width="400"
+          height="630"
+          key={url}
+        />
+      ))}
+    </div>,
+    { ...size },
+  );
+}
+
 export default async function PricingImage() {
   console.log("[PricingOG] Starting image generation...");
   try {
@@ -47,14 +81,7 @@ export default async function PricingImage() {
       return generateFallbackImage();
     }
 
-    /*
-     * Take up to 3 images - use remote URLs directly instead of encoding
-     * Satori doesn't support WebP, so filter to only JPEG/PNG
-     */
-    const imageUrls = photos
-      .map((p) => p.srcSet[0]?.src)
-      .filter((url): url is string => Boolean(url) && !url.endsWith(".webp"))
-      .slice(0, 3);
+    const imageUrls = getImageUrls(photos);
 
     if (imageUrls.length === 0) {
       console.warn("[PricingOG] No valid non-WebP image URLs, using fallback.");
@@ -63,32 +90,7 @@ export default async function PricingImage() {
 
     console.log(`[PricingOG] Using ${imageUrls.length} remote image URLs.`);
 
-    // Use remote URLs directly
-    const [img0, img1, img2] = imageUrls;
-    const imgStyle = { flex: 1, height: "100%", objectFit: "cover" as const };
-
-    return new ImageResponse(
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          width: "1200px",
-          height: "630px",
-          backgroundColor: "#1a1a2e",
-        }}
-      >
-        {img0 && (
-          <img src={img0} alt="" style={imgStyle} width="400" height="630" />
-        )}
-        {img1 && (
-          <img src={img1} alt="" style={imgStyle} width="400" height="630" />
-        )}
-        {img2 && (
-          <img src={img2} alt="" style={imgStyle} width="400" height="630" />
-        )}
-      </div>,
-      { ...size },
-    );
+    return generatePhotoImage(imageUrls);
   } catch (error) {
     console.error("[PricingOG] Unexpected error during generation:", error);
     return generateFallbackImage();

@@ -10,7 +10,7 @@ import TruthSection from "./TruthSection";
 export const metadata: Metadata = {
   title: "5 Common Boudoir Photography Myths Debunked",
   description:
-    "Discover the truth about boudoir photography. We debunk 5 common myths and misconceptions about intimate photography sessions, body positivity, and empowerment.",
+    "Separate fact from fiction with five common boudoir photography myths debunked, and discover how a private, body-positive session can celebrate your confidence.",
   keywords:
     "boudoir photography myths, boudoir misconceptions, intimate photography facts, body positivity photography, boudoir photography truth, empowering photography, boudoir session reality",
   openGraph: {

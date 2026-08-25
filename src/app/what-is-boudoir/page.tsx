@@ -7,7 +7,7 @@ import { getTranslations } from "next-intl/server";
 export const metadata: Metadata = {
   title: "What is Boudoir?",
   description:
-    "What is Boudoir? Uncover the magic of sensuality in our boudoir photography service based in Barcelona, Spain.",
+    "Discover what boudoir photography is and how our Barcelona sessions combine guidance, elegant portraiture, and a confidence-building experience tailored to you.",
 };
 
 function getRandomElements(arr: Photo[], num: number) {

@@ -134,8 +134,10 @@
 **Action:** Always extract the selection logic (e.g., finding the random index) to pick the specific raw element _first_, and then apply the data transformation/formatting only to that single $O(1)$ element.
 
 ## 2026-05-22 - [Performance: Redundant RegExp Allocations in Batch Processing]
+
 **Learning:** Re-instantiating `RegExp` patterns inside utility functions (like `extractIdFromFilename`) that are called iteratively for every item during batch processing (e.g., scanning thousands of GCS files) causes redundant memory allocations, garbage collection overhead, and degrades CPU performance.
 **Action:** Hoist `RegExp` patterns to the module level to ensure they are created only once and reused across all function calls.
+
 ## 2026-05-23 - [Performance: I/O Operation Concurrency in Cache Writing]
 
 **Learning:** When a service writes data to multiple independent caching layers (e.g., Redis and Vercel Blob), awaiting these operations sequentially creates an unnecessary request waterfall that slows down the overall hydration process.
@@ -145,10 +147,21 @@
 
 **Learning:** Declaring regular expression literals (e.g., `/\.[^/.]+$/`) and static primitive wrapper objects (e.g., `new Date(0)`) inside a function that is called iteratively during a batch process (like mapping thousands of GCS files) forces the JavaScript engine to allocate memory and garbage collect these objects repeatedly, degrading throughput and increasing memory overhead. Additionally, using `.match()` for boolean checks allocates an array of results, while `.test()` only returns a boolean.
 **Action:** Extract invariant RegExp literals and primitive instantiations into module-level constants. When only a boolean check is needed, prefer `RegExp.prototype.test()` over `String.prototype.match()`.
+
 ## 2026-06-25 - [Performance: Next.js/Supabase SSR Cookie deduplication micro-optimization]
+
 **Learning:** Avoid deduplicating small cookie arrays using a `Map` before calling `cookies().set()` in Next.js/Supabase SSR handlers. This is a counterproductive micro-optimization, as the Map allocation overhead typically exceeds the cost of redundant setter calls.
 **Action:** Do not deduplicate small cookie arrays; allow `cookies().set()` to be called sequentially even if it means some redundant calls.
+
 ## 2026-06-13 - [Performance: GCS Metadata Fetching]
 
 **Learning:** When fetching a limited subset of files from Google Cloud Storage, calling `bucket.getFiles()` without specifying `maxResults` causes the library to fetch the default page size (up to 1000 items) of metadata. This results in significant overhead through large payload parsing, unnecessary network latency, and memory allocation.
 **Action:** Always set `maxResults` to a reasonable buffer (e.g., limit + 20) in the options object passed to `bucket.getFiles` when only a subset of items is needed.
+## 2026-06-25 - [Performance: Redundant Sharp Image Parsing]
+
+**Learning:** When generating a buffer from a `sharp` pipeline (e.g., `pipeline.webp().toBuffer()`), calling `sharp(convertedBuffer).metadata()` sequentially afterwards forces an unnecessary second object allocation and re-parses the newly created image buffer, causing CPU and memory overhead.
+**Action:** Use `toBuffer({ resolveWithObject: true })` to return both the generated buffer and its `info` (metadata) in a single pass: `const { data: convertedBuffer, info: newMetadata } = await pipeline.toBuffer({ resolveWithObject: true });`
+
+## 2024-05-18 - Early Exit in OpenGraph Image Generation
+**Learning:** Chained array methods (`.map().filter().slice()`) process the entire array even when only a few items are needed, causing O(N) overhead.
+**Action:** Replace chained array methods with a `for...of` loop and early exit (`break`) when extracting a limited subset of items to achieve O(limit) time complexity.

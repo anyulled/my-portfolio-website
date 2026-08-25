@@ -15,7 +15,7 @@ const metadataImages = [
 export const metadata: Metadata = {
   title: "About Me",
   description:
-    "Anyul Rivas — Professional portrait & Boudoir photographer born in Venezuela and based in Barcelona, Spain",
+    "Meet Anyul Rivas, a portrait and boudoir photographer based in Barcelona, creating elegant, confidence-building images in a private, supportive setting.",
   twitter: {
     images: metadataImages,
   },
