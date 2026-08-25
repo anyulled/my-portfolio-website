@@ -13,6 +13,7 @@ const siteLinks = [
   { name: "testimonials", href: "/testimonials" },
   { name: "styles", href: "/styles" },
   { name: "faq", href: "/faq" },
+  { name: "session_preparation", href: "/session-preparation" },
 ];
 
 export default function Footer() {
