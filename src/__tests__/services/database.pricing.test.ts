@@ -12,7 +12,8 @@ jest.mock("@supabase/ssr", () => ({
 }));
 
 jest.mock("next/cache", () => ({
-  unstable_cache: jest.fn((cb) => cb),
+  cacheLife: jest.fn(),
+  cacheTag: jest.fn(),
   revalidateTag: jest.fn(),
 }));
 

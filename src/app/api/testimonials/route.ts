@@ -1,20 +1,9 @@
-import { getTestimonials } from "@/lib/testimonials";
-import { unstable_cache } from "next/cache";
+import { Testimonials } from "@/services/database";
 import { NextResponse } from "next/server";
-
-const getCachedTestimonials = unstable_cache(
-  getTestimonials,
-  ["testimonials"],
-  {
-    // 1 hour
-    revalidate: 3600,
-    tags: ["testimonials"],
-  },
-);
 
 export async function GET() {
   try {
-    const testimonials = await getCachedTestimonials();
+    const testimonials = await Testimonials();
     return NextResponse.json(testimonials);
   } catch (error) {
     console.error("Error fetching testimonials:", error);

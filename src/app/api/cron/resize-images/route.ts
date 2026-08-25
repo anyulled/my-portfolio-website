@@ -8,7 +8,6 @@ import sharp from "sharp";
 
 // 5 minutes
 export const maxDuration = 300;
-export const dynamic = "force-dynamic";
 
 const MAX_WIDTH_HEIGHT = 2560;
 
@@ -50,10 +49,7 @@ interface ProcessResult {
 }
 
 function isValidImage(file: GCSFile): boolean {
-  return (
-    !file.name.endsWith("/") &&
-    VALID_IMAGE_PATTERN.test(file.name)
-  );
+  return !file.name.endsWith("/") && VALID_IMAGE_PATTERN.test(file.name);
 }
 
 // eslint-disable-next-line complexity

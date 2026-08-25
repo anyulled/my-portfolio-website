@@ -14,7 +14,6 @@ const dancingScript = Dancing_Script({ subsets: ["latin"] });
 type Params = Promise<{ modelName: string }>;
 
 export type Props = { params: Params };
-export const dynamic = "force-dynamic";
 
 export const generateMetadata = async ({
   params,

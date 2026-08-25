@@ -5,6 +5,7 @@ import Hero from "@/components/Hero";
 import SocialMedia from "@/components/SocialMedia";
 import { Separator } from "@/components/ui/separator";
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
+import type { Photo } from "@/types/photos";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -43,6 +44,14 @@ const fallbackGalleryPhotos = [
   },
 ];
 
+async function selectRandomPhoto(photos: Photo[]): Promise<Photo | null> {
+  "use cache";
+
+  return photos.length > 0
+    ? photos[Math.floor(Math.random() * photos.length)]
+    : null;
+}
+
 export default async function HomePage() {
   // Parallelize data fetching to reduce waterfall effect and improve LCP
   const [fetchedGallery, heroPhotosRaw] = await Promise.all([
@@ -63,10 +72,7 @@ export default async function HomePage() {
    * an O(N) allocation into an O(1) allocation and eliminating redundant object creations
    * on every server render.
    */
-  const selectedPhoto =
-    heroPhotos.length > 0
-      ? heroPhotos[Math.floor(Math.random() * heroPhotos.length)]
-      : null;
+  const selectedPhoto = await selectRandomPhoto(heroPhotos);
 
   const heroImage = selectedPhoto
     ? {

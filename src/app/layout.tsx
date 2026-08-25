@@ -11,6 +11,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import React from "react";
+import { Suspense } from "react";
 import { LocalBusiness, WithContext } from "schema-dts";
 import "./globals.css";
 
@@ -138,33 +139,40 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  /*
-   * ⚡ Bolt: Execute independent asynchronous operations concurrently
-   * to eliminate request waterfalls and reduce server response time.
-   */
-  const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={"bg-background dark:bg-background"}>
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <ScrollProvider>
-              <div className="min-h-screen bg-background text-foreground dark:bg-background dark:text-foreground">
-                <NavBar />
-                <MixpanelLayout>{children}</MixpanelLayout>
-              </div>
-              <Toaster />
-              <CookieConsent />
-            </ScrollProvider>
-          </ThemeProvider>
-          <Footer />
-          <Analytics />
-        </NextIntlClientProvider>
+        <Suspense fallback={<div className="min-h-screen bg-background" />}>
+          <LocalizedShell>{children}</LocalizedShell>
+        </Suspense>
+      </body>
+    </html>
+  );
+}
+
+async function LocalizedShell({ children }: { children: React.ReactNode }) {
+  const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
+
+  return (
+    <div lang={locale}>
+      <NextIntlClientProvider messages={messages}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ScrollProvider>
+            <div className="min-h-screen bg-background text-foreground dark:bg-background dark:text-foreground">
+              <NavBar />
+              <MixpanelLayout>{children}</MixpanelLayout>
+            </div>
+            <Toaster />
+            <CookieConsent />
+          </ScrollProvider>
+        </ThemeProvider>
+        <Footer />
+        <Analytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-      </body>
-    </html>
+      </NextIntlClientProvider>
+    </div>
   );
 }

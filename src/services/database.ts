@@ -2,7 +2,7 @@ import { Testimonial } from "@/lib/testimonials";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import chalk from "chalk";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
-import { unstable_cache, revalidateTag } from "next/cache";
+import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 const createDbClient = (cookies: ReadonlyRequestCookies) =>
@@ -22,7 +22,10 @@ const createDbClient = (cookies: ReadonlyRequestCookies) =>
              * ⚡ Bolt: Deduplicate cookie updates by name to prevent redundant internal
              * state re-evaluations and minimize synchronous overhead from `cookies.set()`.
              */
-            const uniqueCookies = new Map<string, { name: string; value: string; options: CookieOptions }>();
+            const uniqueCookies = new Map<
+              string,
+              { name: string; value: string; options: CookieOptions }
+            >();
             for (const c of cookie) {
               uniqueCookies.set(c.name, c);
             }
@@ -57,6 +60,9 @@ const createPublicDbClient = () =>
   );
 
 const fetchTestimonials = async (): Promise<Array<Testimonial>> => {
+  "use cache";
+  cacheLife({ revalidate: 3600 });
+  cacheTag("testimonials");
   const supabase = createPublicDbClient();
 
   console.log(chalk.gray("[ supabase ] retrieving testimonials from database"));
@@ -81,17 +87,8 @@ const fetchTestimonials = async (): Promise<Array<Testimonial>> => {
   return testimonials || [];
 };
 
-const getCachedTestimonials = unstable_cache(
-  fetchTestimonials,
-  ["testimonials-list"],
-  {
-    tags: ["testimonials"],
-    revalidate: 3600,
-  },
-);
-
 export const Testimonials = async (): Promise<Array<Testimonial>> => {
-  return getCachedTestimonials();
+  return fetchTestimonials();
 };
 
 export interface PricingPackageRecord {
@@ -109,6 +106,9 @@ export type PricingPackageInsert = {
 };
 
 const fetchLatestPricing = async () => {
+  "use cache";
+  cacheLife({ revalidate: 3600 });
+  cacheTag("pricing-packages");
   const supabase = createPublicDbClient();
 
   console.log(
@@ -136,18 +136,9 @@ const fetchLatestPricing = async () => {
   return data;
 };
 
-const getCachedLatestPricing = unstable_cache(
-  fetchLatestPricing,
-  ["pricing-packages"],
-  {
-    tags: ["pricing-packages"],
-    revalidate: 3600,
-  },
-);
-
 export const getLatestPricing =
   async (): Promise<PricingPackageRecord | null> => {
-    return getCachedLatestPricing();
+    return fetchLatestPricing();
   };
 
 export const insertPricing = async (

@@ -69,7 +69,7 @@ describe("TestimonialCard", () => {
     location: "Test Location",
     rating: 4,
     content: "This is a test testimonial content",
-    date: "2025-07-31",
+    date: new Date("2025-07-31"),
     featured: true,
   };
 

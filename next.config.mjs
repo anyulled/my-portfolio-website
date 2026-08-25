@@ -4,6 +4,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  cacheComponents: true,
+  partialPrefetching: true,
   images: {
     unoptimized: false,
     qualities: [85],

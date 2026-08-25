@@ -2,10 +2,16 @@ import { jest } from "@jest/globals";
 
 const mockEnMessages = { test: "English message" };
 const mockEsMessages = { test: "Spanish message" };
+type Messages = Record<string, Record<string, string>>;
+type RequestConfig = () => Promise<{
+  locale: string;
+  messages: Record<string, string>;
+}>;
+
 const createRequestConfigForTesting = (
-  mockGetUserLocale,
-  mockMessages = {},
-) => {
+  mockGetUserLocale: () => Promise<string>,
+  mockMessages: Messages = {},
+): RequestConfig => {
   return async () => {
     const requestedLocale = await mockGetUserLocale();
     const availableLocales = ["es", "en", "fr", "ca", "it", "uk"];
@@ -55,10 +61,14 @@ const createRequestConfigForTesting = (
 };
 
 describe("i18n request config", () => {
-  const context = {
-    mockGetUserLocale: null as any,
-    requestConfig: null as any,
-    mockMessages: null as any,
+  const context: {
+    mockGetUserLocale: jest.MockedFunction<() => Promise<string>>;
+    requestConfig: RequestConfig;
+    mockMessages: Messages;
+  } = {
+    mockGetUserLocale: jest.fn(),
+    requestConfig: async () => ({ locale: "en", messages: {} }),
+    mockMessages: {},
   };
 
   beforeEach(() => {

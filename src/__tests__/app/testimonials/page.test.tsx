@@ -85,7 +85,7 @@ describe("TestimonialsPage", () => {
       location: "Location 1",
       rating: 5,
       content: "Featured content 1",
-      date: "2025-07-31",
+      date: new Date("2025-07-31"),
       featured: true,
     },
     {
@@ -94,7 +94,7 @@ describe("TestimonialsPage", () => {
       location: "Location 2",
       rating: 4,
       content: "Featured content 2",
-      date: "2025-07-30",
+      date: new Date("2025-07-30"),
       featured: true,
     },
   ];
@@ -106,7 +106,7 @@ describe("TestimonialsPage", () => {
       location: "Location 3",
       rating: 4,
       content: "Regular content 1",
-      date: "2025-07-29",
+      date: new Date("2025-07-29"),
       featured: false,
     },
   ];

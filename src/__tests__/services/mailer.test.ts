@@ -18,6 +18,11 @@ jest.mock("nodemailer", () => {
 });
 
 const originalEnv = process.env;
+type MockTransporter = {
+  sendMail: jest.MockedFunction<
+    (options: Record<string, unknown>) => Promise<{ messageId: string }>
+  >;
+};
 
 describe("Mailer Service", () => {
   beforeEach(() => {
@@ -36,7 +41,8 @@ describe("Mailer Service", () => {
 
   describe("sendEMail", () => {
     it("should send an email with the correct parameters", async () => {
-      const mockTransporter = nodemailer.createTransport();
+      const mockTransporter =
+        nodemailer.createTransport() as unknown as MockTransporter;
 
       mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
 
@@ -58,7 +64,8 @@ describe("Mailer Service", () => {
     });
 
     it("should return null when email sending fails", async () => {
-      const mockTransporter = nodemailer.createTransport();
+      const mockTransporter =
+        nodemailer.createTransport() as unknown as MockTransporter;
 
       mockTransporter.sendMail.mockRejectedValue(
         new Error("Failed to send email"),
@@ -80,7 +87,8 @@ describe("Mailer Service", () => {
 
   describe("sendEmail", () => {
     it("should send an email with the correct parameters", async () => {
-      const mockTransporter = nodemailer.createTransport();
+      const mockTransporter =
+        nodemailer.createTransport() as unknown as MockTransporter;
 
       mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
 
@@ -103,7 +111,8 @@ describe("Mailer Service", () => {
     });
 
     it('should use default recipient when "to" is not provided', async () => {
-      const mockTransporter = nodemailer.createTransport();
+      const mockTransporter =
+        nodemailer.createTransport() as unknown as MockTransporter;
 
       mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
 
@@ -124,7 +133,8 @@ describe("Mailer Service", () => {
     });
 
     it("should return null when email sending fails", async () => {
-      const mockTransporter = nodemailer.createTransport();
+      const mockTransporter =
+        nodemailer.createTransport() as unknown as MockTransporter;
 
       mockTransporter.sendMail.mockRejectedValue(
         new Error("Failed to send email"),
@@ -146,7 +156,8 @@ describe("Mailer Service", () => {
 
   describe("sendEmailToRecipient", () => {
     it("should send an email to the specified recipient", async () => {
-      const mockTransporter = nodemailer.createTransport();
+      const mockTransporter =
+        nodemailer.createTransport() as unknown as MockTransporter;
 
       mockTransporter.sendMail.mockResolvedValue({ messageId: "test-id" });
 
@@ -168,7 +179,8 @@ describe("Mailer Service", () => {
     });
 
     it("should return null when email sending fails", async () => {
-      const mockTransporter = nodemailer.createTransport();
+      const mockTransporter =
+        nodemailer.createTransport() as unknown as MockTransporter;
 
       mockTransporter.sendMail.mockRejectedValue(
         new Error("Failed to send email"),

@@ -1,33 +1,13 @@
 import { getPhotosFromStorage as getPhotosFromStorageUncached } from "@/services/storage/photos";
 import type { Photo } from "@/types/photos";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
-const CACHE_KEY_VERSION = "public-urls-v1";
-
-/**
- * Cached version of getPhotosFromStorage using Next.js ISR.
- * Revalidates every 1 week (604800 seconds).
- *
- * This wrapper ensures photos are cached at the Next.js level,
- * preventing unnecessary GCS calls during static generation.
- *
- * NOTE: We wrap the unstable_cache call inside the function to ensure the cache key
- * includes the dynamic arguments (prefix, limit), preventing collisions.
- */
 export const getPhotosFromStorage = async (
   prefix: string,
   limit?: number,
 ): Promise<Photo[] | null> => {
-  return unstable_cache(
-    async () => {
-      return getPhotosFromStorageUncached(prefix, limit);
-    },
-    // Cache key parts including arguments to prevent collisions
-    ["photos-storage", CACHE_KEY_VERSION, prefix, limit?.toString() ?? "all"],
-    {
-      // 12 hours in seconds (aligned with Signed URL fix)
-      revalidate: 43200,
-      tags: ["photos"],
-    },
-  )();
+  "use cache";
+  cacheLife({ revalidate: 43200 });
+  cacheTag("photos");
+  return getPhotosFromStorageUncached(prefix, limit);
 };
