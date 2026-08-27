@@ -34,10 +34,20 @@ function generateFallbackImage() {
 function getImageUrls(
   photos: Awaited<ReturnType<typeof getPhotosFromStorage>>,
 ) {
-  return (photos ?? [])
-    .map((photo) => photo.srcSet[0]?.src)
-    .filter((url): url is string => Boolean(url) && !url.endsWith(".webp"))
-    .slice(0, 3);
+  const result: string[] = [];
+  const limit = 3;
+
+  for (const photo of photos ?? []) {
+    const url = photo.srcSet[0]?.src;
+    if (url && !url.endsWith(".webp")) {
+      result.push(url);
+      if (result.length >= limit) {
+        break;
+      }
+    }
+  }
+
+  return result;
 }
 
 function generatePhotoImage(imageUrls: string[]) {
