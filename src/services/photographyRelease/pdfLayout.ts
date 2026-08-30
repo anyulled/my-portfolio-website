@@ -11,7 +11,12 @@ export const BODY_COLOR = rgb(0.12, 0.12, 0.12);
 export const HEADING_COLOR = rgb(0.35, 0.35, 0.35);
 export const ACCENT_COLOR = rgb(0.32, 0.18, 0.23);
 
-const wrapText = (text: string, font: PDFFont, size: number, width: number) => {
+export const wrapText = (
+  text: string,
+  font: PDFFont,
+  size: number,
+  width: number,
+) => {
   const words = text.trim().split(/\s+/).filter(Boolean);
   const collectLines = (
     remainingWords: string[],
@@ -173,7 +178,7 @@ export const drawRadio = (
 
 export const drawHeader = (
   page: PDFPage,
-  copy: ReleaseCopy,
+  copy: Pick<ReleaseCopy, "title">,
   font: PDFFont,
   boldFont: PDFFont,
 ) => {

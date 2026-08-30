@@ -9,6 +9,7 @@ interface SignaturePadProps {
   label: string;
   hint: string;
   clearLabel: string;
+  id?: string;
   error?: string;
 }
 
@@ -18,6 +19,7 @@ export const SignaturePad = ({
   label,
   hint,
   clearLabel,
+  id = "client-signature",
   error,
 }: SignaturePadProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -102,7 +104,7 @@ export const SignaturePad = ({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-4">
-        <label htmlFor="client-signature" className="text-sm font-medium">
+        <label htmlFor={id} className="text-sm font-medium">
           {label} *
         </label>
         <Button type="button" variant="outline" size="sm" onClick={clear}>
@@ -111,7 +113,7 @@ export const SignaturePad = ({
       </div>
       <canvas
         ref={canvasRef}
-        id="client-signature"
+        id={id}
         width={900}
         height={240}
         aria-describedby="signature-hint signature-error"

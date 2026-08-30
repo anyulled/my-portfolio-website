@@ -23,13 +23,16 @@ type ReleaseStorage = {
 export const archiveReleasePdf = async (
   pdf: Buffer,
   sessionDate: string,
+  releaseType: "photography" | "model" = "photography",
 ): Promise<string> => {
   const bucketName = process.env.GCP_RELEASES_BUCKET;
   if (!bucketName) {
     throw new Error("GCP_RELEASES_BUCKET is not configured");
   }
 
-  const objectName = `photography-releases/${sessionDate.slice(0, 7)}/${randomUUID()}.pdf`;
+  const prefix =
+    releaseType === "model" ? "model-releases" : "photography-releases";
+  const objectName = `${prefix}/${sessionDate.slice(0, 7)}/${randomUUID()}.pdf`;
   const storage = createGCPStorageClient() as unknown as ReleaseStorage;
   await storage
     .bucket(bucketName)
