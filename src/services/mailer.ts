@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import type { SendMailOptions } from "nodemailer";
 import chalk from "chalk";
 
 const transporter = nodemailer.createTransport({
@@ -18,6 +19,7 @@ interface EmailOptions {
   cc?: string;
   subject: string;
   text: string;
+  attachments?: SendMailOptions["attachments"];
 }
 
 /**
@@ -35,6 +37,7 @@ export const sendEmail = async (
       cc: options.cc,
       subject: options.subject,
       text: options.text,
+      attachments: options.attachments,
     });
   } catch (e) {
     console.error(chalk.red("[Mailer] Error sending email:"), e);

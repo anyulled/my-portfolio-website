@@ -28,6 +28,7 @@ const navLinks = [
   { name: "menu_about", href: "/about" },
   { name: "menu_testimonials", href: "/testimonials" },
   { name: "menu_myths", href: "/boudoir-myths" },
+  { name: "menu_release", href: "/photography-release" },
 ];
 
 export default function NavBar() {
