@@ -34,10 +34,21 @@ function generateFallbackImage() {
 function getImageUrls(
   photos: Awaited<ReturnType<typeof getPhotosFromStorage>>,
 ) {
-  return (photos ?? [])
-    .map((photo) => photo.srcSet[0]?.src)
-    .filter((url): url is string => Boolean(url) && !url.endsWith(".webp"))
-    .slice(0, 3);
+  const imageUrls: string[] = [];
+  /*
+   * ⚡ Bolt: Replaced chained array methods (.map.filter.slice) with a for...of loop
+   * and an early exit. This avoids O(N) iteration over the entire photos array
+   * and prevents intermediate array allocations, reducing time complexity to O(limit).
+   */
+  for (const photo of photos ?? []) {
+    if (imageUrls.length >= 3) break;
+
+    const url = photo.srcSet[0]?.src;
+    if (url && !url.endsWith(".webp")) {
+      imageUrls.push(url);
+    }
+  }
+  return imageUrls;
 }
 
 function generatePhotoImage(imageUrls: string[]) {
