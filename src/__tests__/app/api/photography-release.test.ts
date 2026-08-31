@@ -34,6 +34,7 @@ const createRequest = (entries: Record<string, string | string[]>) => {
     formData.append(key, value);
   });
   return {
+    headers: new Headers(),
     formData: async () => formData,
   } as unknown as Request;
 };
@@ -80,6 +81,7 @@ describe("Photography release API", () => {
 
     expect(response.status).toBe(200);
     expect(body.success).toBe(true);
+    expect(body.requestId).toEqual(expect.any(String));
     expect(createPhotographyReleasePdf).toHaveBeenCalledWith(
       expect.objectContaining({
         sessionDate: expect.not.stringMatching(/^1900/),
@@ -88,6 +90,7 @@ describe("Photography release API", () => {
     expect(archiveReleasePdf).toHaveBeenCalledWith(
       Buffer.from("pdf"),
       expect.not.stringMatching(/^1900/),
+      "photography",
     );
     expect(sendEmail).toHaveBeenCalledTimes(2);
     expect(jest.mocked(sendEmail).mock.calls[0][0]).toEqual(
@@ -108,7 +111,8 @@ describe("Photography release API", () => {
 
     const response = await POST(createRequest(validEntries));
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(502);
+    expect((await response.json()).retryable).toBe(true);
     expect(sendEmail).not.toHaveBeenCalled();
   });
 
@@ -118,6 +122,7 @@ describe("Photography release API", () => {
     const response = await POST(createRequest(validEntries));
 
     expect(response.status).toBe(502);
+    expect((await response.json()).retryable).toBe(true);
     expect(archiveReleasePdf).toHaveBeenCalled();
     expect(sendEmail).toHaveBeenCalledTimes(1);
   });

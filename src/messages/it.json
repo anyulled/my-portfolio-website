@@ -83,6 +83,7 @@
     "error_phone": "Inserisci un numero di telefono internazionale valido.",
     "error_session_date": "La data della sessione è obbligatoria.",
     "error_signature": "La firma disegnata è obbligatoria.",
+    "error_reference": "Riferimento",
     "error_privacy_level": "Scegli un livello di privacy per le autorizzazioni selezionate.",
     "error_privacy_without_permission": "Scegli un'autorizzazione per le immagini prima di selezionare un livello di privacy.",
     "email_subject": "Liberatoria fotografica firmata"
@@ -139,6 +140,7 @@
     "error_email": "Inserisci un indirizzo e-mail valido.",
     "error_phone": "Inserisci un numero di telefono internazionale valido.",
     "error_signature": "È obbligatoria una firma disegnata.",
+    "error_reference": "Riferimento",
     "email_subject": "Liberatoria della modella firmata"
   },
   "contact_form": {

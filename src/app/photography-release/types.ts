@@ -126,6 +126,7 @@ export type ReleaseCopy = {
   errorPhone: string;
   errorSessionDate: string;
   errorSignature: string;
+  errorReference: string;
   errorPrivacyLevel: string;
   errorPrivacyWithoutPermission: string;
   emailSubject: string;

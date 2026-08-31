@@ -83,6 +83,7 @@
     "error_phone": "Saisissez un numéro de téléphone international valide.",
     "error_session_date": "La date de la séance est obligatoire.",
     "error_signature": "La signature dessinée est obligatoire.",
+    "error_reference": "Référence",
     "error_privacy_level": "Choisissez un niveau de confidentialité pour les autorisations sélectionnées.",
     "error_privacy_without_permission": "Choisissez une autorisation d'image avant de sélectionner un niveau de confidentialité.",
     "email_subject": "Cession photographique signée"
@@ -139,6 +140,7 @@
     "error_email": "Saisissez une adresse e-mail valide.",
     "error_phone": "Saisissez un numéro de téléphone international valide.",
     "error_signature": "Une signature dessinée est obligatoire.",
+    "error_reference": "Référence",
     "email_subject": "Autorisation de modèle signée"
   },
   "contact_form": {

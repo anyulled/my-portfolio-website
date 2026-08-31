@@ -85,6 +85,7 @@ export const getModelReleaseCopy = (locale: string): ModelReleaseCopy => {
     errorEmail: source.error_email,
     errorPhone: source.error_phone,
     errorSignature: source.error_signature,
+    errorReference: source.error_reference,
     emailSubject: source.email_subject,
   };
 };

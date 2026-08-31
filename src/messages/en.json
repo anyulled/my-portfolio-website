@@ -150,6 +150,7 @@
     "error_phone": "Enter a valid international phone number.",
     "error_session_date": "Session date is required.",
     "error_signature": "A drawn signature is required.",
+    "error_reference": "Reference",
     "error_privacy_level": "Choose a privacy level for the selected image permissions.",
     "error_privacy_without_permission": "Choose an image permission before selecting a privacy level.",
     "email_subject": "Signed Photography Release"
@@ -206,6 +207,7 @@
     "error_email": "Enter a valid email address.",
     "error_phone": "Enter a valid international phone number.",
     "error_signature": "A drawn signature is required.",
+    "error_reference": "Reference",
     "email_subject": "Signed Model Release"
   },
   "contact_form": {

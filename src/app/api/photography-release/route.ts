@@ -1,14 +1,22 @@
 import { getReleaseCopy } from "@/services/photographyRelease/copy";
-import { archiveReleasePdf } from "@/services/photographyRelease/archive";
 import { createPhotographyReleasePdf } from "@/services/photographyRelease/pdf";
+import {
+  createReleaseRequestContext,
+  deliverRelease,
+  getErrorDetails,
+  getReleaseConfigurationStatus,
+  logReleaseEvent,
+  ReleaseRequestContext,
+  ReleaseStageError,
+  runReleaseStage,
+} from "@/services/releaseDelivery";
 import {
   getMadridDate,
   releaseFormSchema,
 } from "@/app/photography-release/types";
 import { locales } from "@/i18n/config";
-import { sendEmail } from "@/services/mailer";
-import chalk from "chalk";
 import { NextResponse } from "next/server";
+import type { ReleaseStage } from "@/services/releaseDelivery";
 
 const getText = (formData: FormData, key: string): string =>
   formData.get(key)?.toString() ?? "";
@@ -43,6 +51,39 @@ const errorMessageFor = (
   }
 };
 
+const isRetryableStage = (stage?: ReleaseStage) =>
+  stage === "archive" ||
+  stage === "photographer_email" ||
+  stage === "client_email";
+
+const failureResponse = (
+  error: unknown,
+  locale: string,
+  context: ReleaseRequestContext,
+) => {
+  const copy = getReleaseCopy(locale);
+  const stage = error instanceof ReleaseStageError ? error.stage : undefined;
+  const retryable = isRetryableStage(stage);
+  logReleaseEvent({
+    ...context,
+    event: "release_submission_failed",
+    level: "error",
+    stage,
+    archiveName:
+      error instanceof ReleaseStageError ? error.archiveName : undefined,
+    error: getErrorDetails(error),
+  });
+  return NextResponse.json(
+    {
+      success: false,
+      message: `${copy.errorGeneric} ${copy.errorReference}: ${context.requestId}`,
+      requestId: context.requestId,
+      retryable,
+    },
+    { status: retryable ? 502 : 500 },
+  );
+};
+
 const createSubmission = (formData: FormData) => {
   const requestedLocale = getText(formData, "locale");
   const locale = locales.includes(requestedLocale as (typeof locales)[number])
@@ -67,74 +108,75 @@ const createSubmission = (formData: FormData) => {
 };
 
 export async function POST(request: Request) {
+  const context = createReleaseRequestContext("photography", request);
+  logReleaseEvent({
+    ...context,
+    event: "release_submission_received",
+    level: "info",
+    configuration: getReleaseConfigurationStatus(),
+  });
+
   try {
     const formData = await request.formData();
     const submission = createSubmission(formData);
     const { locale, sessionDate, result } = submission;
 
-    if (!result.success) {
-      const firstIssue = result.error.issues[0];
-      const path = firstIssue?.path[0]?.toString() ?? "";
-      return NextResponse.json(
-        {
-          success: false,
-          message: errorMessageFor(firstIssue?.message ?? "", path, locale),
-        },
-        { status: 400 },
+    try {
+      if (!result.success) {
+        const firstIssue = result.error.issues[0];
+        const path = firstIssue?.path[0]?.toString() ?? "";
+        logReleaseEvent({
+          ...context,
+          event: "release_validation_failed",
+          level: "info",
+        });
+        return NextResponse.json(
+          {
+            success: false,
+            message: errorMessageFor(firstIssue?.message ?? "", path, locale),
+          },
+          { status: 400 },
+        );
+      }
+
+      const copy = getReleaseCopy(locale);
+      const pdf = await runReleaseStage(context, "pdf_generation", () =>
+        createPhotographyReleasePdf({
+          values: result.data,
+          copy,
+          sessionDate,
+        }),
       );
+      const photographerEmail =
+        process.env.RELEASE_RECIPIENT_EMAIL ?? "info@boudoir.barcelona";
+      await deliverRelease({
+        ...context,
+        releaseDate: sessionDate,
+        pdf,
+        filename: `photography-release-${sessionDate}.pdf`,
+        photographerEmail,
+        clientEmail: result.data.email,
+        subject: copy.emailSubject,
+        photographerText: (archiveName) =>
+          `${copy.title}\n\n${copy.fullName}: ${result.data.fullName}\n${copy.email}: ${result.data.email}\n${copy.sessionDate}: ${sessionDate}\n\nArchive reference: ${archiveName}`,
+        clientText: copy.successMessage,
+      });
+
+      logReleaseEvent({
+        ...context,
+        event: "release_submission_completed",
+        level: "info",
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: copy.successMessage,
+        requestId: context.requestId,
+      });
+    } catch (error) {
+      return failureResponse(error, locale, context);
     }
-
-    const copy = getReleaseCopy(locale);
-    const pdf = await createPhotographyReleasePdf({
-      values: result.data,
-      copy,
-      sessionDate,
-    });
-    const archiveName = await archiveReleasePdf(pdf, sessionDate);
-    const attachment = {
-      filename: `photography-release-${sessionDate}.pdf`,
-      content: pdf,
-      contentType: "application/pdf",
-    };
-    const photographerEmail =
-      process.env.RELEASE_RECIPIENT_EMAIL ?? "info@boudoir.barcelona";
-    const emailText = `${copy.title}\n\n${copy.fullName}: ${result.data.fullName}\n${copy.email}: ${result.data.email}\n${copy.sessionDate}: ${sessionDate}\n\nArchive reference: ${archiveName}`;
-
-    const photographerDelivery = await sendEmail({
-      to: photographerEmail,
-      subject: copy.emailSubject,
-      text: emailText,
-      attachments: [attachment],
-    });
-    if (!photographerDelivery) {
-      return NextResponse.json(
-        { success: false, message: copy.errorGeneric },
-        { status: 502 },
-      );
-    }
-
-    const clientDelivery = await sendEmail({
-      to: result.data.email,
-      subject: copy.emailSubject,
-      text: copy.successMessage,
-      attachments: [attachment],
-    });
-    if (!clientDelivery) {
-      return NextResponse.json(
-        { success: false, message: copy.errorGeneric },
-        { status: 502 },
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: copy.successMessage,
-    });
   } catch (error) {
-    console.error(chalk.red("[PhotographyRelease] Submission error:"), error);
-    return NextResponse.json(
-      { success: false, message: getReleaseCopy("en").errorGeneric },
-      { status: 500 },
-    );
+    return failureResponse(error, "en", context);
   }
 }

@@ -1,13 +1,19 @@
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import type { SendMailOptions } from "nodemailer";
-import chalk from "chalk";
+import type {
+  ReleaseRequestContext,
+  ReleaseStage,
+} from "@/services/releaseDelivery";
 
 const transporter = nodemailer.createTransport({
   service: "smtp",
   port: 465,
   host: "authsmtp.securemail.pro",
   secure: true,
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -20,6 +26,7 @@ interface EmailOptions {
   subject: string;
   text: string;
   attachments?: SendMailOptions["attachments"];
+  logContext?: ReleaseRequestContext & { stage: ReleaseStage };
 }
 
 /**
@@ -39,8 +46,20 @@ export const sendEmail = async (
       text: options.text,
       attachments: options.attachments,
     });
-  } catch (e) {
-    console.error(chalk.red("[Mailer] Error sending email:"), e);
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        ...options.logContext,
+        component: "mailer",
+        event: "email_send_failed",
+        level: "error",
+        error: {
+          name: error instanceof Error ? error.name : "UnknownError",
+          message: error instanceof Error ? error.message : String(error),
+        },
+        timestamp: new Date().toISOString(),
+      }),
+    );
     return null;
   }
 };

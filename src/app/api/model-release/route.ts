@@ -1,14 +1,22 @@
 import { getModelReleaseCopy } from "@/services/modelRelease/copy";
-import { archiveReleasePdf } from "@/services/photographyRelease/archive";
 import { createModelReleasePdf } from "@/services/modelRelease/pdf";
+import {
+  createReleaseRequestContext,
+  deliverRelease,
+  getErrorDetails,
+  getReleaseConfigurationStatus,
+  logReleaseEvent,
+  ReleaseRequestContext,
+  ReleaseStageError,
+  runReleaseStage,
+} from "@/services/releaseDelivery";
 import {
   createModelReleaseSchema,
   getMadridDate,
 } from "@/app/model-release/types";
 import { locales } from "@/i18n/config";
-import { sendEmail } from "@/services/mailer";
-import chalk from "chalk";
 import { NextResponse } from "next/server";
+import type { ReleaseStage } from "@/services/releaseDelivery";
 
 const getText = (formData: FormData, key: string): string =>
   formData.get(key)?.toString() ?? "";
@@ -37,7 +45,48 @@ const getErrorMessage = (
   }
 };
 
+const isRetryableStage = (stage?: ReleaseStage) =>
+  stage === "archive" ||
+  stage === "photographer_email" ||
+  stage === "client_email";
+
+const failureResponse = (
+  error: unknown,
+  locale: string,
+  context: ReleaseRequestContext,
+) => {
+  const copy = getModelReleaseCopy(locale);
+  const stage = error instanceof ReleaseStageError ? error.stage : undefined;
+  const retryable = isRetryableStage(stage);
+  logReleaseEvent({
+    ...context,
+    event: "release_submission_failed",
+    level: "error",
+    stage,
+    archiveName:
+      error instanceof ReleaseStageError ? error.archiveName : undefined,
+    error: getErrorDetails(error),
+  });
+  return NextResponse.json(
+    {
+      success: false,
+      message: `${copy.errorGeneric} ${copy.errorReference}: ${context.requestId}`,
+      requestId: context.requestId,
+      retryable,
+    },
+    { status: retryable ? 502 : 500 },
+  );
+};
+
 export async function POST(request: Request) {
+  const context = createReleaseRequestContext("model", request);
+  logReleaseEvent({
+    ...context,
+    event: "release_submission_received",
+    level: "info",
+    configuration: getReleaseConfigurationStatus(),
+  });
+
   try {
     const formData = await request.formData();
     const requestedLocale = getText(formData, "locale");
@@ -61,66 +110,62 @@ export async function POST(request: Request) {
     };
     const result = createModelReleaseSchema(releaseDate).safeParse(values);
 
-    if (!result.success) {
-      const firstIssue = result.error.issues[0];
-      const path = firstIssue?.path[0]?.toString() ?? "";
-      return NextResponse.json(
-        {
-          success: false,
-          message: getErrorMessage(firstIssue?.message ?? "", path, locale),
-        },
-        { status: 400 },
+    try {
+      if (!result.success) {
+        const firstIssue = result.error.issues[0];
+        const path = firstIssue?.path[0]?.toString() ?? "";
+        logReleaseEvent({
+          ...context,
+          event: "release_validation_failed",
+          level: "info",
+        });
+        return NextResponse.json(
+          {
+            success: false,
+            message: getErrorMessage(firstIssue?.message ?? "", path, locale),
+          },
+          { status: 400 },
+        );
+      }
+
+      const copy = getModelReleaseCopy(locale);
+      const pdf = await runReleaseStage(context, "pdf_generation", () =>
+        createModelReleasePdf({
+          values: result.data,
+          copy,
+          releaseDate,
+        }),
       );
+      const photographerEmail =
+        process.env.RELEASE_RECIPIENT_EMAIL ?? "info@boudoir.barcelona";
+      await deliverRelease({
+        ...context,
+        releaseDate,
+        pdf,
+        filename: `model-release-${releaseDate}.pdf`,
+        photographerEmail,
+        clientEmail: result.data.email,
+        subject: copy.emailSubject,
+        photographerText: (archiveName) =>
+          `${copy.title}\n\n${copy.fullName}: ${result.data.fullName}\n${copy.email}: ${result.data.email}\n${copy.releaseDate}: ${releaseDate}\n\nArchive reference: ${archiveName}`,
+        clientText: copy.successMessage,
+      });
+
+      logReleaseEvent({
+        ...context,
+        event: "release_submission_completed",
+        level: "info",
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: copy.successMessage,
+        requestId: context.requestId,
+      });
+    } catch (error) {
+      return failureResponse(error, locale, context);
     }
-
-    const copy = getModelReleaseCopy(locale);
-    const pdf = await createModelReleasePdf({
-      values: result.data,
-      copy,
-      releaseDate,
-    });
-    const archiveName = await archiveReleasePdf(pdf, releaseDate, "model");
-    const attachment = {
-      filename: `model-release-${releaseDate}.pdf`,
-      content: pdf,
-      contentType: "application/pdf",
-    };
-    const photographerEmail =
-      process.env.RELEASE_RECIPIENT_EMAIL ?? "info@boudoir.barcelona";
-    const emailText = `${copy.title}\n\n${copy.fullName}: ${result.data.fullName}\n${copy.email}: ${result.data.email}\n${copy.releaseDate}: ${releaseDate}\n\nArchive reference: ${archiveName}`;
-
-    const photographerDelivery = await sendEmail({
-      to: photographerEmail,
-      subject: copy.emailSubject,
-      text: emailText,
-      attachments: [attachment],
-    });
-    if (!photographerDelivery) {
-      return NextResponse.json(
-        { success: false, message: copy.errorGeneric },
-        { status: 502 },
-      );
-    }
-
-    const modelDelivery = await sendEmail({
-      to: result.data.email,
-      subject: copy.emailSubject,
-      text: copy.successMessage,
-      attachments: [attachment],
-    });
-    if (!modelDelivery) {
-      return NextResponse.json(
-        { success: false, message: copy.errorGeneric },
-        { status: 502 },
-      );
-    }
-
-    return NextResponse.json({ success: true, message: copy.successMessage });
   } catch (error) {
-    console.error(chalk.red("[ModelRelease] Submission error:"), error);
-    return NextResponse.json(
-      { success: false, message: getModelReleaseCopy("en").errorGeneric },
-      { status: 500 },
-    );
+    return failureResponse(error, "en", context);
   }
 }

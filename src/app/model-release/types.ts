@@ -91,6 +91,7 @@ export type ModelReleaseCopy = {
   errorEmail: string;
   errorPhone: string;
   errorSignature: string;
+  errorReference: string;
   emailSubject: string;
 };
 

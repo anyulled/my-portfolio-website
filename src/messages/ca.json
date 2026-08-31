@@ -83,6 +83,7 @@
     "error_phone": "Introdueix un número de telèfon internacional vàlid.",
     "error_session_date": "La data de la sessió és obligatòria.",
     "error_signature": "La signatura dibuixada és obligatòria.",
+    "error_reference": "Referència",
     "error_privacy_level": "Tria un nivell de privacitat per als permisos seleccionats.",
     "error_privacy_without_permission": "Selecciona un permís d'imatge abans de triar un nivell de privacitat.",
     "email_subject": "Cessió fotogràfica signada"
@@ -139,6 +140,7 @@
     "error_email": "Introdueix una adreça de correu vàlida.",
     "error_phone": "Introdueix un número de telèfon internacional vàlid.",
     "error_signature": "La signatura dibuixada és obligatòria.",
+    "error_reference": "Referència",
     "email_subject": "Cessió de model signada"
   },
   "contact_form": {

@@ -151,6 +151,7 @@
     "error_phone": "Introduce un número de teléfono internacional válido.",
     "error_session_date": "La fecha de la sesión es obligatoria.",
     "error_signature": "La firma dibujada es obligatoria.",
+    "error_reference": "Referencia",
     "error_privacy_level": "Elige un nivel de privacidad para los permisos seleccionados.",
     "error_privacy_without_permission": "Selecciona un permiso de imagen antes de elegir un nivel de privacidad.",
     "email_subject": "Cesión fotográfica firmada"
@@ -207,6 +208,7 @@
     "error_email": "Introduce una dirección de correo válida.",
     "error_phone": "Introduce un número de teléfono internacional válido.",
     "error_signature": "La firma dibujada es obligatoria.",
+    "error_reference": "Referencia",
     "email_subject": "Cesión de modelo firmada"
   },
   "contact_form": {

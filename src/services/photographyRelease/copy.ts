@@ -89,6 +89,7 @@ export const getReleaseCopy = (locale: string): ReleaseCopy => {
     errorPhone: source.error_phone,
     errorSessionDate: source.error_session_date,
     errorSignature: source.error_signature,
+    errorReference: source.error_reference,
     errorPrivacyLevel: source.error_privacy_level,
     errorPrivacyWithoutPermission: source.error_privacy_without_permission,
     emailSubject: source.email_subject,

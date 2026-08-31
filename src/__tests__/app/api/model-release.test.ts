@@ -29,7 +29,10 @@ const createRequest = (entries: Record<string, string>) => {
   Object.entries(entries).forEach(([key, value]) =>
     formData.append(key, value),
   );
-  return { formData: async () => formData } as unknown as Request;
+  return {
+    headers: new Headers(),
+    formData: async () => formData,
+  } as unknown as Request;
 };
 
 const validEntries = {
@@ -79,6 +82,7 @@ describe("Model release API", () => {
     );
 
     expect(response.status).toBe(200);
+    expect((await response.json()).requestId).toEqual(expect.any(String));
     expect(createModelReleasePdf).toHaveBeenCalledWith(
       expect.objectContaining({
         releaseDate: expect.not.stringMatching(/^1900/),
@@ -103,7 +107,8 @@ describe("Model release API", () => {
 
     const response = await POST(createRequest(validEntries));
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(502);
+    expect((await response.json()).retryable).toBe(true);
     expect(sendEmail).not.toHaveBeenCalled();
   });
 
@@ -148,6 +153,7 @@ describe("Model release API", () => {
     const response = await POST(createRequest(validEntries));
 
     expect(response.status).toBe(502);
+    expect((await response.json()).retryable).toBe(true);
     expect(archiveReleasePdf).toHaveBeenCalled();
     expect(sendEmail).toHaveBeenCalledTimes(1);
   });
@@ -161,6 +167,7 @@ describe("Model release API", () => {
     const response = await POST(createRequest(validEntries));
 
     expect(response.status).toBe(502);
+    expect((await response.json()).retryable).toBe(true);
     expect(archiveReleasePdf).toHaveBeenCalled();
     expect(sendEmail).toHaveBeenCalledTimes(2);
   });
