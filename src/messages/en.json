@@ -137,7 +137,6 @@
     "photographer_signature": "Photographer Signature",
     "signature_hint": "Draw your signature with your finger, stylus, or mouse in the box above.",
     "clear_signature": "Clear",
-    "agreement": "I have read and agree to the terms of this photography release.",
     "submit": "Sign and Submit Release",
     "submitting": "Generating signed release...",
     "success_title": "Release submitted successfully",
@@ -151,7 +150,6 @@
     "error_phone": "Enter a valid international phone number.",
     "error_session_date": "Session date is required.",
     "error_signature": "A drawn signature is required.",
-    "error_agreement": "You must agree to the release terms.",
     "error_privacy_level": "Choose a privacy level for the selected image permissions.",
     "error_privacy_without_permission": "Choose an image permission before selecting a privacy level.",
     "email_subject": "Signed Photography Release"
@@ -296,6 +294,7 @@
     "copyright": "All rights reserved.",
     "faq": "FAQ",
     "legal": "Legal Terms",
+    "photography_release": "Photography Release",
     "pricing": "Pricing",
     "privacy": "Privacy Terms",
     "session_preparation": "Session Preparation",

@@ -138,7 +138,6 @@
     "photographer_signature": "Firma del fotógrafo",
     "signature_hint": "Dibuja tu firma con el dedo, un lápiz táctil o el ratón en el recuadro.",
     "clear_signature": "Borrar",
-    "agreement": "He leído y acepto las condiciones de esta cesión fotográfica.",
     "submit": "Firmar y enviar la cesión",
     "submitting": "Generando la cesión firmada...",
     "success_title": "Cesión enviada correctamente",
@@ -152,7 +151,6 @@
     "error_phone": "Introduce un número de teléfono internacional válido.",
     "error_session_date": "La fecha de la sesión es obligatoria.",
     "error_signature": "La firma dibujada es obligatoria.",
-    "error_agreement": "Debes aceptar las condiciones de la cesión.",
     "error_privacy_level": "Elige un nivel de privacidad para los permisos seleccionados.",
     "error_privacy_without_permission": "Selecciona un permiso de imagen antes de elegir un nivel de privacidad.",
     "email_subject": "Cesión fotográfica firmada"
@@ -297,6 +295,7 @@
     "copyright": "Todos los derechos reservados.",
     "faq": "Preguntas Frecuentes",
     "legal": "Términos legales",
+    "photography_release": "Cesión fotográfica",
     "pricing": "Precios",
     "privacy": "Términos de Privacidad",
     "session_preparation": "Preparación de la sesión",

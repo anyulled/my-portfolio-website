@@ -26,7 +26,6 @@ const createReleaseFormData = (values: ReleaseFormValues, locale: string) => {
   formData.append("email", values.email);
   formData.append("phone", values.phone);
   formData.append("signature", values.signature);
-  formData.append("agreement", String(values.agreement));
   formData.append("locale", locale);
   values.usagePermissions.forEach((permission) =>
     formData.append("usagePermissions", permission),
@@ -107,7 +106,6 @@ export const PhotographyReleaseForm = ({
       usagePermissions: [],
       privacyLevel: undefined,
       signature: "",
-      agreement: false,
     },
   });
   const usagePermissions = useWatch({ control, name: "usagePermissions" });
@@ -150,7 +148,6 @@ export const PhotographyReleaseForm = ({
       <LegalSections t={t} />
       <SignatureSection
         t={t}
-        register={register}
         errors={errors}
         signature={signature}
         sessionDate={sessionDate}

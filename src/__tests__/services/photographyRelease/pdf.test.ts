@@ -14,7 +14,6 @@ const values: ReleaseFormValues = {
   privacyLevel: "anonymous",
   signature:
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
-  agreement: true,
 };
 
 describe("photography release PDF", () => {

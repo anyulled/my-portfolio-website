@@ -70,7 +70,6 @@
     "photographer_signature": "Signature du photographe",
     "signature_hint": "Dessinez votre signature avec votre doigt, un stylet ou votre souris dans le cadre.",
     "clear_signature": "Effacer",
-    "agreement": "J'ai lu et j'accepte les conditions de cette cession photographique.",
     "submit": "Signer et envoyer la cession",
     "submitting": "Génération de la cession signée...",
     "success_title": "Cession envoyée avec succès",
@@ -84,7 +83,6 @@
     "error_phone": "Saisissez un numéro de téléphone international valide.",
     "error_session_date": "La date de la séance est obligatoire.",
     "error_signature": "La signature dessinée est obligatoire.",
-    "error_agreement": "Vous devez accepter les conditions de la cession.",
     "error_privacy_level": "Choisissez un niveau de confidentialité pour les autorisations sélectionnées.",
     "error_privacy_without_permission": "Choisissez une autorisation d'image avant de sélectionner un niveau de confidentialité.",
     "email_subject": "Cession photographique signée"
@@ -159,6 +157,7 @@
     "cookies": "Cookies",
     "copyright": "Tous droits réservés.",
     "legal": "Mentions légales",
+    "photography_release": "Cession photographique",
     "privacy": "Conditions de confidentialité",
     "about": "À propos de moi",
     "pricing": "Tarifs",

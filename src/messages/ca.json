@@ -70,7 +70,6 @@
     "photographer_signature": "Signatura del fotògraf",
     "signature_hint": "Dibuixa la teva signatura amb el dit, un llapis tàctil o el ratolí dins del requadre.",
     "clear_signature": "Esborra",
-    "agreement": "He llegit i accepto les condicions d'aquesta cessió fotogràfica.",
     "submit": "Signa i envia la cessió",
     "submitting": "Generant la cessió signada...",
     "success_title": "Cessió enviada correctament",
@@ -84,7 +83,6 @@
     "error_phone": "Introdueix un número de telèfon internacional vàlid.",
     "error_session_date": "La data de la sessió és obligatòria.",
     "error_signature": "La signatura dibuixada és obligatòria.",
-    "error_agreement": "Has d'acceptar les condicions de la cessió.",
     "error_privacy_level": "Tria un nivell de privacitat per als permisos seleccionats.",
     "error_privacy_without_permission": "Selecciona un permís d'imatge abans de triar un nivell de privacitat.",
     "email_subject": "Cessió fotogràfica signada"
@@ -159,6 +157,7 @@
     "cookies": "Cookies",
     "copyright": "Tots els drets reservats.",
     "legal": "Termes Legals",
+    "photography_release": "Cessió fotogràfica",
     "privacy": "Termes de Privacitat",
     "about": "Sobre mi",
     "pricing": "Preus",

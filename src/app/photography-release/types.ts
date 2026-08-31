@@ -39,7 +39,6 @@ export const releaseFormSchema = z
     signature: z
       .string()
       .startsWith("data:image/png;base64,", { message: "error_signature" }),
-    agreement: z.boolean().refine(Boolean, { message: "error_agreement" }),
   })
   .superRefine((data, context) => {
     if (data.birthDate > data.sessionDate) {
@@ -114,7 +113,6 @@ export type ReleaseCopy = {
   photographerSignature: string;
   signatureHint: string;
   clearSignature: string;
-  agreement: string;
   submit: string;
   submitting: string;
   successTitle: string;
@@ -128,7 +126,6 @@ export type ReleaseCopy = {
   errorPhone: string;
   errorSessionDate: string;
   errorSignature: string;
-  errorAgreement: string;
   errorPrivacyLevel: string;
   errorPrivacyWithoutPermission: string;
   emailSubject: string;

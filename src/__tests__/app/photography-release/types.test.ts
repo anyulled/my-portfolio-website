@@ -15,7 +15,6 @@ const validValues = {
   usagePermissions: [],
   privacyLevel: undefined,
   signature,
-  agreement: true,
 };
 
 describe("photography release schema", () => {
@@ -25,7 +24,7 @@ describe("photography release schema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("requires the client identity fields and signature agreement", () => {
+  it("requires the client identity fields and signature", () => {
     const result = releaseFormSchema.safeParse({
       ...validValues,
       fullName: "",
@@ -34,7 +33,6 @@ describe("photography release schema", () => {
       email: "invalid",
       phone: "",
       signature: "",
-      agreement: false,
     });
 
     expect(result.success).toBe(false);
@@ -49,7 +47,6 @@ describe("photography release schema", () => {
         "email",
         "phone",
         "signature",
-        "agreement",
       ]),
     );
   });

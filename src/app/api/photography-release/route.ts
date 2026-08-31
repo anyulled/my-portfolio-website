@@ -34,8 +34,6 @@ const errorMessageFor = (
       return copy.errorSessionDate;
     case "signature":
       return copy.errorSignature;
-    case "agreement":
-      return copy.errorAgreement;
     case "privacyLevel":
       return issueMessage === "error_privacy_without_permission"
         ? copy.errorPrivacyWithoutPermission
@@ -63,7 +61,6 @@ const createSubmission = (formData: FormData) => {
       .map((value) => value.toString()),
     privacyLevel: getText(formData, "privacyLevel") || undefined,
     signature: getText(formData, "signature"),
-    agreement: getText(formData, "agreement") === "true",
   };
 
   return { locale, sessionDate, result: releaseFormSchema.safeParse(values) };

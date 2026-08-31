@@ -242,12 +242,11 @@ export const LegalSections = ({ t }: { t: (key: string) => string }) => (
 
 export const SignatureSection = ({
   t,
-  register,
   errors,
   signature,
   sessionDate,
   setValue,
-}: ReleaseFieldsProps & {
+}: Omit<ReleaseFieldsProps, "register"> & {
   signature: string;
   sessionDate: string;
   setValue: UseFormSetValue<ReleaseFormValues>;
@@ -272,19 +271,6 @@ export const SignatureSection = ({
       <p className="mt-2 font-[cursive] text-xl">{PHOTOGRAPHER.name}</p>
       <p className="mt-1 text-muted-foreground">{sessionDate}</p>
     </div>
-    <label className="flex items-start gap-3 text-sm">
-      <input
-        type="checkbox"
-        {...register("agreement")}
-        className="mt-1 h-4 w-4 accent-primary"
-      />
-      <span>{t("agreement")}</span>
-    </label>
-    {translatedError(t, errors.agreement?.message) && (
-      <p role="alert" className="text-xs text-destructive">
-        {translatedError(t, errors.agreement?.message)}
-      </p>
-    )}
   </section>
 );
 

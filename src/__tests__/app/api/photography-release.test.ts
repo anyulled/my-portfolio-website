@@ -47,7 +47,6 @@ const validEntries = {
   usagePermissions: ["social"],
   privacyLevel: "cropped",
   signature: "data:image/png;base64,signature",
-  agreement: "true",
   locale: "en",
   sessionDate: "1900-01-01",
 };

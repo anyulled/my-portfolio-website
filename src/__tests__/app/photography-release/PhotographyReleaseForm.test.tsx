@@ -47,6 +47,7 @@ describe("PhotographyReleaseForm", () => {
     expect(screen.getByLabelText("document_number *")).toBeInTheDocument();
     expect(screen.getByLabelText("email *")).toBeInTheDocument();
     expect(screen.getByLabelText("phone *")).toBeInTheDocument();
+    expect(screen.queryByText("agreement")).not.toBeInTheDocument();
     expect(screen.getByRole("group")).toBeDisabled();
   });
 

@@ -70,7 +70,6 @@
     "photographer_signature": "Firma del fotografo",
     "signature_hint": "Disegna la tua firma con il dito, lo stilo o il mouse nel riquadro.",
     "clear_signature": "Cancella",
-    "agreement": "Ho letto e accetto i termini della presente liberatoria fotografica.",
     "submit": "Firma e invia la liberatoria",
     "submitting": "Generazione della liberatoria firmata...",
     "success_title": "Liberatoria inviata correttamente",
@@ -84,7 +83,6 @@
     "error_phone": "Inserisci un numero di telefono internazionale valido.",
     "error_session_date": "La data della sessione è obbligatoria.",
     "error_signature": "La firma disegnata è obbligatoria.",
-    "error_agreement": "Devi accettare i termini della liberatoria.",
     "error_privacy_level": "Scegli un livello di privacy per le autorizzazioni selezionate.",
     "error_privacy_without_permission": "Scegli un'autorizzazione per le immagini prima di selezionare un livello di privacy.",
     "email_subject": "Liberatoria fotografica firmata"
@@ -159,6 +157,7 @@
     "cookies": "Cookie",
     "copyright": "Tutti i diritti riservati.",
     "legal": "Termini Legali",
+    "photography_release": "Liberatoria fotografica",
     "privacy": "Termini di Privacy",
     "about": "Chi Sono",
     "pricing": "Prezzi",
