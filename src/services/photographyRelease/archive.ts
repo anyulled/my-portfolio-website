@@ -30,9 +30,10 @@ export const archiveReleasePdf = async (
     throw new Error("GCP_RELEASES_BUCKET is not configured");
   }
 
+  const releaseRoot = process.env.GCP_RELEASES_PREFIX ?? "releases";
   const prefix =
     releaseType === "model" ? "model-releases" : "photography-releases";
-  const objectName = `${prefix}/${sessionDate.slice(0, 7)}/${randomUUID()}.pdf`;
+  const objectName = `${releaseRoot}/${prefix}/${sessionDate.slice(0, 7)}/${randomUUID()}.pdf`;
   const storage = createGCPStorageClient() as unknown as ReleaseStorage;
   await storage
     .bucket(bucketName)

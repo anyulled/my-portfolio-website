@@ -12,22 +12,26 @@ describe("archiveReleasePdf", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.GCP_RELEASES_BUCKET = "private-releases";
+    process.env.GCP_RELEASES_BUCKET = "sensuelle-boudoir-homepage";
+    process.env.GCP_RELEASES_PREFIX = "releases";
     jest.mocked(createGCPStorageClient).mockReturnValue({ bucket } as never);
   });
 
   afterEach(() => {
     delete process.env.GCP_RELEASES_BUCKET;
+    delete process.env.GCP_RELEASES_PREFIX;
   });
 
-  it("stores the PDF in the dedicated bucket with indefinite retention metadata", async () => {
+  it("stores the PDF in the release prefix with indefinite retention metadata", async () => {
     const objectName = await archiveReleasePdf(
       Buffer.from("pdf"),
       "2026-08-31",
     );
 
-    expect(objectName).toMatch(/^photography-releases\/2026-08\/[^/]+\.pdf$/);
-    expect(bucket).toHaveBeenCalledWith("private-releases");
+    expect(objectName).toMatch(
+      /^releases\/photography-releases\/2026-08\/[^/]+\.pdf$/,
+    );
+    expect(bucket).toHaveBeenCalledWith("sensuelle-boudoir-homepage");
     expect(file).toHaveBeenCalledWith(objectName);
     expect(save).toHaveBeenCalledWith(
       Buffer.from("pdf"),
@@ -44,7 +48,20 @@ describe("archiveReleasePdf", () => {
     );
   });
 
-  it("requires a dedicated archive bucket configuration", async () => {
+  it("uses the same release prefix for model PDFs", async () => {
+    const objectName = await archiveReleasePdf(
+      Buffer.from("pdf"),
+      "2026-08-31",
+      "model",
+    );
+
+    expect(objectName).toMatch(
+      /^releases\/model-releases\/2026-08\/[^/]+\.pdf$/,
+    );
+    expect(bucket).toHaveBeenCalledWith("sensuelle-boudoir-homepage");
+  });
+
+  it("requires an archive bucket configuration", async () => {
     delete process.env.GCP_RELEASES_BUCKET;
 
     await expect(
