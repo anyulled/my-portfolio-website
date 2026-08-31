@@ -180,27 +180,27 @@ export const drawHeader = (
   page: PDFPage,
   copy: Pick<ReleaseCopy, "title">,
   font: PDFFont,
-  boldFont: PDFFont,
+  logoFont: PDFFont,
 ) => {
   page.drawRectangle({
     x: LEFT,
     y: PAGE_HEIGHT - 82,
-    width: 48,
+    width: 90,
     height: 48,
     color: rgb(0.12, 0.12, 0.12),
   });
   page.drawText("Sensuelle", {
-    x: LEFT + 4,
-    y: PAGE_HEIGHT - 57,
-    size: 7,
-    font,
+    x: LEFT + 8,
+    y: PAGE_HEIGHT - 56,
+    size: 14,
+    font: logoFont,
     color: rgb(0.85, 0.76, 0.58),
   });
-  page.drawText("BOUDOIR", {
-    x: LEFT + 8,
-    y: PAGE_HEIGHT - 67,
-    size: 4.5,
-    font: boldFont,
+  page.drawText("Boudoir", {
+    x: LEFT + 27,
+    y: PAGE_HEIGHT - 73,
+    size: 14,
+    font: logoFont,
     color: rgb(0.85, 0.76, 0.58),
   });
   page.drawText(copy.title.toUpperCase(), {

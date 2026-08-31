@@ -43,13 +43,19 @@ export const createPhotographyReleasePdf = async ({
   );
   const font = await pdf.embedFont(new Uint8Array(fontData), { subset: true });
   const boldFont = font;
+  const logoFontData = await readFile(
+    path.join(process.cwd(), "public", "fonts", "DancingScript-Variable.ttf"),
+  );
+  const logoFont = await pdf.embedFont(new Uint8Array(logoFontData), {
+    subset: true,
+  });
   const page1 = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   const page2 = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   pdf.setTitle(copy.title);
   pdf.setAuthor(PHOTOGRAPHER.name);
   pdf.setSubject("Signed photography release");
 
-  drawHeader(page1, copy, font, boldFont);
+  drawHeader(page1, copy, font, logoFont);
   const y0 = PAGE_HEIGHT - 102;
   drawLabelValue(
     page1,
@@ -184,7 +190,7 @@ export const createPhotographyReleasePdf = async ({
     );
   });
 
-  drawHeader(page2, copy, font, boldFont);
+  drawHeader(page2, copy, font, logoFont);
   const y13 = PAGE_HEIGHT - 110;
   const y14 = drawSection(
     page2,

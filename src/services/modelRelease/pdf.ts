@@ -150,6 +150,12 @@ export const createModelReleasePdf = async ({
   );
   const font = await pdf.embedFont(new Uint8Array(fontData), { subset: true });
   const boldFont = font;
+  const logoFontData = await readFile(
+    path.join(process.cwd(), "public", "fonts", "DancingScript-Variable.ttf"),
+  );
+  const logoFont = await pdf.embedFont(new Uint8Array(logoFontData), {
+    subset: true,
+  });
   pdf.setTitle(copy.title);
   pdf.setAuthor(PHOTOGRAPHER.name);
   pdf.setSubject("Signed model release");
@@ -158,10 +164,10 @@ export const createModelReleasePdf = async ({
     page: pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT]),
     y: PAGE_HEIGHT - 110,
   };
-  drawHeader(state.page, copy, font, boldFont);
+  drawHeader(state.page, copy, font, logoFont);
   const nextPage = () => {
     state.page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-    drawHeader(state.page, copy, font, boldFont);
+    drawHeader(state.page, copy, font, logoFont);
     state.y = PAGE_HEIGHT - 110;
   };
   const drawField = (label: string, value: string) => {
