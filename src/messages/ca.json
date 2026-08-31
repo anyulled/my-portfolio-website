@@ -146,10 +146,21 @@
   "contact_form": {
     "contact_us": "Contacta'ns",
     "email": "El teu correu electrònic",
+    "error_delivery": "Ho sentim, no podem enviar el teu missatge en aquest moment. Torna-ho a provar més tard.",
+    "error_email": "Introdueix una adreça de correu vàlida.",
+    "error_generic": "S'ha produït un error en enviar el teu missatge. Torna-ho a provar.",
+    "error_message_min_length": "El teu missatge ha de tenir almenys 200 caràcters.",
+    "error_message_spaces": "El teu missatge ha d'incloure espais entre les paraules.",
+    "error_name": "Introdueix el teu nom.",
+    "error_title": "Error",
     "message": "El teu missatge",
+    "message_hint": "Escriu almenys 200 caràcters i inclou espais entre les paraules.",
     "name": "El teu nom",
     "send_message": "Envia Missatge",
-    "submit": "Envia"
+    "sending": "Enviant...",
+    "submit": "Envia",
+    "success_message": "Gràcies pel teu missatge. Ens posarem en contacte amb tu aviat!",
+    "success_title": "Èxit"
   },
   "cookie": {
     "accept": "Accepta",

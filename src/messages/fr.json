@@ -146,10 +146,21 @@
   "contact_form": {
     "contact_us": "Contactez-nous",
     "email": "Votre email",
+    "error_delivery": "Désolé, nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer plus tard.",
+    "error_email": "Saisissez une adresse e-mail valide.",
+    "error_generic": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer.",
+    "error_message_min_length": "Votre message doit comporter au moins 200 caractères.",
+    "error_message_spaces": "Votre message doit contenir des espaces entre les mots.",
+    "error_name": "Saisissez votre nom.",
+    "error_title": "Erreur",
     "message": "Votre message",
+    "message_hint": "Veuillez écrire au moins 200 caractères et inclure des espaces entre les mots.",
     "name": "Votre nom",
     "send_message": "Envoyer le message",
-    "submit": "Envoyer"
+    "sending": "Envoi en cours...",
+    "submit": "Envoyer",
+    "success_message": "Merci pour votre message. Nous vous répondrons bientôt !",
+    "success_title": "Succès"
   },
   "cookie": {
     "accept": "Accepter",

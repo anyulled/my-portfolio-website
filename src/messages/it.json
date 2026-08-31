@@ -146,10 +146,21 @@
   "contact_form": {
     "contact_us": "Contattaci",
     "email": "La tua email",
+    "error_delivery": "Spiacenti, al momento non possiamo inviare il tuo messaggio. Riprova più tardi.",
+    "error_email": "Inserisci un indirizzo e-mail valido.",
+    "error_generic": "Si è verificato un errore durante l'invio del messaggio. Riprova.",
+    "error_message_min_length": "Il tuo messaggio deve contenere almeno 200 caratteri.",
+    "error_message_spaces": "Il tuo messaggio deve includere spazi tra le parole.",
+    "error_name": "Inserisci il tuo nome.",
+    "error_title": "Errore",
     "message": "Il tuo messaggio",
+    "message_hint": "Scrivi almeno 200 caratteri e includi spazi tra le parole.",
     "name": "Il tuo nome",
     "send_message": "Invia Messaggio",
-    "submit": "Invia"
+    "sending": "Invio in corso...",
+    "submit": "Invia",
+    "success_message": "Grazie per il tuo messaggio. Ti risponderemo presto!",
+    "success_title": "Successo"
   },
   "cookie": {
     "accept": "Accetta",

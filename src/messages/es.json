@@ -214,10 +214,21 @@
   "contact_form": {
     "contact_us": "Contáctanos",
     "email": "Tu correo electrónico",
+    "error_delivery": "Lo sentimos, no podemos enviar tu mensaje en este momento. Inténtalo más tarde.",
+    "error_email": "Introduce una dirección de correo válida.",
+    "error_generic": "Se ha producido un error al enviar tu mensaje. Inténtalo de nuevo.",
+    "error_message_min_length": "Tu mensaje debe tener al menos 200 caracteres.",
+    "error_message_spaces": "Tu mensaje debe incluir espacios entre las palabras.",
+    "error_name": "Introduce tu nombre.",
+    "error_title": "Error",
     "message": "Tu mensaje",
+    "message_hint": "Escribe al menos 200 caracteres e incluye espacios entre las palabras.",
     "name": "Tu nombre",
     "send_message": "Enviar Mensaje",
-    "submit": "Enviar"
+    "sending": "Enviando...",
+    "submit": "Enviar",
+    "success_message": "Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.",
+    "success_title": "Éxito"
   },
   "cookie": {
     "accept": "Aceptar",
