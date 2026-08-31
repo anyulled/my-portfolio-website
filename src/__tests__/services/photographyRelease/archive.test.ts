@@ -61,6 +61,19 @@ describe("archiveReleasePdf", () => {
     expect(bucket).toHaveBeenCalledWith("sensuelle-boudoir-homepage");
   });
 
+  it("defaults to the release prefix when it is not configured", async () => {
+    delete process.env.GCP_RELEASES_PREFIX;
+
+    const objectName = await archiveReleasePdf(
+      Buffer.from("pdf"),
+      "2026-08-31",
+    );
+
+    expect(objectName).toMatch(
+      /^releases\/photography-releases\/2026-08\/[^/]+\.pdf$/,
+    );
+  });
+
   it("requires an archive bucket configuration", async () => {
     delete process.env.GCP_RELEASES_BUCKET;
 
