@@ -15,6 +15,7 @@ const siteLinks = [
   { name: "faq", href: "/faq" },
   { name: "session_preparation", href: "/session-preparation" },
   { name: "photography_release", href: "/photography-release" },
+  { name: "model_release", href: "/model-release" },
 ];
 
 export default function Footer() {
