@@ -87,7 +87,7 @@
     "lint-staged": "^17.3.0",
     "postcss": "^8.5.18",
     "prettier": "^3.9.4",
-    "supabase": "^2.109.0",
+    "supabase": "^2.116.0",
     "tailwindcss": "^4.3.0",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
