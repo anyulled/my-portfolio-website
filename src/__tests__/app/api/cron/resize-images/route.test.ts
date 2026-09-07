@@ -1,4 +1,4 @@
-/** @jest-environment node */
+/** @jest-environment @stryker-mutator/jest-runner/jest-env/node */
 // Mock next/server
 jest.mock("next/server", () => ({
   NextResponse: {

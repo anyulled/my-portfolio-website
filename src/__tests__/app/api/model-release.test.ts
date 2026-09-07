@@ -52,6 +52,14 @@ const validEntries = {
 };
 
 describe("Model release API", () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-01-15T12:00:00.000Z"));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.mocked(createModelReleasePdf).mockResolvedValue(Buffer.from("pdf"));

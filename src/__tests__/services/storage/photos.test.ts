@@ -1,4 +1,4 @@
-/** @jest-environment node */
+/** @jest-environment @stryker-mutator/jest-runner/jest-env/node */
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { getPhotosFromStorage } from "@/services/storage/photos";

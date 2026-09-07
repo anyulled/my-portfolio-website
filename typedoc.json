@@ -1,6 +1,7 @@
 {
   "entryPoints": ["src"],
-  "out": "docs",
+  "entryPointStrategy": "expand",
+  "out": "docs/api-reference",
   "name": "My Portfolio Website",
   "readme": "none",
   "exclude": ["**/*.spec.ts", "**/*.test.ts"],
