@@ -58,12 +58,12 @@ jest.mock("next/font/google", () => ({
 jest.mock("next-intl/server", () => ({
   getTranslations: jest.fn(() =>
     Promise.resolve((key: string) => {
-      const translations: Record<string, string> = {
-        what_our_clients_say: "Mocked What Our Clients Say",
-        discover_transformative_experiences: "Mocked Discover Experiences",
-        more_client_stories: "Mocked More Client Stories",
-      };
-      return translations[key] || key;
+      const translations = new Map([
+        ["what_our_clients_say", "Mocked What Our Clients Say"],
+        ["discover_transformative_experiences", "Mocked Discover Experiences"],
+        ["more_client_stories", "Mocked More Client Stories"],
+      ]);
+      return translations.get(key) || key;
     }),
   ),
 }));

@@ -15,7 +15,7 @@ describe("extractNameFromTag (property-based)", () => {
         fc.integer({ min: 0 }),
         (data, indexOffset) => {
           const targetIndex = indexOffset % data.length;
-          const targetTag = data[targetIndex].tag;
+          const targetTag = data.at(targetIndex)?.tag ?? "";
 
           /*
            * We need to make sure the generated tags are unique in our sub-test context

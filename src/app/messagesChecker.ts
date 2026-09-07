@@ -1,13 +1,15 @@
 import chalk from "chalk";
-import fs from "fs";
+import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "path";
+
+const requireJson = createRequire(import.meta.url);
 
 const referenceFilePath = path.join("src/messages", "en.json");
 const messagesFolderPath = path.join("src/messages");
 
 const getKeysFromJsonFile = (filePath: string): string[] => {
-  const data = fs.readFileSync(filePath, "utf-8");
-  const jsonDataRaw: unknown = JSON.parse(data);
+  const jsonDataRaw: unknown = requireJson(path.resolve(filePath));
   const isRecord = (val: unknown): val is Record<string, unknown> =>
     typeof val === "object" && val !== null;
 
@@ -20,9 +22,8 @@ const getKeysFromJsonFile = (filePath: string): string[] => {
     const isRecord = (val: unknown): val is Record<string, unknown> =>
       typeof val === "object" && val !== null;
 
-    return Object.keys(obj).flatMap((key) => {
+    return Object.entries(obj).flatMap(([key, value]) => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
-      const value = obj[key];
       if (isRecord(value)) {
         return collectKeys(value, fullKey);
       }
