@@ -6,6 +6,7 @@ import SocialMedia from "@/components/SocialMedia";
 import { Separator } from "@/components/ui/separator";
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import type { Photo } from "@/types/photos";
+import { randomInt } from "node:crypto";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -47,9 +48,7 @@ const fallbackGalleryPhotos = [
 async function selectRandomPhoto(photos: Photo[]): Promise<Photo | null> {
   "use cache";
 
-  return photos.length > 0
-    ? photos[Math.floor(Math.random() * photos.length)]
-    : null;
+  return photos.length > 0 ? photos[randomInt(photos.length)] : null;
 }
 
 export default async function HomePage() {

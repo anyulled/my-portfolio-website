@@ -1,6 +1,7 @@
 import AnimatedPackages from "@/components/AnimatedPackages";
 import FadeInTitle from "@/components/FadeInTitle";
 import { openGraph } from "@/lib/openGraph";
+import { randomInt } from "node:crypto";
 import {
   Camera,
   Check,
@@ -179,7 +180,7 @@ const getRandomPhotosForPricing = (
       continue;
     }
 
-    const getRandomIndex = () => Math.floor(Math.random() * photosCount);
+    const getRandomIndex = () => randomInt(photosCount);
     const findUniqueIndex = (): number => {
       const idx = getRandomIndex();
       return selectedIndices.has(idx) ? findUniqueIndex() : idx;
