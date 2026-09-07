@@ -27,7 +27,7 @@
     "chalk": "^6.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^13.1.0",
+    "framer-motion": "^13.2.0",
     "gsap": "^3.13.0",
     "lenis": "latest",
     "lucide-react": "^1.29.0",
