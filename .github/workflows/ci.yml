@@ -16,7 +16,7 @@ jobs:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL || vars.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           filter: tree:0
           fetch-depth: 0
@@ -28,7 +28,7 @@ jobs:
       # - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
 
       # Cache node_modules
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 20
           cache: "npm"
@@ -37,7 +37,7 @@ jobs:
           npm config set fetch-retries 5
           npm config set fetch-retry-mintimeout 20000
           npm config set fetch-retry-maxtimeout 120000
-          npm ci
+          npm ci --ignore-scripts
 
       - run: npm run lint:ci
       - run: npm run format:check
@@ -52,9 +52,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - name: Link Checker
-        uses: lycheeverse/lychee-action@v2
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
         with:
           args: --verbose --no-progress --exclude 'http://localhost:3000/' './**/*.md' './**/*.html'
           fail: true
@@ -68,11 +68,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           fetch-depth: 0
 
-      - uses: markmishaev76/ai-harness-scorecard@v1
+      - uses: markmishaev76/ai-harness-scorecard@baf1c269e091415d6616a9502a6a045a1bcf78b0
         id: scorecard
 
       - name: Commit badge and report
