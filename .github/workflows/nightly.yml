@@ -23,7 +23,7 @@ jobs:
           cache: "npm"
 
       - run: |
-          npm ci --legacy-peer-deps
+          npm ci
 
       - name: Strict Lints
         run: npm run lint:ci

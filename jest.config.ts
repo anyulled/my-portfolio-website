@@ -6,10 +6,8 @@ const createJestConfig = nextJest({
 
 /** Custom Jest configuration */
 const customJestConfig = {
-  // Use ts-jest for TypeScript files
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
-    "^.+\\.(js|jsx)$": ["babel-jest", { presets: ["next/babel"] }] as [
+    "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }] as [
       string,
       Record<string, unknown>,
     ],
@@ -24,9 +22,13 @@ const customJestConfig = {
     "^uncrypto$": "<rootDir>/src/__mocks__/uncrypto.js",
     "^@google-cloud/storage$": "<rootDir>/src/__mocks__/googleCloudStorage.ts",
   },
-  testEnvironment: "jest-environment-jsdom",
+  testEnvironment: "@stryker-mutator/jest-runner/jest-env/jsdom",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
-  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
+  testPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/.next/",
+    "<rootDir>/.stryker-tmp/",
+  ],
   transformIgnorePatterns: [
     "/node_modules/(?!(chalk|@upstash|@sentry|next-intl|uncrypto|isows|@supabase|gsap)/)",
     "^.+\\.module\\.(css|sass|scss)$",

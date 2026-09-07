@@ -1,4 +1,4 @@
-/** @jest-environment node */
+/** @jest-environment @stryker-mutator/jest-runner/jest-env/node */
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { getPhotosFromStorage as getPhotosFromStorageUncached } from "@/services/storage/photos";
 

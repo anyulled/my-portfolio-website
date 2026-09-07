@@ -50,3 +50,4 @@ next-env.d.ts
 # Next.js
 .next
 out
+docs/api-reference
