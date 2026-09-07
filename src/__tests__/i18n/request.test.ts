@@ -33,7 +33,7 @@ const createRequestConfigForTesting = (
           return null;
         }
 
-        return mockMessages[locale] || {};
+        return new Map(Object.entries(mockMessages)).get(locale) || {};
       } catch (importError) {
         console.error(
           `[ i18n ] Failed to import messages for locale ${locale}:`,
@@ -55,7 +55,10 @@ const createRequestConfigForTesting = (
 
     return {
       locale: messages ? locale : FALLBACK_LOCALE,
-      messages: messages || mockMessages[FALLBACK_LOCALE] || {},
+      messages:
+        messages ||
+        new Map(Object.entries(mockMessages)).get(FALLBACK_LOCALE) ||
+        {},
     };
   };
 };

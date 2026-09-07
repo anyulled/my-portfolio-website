@@ -187,7 +187,7 @@ const getRandomPhotosForPricing = (
 
     const randomIndex = findUniqueIndex();
     selectedIndices.add(randomIndex);
-    const selectedUrl = pricingPhotos[randomIndex]?.srcSet[0]?.src || "";
+    const selectedUrl = pricingPhotos.at(randomIndex)?.srcSet[0]?.src || "";
     images.splice(i, 1, selectedUrl);
   }
 

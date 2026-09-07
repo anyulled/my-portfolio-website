@@ -21,10 +21,10 @@ const loadEnv = () => {
         const trimmedLine = line.trim();
         if (!trimmedLine || trimmedLine.startsWith("#")) return;
 
-        const match = trimmedLine.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
-        if (match) {
-          const key = match[1];
-          let value = match[2] || "";
+        const separatorIndex = trimmedLine.indexOf("=");
+        if (separatorIndex > 0) {
+          const key = trimmedLine.slice(0, separatorIndex).trim();
+          let value = trimmedLine.slice(separatorIndex + 1).trim();
 
           // Remove surrounding quotes
           if (

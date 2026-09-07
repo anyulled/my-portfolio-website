@@ -217,7 +217,7 @@ const getCollabItem = (
   label: string,
 ) => ({
   index,
-  src: images?.[index]?.srcSet[0]?.src || fallback,
+  src: images?.at(index)?.srcSet[0]?.src || fallback,
   alt,
   label,
 });
