@@ -1,0 +1,21 @@
+# Instagram client setup
+
+## Supabase
+
+Apply `supabase/migrations/20260911150000_create_instagram_model_workflow.sql` to the project configured by `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+
+Configure the sole operator with `INSTAGRAM_ADMIN_EMAIL`, `SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+## AI
+
+Configure `GROQ_API_KEY`. The default model is `openai/gpt-oss-20b`; override it with `GROQ_MODEL` when required.
+
+## Meta
+
+Configure `META_APP_ID`, `META_APP_SECRET`, `META_REDIRECT_URI`, `META_INSTAGRAM_SCOPES`, `INSTAGRAM_GRAPH_API_VERSION`, and `INSTAGRAM_OAUTH_STATE_SECRET`.
+
+Set the Meta webhook callback to `/api/instagram/webhook` and set `INSTAGRAM_WEBHOOK_VERIFY_TOKEN` to the verification token configured in Meta.
+
+Open `/instagram`, sign in with the configured email through the magic link, and connect each professional account independently. Do not put access tokens or secrets in client-side variables.
+
+Production use requires the Meta app to be configured for the approved Instagram permissions and webhook subscription. Until then, keep the app in test mode with the authorized test accounts.

@@ -130,7 +130,7 @@ describe("Model release API", () => {
     [
       "age",
       "birthDate",
-      "2008-09-01",
+      "2009-01-01",
       "You must be at least 18 years old to sign this release.",
     ],
     [

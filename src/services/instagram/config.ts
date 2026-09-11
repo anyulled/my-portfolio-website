@@ -1,0 +1,80 @@
+import { instagramHandleSchema, type InstagramHandle } from "./types";
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+export const getInstagramPublicUrl = () =>
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://boudoir.barcelona";
+
+export const getInstagramModel = () =>
+  process.env.GROQ_MODEL ?? "openai/gpt-oss-20b";
+
+export const getInstagramHandle = (value: string): InstagramHandle => {
+  const result = instagramHandleSchema.safeParse(value);
+  if (!result.success) {
+    throw new Error("Unsupported Instagram account handle");
+  }
+  return result.data;
+};
+
+export const getInstagramAccountHandle = (instagramUserId: string) => {
+  const configuredAccount = Object.entries({
+    anyulled: process.env.INSTAGRAM_ANYULLED_USER_ID,
+    sensuelleboidoir: process.env.INSTAGRAM_SENSUELLEBOIDOIR_USER_ID,
+  }).find(([, accountId]) => accountId === instagramUserId);
+
+  if (!configuredAccount) {
+    throw new Error("Instagram account is not configured");
+  }
+
+  return getInstagramHandle(configuredAccount[0]);
+};
+
+const getRequiredEnvironmentValue = (name: string) => {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`${name} is required`);
+  }
+  return value;
+};
+
+export const createInstagramOAuthState = (handle: InstagramHandle) => {
+  const payload = `${handle}.${Date.now()}`;
+  const signature = createHmac(
+    "sha256",
+    getRequiredEnvironmentValue("INSTAGRAM_OAUTH_STATE_SECRET"),
+  )
+    .update(payload)
+    .digest("hex");
+  return `${payload}.${signature}`;
+};
+
+export const parseInstagramOAuthState = (state: string) => {
+  const parts = state.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Invalid Instagram OAuth state");
+  }
+  const [handle, timestamp, signature] = parts;
+  const payload = `${handle}.${timestamp}`;
+  const expected = createHmac(
+    "sha256",
+    getRequiredEnvironmentValue("INSTAGRAM_OAUTH_STATE_SECRET"),
+  )
+    .update(payload)
+    .digest("hex");
+  if (
+    !signature ||
+    !timingSafeEqual(Buffer.from(signature), Buffer.from(expected)) ||
+    Number.isNaN(Number(timestamp)) ||
+    Date.now() - Number(timestamp) > 10 * 60 * 1000
+  ) {
+    throw new Error("Invalid or expired Instagram OAuth state");
+  }
+  return getInstagramHandle(handle);
+};
+
+export const getInstagramOAuthConfig = () => ({
+  appId: getRequiredEnvironmentValue("META_APP_ID"),
+  appSecret: getRequiredEnvironmentValue("META_APP_SECRET"),
+  redirectUri: getRequiredEnvironmentValue("META_REDIRECT_URI"),
+  scopes: getRequiredEnvironmentValue("META_INSTAGRAM_SCOPES"),
+  graphApiVersion: getRequiredEnvironmentValue("INSTAGRAM_GRAPH_API_VERSION"),
+});

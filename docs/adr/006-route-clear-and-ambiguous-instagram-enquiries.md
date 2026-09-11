@@ -1,0 +1,5 @@
+# Route Instagram enquiries by clear intent and required context
+
+The agent will automatically send one localized response for clearly identified model opportunities that explicitly identify the sender as a model, explicitly mention Barcelona, and explicitly mention paid photography work, linking to `src/app/booking-a-session`. It will automatically send potential client enquiries to `src/app/pricing`, even when their city or session type is not specified, provided their intent to hire the photographer is clear. Conversations where identity or intent cannot be established confidently will enter the unified inbox for Manual Approval. No route may accept or negotiate conditions, and every response must use the originating Instagram account.
+
+The model workflow will retain only a Relevant Conversation Record: the triggering message, limited context, account provenance, conversation identifier, detected language, classification, confidence, and processing state. It will not import images or full conversation history by default.

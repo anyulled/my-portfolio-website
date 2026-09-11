@@ -423,6 +423,8 @@
     "select_payment": "Seleziona tipo di pagamento",
     "submit": "Invia Richiesta di Prenotazione",
     "submitting": "Invio in corso...",
+    "privacy_notice": "Inviando questo modulo, prendi atto della nostra informativa sulla privacy. Ciò non costituisce accettazione di una liberatoria per l'uso dell'immagine.",
+    "privacy_link": "Leggi l'informativa sulla privacy",
     "validation_error": "Per favore, correggi gli errori nel modulo prima di inviare",
     "error_full_name": "Il nome completo è obbligatorio",
     "error_social_account": "L'account social è obbligatorio",

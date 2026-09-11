@@ -15,6 +15,10 @@ export const useBookingForm = (reset: (values?: FormValues) => void) => {
           formData.append(key, String(value));
         }
       });
+      const leadToken = new URLSearchParams(window.location.search).get("lead");
+      if (leadToken) {
+        formData.set("lead", leadToken);
+      }
 
       const res = await fetch("/api/booking", {
         method: "POST",
