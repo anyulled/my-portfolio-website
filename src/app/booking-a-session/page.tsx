@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Aref_Ruqaa } from "next/font/google";
 import { useForm } from "react-hook-form";
@@ -60,6 +61,13 @@ export default function BookingPage() {
           />
 
           <div className="pt-6">
+            <p className="mb-4 text-sm text-muted-foreground">
+              {t("privacy_notice")}{" "}
+              <Link className="underline" href="/privacy">
+                {t("privacy_link")}
+              </Link>
+              .
+            </p>
             <Button
               type="submit"
               className="w-full py-6"

@@ -423,6 +423,8 @@
     "select_payment": "Selecciona tipus de pagament",
     "submit": "Envia Sol·licitud de Reserva",
     "submitting": "Enviant...",
+    "privacy_notice": "En enviar aquest formulari, reconeixes la nostra política de privacitat. Això no constitueix l'acceptació d'una cessió de drets d'imatge.",
+    "privacy_link": "Llegir la política de privacitat",
     "validation_error": "Si us plau, corregeix els errors al formulari abans d'enviar",
     "error_full_name": "El nom complet és obligatori",
     "error_social_account": "El compte social és obligatori",

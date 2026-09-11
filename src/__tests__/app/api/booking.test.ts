@@ -1,5 +1,6 @@
 import { POST } from "@/app/api/booking/route";
 import { sendEmailToRecipient } from "@/services/mailer";
+import { persistBookingSubmission } from "@/services/booking/repository";
 import { NextRequest } from "next/server";
 
 // Mock next/server
@@ -30,6 +31,11 @@ jest.mock("@/services/mailer", () => ({
   sendEmailToRecipient: jest.fn(),
 }));
 
+jest.mock("@/services/booking/repository", () => ({
+  persistBookingSubmission: jest.fn().mockResolvedValue("submission-id"),
+  updateBookingEmailState: jest.fn().mockResolvedValue(undefined),
+}));
+
 describe("Booking API", () => {
   beforeEach(() => {});
 
@@ -54,6 +60,7 @@ describe("Booking API", () => {
     expect(data.message).toBe("Please fill in all required fields.");
 
     expect(sendEmailToRecipient).not.toHaveBeenCalled();
+    expect(persistBookingSubmission).not.toHaveBeenCalled();
   });
 
   it("should return 400 if email is missing", async () => {
@@ -87,6 +94,7 @@ describe("Booking API", () => {
     expect(data.message).toBe("Please fill in all required fields.");
 
     expect(sendEmailToRecipient).not.toHaveBeenCalled();
+    expect(persistBookingSubmission).not.toHaveBeenCalled();
   });
 
   it("should successfully process a valid request with email", async () => {
@@ -124,5 +132,9 @@ describe("Booking API", () => {
 
     // In test environment, email is not actually sent
     expect(sendEmailToRecipient).not.toHaveBeenCalled();
+    expect(persistBookingSubmission).toHaveBeenCalledWith(
+      expect.objectContaining({ fullName: "Test User" }),
+      null,
+    );
   });
 });

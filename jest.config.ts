@@ -21,6 +21,8 @@ const customJestConfig = {
     "^isows$": "<rootDir>/src/__mocks__/isows.js",
     "^uncrypto$": "<rootDir>/src/__mocks__/uncrypto.js",
     "^@google-cloud/storage$": "<rootDir>/src/__mocks__/googleCloudStorage.ts",
+    "^ai$": "<rootDir>/src/__mocks__/ai.ts",
+    "^@ai-sdk/groq$": "<rootDir>/src/__mocks__/groq.ts",
   },
   testEnvironment: "@stryker-mutator/jest-runner/jest-env/jsdom",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
@@ -30,7 +32,7 @@ const customJestConfig = {
     "<rootDir>/.stryker-tmp/",
   ],
   transformIgnorePatterns: [
-    "/node_modules/(?!(chalk|@upstash|@sentry|next-intl|uncrypto|isows|@supabase|gsap)/)",
+    "/node_modules/(?!(chalk|@upstash|@sentry|next-intl|uncrypto|isows|@supabase|gsap|ai|@ai-sdk)/)",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
   collectCoverage: true,

@@ -73,6 +73,7 @@ export default [
             '**/*.d.ts',
             '**/test-output',
             '**/api/generated/**',
+            'docs/api-reference/**',
             '**/.vitepress/cache/**',
         ],
     },

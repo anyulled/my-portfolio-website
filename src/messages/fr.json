@@ -423,6 +423,8 @@
     "select_payment": "Sélectionnez le type de paiement",
     "submit": "Soumettre la Demande de Réservation",
     "submitting": "Soumission en cours...",
+    "privacy_notice": "En envoyant ce formulaire, vous reconnaissez notre politique de confidentialité. Cela ne constitue pas l'acceptation d'une autorisation de droit à l'image.",
+    "privacy_link": "Lire la politique de confidentialité",
     "validation_error": "Veuillez corriger les erreurs dans le formulaire avant de soumettre",
     "error_full_name": "Le nom complet est requis",
     "error_social_account": "Le compte social est requis",
