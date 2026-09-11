@@ -3,8 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { createInstagramBrowserAuthClient } from "@/services/instagram/browserAuth";
 import { useState } from "react";
+
+interface LoginResponse {
+  message: string;
+  requestId?: string;
+}
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -15,20 +19,24 @@ export default function LoginForm() {
     event.preventDefault();
     setSubmitting(true);
     setMessage("");
-    const client = createInstagramBrowserAuthClient();
-    const { error } = await client.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/auth/confirm`,
-      },
-    });
-    setMessage(
-      error
-        ? "Unable to send the access link."
-        : "Check your email for the access link.",
-    );
-    setSubmitting(false);
+    try {
+      const response = await fetch("/api/instagram/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const result = (await response.json()) as LoginResponse;
+      const reference = result.requestId
+        ? ` Reference: ${result.requestId}`
+        : "";
+      setMessage(
+        response.ok ? result.message : `${result.message}${reference}`,
+      );
+    } catch {
+      setMessage("Unable to send the access link.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
