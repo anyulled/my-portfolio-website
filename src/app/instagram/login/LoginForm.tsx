@@ -10,9 +10,13 @@ interface LoginResponse {
   requestId?: string;
 }
 
-export default function LoginForm() {
+interface LoginFormProps {
+  initialMessage?: string;
+}
+
+export default function LoginForm({ initialMessage = "" }: LoginFormProps) {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(initialMessage);
   const [submitting, setSubmitting] = useState(false);
 
   const submitLogin = async (event: React.FormEvent<HTMLFormElement>) => {

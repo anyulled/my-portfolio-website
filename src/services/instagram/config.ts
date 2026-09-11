@@ -16,20 +16,21 @@ export const getInstagramHandle = (value: string): InstagramHandle => {
 };
 
 export const getInstagramAccountHandle = (instagramUserId: string) => {
-  const configuredAccount = Object.entries({
-    anyulled: process.env.INSTAGRAM_ANYULLED_USER_ID,
-    sensuelleboidoir: process.env.INSTAGRAM_SENSUELLEBOIDOIR_USER_ID,
-  }).find(([, accountId]) => accountId === instagramUserId);
-
-  if (!configuredAccount) {
-    throw new Error("Instagram account is not configured");
+  if (process.env.INSTAGRAM_ANYULLED_USER_ID === instagramUserId) {
+    return getInstagramHandle("anyulled");
   }
 
-  return getInstagramHandle(configuredAccount[0]);
+  if (process.env.INSTAGRAM_SENSUELLEBOIDOIR_USER_ID === instagramUserId) {
+    return getInstagramHandle("sensuelleboidoir");
+  }
+
+  throw new Error("Instagram account is not configured");
 };
 
-const getRequiredEnvironmentValue = (name: string) => {
-  const value = process.env[name];
+const getRequiredEnvironmentValue = (
+  name: string,
+  value: string | undefined,
+) => {
   if (!value) {
     throw new Error(`${name} is required`);
   }
@@ -40,7 +41,10 @@ export const createInstagramOAuthState = (handle: InstagramHandle) => {
   const payload = `${handle}.${Date.now()}`;
   const signature = createHmac(
     "sha256",
-    getRequiredEnvironmentValue("INSTAGRAM_OAUTH_STATE_SECRET"),
+    getRequiredEnvironmentValue(
+      "INSTAGRAM_OAUTH_STATE_SECRET",
+      process.env.INSTAGRAM_OAUTH_STATE_SECRET,
+    ),
   )
     .update(payload)
     .digest("hex");
@@ -56,7 +60,10 @@ export const parseInstagramOAuthState = (state: string) => {
   const payload = `${handle}.${timestamp}`;
   const expected = createHmac(
     "sha256",
-    getRequiredEnvironmentValue("INSTAGRAM_OAUTH_STATE_SECRET"),
+    getRequiredEnvironmentValue(
+      "INSTAGRAM_OAUTH_STATE_SECRET",
+      process.env.INSTAGRAM_OAUTH_STATE_SECRET,
+    ),
   )
     .update(payload)
     .digest("hex");
@@ -72,9 +79,21 @@ export const parseInstagramOAuthState = (state: string) => {
 };
 
 export const getInstagramOAuthConfig = () => ({
-  appId: getRequiredEnvironmentValue("META_APP_ID"),
-  appSecret: getRequiredEnvironmentValue("META_APP_SECRET"),
-  redirectUri: getRequiredEnvironmentValue("META_REDIRECT_URI"),
-  scopes: getRequiredEnvironmentValue("META_INSTAGRAM_SCOPES"),
-  graphApiVersion: getRequiredEnvironmentValue("INSTAGRAM_GRAPH_API_VERSION"),
+  appId: getRequiredEnvironmentValue("META_APP_ID", process.env.META_APP_ID),
+  appSecret: getRequiredEnvironmentValue(
+    "META_APP_SECRET",
+    process.env.META_APP_SECRET,
+  ),
+  redirectUri: getRequiredEnvironmentValue(
+    "META_REDIRECT_URI",
+    process.env.META_REDIRECT_URI,
+  ),
+  scopes: getRequiredEnvironmentValue(
+    "META_INSTAGRAM_SCOPES",
+    process.env.META_INSTAGRAM_SCOPES,
+  ),
+  graphApiVersion: getRequiredEnvironmentValue(
+    "INSTAGRAM_GRAPH_API_VERSION",
+    process.env.INSTAGRAM_GRAPH_API_VERSION,
+  ),
 });
