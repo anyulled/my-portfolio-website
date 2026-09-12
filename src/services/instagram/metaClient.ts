@@ -1,14 +1,12 @@
+import { getInstagramGraphApiVersion } from "./config";
+
 interface InstagramSendResponse {
   recipient_id?: string;
   message_id?: string;
 }
 
 const getGraphApiVersion = () => {
-  const version = process.env.INSTAGRAM_GRAPH_API_VERSION;
-  if (!version) {
-    throw new Error("INSTAGRAM_GRAPH_API_VERSION is required");
-  }
-  return version;
+  return getInstagramGraphApiVersion();
 };
 
 const getGraphApiUrl = (instagramUserId: string) =>
