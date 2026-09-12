@@ -45,6 +45,14 @@ const getRequiredEnvironmentValue = (
   return value;
 };
 
+export const getInstagramGraphApiVersion = () => {
+  const version = getRequiredEnvironmentValue(
+    "INSTAGRAM_GRAPH_API_VERSION",
+    process.env.INSTAGRAM_GRAPH_API_VERSION,
+  );
+  return version.startsWith("v") ? version : `v${version}`;
+};
+
 export const createInstagramOAuthState = (handle: InstagramHandle) => {
   const payload = `${handle}.${Date.now()}`;
   const signature = createHmac(
@@ -100,8 +108,5 @@ export const getInstagramOAuthConfig = (): InstagramOAuthConfig => ({
     "META_INSTAGRAM_SCOPES",
     process.env.META_INSTAGRAM_SCOPES,
   ),
-  graphApiVersion: getRequiredEnvironmentValue(
-    "INSTAGRAM_GRAPH_API_VERSION",
-    process.env.INSTAGRAM_GRAPH_API_VERSION,
-  ),
+  graphApiVersion: getInstagramGraphApiVersion(),
 });
