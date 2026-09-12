@@ -87,4 +87,53 @@ describe("InstagramInbox", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });
+
+  it("shows the connected accounts instead of connection buttons", async () => {
+    jest.mocked(global.fetch).mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ conversations: [] }),
+    } as Response);
+
+    render(
+      <InstagramInbox connectedAccounts={["anyulled", "sensuelleboudoir"]} />,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Connected Instagram accounts: @anyulled, @sensuelleboudoir",
+      ),
+    );
+    expect(
+      screen.queryByRole("link", { name: "Connect @anyulled" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Connect @sensuelleboudoir" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps a connection button for an account that is not connected", async () => {
+    jest.mocked(global.fetch).mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ conversations: [] }),
+    } as Response);
+
+    render(<InstagramInbox connectedAccounts={["anyulled"]} />);
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Connected Instagram accounts: @anyulled",
+      ),
+    );
+    expect(
+      screen.queryByRole("link", { name: "Connect @anyulled" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Connect @sensuelleboudoir" }),
+    ).toHaveAttribute(
+      "href",
+      "/api/instagram/oauth/start?account=sensuelleboudoir",
+    );
+  });
 });

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type {
   InstagramConversationRecord,
+  InstagramHandle,
   ReviewDecision,
 } from "@/services/instagram/types";
 import { useEffect, useState } from "react";
@@ -23,6 +24,11 @@ const reviewDecisions: Array<{ value: ReviewDecision; label: string }> = [
   { value: "pricing", label: "Send pricing" },
   { value: "ignore", label: "Ignore" },
 ];
+
+const instagramAccounts: InstagramHandle[] = ["anyulled", "sensuelleboudoir"];
+
+const getInstagramAccountLabel = (account: InstagramHandle): string =>
+  account === "anyulled" ? "@anyulled" : "@sensuelleboudoir";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
@@ -56,8 +62,10 @@ const getConversations = (
 
 export default function InstagramInbox({
   connectionError,
+  connectedAccounts = [],
 }: {
   connectionError?: ConnectionError;
+  connectedAccounts?: InstagramHandle[];
 } = {}) {
   const [conversations, setConversations] = useState<
     InstagramConversationRecord[]
@@ -121,16 +129,21 @@ export default function InstagramInbox({
           Review ambiguous conversations from both accounts.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <Button asChild variant="outline">
-            <a href="/api/instagram/oauth/start?account=anyulled">
-              Connect @anyulled
-            </a>
-          </Button>
-          <Button asChild variant="outline">
-            <a href="/api/instagram/oauth/start?account=sensuelleboudoir">
-              Connect @sensuelleboudoir
-            </a>
-          </Button>
+          {connectedAccounts.length > 0 && (
+            <p className="text-sm text-muted-foreground" role="status">
+              Connected Instagram accounts:{" "}
+              {connectedAccounts.map(getInstagramAccountLabel).join(", ")}
+            </p>
+          )}
+          {instagramAccounts
+            .filter((account) => !connectedAccounts.includes(account))
+            .map((account) => (
+              <Button key={account} asChild variant="outline">
+                <a href={`/api/instagram/oauth/start?account=${account}`}>
+                  Connect {getInstagramAccountLabel(account)}
+                </a>
+              </Button>
+            ))}
         </div>
       </div>
       {connectionError && (
