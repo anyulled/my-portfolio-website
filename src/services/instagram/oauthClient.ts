@@ -15,6 +15,10 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
 const getTokenRecord = (payload: unknown): InstagramTokenRecord | null => {
+  if (Array.isArray(payload) && isRecord(payload[0])) {
+    return payload[0] as InstagramTokenRecord;
+  }
+
   if (!isRecord(payload)) {
     return null;
   }
@@ -22,6 +26,9 @@ const getTokenRecord = (payload: unknown): InstagramTokenRecord | null => {
   const data = payload.data;
   if (Array.isArray(data) && isRecord(data[0])) {
     return data[0] as InstagramTokenRecord;
+  }
+  if (isRecord(data)) {
+    return data as InstagramTokenRecord;
   }
 
   return payload as InstagramTokenRecord;
@@ -61,6 +68,20 @@ const readTokenResponse = async (response: Response) => {
 const getTokenExpiresAt = (expiresIn: number | null) =>
   expiresIn ? new Date(Date.now() + expiresIn * 1000).toISOString() : null;
 
+const getResponseKeys = (payload: unknown) => {
+  const record = getTokenRecord(payload);
+  return record ? Object.keys(record).sort().join(",") : "none";
+};
+
+const getResponseError = (payload: unknown) => {
+  if (!isRecord(payload)) {
+    return null;
+  }
+
+  const message = payload.error_message ?? payload.message;
+  return typeof message === "string" && message ? message : null;
+};
+
 export const exchangeInstagramAuthorizationCode = async (
   code: string,
   config: Pick<InstagramOAuthConfig, "appId" | "appSecret" | "redirectUri">,
@@ -83,8 +104,15 @@ export const exchangeInstagramAuthorizationCode = async (
   const shortLivedToken = getAccessToken(shortLivedPayload.payload);
   const instagramUserId = getRawUserId(shortLivedPayload.body);
   if (!shortLivedResponse.ok || !shortLivedToken || !instagramUserId) {
+    const missingFields = [
+      !shortLivedToken ? "access_token" : null,
+      !instagramUserId ? "user_id" : null,
+    ]
+      .filter((field): field is string => Boolean(field))
+      .join(",");
+    const responseError = getResponseError(shortLivedPayload.payload);
     throw new Error(
-      `Instagram authorization code exchange failed (${shortLivedResponse.status})`,
+      `Instagram authorization code exchange failed (${shortLivedResponse.status}); missing=${missingFields || "none"}; keys=${getResponseKeys(shortLivedPayload.payload)}${responseError ? `; provider=${responseError}` : ""}`,
     );
   }
 
@@ -96,8 +124,9 @@ export const exchangeInstagramAuthorizationCode = async (
   const longLivedPayload = await readTokenResponse(longLivedResponse);
   const longLivedToken = getAccessToken(longLivedPayload.payload);
   if (!longLivedResponse.ok || !longLivedToken) {
+    const responseError = getResponseError(longLivedPayload.payload);
     throw new Error(
-      `Instagram long-lived token exchange failed (${longLivedResponse.status})`,
+      `Instagram long-lived token exchange failed (${longLivedResponse.status}); missing=${longLivedToken ? "none" : "access_token"}; keys=${getResponseKeys(longLivedPayload.payload)}${responseError ? `; provider=${responseError}` : ""}`,
     );
   }
 
