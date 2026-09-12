@@ -3,6 +3,7 @@ import type { InstagramOAuthConfig } from "./config";
 interface InstagramTokenRecord {
   access_token?: unknown;
   expires_in?: unknown;
+  user_id?: unknown;
 }
 
 interface InstagramTokenExchange {
@@ -41,9 +42,36 @@ const getAccessToken = (payload: unknown) => {
     : null;
 };
 
-const getRawUserId = (body: string) => {
-  const match = body.match(/"user_id"\s*:\s*(?:"([^"]+)"|([0-9]+))/);
+const getRawFieldValue = (body: string, field: "id" | "user_id") => {
+  const match =
+    field === "id"
+      ? body.match(/"id"\s*:\s*(?:"([^"]+)"|([0-9]+))/)
+      : body.match(/"user_id"\s*:\s*(?:"([^"]+)"|([0-9]+))/);
   return match?.[1] ?? match?.[2] ?? null;
+};
+
+const getRawUserId = (body: string) => getRawFieldValue(body, "user_id");
+
+const getInstagramUserIdFromProfile = async (
+  accessToken: string,
+  graphApiVersion: string,
+) => {
+  const profileUrl = new URL(
+    `https://graph.instagram.com/${graphApiVersion}/me`,
+  );
+  profileUrl.searchParams.set("fields", "id");
+  const response = await fetch(profileUrl, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const profile = await readTokenResponse(response);
+  const instagramUserId = getRawFieldValue(profile.body, "id");
+  if (!response.ok || !instagramUserId) {
+    const responseError = getResponseError(profile.payload);
+    throw new Error(
+      `Instagram profile lookup failed (${response.status}); missing=${instagramUserId ? "none" : "id"}; keys=${getResponseKeys(profile.payload)}${responseError ? `; provider=${responseError}` : ""}`,
+    );
+  }
+  return instagramUserId;
 };
 
 const getExpiresIn = (payload: unknown) => {
@@ -84,7 +112,10 @@ const getResponseError = (payload: unknown) => {
 
 export const exchangeInstagramAuthorizationCode = async (
   code: string,
-  config: Pick<InstagramOAuthConfig, "appId" | "appSecret" | "redirectUri">,
+  config: Pick<
+    InstagramOAuthConfig,
+    "appId" | "appSecret" | "redirectUri" | "graphApiVersion"
+  >,
 ): Promise<InstagramTokenExchange> => {
   const shortLivedResponse = await fetch(
     "https://api.instagram.com/oauth/access_token",
@@ -102,12 +133,8 @@ export const exchangeInstagramAuthorizationCode = async (
   );
   const shortLivedPayload = await readTokenResponse(shortLivedResponse);
   const shortLivedToken = getAccessToken(shortLivedPayload.payload);
-  const instagramUserId = getRawUserId(shortLivedPayload.body);
-  if (!shortLivedResponse.ok || !shortLivedToken || !instagramUserId) {
-    const missingFields = [
-      !shortLivedToken ? "access_token" : null,
-      !instagramUserId ? "user_id" : null,
-    ]
+  if (!shortLivedResponse.ok || !shortLivedToken) {
+    const missingFields = [!shortLivedToken ? "access_token" : null]
       .filter((field): field is string => Boolean(field))
       .join(",");
     const responseError = getResponseError(shortLivedPayload.payload);
@@ -115,6 +142,13 @@ export const exchangeInstagramAuthorizationCode = async (
       `Instagram authorization code exchange failed (${shortLivedResponse.status}); missing=${missingFields || "none"}; keys=${getResponseKeys(shortLivedPayload.payload)}${responseError ? `; provider=${responseError}` : ""}`,
     );
   }
+
+  const instagramUserId =
+    getRawUserId(shortLivedPayload.body) ??
+    (await getInstagramUserIdFromProfile(
+      shortLivedToken,
+      config.graphApiVersion,
+    ));
 
   const longLivedUrl = new URL("https://graph.instagram.com/access_token");
   longLivedUrl.searchParams.set("grant_type", "ig_exchange_token");

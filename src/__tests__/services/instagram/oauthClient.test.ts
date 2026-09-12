@@ -35,6 +35,7 @@ describe("exchangeInstagramAuthorizationCode", () => {
       appId: "app-id",
       appSecret: "app-secret",
       redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+      graphApiVersion: "v23.0",
     });
 
     expect(result).toEqual({
@@ -69,6 +70,7 @@ describe("exchangeInstagramAuthorizationCode", () => {
       appId: "app-id",
       appSecret: "app-secret",
       redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+      graphApiVersion: "v23.0",
     });
 
     expect(result.instagramUserId).toBe("instagram-user-id");
@@ -84,6 +86,7 @@ describe("exchangeInstagramAuthorizationCode", () => {
         appId: "app-id",
         appSecret: "app-secret",
         redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+        graphApiVersion: "v23.0",
       }),
     ).rejects.toThrow("Instagram authorization code exchange failed (400)");
     expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -102,7 +105,36 @@ describe("exchangeInstagramAuthorizationCode", () => {
         appId: "app-id",
         appSecret: "app-secret",
         redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+        graphApiVersion: "v23.0",
       }),
     ).rejects.toThrow("Instagram long-lived token exchange failed (200)");
+  });
+
+  it("looks up the account id when the code exchange omits its value", async () => {
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce(
+        createResponse(
+          '{"access_token":"short-token","permissions":[],"user_id":null}',
+        ),
+      )
+      .mockResolvedValueOnce(createResponse('{"id":"instagram-user-id"}'))
+      .mockResolvedValueOnce(
+        createResponse('{"access_token":"long-token","expires_in":3600}'),
+      );
+
+    const result = await exchangeInstagramAuthorizationCode("code", {
+      appId: "app-id",
+      appSecret: "app-secret",
+      redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+      graphApiVersion: "v23.0",
+    });
+
+    expect(result.instagramUserId).toBe("instagram-user-id");
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      2,
+      new URL("https://graph.instagram.com/v23.0/me?fields=id"),
+      { headers: { Authorization: "Bearer short-token" } },
+    );
   });
 });
