@@ -94,13 +94,14 @@ export const upsertInstagramAccount = async (
   account: Pick<
     InstagramAccountRow,
     "handle" | "instagram_user_id" | "access_token"
-  >,
+  > & { token_expires_at: string | null },
 ) => {
   const { error } = await database.from("instagram_accounts").upsert(
     {
       handle: account.handle,
       instagram_user_id: account.instagram_user_id,
       access_token: account.access_token,
+      token_expires_at: account.token_expires_at,
       active: true,
     },
     { onConflict: "handle" },

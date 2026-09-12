@@ -14,6 +14,10 @@ interface InboxError {
   resolution?: string;
 }
 
+interface ConnectionError {
+  reference?: string;
+}
+
 const reviewDecisions: Array<{ value: ReviewDecision; label: string }> = [
   { value: "model_form", label: "Send model form" },
   { value: "pricing", label: "Send pricing" },
@@ -50,7 +54,11 @@ const getConversations = (
   return result.conversations as InstagramConversationRecord[];
 };
 
-export default function InstagramInbox() {
+export default function InstagramInbox({
+  connectionError,
+}: {
+  connectionError?: ConnectionError;
+} = {}) {
   const [conversations, setConversations] = useState<
     InstagramConversationRecord[]
   >([]);
@@ -125,6 +133,18 @@ export default function InstagramInbox() {
           </Button>
         </div>
       </div>
+      {connectionError && (
+        <div className="space-y-2 text-sm text-destructive" role="alert">
+          <p>Unable to connect the Instagram account.</p>
+          <p>
+            Check the Vercel logs and retry after correcting the account or Meta
+            configuration.
+          </p>
+          {connectionError.reference && (
+            <p>Reference: {connectionError.reference}</p>
+          )}
+        </div>
+      )}
       {error && (
         <div className="space-y-2 text-sm text-destructive" role="alert">
           <p>{error.message}</p>
