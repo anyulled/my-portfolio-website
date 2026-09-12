@@ -22,4 +22,6 @@ Set the Meta webhook callback to `/api/instagram/webhook` and set `INSTAGRAM_WEB
 
 Open `/instagram`, sign in with the configured email through the magic link, and connect each professional account independently. Do not put access tokens or secrets in client-side variables.
 
+The production Vercel cron refreshes active long-lived Instagram tokens once they have 14 days or less remaining. It uses `CRON_SECRET` for authorization and requires no additional environment variable. If a token is already expired, reconnect that Instagram account from `/instagram`.
+
 Production use requires the Meta app to be configured for the approved Instagram permissions and webhook subscription. Until then, keep the app in test mode with the authorized test accounts.

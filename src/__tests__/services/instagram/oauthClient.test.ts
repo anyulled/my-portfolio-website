@@ -1,4 +1,7 @@
-import { exchangeInstagramAuthorizationCode } from "@/services/instagram/oauthClient";
+import {
+  exchangeInstagramAuthorizationCode,
+  refreshInstagramAccessToken,
+} from "@/services/instagram/oauthClient";
 
 const createResponse = (body: string, status = 200) =>
   ({
@@ -161,5 +164,37 @@ describe("exchangeInstagramAuthorizationCode", () => {
       "Instagram profile lookup failed (400); missing=id; keys=error; provider=Invalid OAuth token",
     );
     expect(global.fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("refreshes a long-lived access token and returns its new expiry", async () => {
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce(
+        createResponse('{"access_token":"refreshed-token","expires_in":3600}'),
+      );
+
+    const result = await refreshInstagramAccessToken("long-lived-token");
+
+    expect(result).toEqual({
+      accessToken: "refreshed-token",
+      tokenExpiresAt: "2026-09-12T11:00:00.000Z",
+    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      new URL(
+        "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=long-lived-token",
+      ),
+    );
+  });
+
+  it("rejects an unsuccessful token refresh without exposing the response body", async () => {
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce(
+        createResponse('{"error":{"message":"expired"}}', 400),
+      );
+
+    await expect(
+      refreshInstagramAccessToken("long-lived-token"),
+    ).rejects.toThrow("Instagram access token refresh failed (400)");
   });
 });
