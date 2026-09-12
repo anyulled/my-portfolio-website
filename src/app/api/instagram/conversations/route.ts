@@ -3,7 +3,7 @@ import {
   getInstagramDatabase,
   listInstagramConversations,
 } from "@/services/instagram/repository";
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 
 const getErrorDetails = (error: unknown) => {
   if (error instanceof Error) {
@@ -39,6 +39,7 @@ const isMissingInstagramSchema = (error: unknown) => {
 };
 
 export async function GET() {
+  await connection();
   const requestId = crypto.randomUUID();
 
   try {

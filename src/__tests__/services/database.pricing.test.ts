@@ -2,6 +2,7 @@ import {
   getLatestPricing,
   insertPricing,
   PricingPackageInsert,
+  Testimonials,
 } from "@/services/database";
 import { createServerClient } from "@supabase/ssr";
 import { revalidateTag } from "next/cache";
@@ -32,6 +33,7 @@ jest.mock("chalk", () => ({
 }));
 
 describe("pricing database helpers", () => {
+  const originalHarnessMode = process.env.HARNESS_MODE;
   const mockCookieStore = {
     getAll: jest.fn(() => []),
     set: jest.fn(),
@@ -40,6 +42,59 @@ describe("pricing database helpers", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (cookies as jest.Mock).mockResolvedValue(mockCookieStore);
+  });
+
+  afterEach(() => {
+    if (originalHarnessMode === undefined) {
+      delete process.env.HARNESS_MODE;
+      return;
+    }
+
+    process.env.HARNESS_MODE = originalHarnessMode;
+  });
+
+  it("returns fixture data without constructing a database client", async () => {
+    process.env.HARNESS_MODE = "fixture";
+
+    const [pricing, testimonials] = await Promise.all([
+      getLatestPricing(),
+      Testimonials(),
+    ]);
+
+    expect(pricing?.id).toBe("harness-pricing");
+    expect(testimonials[0].id).toBe("harness-testimonial");
+    expect(createServerClient).not.toHaveBeenCalled();
+  });
+
+  it("uses the database integration when fixture mode is disabled", async () => {
+    delete process.env.HARNESS_MODE;
+    const testimonials = [
+      {
+        id: "testimonial-1",
+        name: "Client",
+        content: "Testimonial",
+        location: "Barcelona",
+        rating: 5,
+        featured: true,
+        date: "2026-09-12T00:00:00.000Z",
+      },
+    ];
+    const mockLimit = jest
+      .fn()
+      .mockResolvedValue({ data: testimonials, error: null });
+    const mockCreatedAtOrder = jest.fn().mockReturnValue({ limit: mockLimit });
+    const mockFeaturedOrder = jest
+      .fn()
+      .mockReturnValue({ order: mockCreatedAtOrder });
+    const mockEqual = jest.fn().mockReturnValue({ order: mockFeaturedOrder });
+    const mockSelect = jest.fn().mockReturnValue({ eq: mockEqual });
+    const mockFrom = jest.fn().mockReturnValue({ select: mockSelect });
+    (createServerClient as jest.Mock).mockReturnValue({ from: mockFrom });
+
+    const result = await Testimonials();
+
+    expect(result).toEqual(testimonials);
+    expect(mockFrom).toHaveBeenCalledWith("testimonials");
   });
 
   describe("getLatestPricing", () => {

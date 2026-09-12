@@ -1,0 +1,41 @@
+name: AI Harness Scorecard
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: harness-scorecard
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  scorecard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - uses: markmishaev76/ai-harness-scorecard@baf1c269e091415d6616a9502a6a045a1bcf78b0
+      - name: Publish advisory report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp scorecard-badge.json /tmp/scorecard-badge.json
+          cp scorecard-report.md /tmp/scorecard-report.md
+          git fetch origin scorecard || true
+          if git show-ref --verify --quiet refs/remotes/origin/scorecard; then
+            git checkout --track origin/scorecard
+          else
+            git checkout --orphan scorecard
+            git rm -rf .
+          fi
+          cp /tmp/scorecard-badge.json scorecard-badge.json
+          cp /tmp/scorecard-report.md scorecard-report.md
+          git add scorecard-badge.json scorecard-report.md
+          git diff --cached --quiet || git commit -m "chore: update scorecard badge and report"
+          git push origin scorecard

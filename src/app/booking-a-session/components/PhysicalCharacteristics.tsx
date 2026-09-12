@@ -91,14 +91,14 @@ export const PhysicalCharacteristics = ({
           render={({ field }) => (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <SelectTrigger>
-                <SelectValue placeholder={t("select_hair_color")} />
+                <SelectValue placeholder={t("hair_color")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="blonde">{t("hair_blonde")}</SelectItem>
                 <SelectItem value="brown">{t("hair_brown")}</SelectItem>
                 <SelectItem value="black">{t("hair_black")}</SelectItem>
                 <SelectItem value="red">{t("hair_red")}</SelectItem>
-                <SelectItem value="other">{t("other")}</SelectItem>
+                <SelectItem value="other">{t("hair_other")}</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -112,14 +112,14 @@ export const PhysicalCharacteristics = ({
           render={({ field }) => (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <SelectTrigger>
-                <SelectValue placeholder={t("select_eye_color")} />
+                <SelectValue placeholder={t("eye_color")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="blue">{t("eye_blue")}</SelectItem>
                 <SelectItem value="brown">{t("eye_brown")}</SelectItem>
                 <SelectItem value="green">{t("eye_green")}</SelectItem>
                 <SelectItem value="hazel">{t("eye_hazel")}</SelectItem>
-                <SelectItem value="other">{t("other")}</SelectItem>
+                <SelectItem value="other">{t("eye_other")}</SelectItem>
               </SelectContent>
             </Select>
           )}

@@ -4,6 +4,11 @@ import chalk from "chalk";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import {
+  getHarnessPricing,
+  getHarnessTestimonials,
+} from "@/services/harness/fixtures";
+import { isHarnessFixtureMode } from "@/services/harness/mode";
 
 const createDbClient = (cookies: ReadonlyRequestCookies) =>
   createServerClient(
@@ -88,6 +93,10 @@ const fetchTestimonials = async (): Promise<Array<Testimonial>> => {
 };
 
 export const Testimonials = async (): Promise<Array<Testimonial>> => {
+  if (isHarnessFixtureMode()) {
+    return getHarnessTestimonials();
+  }
+
   return fetchTestimonials();
 };
 
@@ -138,6 +147,10 @@ const fetchLatestPricing = async () => {
 
 export const getLatestPricing =
   async (): Promise<PricingPackageRecord | null> => {
+    if (isHarnessFixtureMode()) {
+      return getHarnessPricing();
+    }
+
     return fetchLatestPricing();
   };
 

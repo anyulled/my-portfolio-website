@@ -2,94 +2,177 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+  HUSKY: 0
 
 jobs:
-  main:
+  static:
+    name: Harness and static checks
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL || vars.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          filter: tree:0
-          fetch-depth: 0
-
-      # This enables task distribution via Nx Cloud
-      # Run this command as early as possible, before dependencies are installed
-      # Learn more at https://nx.dev/ci/reference/nx-cloud-cli#npx-nxcloud-startcirun
-      # Uncomment this line to enable task distribution
-      # - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
-
-      # Cache node_modules
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
-        with:
-          node-version: 20
-          cache: "npm"
-
-      - run: |
-          npm config set fetch-retries 5
-          npm config set fetch-retry-mintimeout 20000
-          npm config set fetch-retry-maxtimeout 120000
-          npm ci --ignore-scripts
-
-      - run: npm run lint:ci
-      - run: npm run format:check
-      - run: npm run audit:ci
-      - run: npm run test
-      - run: npm run build
-      - run: npm run docs
-      - run: npm run api:lint
-
-  link-checker:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - name: Link Checker
-        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
-        with:
-          args: --verbose --no-progress --exclude 'http://localhost:3000/' './**/*.md' './**/*.html'
-          fail: true
-
-  scorecard:
-    runs-on: ubuntu-latest
-    name: AI Hardness Scorecard
-    if: github.event_name != 'pull_request'
-
-    permissions:
-      contents: write
-
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm install --global npm@11.19.1
+      - run: npm ci
+      - run: npm run doctor
+      - run: npm run lint:ci
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run harness:clean
 
-      - uses: markmishaev76/ai-harness-scorecard@baf1c269e091415d6616a9502a6a045a1bcf78b0
-        id: scorecard
+  tests:
+    name: Unit, property, contract, and coverage
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || vars.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm install --global npm@11.19.1
+      - run: npm ci
+      - run: npm run test:coverage
+      - run: npm run api:lint
+      - run: npm run docs
+      - run: npm run harness:clean
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: coverage
+          path: coverage
+          retention-days: 7
 
-      - name: Commit badge and report
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          cp scorecard-badge.json /tmp/scorecard-badge.json
-          cp scorecard-report.md /tmp/scorecard-report.md
-          rm -f scorecard-badge.json scorecard-report.md
-          if git fetch origin scorecard; then
-            git checkout scorecard
-          else
-            git checkout --orphan scorecard
-            git rm -rf .
-          fi
-          cp /tmp/scorecard-badge.json scorecard-badge.json
-          cp /tmp/scorecard-report.md scorecard-report.md
-          git add scorecard-badge.json scorecard-report.md
-          git diff --cached --quiet || git commit -m "chore: update scorecard badge and report"
-          git push origin scorecard
+  build:
+    name: Hermetic production build
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm install --global npm@11.19.1
+      - run: npm ci
+      - run: npm run build:harness
+      - run: npm run harness:clean
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: next-production-build
+          path: .next
+          include-hidden-files: true
+          retention-days: 3
+
+  e2e:
+    name: Local production E2E
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm install --global npm@11.19.1
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: next-production-build
+          path: .next
+      - run: ./node_modules/.bin/playwright install --with-deps chromium
+      - run: npm run e2e:run
+      - run: npm run harness:clean
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: playwright-local
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
+
+  security:
+    name: Security audit
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm install --global npm@11.19.1
+      - run: npm ci
+      - run: npm run audit:ci
+
+  compatibility:
+    name: Node 22 compatibility
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22.9.0
+          cache: npm
+      - run: npm install --global npm@11.19.1
+      - run: npm ci
+      - run: npm run build:harness
+      - run: npm run harness:clean
+
+  links:
+    name: Documentation links
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
+        with:
+          args: --config lychee.toml './**/*.md' './**/*.html'
+          fail: true
+
+  complete:
+    name: Required harness gates
+    if: always()
+    needs: [static, tests, build, e2e, security, compatibility, links]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail when any required gate did not pass
+        if: needs.static.result != 'success' || needs.tests.result != 'success' || needs.build.result != 'success' || needs.e2e.result != 'success' || needs.security.result != 'success' || needs.compatibility.result != 'success' || needs.links.result != 'success'
+        run: exit 1
+      - name: Confirm every required gate passed
+        run: echo "All required harness gates passed."

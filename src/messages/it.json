@@ -419,6 +419,8 @@
     "payment_bank": "Bonifico Bancario",
     "payment_bizum": "Bizum",
     "payment_paypal": "PayPal",
+    "payment_revolut": "Revolut",
+    "payment_types": "Tipi di Pagamento Accettati",
     "payment_other": "Altro",
     "select_payment": "Seleziona tipo di pagamento",
     "submit": "Invia Richiesta di Prenotazione",
