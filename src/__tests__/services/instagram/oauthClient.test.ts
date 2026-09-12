@@ -53,6 +53,27 @@ describe("exchangeInstagramAuthorizationCode", () => {
     );
   });
 
+  it("accepts a token response wrapped in a data object", async () => {
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce(
+        createResponse(
+          '{"data":{"access_token":"short-token","user_id":"instagram-user-id"}}',
+        ),
+      )
+      .mockResolvedValueOnce(
+        createResponse('{"access_token":"long-token","expires_in":3600}'),
+      );
+
+    const result = await exchangeInstagramAuthorizationCode("code", {
+      appId: "app-id",
+      appSecret: "app-secret",
+      redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+    });
+
+    expect(result.instagramUserId).toBe("instagram-user-id");
+  });
+
   it("rejects an unsuccessful short-lived token exchange without exposing a response body", async () => {
     jest
       .mocked(global.fetch)
