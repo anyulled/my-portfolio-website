@@ -56,6 +56,12 @@ const requiredScripts = [
   "verify:preview",
 ];
 
+const gitHooks: Array<[string, string]> = [
+  [".husky/commit-msg", readFileSync(".husky/commit-msg", "utf8")],
+  [".husky/pre-commit", readFileSync(".husky/pre-commit", "utf8")],
+  [".husky/pre-push", readFileSync(".husky/pre-push", "utf8")],
+];
+
 const readPackageManifest = (): PackageManifest =>
   JSON.parse(readFileSync("package.json", "utf8")) as PackageManifest;
 
@@ -107,6 +113,15 @@ const collectScriptFindings = (): HarnessFinding[] => {
   return [...missingScriptFindings, ...networkFetchingScripts];
 };
 
+const collectGitHookFindings = (): HarnessFinding[] =>
+  gitHooks
+    .filter(([, hookContents]) => /(^|\s)npx\s/m.test(hookContents))
+    .map(([hookPath]) => ({
+      what: `Git hook can fetch undeclared tooling: ${hookPath}`,
+      why: "Runtime downloads make local verification non-deterministic.",
+      fix: `Invoke the declared binary from node_modules in ${hookPath}.`,
+    }));
+
 const reportFinding = (finding: HarnessFinding): void => {
   console.error(`WHAT: ${finding.what}`);
   console.error(`WHY: ${finding.why}`);
@@ -117,6 +132,7 @@ const findings = [
   ...collectRequiredPathFindings(),
   ...collectTrackedArtifactFindings(),
   ...collectScriptFindings(),
+  ...collectGitHookFindings(),
 ];
 
 if (findings.length > 0) {
