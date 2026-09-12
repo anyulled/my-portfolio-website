@@ -177,3 +177,26 @@ export const exchangeInstagramAuthorizationCode = async (
     tokenExpiresAt: getTokenExpiresAt(getExpiresIn(longLivedPayload.payload)),
   };
 };
+
+export const refreshInstagramAccessToken = async (accessToken: string) => {
+  const refreshUrl = new URL(
+    "https://graph.instagram.com/refresh_access_token",
+  );
+  refreshUrl.searchParams.set("grant_type", "ig_refresh_token");
+  refreshUrl.searchParams.set("access_token", accessToken);
+
+  const response = await fetch(refreshUrl);
+  const payload = await readTokenResponse(response);
+  const refreshedToken = getAccessToken(payload.payload);
+  if (!response.ok || !refreshedToken) {
+    const responseError = getResponseError(payload.payload);
+    throw new Error(
+      `Instagram access token refresh failed (${response.status}); missing=${refreshedToken ? "none" : "access_token"}; keys=${getResponseKeys(payload.payload)}${responseError ? `; provider=${responseError}` : ""}`,
+    );
+  }
+
+  return {
+    accessToken: refreshedToken,
+    tokenExpiresAt: getTokenExpiresAt(getExpiresIn(payload.payload)),
+  };
+};
