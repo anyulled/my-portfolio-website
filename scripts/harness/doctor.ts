@@ -16,14 +16,14 @@ const npmVersionText =
   process.env.npm_config_user_agent?.match(/^npm\/([^\s]+)/)?.[1] ?? "0.0.0";
 const npmVersion = parseRuntimeVersion(npmVersionText);
 const nodeSupported =
-  (nodeVersion.major === 22 && nodeVersion.minor >= 12) ||
+  (nodeVersion.major === 22 && nodeVersion.minor >= 13) ||
   (nodeVersion.major >= 23 && nodeVersion.major < 25);
 const npmSupported = npmVersion.major === 11;
 
 if (!nodeSupported) {
   console.error(`WHAT: Unsupported Node.js runtime: ${process.version}`);
   console.error(
-    "WHY: The repository supports Node.js 22.12 through Node.js 24.",
+    "WHY: The repository supports Node.js 22.13 through Node.js 24.",
   );
   console.error("FIX: Install Node.js 24.20.0 from .node-version.");
   process.exitCode = 1;
