@@ -1,11 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
-import type {
-  ClassificationRoute,
-  InstagramConversationRecord,
-  InstagramHandle,
-  NormalizedClassification,
-  ProcessingState,
-  ResponseRoute,
+import {
+  instagramHandleSchema,
+  type ClassificationRoute,
+  type InstagramConversationRecord,
+  type InstagramHandle,
+  type NormalizedClassification,
+  type ProcessingState,
+  type ResponseRoute,
 } from "./types";
 
 interface InstagramAccountRow {
@@ -68,6 +69,26 @@ export const getInstagramDatabase = () =>
     getRequiredEnvironmentValue("SUPABASE_SERVICE_ROLE_KEY"),
     { auth: { autoRefreshToken: false, persistSession: false } },
   );
+
+export const listConnectedInstagramAccounts = async (
+  database: ReturnType<typeof getInstagramDatabase>,
+): Promise<Array<InstagramHandle>> => {
+  const result = await database
+    .from("instagram_accounts")
+    .select("handle")
+    .eq("active", true)
+    .order("handle");
+  const data = result.data as unknown as Array<{ handle: string }> | null;
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  return (data ?? []).flatMap((account) => {
+    const handle = instagramHandleSchema.safeParse(account.handle);
+    return handle.success ? [handle.data] : [];
+  });
+};
 
 export const findInstagramAccount = async (
   database: ReturnType<typeof getInstagramDatabase>,
