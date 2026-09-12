@@ -3,11 +3,20 @@ import {
   getInstagramOAuthConfig,
   parseInstagramOAuthState,
 } from "@/services/instagram/config";
+import { exchangeInstagramAuthorizationCode } from "@/services/instagram/oauthClient";
 import {
   getInstagramDatabase,
   upsertInstagramAccount,
 } from "@/services/instagram/repository";
 import { NextResponse } from "next/server";
+
+const getErrorDetails = (error: unknown) => {
+  if (error instanceof Error) {
+    return { name: error.name, message: error.message };
+  }
+
+  return { name: "UnknownError", message: String(error) };
+};
 
 export async function GET(request: Request) {
   if (!(await getAuthenticatedOperator())) {
@@ -22,46 +31,29 @@ export async function GET(request: Request) {
     }
     const handle = parseInstagramOAuthState(state);
     const config = getInstagramOAuthConfig();
-    const tokenResponse = await fetch(
-      "https://api.instagram.com/oauth/access_token",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          client_id: config.appId,
-          client_secret: config.appSecret,
-          grant_type: "authorization_code",
-          redirect_uri: config.redirectUri,
-          code,
-        }),
-      },
-    );
-    const tokenPayload: unknown = await tokenResponse.json();
-    if (
-      !tokenResponse.ok ||
-      typeof tokenPayload !== "object" ||
-      tokenPayload === null
-    ) {
-      throw new Error("Instagram token exchange failed");
-    }
-    const token = tokenPayload as { access_token?: unknown; user_id?: unknown };
-    if (
-      typeof token.access_token !== "string" ||
-      typeof token.user_id !== "string"
-    ) {
-      throw new Error("Instagram token response is incomplete");
-    }
+    const token = await exchangeInstagramAuthorizationCode(code, config);
     await upsertInstagramAccount(getInstagramDatabase(), {
       handle,
-      instagram_user_id: token.user_id,
-      access_token: token.access_token,
+      instagram_user_id: token.instagramUserId,
+      access_token: token.accessToken,
+      token_expires_at: token.tokenExpiresAt,
     });
     return NextResponse.redirect(
       new URL("/instagram?connected=1", request.url),
     );
-  } catch {
-    return NextResponse.redirect(
-      new URL("/instagram?connected=0", request.url),
+  } catch (error) {
+    const requestId = crypto.randomUUID();
+    console.error(
+      JSON.stringify({
+        event: "instagram_oauth_callback_failed",
+        requestId,
+        error: getErrorDetails(error),
+      }),
     );
+    const redirectUrl = new URL("/instagram", request.url);
+    redirectUrl.searchParams.set("connected", "0");
+    redirectUrl.searchParams.set("error", "oauth_failed");
+    redirectUrl.searchParams.set("reference", requestId);
+    return NextResponse.redirect(redirectUrl);
   }
 }

@@ -15,6 +15,14 @@ export const getInstagramHandle = (value: string): InstagramHandle => {
   return result.data;
 };
 
+export interface InstagramOAuthConfig {
+  appId: string;
+  appSecret: string;
+  redirectUri: string;
+  scopes: string;
+  graphApiVersion: string;
+}
+
 export const getInstagramAccountHandle = (instagramUserId: string) => {
   if (process.env.INSTAGRAM_ANYULLED_USER_ID === instagramUserId) {
     return getInstagramHandle("anyulled");
@@ -78,7 +86,7 @@ export const parseInstagramOAuthState = (state: string) => {
   return getInstagramHandle(handle);
 };
 
-export const getInstagramOAuthConfig = () => ({
+export const getInstagramOAuthConfig = (): InstagramOAuthConfig => ({
   appId: getRequiredEnvironmentValue("META_APP_ID", process.env.META_APP_ID),
   appSecret: getRequiredEnvironmentValue(
     "META_APP_SECRET",

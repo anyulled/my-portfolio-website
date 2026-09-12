@@ -10,6 +10,19 @@ describe("InstagramInbox", () => {
     jest.restoreAllMocks();
   });
 
+  it("shows an actionable OAuth connection error reference", () => {
+    render(
+      <InstagramInbox connectionError={{ reference: "oauth-reference" }} />,
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Unable to connect the Instagram account.",
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Reference: oauth-reference",
+    );
+  });
+
   it("shows the server diagnosis and reference without claiming the inbox is empty", async () => {
     jest.mocked(global.fetch).mockResolvedValue({
       ok: false,
