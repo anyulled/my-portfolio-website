@@ -106,8 +106,15 @@ const getResponseError = (payload: unknown) => {
     return null;
   }
 
-  const message = payload.error_message ?? payload.message;
-  return typeof message === "string" && message ? message : null;
+  const getMessage = (value: unknown) => {
+    if (!isRecord(value)) {
+      return null;
+    }
+    const message = value.error_message ?? value.message;
+    return typeof message === "string" && message ? message : null;
+  };
+
+  return getMessage(payload) ?? getMessage(payload.error);
 };
 
 export const exchangeInstagramAuthorizationCode = async (
