@@ -12,7 +12,11 @@ Configure `GROQ_API_KEY`. The default model is `openai/gpt-oss-20b`; override it
 
 ## Meta
 
+Create or select the Meta app at https://developers.facebook.com/apps/ and add the Instagram product required by the selected Instagram API. Use the app credentials and callback configuration below; there is one Meta app for both professional Instagram accounts.
+
 Configure `META_APP_ID`, `META_APP_SECRET`, `META_REDIRECT_URI`, `META_INSTAGRAM_SCOPES`, `INSTAGRAM_GRAPH_API_VERSION`, and `INSTAGRAM_OAUTH_STATE_SECRET`.
+
+Set `META_REDIRECT_URI` to `https://boudoir.barcelona/api/instagram/oauth/callback`. Keep the real values in `.env.local` for local development and in the `boudoir-barcelona` Vercel project for deployed environments. The tracked `.env` file contains placeholders only.
 
 Set the Meta webhook callback to `/api/instagram/webhook` and set `INSTAGRAM_WEBHOOK_VERIFY_TOKEN` to the verification token configured in Meta.
 
