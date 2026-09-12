@@ -20,8 +20,8 @@ export const getInstagramAccountHandle = (instagramUserId: string) => {
     return getInstagramHandle("anyulled");
   }
 
-  if (process.env.INSTAGRAM_SENSUELLEBOIDOIR_USER_ID === instagramUserId) {
-    return getInstagramHandle("sensuelleboidoir");
+  if (process.env.INSTAGRAM_SENSUELLEBOUDOIR_USER_ID === instagramUserId) {
+    return getInstagramHandle("sensuelleboudoir");
   }
 
   throw new Error("Instagram account is not configured");

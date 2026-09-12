@@ -75,8 +75,8 @@ export default function InstagramInbox() {
             </a>
           </Button>
           <Button asChild variant="outline">
-            <a href="/api/instagram/oauth/start?account=sensuelleboidoir">
-              Connect @sensuelleboidoir
+            <a href="/api/instagram/oauth/start?account=sensuelleboudoir">
+              Connect @sensuelleboudoir
             </a>
           </Button>
         </div>

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const instagramHandleSchema = z.enum(["anyulled", "sensuelleboidoir"]);
+export const instagramHandleSchema = z.enum(["anyulled", "sensuelleboudoir"]);
 export type InstagramHandle = z.infer<typeof instagramHandleSchema>;
 
 export const responseRouteSchema = z.enum([
