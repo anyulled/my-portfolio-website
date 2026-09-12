@@ -42,6 +42,30 @@ Use `vercel env ls --json` when a script needs to inspect variables. Read only m
 
 For existing Config variables, pass `--type config`. For existing Sensitive variables, pass `--sensitive` or the equivalent supported secret type. This is important for values that look like credentials and for `NEXT_PUBLIC_*` variables: public variables must remain Config only when exposing them to browsers is intentional.
 
+### Application secret classification
+
+The `boudoir-barcelona` project stores these application credentials as Sensitive in every Vercel environment:
+
+| Variable       | Development | Preview   | Production |
+| -------------- | ----------- | --------- | ---------- |
+| `CRON_SECRET`  | Sensitive   | Sensitive | Sensitive  |
+| `GROQ_API_KEY` | Sensitive   | Sensitive | Sensitive  |
+
+The classification is independent from the variable value and environment scope. Verify it from sanitized JSON metadata:
+
+```bash
+npx --yes vercel env ls --json
+```
+
+When synchronizing either credential from `.env.local`, send the value through stdin and preserve the target explicitly:
+
+```bash
+printf '%s\n' "$CRON_SECRET_VALUE" | npx --yes vercel env update CRON_SECRET production --sensitive --yes
+printf '%s\n' "$GROQ_API_KEY_VALUE" | npx --yes vercel env update GROQ_API_KEY development --sensitive --yes
+```
+
+Never print the value or include it in `--value`, shell arguments, logs, commits, or pull requests.
+
 Examples that do not expose the value in the command line:
 
 ```bash
