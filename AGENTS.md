@@ -17,6 +17,10 @@
 - **State Management / Data**: React Server Components (RSC), Supabase, Google Cloud Storage
 - **Testing**: Jest, Testing Library
 
+## Deployment and Vercel CLI
+
+Follow the project-specific [Vercel CLI runbook](docs/vercel-cli.md) for project linking, environment variables, secret handling, and production deployments.
+
 ## Architectural Constraints
 
 - Follow Next.js App Router conventions (e.g., `page.tsx`, `layout.tsx`, API routes in `app/api`).
