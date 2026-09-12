@@ -137,4 +137,29 @@ describe("exchangeInstagramAuthorizationCode", () => {
       { headers: { Authorization: "Bearer short-token" } },
     );
   });
+
+  it("includes a nested provider error when the profile lookup fails", async () => {
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce(
+        createResponse(
+          '{"access_token":"short-token","permissions":[],"user_id":null}',
+        ),
+      )
+      .mockResolvedValueOnce(
+        createResponse('{"error":{"message":"Invalid OAuth token"}}', 400),
+      );
+
+    await expect(
+      exchangeInstagramAuthorizationCode("code", {
+        appId: "app-id",
+        appSecret: "app-secret",
+        redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+        graphApiVersion: "v23.0",
+      }),
+    ).rejects.toThrow(
+      "Instagram profile lookup failed (400); missing=id; keys=error; provider=Invalid OAuth token",
+    );
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+  });
 });
