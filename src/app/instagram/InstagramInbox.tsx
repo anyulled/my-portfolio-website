@@ -8,34 +8,78 @@ import type {
 } from "@/services/instagram/types";
 import { useEffect, useState } from "react";
 
+interface InboxError {
+  message: string;
+  requestId?: string;
+  resolution?: string;
+}
+
 const reviewDecisions: Array<{ value: ReviewDecision; label: string }> = [
   { value: "model_form", label: "Send model form" },
   { value: "pricing", label: "Send pricing" },
   { value: "ignore", label: "Ignore" },
 ];
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const getInboxError = (result: unknown): InboxError => {
+  if (!isRecord(result)) {
+    return { message: "Unable to load conversations." };
+  }
+
+  return {
+    message:
+      typeof result.message === "string"
+        ? result.message
+        : "Unable to load conversations.",
+    requestId:
+      typeof result.requestId === "string" ? result.requestId : undefined,
+    resolution:
+      typeof result.resolution === "string" ? result.resolution : undefined,
+  };
+};
+
+const getConversations = (
+  result: unknown,
+): InstagramConversationRecord[] | null => {
+  if (!isRecord(result) || !Array.isArray(result.conversations)) {
+    return null;
+  }
+
+  return result.conversations as InstagramConversationRecord[];
+};
+
 export default function InstagramInbox() {
   const [conversations, setConversations] = useState<
     InstagramConversationRecord[]
   >([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<InboxError | null>(null);
 
   const loadConversations = async () => {
-    const response = await fetch("/api/instagram/conversations");
-    if (!response.ok) {
-      setError("Unable to load conversations.");
-      return;
-    }
-    const result: unknown = await response.json();
-    if (
-      typeof result === "object" &&
-      result !== null &&
-      "conversations" in result
-    ) {
-      setConversations(
-        (result as { conversations: InstagramConversationRecord[] })
-          .conversations,
-      );
+    setError(null);
+
+    try {
+      const response = await fetch("/api/instagram/conversations");
+      const result: unknown = await response.json();
+
+      if (!response.ok) {
+        setError(getInboxError(result));
+        return;
+      }
+
+      const nextConversations = getConversations(result);
+      if (nextConversations) {
+        setConversations(nextConversations);
+        return;
+      }
+
+      setError({ message: "The inbox returned an invalid response." });
+    } catch {
+      setError({
+        message: "Unable to reach the Instagram inbox.",
+        resolution: "Check your connection and retry.",
+      });
     }
   };
 
@@ -53,7 +97,7 @@ export default function InstagramInbox() {
       },
     );
     if (!response.ok) {
-      setError("Unable to apply the decision.");
+      setError({ message: "Unable to apply the decision. Please retry." });
       return;
     }
     setConversations((current) =>
@@ -81,8 +125,26 @@ export default function InstagramInbox() {
           </Button>
         </div>
       </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      {conversations.length === 0 && <p>No conversations need attention.</p>}
+      {error && (
+        <div className="space-y-2 text-sm text-destructive" role="alert">
+          <p>{error.message}</p>
+          {error.resolution && <p>{error.resolution}</p>}
+          {error.requestId && <p>Reference: {error.requestId}</p>}
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={() => void loadConversations()}>
+              Retry loading conversations
+            </Button>
+            {error.message.includes("session has expired") && (
+              <Button asChild variant="outline">
+                <a href="/instagram/login">Sign in again</a>
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+      {!error && conversations.length === 0 && (
+        <p>No conversations need attention.</p>
+      )}
       {conversations.map((conversation) => (
         <Card key={conversation.id}>
           <CardHeader>
