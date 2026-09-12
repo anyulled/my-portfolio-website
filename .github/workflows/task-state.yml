@@ -6,15 +6,12 @@ on:
   pull_request:
     types: [opened, edited, synchronize, reopened, closed]
 
-permissions:
-  contents: read
-  issues: write
-  pull-requests: read
-
 jobs:
   enforce-wip:
     name: Enforce one active issue
     if: github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'state:active')
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
@@ -69,6 +66,8 @@ jobs:
   contract:
     name: Pull request task contract
     if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      issues: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
@@ -95,6 +94,9 @@ jobs:
   complete-task:
     name: Record verified completion
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      checks: read
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b

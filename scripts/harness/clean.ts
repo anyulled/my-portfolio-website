@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 
 const changedTrackedPaths = execFileSync(
-  "git",
+  "/usr/bin/git",
   ["status", "--porcelain", "--untracked-files=all"],
   { encoding: "utf8" },
 ).trim();
