@@ -1,0 +1,68 @@
+name: Harness task
+description: Define one implementation unit with machine-verifiable acceptance.
+title: "[Task]: "
+labels:
+  - "state:not-started"
+body:
+  - type: markdown
+    attributes:
+      value: Complete every required field before moving this issue to `state:active`.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: Describe the observable outcome, not the implementation steps.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List independently verifiable behaviors and the expected evidence.
+      placeholder: "- [ ] Behavior — verification command or artifact"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Included scope
+    validations:
+      required: true
+  - type: textarea
+    id: exclusions
+    attributes:
+      label: Explicit exclusions
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and decisions
+      description: Link blocking work and identify human decisions that must remain explicit.
+    validations:
+      required: true
+  - type: dropdown
+    id: verification
+    attributes:
+      label: Required verification
+      multiple: true
+      options:
+        - Static checks
+        - Runtime tests
+        - Local E2E
+        - Preview E2E
+        - Manual production verification
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: Risk and rollback
+    validations:
+      required: true
+  - type: textarea
+    id: documentation
+    attributes:
+      label: Documentation impact
+    validations:
+      required: true

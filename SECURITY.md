@@ -1,18 +1,19 @@
 # Security Policy
 
-## Supported Versions
+## Supported version
 
-Currently only the `main` branch of Superhero Battle Arena receives security updates. Previous versions and specific tags are not supported with security backports at this time.
+Security fixes target the current `main` branch.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| v0.0.1  | :x:                |
-| main    | :white_check_mark: |
+## Reporting
 
-## Reporting a Vulnerability
+Report vulnerabilities privately through GitHub Security Advisories. Do not publish credentials, exploit details, personal data, or client information in a public issue.
 
-We take the security of this project seriously. If you discover a vulnerability, please do NOT report it by creating a public GitHub issue.
+## Repository requirements
 
-Instead, report it privately via GitHub Security Advisories if available for this repository, or by contacting the maintainer directly at `@anyulled`.
-
-We will work to assess the vulnerability and, if confirmed, issue a patch and a public security advisory detailing the flaw and providing mitigation steps.
+- Store local secrets only in ignored `.env.local` files and deployment secrets in the relevant provider.
+- Keep `.env.example` value-free.
+- Compare environment-variable names without displaying values.
+- Require bearer authentication before cron handlers construct or call integration clients.
+- Never enable `HARNESS_MODE=fixture` in Vercel production.
+- Run the security and secret-scanning checks before merge.
+- Rotate a credential only after confirming exposure and obtaining explicit authorization for the external change.

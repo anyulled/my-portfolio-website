@@ -419,6 +419,8 @@
     "payment_bank": "Virement Bancaire",
     "payment_bizum": "Bizum",
     "payment_paypal": "PayPal",
+    "payment_revolut": "Revolut",
+    "payment_types": "Modes de Paiement Acceptés",
     "payment_other": "Autre",
     "select_payment": "Sélectionnez le type de paiement",
     "submit": "Soumettre la Demande de Réservation",

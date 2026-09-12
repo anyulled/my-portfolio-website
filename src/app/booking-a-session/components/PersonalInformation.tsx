@@ -20,7 +20,7 @@ export const PersonalInformation = ({ register, errors, t }: Props) => (
         </label>
         <Input
           id="fullName"
-          placeholder={t("full_name_placeholder")}
+          placeholder={t("full_name")}
           {...register("fullName")}
         />
         {errors.fullName && (
@@ -33,7 +33,7 @@ export const PersonalInformation = ({ register, errors, t }: Props) => (
         </label>
         <Input
           id="socialAccount"
-          placeholder={t("social_account_placeholder")}
+          placeholder={t("social_account")}
           {...register("socialAccount")}
         />
         {errors.socialAccount && (
@@ -51,7 +51,7 @@ export const PersonalInformation = ({ register, errors, t }: Props) => (
         <Input
           id="email"
           type="email"
-          placeholder={t("email_placeholder")}
+          placeholder={t("email")}
           {...register("email")}
         />
         {errors.email && (
@@ -64,7 +64,7 @@ export const PersonalInformation = ({ register, errors, t }: Props) => (
         </label>
         <Input
           id="country"
-          placeholder={t("country_placeholder")}
+          placeholder={t("country")}
           {...register("country")}
         />
         {errors.country && (

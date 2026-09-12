@@ -21,6 +21,13 @@
 
 Follow the project-specific [Vercel CLI runbook](docs/vercel-cli.md) for project linking, environment variables, secret handling, and production deployments.
 
+## Harness entrypoints
+
+- Start every change from one `state:active` GitHub issue with explicit acceptance criteria and exclusions.
+- Run `npm run doctor` before work, `npm run verify:quick` during work, and `npm run verify:full` before handoff.
+- Follow [Harness Engineering](docs/harness.md), [Testing](docs/testing.md), [Architecture](architecture.md), and [Security](SECURITY.md) through progressive disclosure.
+- GitHub issues and comments are the only task-state store. ADRs and RFCs hold durable decisions.
+
 ## Architectural Constraints
 
 - Follow Next.js App Router conventions (e.g., `page.tsx`, `layout.tsx`, API routes in `app/api`).
@@ -57,7 +64,7 @@ Agents must adhere to the following core principles:
   2. Verify all tests pass (`npm run test`).
   3. Resolve all linting or formatting errors (`npm run lint`).
   4. Fix any SonarQube findings.
-- **Documentation**: Always check the `/workflows` or `/skills` reference documentation if you're uncertain about a particular architectural approach or implementation detail.
+- **Documentation**: Check the focused repository documents linked above and the bundled Next.js guides in `node_modules/next/dist/docs/` before choosing an unfamiliar approach.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

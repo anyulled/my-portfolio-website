@@ -1,34 +1,26 @@
-/**
- * Concurrently maps an array with a maximum concurrency limit.
- *
- * @param array The array to map.
- * @param mapper The mapping function.
- * @param concurrency Limit on concurrent executions. Default is 10.
- * @returns A promise that resolves to an array of mapped values.
- */
 export async function concurrentMap<T, R>(
   array: T[],
   mapper: (item: T, index: number) => Promise<R>,
   concurrency = 10,
 ): Promise<R[]> {
-  const results: R[] = new Array<R>(array.length);
-  // eslint-disable-next-line no-restricted-syntax
-  let currentIndex = 0;
+  const batches = Array.from(
+    { length: Math.ceil(array.length / concurrency) },
+    (_, batchIndex) =>
+      array.slice(batchIndex * concurrency, (batchIndex + 1) * concurrency),
+  );
 
-  const worker = async () => {
-    while (true) {
-      const index = currentIndex++;
-      if (index >= array.length) {
-        break;
-      }
-      // eslint-disable-next-line security/detect-object-injection
-      results[index] = await mapper(array[index], index);
-    }
-  };
+  const mappedBatches = await batches.reduce<Promise<R[][]>>(
+    async (previousBatches, batch, batchIndex) => {
+      const completedBatches = await previousBatches;
+      const mappedBatch = await Promise.all(
+        batch.map((item, itemIndex) =>
+          mapper(item, batchIndex * concurrency + itemIndex),
+        ),
+      );
+      return [...completedBatches, mappedBatch];
+    },
+    Promise.resolve([]),
+  );
 
-  const workerCount = Math.min(concurrency, array.length);
-  const workers = new Array(workerCount).fill(null).map(worker);
-  await Promise.all(workers);
-
-  return results;
+  return mappedBatches.flat();
 }

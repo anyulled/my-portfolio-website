@@ -83,6 +83,8 @@
     "payment_cash": "Cash",
     "payment_other": "Other",
     "payment_paypal": "PayPal",
+    "payment_revolut": "Revolut",
+    "payment_types": "Accepted Payment Types",
     "payment_type": "Preferred Payment Type",
     "personal_info": "Personal Information",
     "physical_characteristics": "Physical Characteristics",

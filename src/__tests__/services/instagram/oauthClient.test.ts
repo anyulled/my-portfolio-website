@@ -95,6 +95,36 @@ describe("exchangeInstagramAuthorizationCode", () => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
+  it("reports response keys in deterministic alphabetical order", async () => {
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce(createResponse('{"zeta":true,"alpha":true}', 400));
+
+    await expect(
+      exchangeInstagramAuthorizationCode("code", {
+        appId: "app-id",
+        appSecret: "app-secret",
+        redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+        graphApiVersion: "v23.0",
+      }),
+    ).rejects.toThrow("keys=alpha,zeta");
+  });
+
+  it("reports no response keys when the provider returns a scalar", async () => {
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce(createResponse("null", 400));
+
+    await expect(
+      exchangeInstagramAuthorizationCode("code", {
+        appId: "app-id",
+        appSecret: "app-secret",
+        redirectUri: "https://boudoir.barcelona/api/instagram/oauth/callback",
+        graphApiVersion: "v23.0",
+      }),
+    ).rejects.toThrow("keys=none");
+  });
+
   it("rejects an incomplete long-lived token response", async () => {
     jest
       .mocked(global.fetch)

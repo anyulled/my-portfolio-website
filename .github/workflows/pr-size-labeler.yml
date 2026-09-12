@@ -1,26 +1,26 @@
 name: PR Size Labeler
 
 on:
-    pull_request:
-        types: [opened, synchronize, reopened]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-    size-label:
-        permissions:
-            issues: write
-            pull-requests: write
-        runs-on: ubuntu-latest
-        steps:
-            - uses: pascalgn/size-label-action@f8edde36b3be04b4f65dcfead05dc8691b374348
-              env:
-                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-              with:
-                  sizes: >
-                      {
-                        "0": "size/XS",
-                        "20": "size/S",
-                        "50": "size/M",
-                        "200": "size/L",
-                        "800": "size/XL",
-                        "2000": "size/XXL"
-                      }
+  size-label:
+    permissions:
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: pascalgn/size-label-action@f8edde36b3be04b4f65dcfead05dc8691b374348
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          sizes: >
+            {
+              "0": "size/XS",
+              "20": "size/S",
+              "50": "size/M",
+              "200": "size/L",
+              "800": "size/XL",
+              "2000": "size/XXL"
+            }

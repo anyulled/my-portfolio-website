@@ -1,17 +1,10 @@
 import { getInstagramDatabase } from "@/services/instagram/repository";
 import { refreshInstagramAccounts } from "@/services/instagram/tokenRefresh";
+import { isCronRequestAuthorized } from "@/services/cron/authorization";
 import { NextResponse } from "next/server";
 
-const isAuthorized = (request: Request) => {
-  const configuredSecret = process.env.CRON_SECRET;
-  const authorization = request.headers.get("authorization");
-  return Boolean(
-    configuredSecret && authorization === `Bearer ${configuredSecret}`,
-  );
-};
-
 export async function GET(request: Request) {
-  if (!isAuthorized(request)) {
+  if (!isCronRequestAuthorized(request)) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 

@@ -419,6 +419,8 @@
     "payment_bank": "Банківський переказ",
     "payment_bizum": "Bizum",
     "payment_paypal": "PayPal",
+    "payment_revolut": "Revolut",
+    "payment_types": "Прийнятні Способи Оплати",
     "payment_other": "Інше",
     "select_payment": "Виберіть тип оплати",
     "submit": "Надіслати запит на бронювання",

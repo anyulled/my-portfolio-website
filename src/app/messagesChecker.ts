@@ -53,8 +53,6 @@ fs.readdir(messagesFolderPath, (err, files) => {
 
       const fileKeysSet = new Set(fileKeys);
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const missingKeys = referenceKeysArray.filter(
         (key) => !fileKeysSet.has(key),
       );

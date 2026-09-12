@@ -98,7 +98,11 @@ const getTokenExpiresAt = (expiresIn: number | null) =>
 
 const getResponseKeys = (payload: unknown) => {
   const record = getTokenRecord(payload);
-  return record ? Object.keys(record).sort().join(",") : "none";
+  return record
+    ? Object.keys(record)
+        .sort((leftKey, rightKey) => leftKey.localeCompare(rightKey))
+        .join(",")
+    : "none";
 };
 
 const getResponseError = (payload: unknown) => {

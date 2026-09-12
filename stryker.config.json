@@ -6,6 +6,11 @@
   "testRunner": "jest",
   "reporters": ["progress", "clear-text", "html"],
   "coverageAnalysis": "perTest",
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": 25
+  },
   "jest": {
     "projectType": "custom",
     "configFile": "jest.config.ts",

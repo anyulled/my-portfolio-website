@@ -10,6 +10,7 @@ import securityPlugin from 'eslint-plugin-security';
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import noGenericNames from './.eslint-rules/no-generic-names.js';
+import noServerImportsInClient from './.eslint-rules/no-server-imports-in-client.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,6 +25,7 @@ const customRules = {
         custom: {
             rules: {
                 'no-generic-names': noGenericNames,
+                'no-server-imports-in-client': noServerImportsInClient,
             },
         },
         import: importPlugin,
@@ -56,6 +58,7 @@ export default [
         ignores: [
             ".agent/**",
             ".next/**",
+            ".stryker-tmp/**",
             "node_modules/**",
             "coverage/**",
             "*.config.js",
@@ -80,7 +83,7 @@ export default [
     eslintComments.recommended,
     {
         rules: {
-            '@eslint-community/eslint-comments/no-use': ['error', { allow: ['eslint-disable', 'eslint-enable', 'eslint-disable-next-line'] }],
+            '@eslint-community/eslint-comments/no-use': 'error',
         },
     },
     securityPlugin.configs.recommended,
@@ -96,6 +99,7 @@ export default [
 
             // Custom rule: no generic names
             'custom/no-generic-names': 'error',
+            'custom/no-server-imports-in-client': 'error',
 
             // No comments - forces self-documenting code
             'no-warning-comments': 'error',

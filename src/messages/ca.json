@@ -419,6 +419,8 @@
     "payment_bank": "Transferència Bancària",
     "payment_bizum": "Bizum",
     "payment_paypal": "PayPal",
+    "payment_revolut": "Revolut",
+    "payment_types": "Tipus de Pagament Acceptats",
     "payment_other": "Altre",
     "select_payment": "Selecciona tipus de pagament",
     "submit": "Envia Sol·licitud de Reserva",

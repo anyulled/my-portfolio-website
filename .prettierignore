@@ -1,0 +1,9 @@
+.next/
+.stryker-tmp/
+coverage/
+docs/api-reference/
+node_modules/
+output/
+playwright-report/
+reports/
+test-results/

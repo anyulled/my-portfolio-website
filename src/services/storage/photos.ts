@@ -3,6 +3,8 @@ import { createGCPStorageClient } from "@/lib/gcp/storage-client";
 import { concurrentMap } from "@/lib/async";
 import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
+import { getHarnessPhotos } from "@/services/harness/fixtures";
+import { isHarnessFixtureMode } from "@/services/harness/mode";
 import type { Photo } from "@/types/photos";
 import { Storage } from "@google-cloud/storage";
 import { captureException } from "@sentry/nextjs";
@@ -40,29 +42,7 @@ const parseDate = (value: string | undefined, fallback: Date): Date => {
 };
 
 const extractTrailingDigits = (value: string): string | null => {
-  // eslint-disable-next-line no-restricted-syntax
-  let end = -1;
-  // eslint-disable-next-line no-restricted-syntax
-  for (let i = value.length - 1; i >= 0; i--) {
-    const code = value.codePointAt(i) ?? 0;
-    // '0'-'9'
-    const isDigit = code >= 48 && code <= 57;
-    if (!isDigit) {
-      if (end !== -1) {
-        // Found the end of the digit sequence (since we are going backwards, it's the start)
-        return value.substring(i + 1, end + 1);
-      }
-      continue;
-    }
-
-    if (end === -1) {
-      end = i;
-    }
-  }
-  if (end !== -1) {
-    return value.substring(0, end + 1);
-  }
-  return null;
+  return value.match(/[0-9]+$/)?.[0] ?? null;
 };
 
 const parsePhotoId = (value: string | undefined): number | null => {
@@ -83,15 +63,11 @@ const parsePhotoId = (value: string | undefined): number | null => {
 };
 
 const generatePhotoIdFromFilename = (filename: string): number => {
-  // eslint-disable-next-line no-restricted-syntax
-  let hash = 0;
-  // eslint-disable-next-line no-restricted-syntax
-  for (let i = 0; i < filename.length; i++) {
-    const charCode = filename.codePointAt(i) ?? 0;
-    hash = (hash << 5) - hash + charCode;
-    // Convert to 32bit integer
-    hash = Math.trunc(hash);
-  }
+  const hash = Array.from(filename).reduce(
+    (currentHash, character) =>
+      Math.trunc((currentHash << 5) - currentHash + character.charCodeAt(0)),
+    0,
+  );
   return Math.abs(hash);
 };
 
@@ -335,7 +311,7 @@ const fetchPhotosFromGCS = async (
   }
 };
 
-export const getPhotosFromStorage = async (
+const getIntegratedPhotosFromStorage = async (
   prefix: string,
   limit?: number,
   storageClient?: StorageClient,
@@ -373,3 +349,12 @@ export const getPhotosFromStorage = async (
 
   return fetchedPhotos;
 };
+
+export const getPhotosFromStorage = async (
+  prefix: string,
+  limit?: number,
+  storageClient?: StorageClient,
+): Promise<Photo[] | null> =>
+  isHarnessFixtureMode()
+    ? getHarnessPhotos(prefix, limit)
+    : getIntegratedPhotosFromStorage(prefix, limit, storageClient);

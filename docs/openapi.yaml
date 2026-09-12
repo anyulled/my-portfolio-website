@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: My Portfolio Website API
-  description: Internal APIs for contact, bookings, pricing, and testimonials.
-  version: 1.0.0
+  title: Sensuelle Boudoir API
+  description: APIs for the public website and authenticated operational jobs.
+  version: 1.1.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
 servers:
-  - url: https://api.my-portfolio.com
+  - url: https://boudoir.barcelona
     description: Production server
   - url: http://localhost:3000
     description: Local development server
@@ -32,11 +32,11 @@ paths:
                   type: string
                   format: date
       responses:
-        '200':
+        "200":
           description: Booking request received successfully
-        '400':
+        "400":
           description: Invalid request payload
-        '500':
+        "500":
           description: Internal server error
   /api/contact:
     post:
@@ -56,29 +56,29 @@ paths:
                 message:
                   type: string
       responses:
-        '200':
+        "200":
           description: Contact message sent successfully
-        '400':
+        "400":
           description: Invalid request payload
   /api/pricing/recalculate:
-    post:
+    get:
       operationId: recalculatePricing
       summary: Recalculate pricing based on selected options
       responses:
-        '200':
+        "200":
           description: Pricing recalculated
           content:
             application/json:
               schema:
                 type: object
-        '400':
-          description: Invalid request payload
+        "401":
+          description: Invalid pricing recalculation secret
   /api/testimonials:
     get:
       operationId: getTestimonials
       summary: Retrieve testimonials
       responses:
-        '200':
+        "200":
           description: Testimonials list
           content:
             application/json:
@@ -86,5 +86,37 @@ paths:
                 type: array
                 items:
                   type: object
-        '400':
-          description: Invalid request payload
+        "500":
+          description: Internal server error
+  /api/cron/resize-images:
+    get:
+      operationId: resizeImages
+      summary: Resize and convert stored photographs
+      security:
+        - cronBearer: []
+      responses:
+        "200":
+          description: Image processing completed
+        "401":
+          description: Missing or invalid cron bearer token
+        "500":
+          description: Image processing failed
+  /api/cron/refresh-instagram-tokens:
+    get:
+      operationId: refreshInstagramTokens
+      summary: Refresh connected Instagram account tokens
+      security:
+        - cronBearer: []
+      responses:
+        "200":
+          description: Token refresh completed
+        "401":
+          description: Missing or invalid cron bearer token
+        "503":
+          description: One or more token refreshes failed
+components:
+  securitySchemes:
+    cronBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: CRON_SECRET

@@ -13,6 +13,7 @@ jest.mock("@sentry/nextjs", () => ({
 }));
 
 describe("Photos Storage Service", () => {
+  const originalHarnessMode = process.env.HARNESS_MODE;
   const mockPhoto = {
     id: 1,
     title: "Test Photo",
@@ -64,6 +65,26 @@ describe("Photos Storage Service", () => {
     (Storage as unknown as jest.Mock).mockImplementation(
       () => mockStorageClient,
     );
+  });
+
+  afterEach(() => {
+    if (originalHarnessMode === undefined) {
+      delete process.env.HARNESS_MODE;
+      return;
+    }
+
+    process.env.HARNESS_MODE = originalHarnessMode;
+  });
+
+  it("returns local fixture photos without accessing integrations", async () => {
+    process.env.HARNESS_MODE = "fixture";
+
+    const result = await getPhotosFromStorage("hero", 1);
+
+    expect(result?.[0].srcSet[0].src).toBe("/images/DSC_7028.jpg");
+    expect(getRedisCachedData).not.toHaveBeenCalled();
+    expect(getCachedData).not.toHaveBeenCalled();
+    expect(mockStorageClient.bucket).not.toHaveBeenCalled();
   });
 
   it("should return cached data from Redis if available", async () => {

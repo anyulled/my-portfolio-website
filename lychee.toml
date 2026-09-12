@@ -1,0 +1,14 @@
+exclude = [
+  "http://localhost:3000/",
+  "http://127.0.0.1:3000/",
+  "node_modules",
+  ".next",
+  "coverage",
+  "docs/api-reference",
+  "output",
+  "playwright-report",
+  "test-results",
+]
+max_retries = 2
+max_concurrency = 8
+timeout = 20
