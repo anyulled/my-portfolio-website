@@ -1,48 +1,52 @@
-![](https://api.checklyhq.com/v1/badges/checks/8fb0d035-0146-4b64-8826-d01e721d34e6?style=flat&theme=default)
+# Sensuelle Boudoir Barcelona
 
+[![Checkly](https://api.checklyhq.com/v1/badges/checks/8fb0d035-0146-4b64-8826-d01e721d34e6?style=flat&theme=default)](https://app.checklyhq.com)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=anyulled_my-portfolio-website&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=anyulled_my-portfolio-website)
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/anyulled/my-portfolio-website)
-
 [![AI Harness Scorecard](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanyulled%2Fmy-portfolio-website%2Fscorecard%2Fscorecard-badge.json)](https://github.com/anyulled/my-portfolio-website/blob/scorecard/scorecard-report.md)
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Next.js App Router application for the Sensuelle Boudoir photography website, booking and release workflows, pricing, image delivery, and the operator-only Instagram inbox.
 
-## Architecture & RFCs
+## Prerequisites
 
-For significant architectural changes, new features, or major refactoring, we use a Request for Comments (RFCs) process. You can find our active and past proposals in the [docs/rfcs](./docs/rfcs) directory and read the [RFC Process Documentation](./docs/rfcs/README.md) to learn how to propose changes.
+- Node.js 24.20.0 is preferred; Node.js 22.9 or newer is supported.
+- npm 11.19.1.
+- Copy `.env.example` to `.env.local` and populate only the integrations needed for the workflow being exercised.
 
-## Getting Started
+Never commit an environment file or paste credential values into issues, logs, or pull requests.
 
-First, run the development server:
+## Bootstrap
+
+```bash
+npm ci
+npm run doctor
+```
+
+Start the application with production integrations:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Start it with deterministic local fixtures:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev:harness
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open <http://localhost:3000>.
 
-## Learn More
+## Verification
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run verify:quick
+npm run verify
+npm run verify:full
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`verify:quick` checks the repository contract, linting, formatting, and types. `verify` adds coverage, a fixture-backed production build, and the OpenAPI contract. `verify:full` also runs browser E2E tests against the production server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+See [Harness Engineering](docs/harness.md) for task state, evidence, handoffs, and CI behavior. See [Testing](docs/testing.md), [Architecture](architecture.md), [Security](SECURITY.md), and the [Vercel runbook](docs/vercel-cli.md) for focused guidance.
 
-## Deploy on Vercel
+## Changes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Work is tracked through GitHub issues. One issue may be active per assignee, and every non-Dependabot pull request must close exactly one active issue. Significant architectural changes use the [RFC process](docs/rfcs/README.md) and durable decisions use `docs/adr`.

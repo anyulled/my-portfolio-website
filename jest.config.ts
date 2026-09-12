@@ -36,6 +36,9 @@ const customJestConfig = {
     "^.+\\.module\\.(css|sass|scss)$",
   ],
   collectCoverage: true,
+  coverageReporters: ["text", "lcov", "json", "json-summary"] as Array<
+    "text" | "lcov" | "json" | "json-summary"
+  >,
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",
     "!src/**/*.d.ts",

@@ -1,0 +1,144 @@
+name: Task State
+
+on:
+  issues:
+    types: [assigned, labeled]
+  pull_request:
+    types: [opened, edited, synchronize, reopened, closed]
+
+jobs:
+  enforce-wip:
+    name: Enforce one active issue
+    if: github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'state:active')
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        with:
+          script: |
+            const assignees = context.payload.issue.assignees ?? [];
+            const currentLabels = context.payload.issue.labels.map((label) => label.name);
+            const obsoleteStateLabels = currentLabels.filter((label) => label.startsWith('state:') && label !== 'state:active');
+            for (const label of obsoleteStateLabels) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: label,
+              });
+            }
+            if (assignees.length === 0) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: 'state:active',
+              });
+              core.setFailed('WHAT: Active issue has no assignee. WHY: WIP ownership must be explicit. FIX: Assign the issue before adding state:active.');
+              return;
+            }
+            for (const assignee of assignees) {
+              const activeIssues = await github.paginate(github.rest.issues.listForRepo, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'state:active',
+                assignee: assignee.login,
+              });
+              if (activeIssues.length > 1) {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  name: 'state:active',
+                });
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: `WIP=1: @${assignee.login} already has an active issue. Finish or block it before activating this task.`,
+                });
+                core.setFailed(`WIP=1 violation for ${assignee.login}`);
+              }
+            }
+
+  contract:
+    name: Pull request task contract
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      issues: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        with:
+          script: |
+            const body = context.payload.pull_request.body ?? '';
+            const references = [...body.matchAll(/(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi)];
+            const issueNumbers = [...new Set(references.map((reference) => Number(reference[1])))];
+            if (issueNumbers.length !== 1) {
+              core.setFailed('WHAT: PR must close exactly one issue. WHY: The harness requires one active task per change. FIX: Add Closes #<active-issue> to the PR body.');
+              return;
+            }
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumbers[0],
+            });
+            const labels = issue.data.labels.map((label) => typeof label === 'string' ? label : label.name);
+            const stateLabels = labels.filter((label) => label?.startsWith('state:'));
+            if (stateLabels.length !== 1 || stateLabels[0] !== 'state:active') {
+              core.setFailed('WHAT: Linked issue must have exactly one state label: state:active. WHY: Work must have explicit ownership and boundaries. FIX: Remove other state labels and activate the linked issue.');
+            }
+
+  complete-task:
+    name: Record verified completion
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      checks: read
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        with:
+          script: |
+            const body = context.payload.pull_request.body ?? '';
+            const match = body.match(/(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/i);
+            if (!match) return;
+            const issueNumber = Number(match[1]);
+            const requiredChecks = ['Required harness gates', 'Pull request task contract'];
+            const checkRuns = await github.paginate(github.rest.checks.listForRef, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.payload.pull_request.head.sha,
+              per_page: 100,
+            });
+            const failedRequirements = requiredChecks.filter((name) =>
+              !checkRuns.some((check) => check.name === name && check.conclusion === 'success'),
+            );
+            if (failedRequirements.length > 0) {
+              core.setFailed(`WHAT: Required verification was not successful: ${failedRequirements.join(', ')}. WHY: A merge alone cannot prove acceptance. FIX: Repair or rerun the required checks.`);
+              return;
+            }
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+            });
+            const stateLabels = issue.data.labels
+              .map((label) => typeof label === 'string' ? label : label.name)
+              .filter((label) => label?.startsWith('state:'));
+            for (const label of stateLabels) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                name: label,
+              });
+            }
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              labels: ['state:passing'],
+            });

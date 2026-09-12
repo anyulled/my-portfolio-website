@@ -56,6 +56,7 @@ describe("Image Resizing Cron Route", () => {
     jest.resetModules();
     process.env.CRON_NOTIFICATION_EMAIL = "test@example.com";
     process.env.GCP_HOMEPAGE_BUCKET = "test-bucket";
+    process.env.CRON_SECRET = "cron-secret";
 
     // Import mocks
     context.mailer = require("@/services/mailer");
@@ -79,6 +80,71 @@ describe("Image Resizing Cron Route", () => {
     context.GET = route.GET;
   });
 
+  it("rejects unauthorized requests before accessing storage", async () => {
+    const response = await context.GET(
+      new Request("https://example.com/api/cron/resize-images"),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(json).toEqual({ message: "Unauthorized" });
+    expect(context.photosStorage.createStorageClient).not.toHaveBeenCalled();
+    expect(context.mailer.sendEmailToRecipient).not.toHaveBeenCalled();
+  });
+
+  it("skips small WebP images without downloading them", async () => {
+    const webpFile = {
+      ...mockFile("small.webp"),
+      metadata: {
+        contentType: "image/webp",
+        size: "500",
+        metadata: { width: "100", height: "100" },
+      },
+    };
+    context.mockBucket.getFilesStream.mockReturnValue({
+      [Symbol.asyncIterator]: async function* () {
+        yield webpFile;
+      },
+    });
+
+    const response = await context.GET(
+      new Request("https://example.com/api/cron/resize-images", {
+        headers: { authorization: "Bearer cron-secret" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.skipped).toBe(1);
+    expect(webpFile.download).not.toHaveBeenCalled();
+  });
+
+  it("reports processing errors from images without dimension metadata", async () => {
+    const failingFile = {
+      ...mockFile("broken.jpg"),
+      metadata: { metadata: {} },
+      download: jest.fn().mockRejectedValue(new Error("download failed")),
+    };
+    context.mockBucket.getFilesStream.mockReturnValue({
+      [Symbol.asyncIterator]: async function* () {
+        yield failingFile;
+      },
+    });
+
+    const response = await context.GET(
+      new Request("https://example.com/api/cron/resize-images", {
+        headers: { authorization: "Bearer cron-secret" },
+      }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(json.errors).toBe(1);
+    expect(json.errorList).toEqual([
+      { file: "broken.jpg", error: "download failed" },
+    ]);
+  });
+
   it("should process images and send email summary", async () => {
     const file1 = mockFile("image1.jpg");
     const file2 = mockFile("image2.png");
@@ -92,7 +158,11 @@ describe("Image Resizing Cron Route", () => {
       mockFile(name),
     );
 
-    const response = await context.GET();
+    const response = await context.GET(
+      new Request("https://example.com/api/cron/resize-images", {
+        headers: { authorization: "Bearer cron-secret" },
+      }),
+    );
     const json = await response.json();
 
     expect(response.status).toBe(200);

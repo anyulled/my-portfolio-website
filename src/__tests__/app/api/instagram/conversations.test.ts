@@ -1,4 +1,5 @@
 jest.mock("next/server", () => ({
+  connection: jest.fn().mockResolvedValue(undefined),
   NextResponse: {
     json: (body: unknown, options?: { status?: number }) => ({
       status: options?.status ?? 200,

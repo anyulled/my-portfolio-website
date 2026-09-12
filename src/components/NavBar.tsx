@@ -15,7 +15,7 @@ import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { NavLinks } from "@/components/NavLinks";
@@ -37,6 +37,7 @@ export default function NavBar() {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const scrollFramePending = useRef(false);
   const gaEventTracker = useAnalyticsEventTracker("Navigation");
 
   const t = useTranslations();
@@ -60,16 +61,13 @@ export default function NavBar() {
       };
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    let ticking = false;
-
     const handleWindowScroll = () => {
-      if (!ticking) {
+      if (!scrollFramePending.current) {
         window.requestAnimationFrame(() => {
           setIsScrolled(window.scrollY > 50);
-          ticking = false;
+          scrollFramePending.current = false;
         });
-        ticking = true;
+        scrollFramePending.current = true;
       }
     };
     /*

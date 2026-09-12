@@ -84,6 +84,8 @@
     "payment_cash": "Efectivo",
     "payment_other": "Otro",
     "payment_paypal": "PayPal",
+    "payment_revolut": "Revolut",
+    "payment_types": "Tipos de Pago Aceptados",
     "payment_type": "Tipo de Pago Preferido",
     "personal_info": "Información Personal",
     "physical_characteristics": "Características Físicas",

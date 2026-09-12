@@ -25,7 +25,7 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
         <label htmlFor="startDate" className="text-sm font-medium">
-          {t("start_date")} *
+          {t("available_from")} *
         </label>
         <Input id="startDate" type="date" {...register("startDate")} />
         {errors.startDate && (
@@ -34,7 +34,7 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
       </div>
       <div className="space-y-2">
         <label htmlFor="endDate" className="text-sm font-medium">
-          {t("end_date")} *
+          {t("available_until")} *
         </label>
         <Input id="endDate" type="date" {...register("endDate")} />
         {errors.endDate && (
@@ -44,7 +44,7 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
     </div>
     <div className="space-y-2">
       <label htmlFor="rates" className="text-sm font-medium">
-        {t("rates_expectation")} *
+        {t("rates")} *
       </label>
       <Input
         id="rates"
@@ -57,7 +57,7 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t("model_release_q")} *</label>
+        <label className="text-sm font-medium">{t("model_release")} *</label>
         <Controller
           name="modelRelease"
           control={control}
@@ -80,7 +80,7 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">{t("payment_types_q")} *</label>
+        <label className="text-sm font-medium">{t("payment_types")} *</label>
         <Controller
           name="paymentTypes"
           control={control}
@@ -101,7 +101,7 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
                     htmlFor={`payment-${type}`}
                     className="text-sm capitalize"
                   >
-                    {t(type)}
+                    {t(`payment_${type}`)}
                   </label>
                 </div>
               ))}

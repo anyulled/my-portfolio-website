@@ -2,6 +2,7 @@ import {
   createStorageClient,
   DEFAULT_BUCKET_NAME,
 } from "@/services/storage/photos";
+import { isCronRequestAuthorized } from "@/services/cron/authorization";
 import chalk from "chalk";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
@@ -52,21 +53,20 @@ function isValidImage(file: GCSFile): boolean {
   return !file.name.endsWith("/") && VALID_IMAGE_PATTERN.test(file.name);
 }
 
-// eslint-disable-next-line complexity
+const hasKnownDimensions = (width: number, height: number): boolean =>
+  Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0;
+
+const isWithinSizeLimit = (width: number, height: number): boolean =>
+  width <= MAX_WIDTH_HEIGHT && height <= MAX_WIDTH_HEIGHT;
+
 function shouldSkipImage(file: GCSFile): ProcessResult | null {
   const metaWidth = parseInt(file.metadata.metadata?.width || "0");
   const metaHeight = parseInt(file.metadata.metadata?.height || "0");
-  const knownDimensions =
-    !isNaN(metaWidth) && metaWidth > 0 && !isNaN(metaHeight) && metaHeight > 0;
-
-  if (!knownDimensions) {
+  if (!hasKnownDimensions(metaWidth, metaHeight)) {
     return null;
   }
 
-  const isTooLargeMetadata =
-    metaWidth > MAX_WIDTH_HEIGHT || metaHeight > MAX_WIDTH_HEIGHT;
-
-  if (isTooLargeMetadata) {
+  if (!isWithinSizeLimit(metaWidth, metaHeight)) {
     return null;
   }
 
@@ -202,9 +202,7 @@ interface GCSStorage {
   bucket(name: string): GCSBucket;
 }
 
-import { NextRequest } from "next/server";
-
-export async function GET(_request: NextRequest) {
+const runImageResizeJob = async () => {
   console.log(
     chalk.cyan(
       "[Cron] Starting image resizing & WebP conversion job... (VERSION 3)",
@@ -223,24 +221,24 @@ export async function GET(_request: NextRequest) {
      * errors on large buckets by streaming metadata instead of loading all items into a single array.
      */
     const fileStream = bucket.getFilesStream();
-    const fileIterator = fileStream[Symbol.asyncIterator]();
+    const fileIterator: AsyncIterator<GCSFile> =
+      fileStream[Symbol.asyncIterator]();
 
     const results: ProcessResult[] = [];
 
-    // Concurrency limit to optimize throughput without OOM
     const CONCURRENCY = 5;
-    // eslint-disable-next-line no-restricted-syntax
-    let filesProcessedCount = 0;
+    const progress = { filesProcessed: 0 };
 
     const worker = async (): Promise<void> => {
       while (true) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const { value: file, done } = await fileIterator.next();
-        if (done) {
+        const iterationResult: IteratorResult<GCSFile> =
+          await fileIterator.next();
+        if (iterationResult.done) {
           break;
         }
+        const file = iterationResult.value;
 
-        filesProcessedCount++;
+        progress.filesProcessed += 1;
 
         if (!isValidImage(file)) {
           results.push({
@@ -262,7 +260,7 @@ export async function GET(_request: NextRequest) {
     await Promise.all(workers);
     console.log(
       chalk.cyan(
-        `[Cron] Processed stream of ${filesProcessedCount} total files in bucket.`,
+        `[Cron] Processed stream of ${progress.filesProcessed} total files in bucket.`,
       ),
     );
 
@@ -271,22 +269,34 @@ export async function GET(_request: NextRequest) {
      * multiple O(N) calls to .filter() and .reduce(). This avoids iterating
      * over the data four separate times and reduces intermediate array allocations.
      */
-    const processed: ProcessResult[] = [];
-    const errors: ProcessResult[] = [];
-    // eslint-disable-next-line no-restricted-syntax
-    let totalOriginalBytes = 0;
-    // eslint-disable-next-line no-restricted-syntax
-    let totalNewBytes = 0;
+    const resultSummary = results.reduce(
+      (summaryState, processResult) => {
+        if (processResult.status === "processed") {
+          return {
+            ...summaryState,
+            processed: [...summaryState.processed, processResult],
+            totalOriginalBytes:
+              summaryState.totalOriginalBytes + processResult.originalBytes,
+            totalNewBytes: summaryState.totalNewBytes + processResult.newBytes,
+          };
+        }
 
-    for (const r of results) {
-      if (r.status === "processed") {
-        processed.push(r);
-        totalOriginalBytes += r.originalBytes;
-        totalNewBytes += r.newBytes;
-      } else if (r.status === "error") {
-        errors.push(r);
-      }
-    }
+        return processResult.status === "error"
+          ? {
+              ...summaryState,
+              errors: [...summaryState.errors, processResult],
+            }
+          : summaryState;
+      },
+      {
+        processed: [] as ProcessResult[],
+        errors: [] as ProcessResult[],
+        totalOriginalBytes: 0,
+        totalNewBytes: 0,
+      },
+    );
+    const { processed, errors, totalOriginalBytes, totalNewBytes } =
+      resultSummary;
 
     const skipped = results.length - processed.length - errors.length;
     const totalBytesSaved = totalOriginalBytes - totalNewBytes;
@@ -357,4 +367,12 @@ ${summary.errorList.length > 0 ? JSON.stringify(summary.errorList, null, 2) : "N
       { status: 500 },
     );
   }
+};
+
+export async function GET(request: Request) {
+  if (!isCronRequestAuthorized(request)) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  return runImageResizeJob();
 }

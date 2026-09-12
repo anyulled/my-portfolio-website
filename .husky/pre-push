@@ -1,6 +1,2 @@
-# Run build and tests before push
-# Run build
-npm run build
-
-# Run tests on changed files only
-npx jest --onlyChanged --passWithNoTests
+npm run build:harness
+./node_modules/.bin/jest --onlyChanged --passWithNoTests

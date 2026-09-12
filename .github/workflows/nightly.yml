@@ -2,46 +2,101 @@ name: Nightly Checks
 
 on:
   schedule:
-    - cron: '0 2 * * *' # Run at 2 AM UTC every night
+    - cron: "0 2 * * *"
   workflow_dispatch:
+
+concurrency:
+  group: nightly-harness
+  cancel-in-progress: true
 
 permissions:
   actions: read
   contents: read
+  issues: write
 
 jobs:
   nightly:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      CI: true
+      HUSKY: 0
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           fetch-depth: 0
-
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
-          node-version: 20
-          cache: "npm"
-
-      - run: |
-          npm ci --ignore-scripts
-
-      - name: Strict Lints
-        run: npm run lint:ci
-
-      - name: Security Audit
-        run: npm run audit:ci
-
-      - name: Mutation Tests
-        run: npm run test:mutation
-        
-      - name: API OpenAPI Specs Validation
-        run: npm run api:lint
-
-      - name: Link Checker
+          node-version-file: .node-version
+          cache: npm
+      - run: npm install --global --ignore-scripts npm@11.19.1
+      - run: npm ci --ignore-scripts
+      - run: ./node_modules/.bin/playwright install --with-deps chromium
+      - id: quality
+        name: Verify application quality
+        continue-on-error: true
+        run: npm run verify:nightly && npm run harness:clean
+      - id: links
+        name: Verify documentation links
+        continue-on-error: true
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
         with:
-          args: --verbose --no-progress './**/*.md' './**/*.html'
+          args: --config lychee.toml './**/*.md' './**/*.html'
           fail: true
-
-      - name: Docs Generation Scan
-        run: npm run docs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: nightly-verification
+          path: |
+            coverage
+            playwright-report
+            test-results
+            reports
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Reconcile repair issues
+        if: always()
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        env:
+          QUALITY_OUTCOME: ${{ steps.quality.outcome }}
+          LINKS_OUTCOME: ${{ steps.links.outcome }}
+        with:
+          script: |
+            const subsystems = [
+              { key: 'quality', name: 'application quality', outcome: process.env.QUALITY_OUTCOME, command: 'npm run verify:nightly' },
+              { key: 'links', name: 'documentation links', outcome: process.env.LINKS_OUTCOME, command: "lychee --config lychee.toml './**/*.md' './**/*.html'" },
+            ];
+            const label = 'automation:nightly';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: label });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              await github.rest.issues.createLabel({ ...context.repo, name: label, color: 'B60205', description: 'Nightly harness failure' });
+            }
+            for (const subsystem of subsystems) {
+              const marker = `[nightly:${subsystem.key}]`;
+              const issues = await github.paginate(github.rest.issues.listForRepo, {
+                ...context.repo,
+                state: 'open',
+                labels: label,
+                per_page: 100,
+              });
+              const existing = issues.find((issue) => issue.title.startsWith(marker));
+              if (subsystem.outcome === 'success') {
+                if (existing) {
+                  await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number, body: `Recovered in ${runUrl}.` });
+                  await github.rest.issues.update({ ...context.repo, issue_number: existing.number, state: 'closed' });
+                }
+                continue;
+              }
+              const body = `Subsystem: ${subsystem.name}\n\nReproduce: \`${subsystem.command}\`\n\nEvidence: ${runUrl}\n\nRetry bound: the scheduled workflow makes one attempt per run and stops after 90 minutes.\n\nNext action: inspect the retained artifacts and repair the first reproducible failure.`;
+              if (existing) {
+                await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number, body });
+              } else {
+                await github.rest.issues.create({ ...context.repo, title: `${marker} ${subsystem.name} verification is failing`, labels: [label], body });
+              }
+            }
+            if (subsystems.some((subsystem) => subsystem.outcome !== 'success')) {
+              core.setFailed('One or more nightly verification subsystems failed.');
+            }
