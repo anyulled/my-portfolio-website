@@ -28,7 +28,7 @@ const changedSourcePattern = /^src\/(?!__tests__\/).+\.(?:ts|tsx)$/;
 
 const readChangedLines = (): ChangedLines => {
   const unifiedDiff = execFileSync(
-    "git",
+    "/usr/bin/git",
     ["diff", "--unified=0", baseReference, "--", "src"],
     { encoding: "utf8" },
   );

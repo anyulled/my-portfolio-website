@@ -67,7 +67,7 @@ const readPackageManifest = (): PackageManifest =>
 
 const readTrackedPaths = (): Set<string> =>
   new Set(
-    execFileSync("git", ["ls-files"], { encoding: "utf8" })
+    execFileSync("/usr/bin/git", ["ls-files"], { encoding: "utf8" })
       .split("\n")
       .filter(Boolean),
   );
