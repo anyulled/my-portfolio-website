@@ -133,7 +133,7 @@ export const PhysicalCharacteristics = ({
           render={({ field }) => (
             <RadioGroup
               onValueChange={field.onChange}
-              defaultValue={field.value}
+              value={field.value}
               className="flex items-center space-x-4 h-10"
             >
               <div className="flex items-center space-x-2">

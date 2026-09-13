@@ -38,7 +38,9 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
         </label>
         <Input id="endDate" type="date" {...register("endDate")} />
         {errors.endDate && (
-          <p className="text-xs text-destructive">{errors.endDate.message}</p>
+          <p className="text-xs text-destructive">
+            {t(errors.endDate.message ?? "error_endDate")}
+          </p>
         )}
       </div>
     </div>
@@ -64,7 +66,7 @@ export const BookingDetails = ({ register, errors, control, t }: Props) => (
           render={({ field }) => (
             <RadioGroup
               onValueChange={field.onChange}
-              defaultValue={field.value}
+              value={field.value}
               className="flex items-center space-x-4 h-10"
             >
               <div className="flex items-center space-x-2">
