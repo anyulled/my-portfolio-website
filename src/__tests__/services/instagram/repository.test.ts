@@ -1,6 +1,7 @@
 import {
   findInstagramAccount,
   listConnectedInstagramAccounts,
+  upsertInstagramAccount,
 } from "@/services/instagram/repository";
 
 const createDatabase = (result: { data: unknown; error: unknown }) => {
@@ -48,9 +49,10 @@ describe("listConnectedInstagramAccounts", () => {
 
 const createFindDatabase = (result: { data: unknown; error: unknown }) => {
   const maybeSingle = jest.fn().mockResolvedValue(result);
-  const eq = jest.fn().mockReturnValue({ maybeSingle });
+  const order = jest.fn().mockResolvedValue(result);
+  const eq = jest.fn().mockReturnValue({ maybeSingle, order });
   const inFilter = jest.fn().mockReturnValue({ eq });
-  const select = jest.fn().mockReturnValue({ in: inFilter });
+  const select = jest.fn().mockReturnValue({ in: inFilter, eq });
   const from = jest.fn().mockReturnValue({ select });
 
   return {
@@ -60,6 +62,7 @@ const createFindDatabase = (result: { data: unknown; error: unknown }) => {
     inFilter,
     eq,
     maybeSingle,
+    order,
   };
 };
 
@@ -83,7 +86,7 @@ describe("findInstagramAccount", () => {
 
     expect(from).toHaveBeenCalledWith("instagram_accounts");
     expect(select).toHaveBeenCalledWith(
-      "id, handle, instagram_user_id, access_token",
+      "id, handle, instagram_user_id, instagram_webhook_user_id, access_token",
     );
     expect(inFilter).toHaveBeenCalledWith("instagram_user_id", [
       "entry-account-id",
@@ -116,5 +119,208 @@ describe("findInstagramAccount", () => {
     await expect(findInstagramAccount(database, ["account-id"])).rejects.toBe(
       error,
     );
+  });
+});
+
+const createFallbackDatabase = (
+  results: Array<{ data: unknown; error: unknown }>,
+  updateResult: { error: unknown } = { error: null },
+  upsertResult: { error: unknown } = { error: null },
+) => {
+  const from = jest.fn().mockImplementation(() => {
+    const result = results.shift() ?? { data: null, error: null };
+    const maybeSingle = jest.fn().mockResolvedValue(result);
+    const order = jest.fn().mockResolvedValue(result);
+    const eq = jest.fn().mockReturnValue({ maybeSingle, order });
+    const inFilter = jest.fn().mockReturnValue({ eq });
+    const select = jest.fn().mockReturnValue({ in: inFilter, eq });
+    const updateEq = jest.fn().mockResolvedValue(updateResult);
+    const update = jest.fn().mockReturnValue({ eq: updateEq });
+    const upsert = jest.fn().mockResolvedValue(upsertResult);
+    return { select, update, updateEq, upsert };
+  });
+
+  return { database: { from } as never, from };
+};
+
+describe("findInstagramAccount webhook identity resolution", () => {
+  const originalGraphApiVersion = process.env.INSTAGRAM_GRAPH_API_VERSION;
+
+  beforeEach(() => {
+    process.env.INSTAGRAM_GRAPH_API_VERSION = "26.0";
+  });
+
+  afterEach(() => {
+    if (originalGraphApiVersion === undefined) {
+      delete process.env.INSTAGRAM_GRAPH_API_VERSION;
+    } else {
+      process.env.INSTAGRAM_GRAPH_API_VERSION = originalGraphApiVersion;
+    }
+    jest.restoreAllMocks();
+  });
+
+  it("uses the persisted webhook identifier", async () => {
+    const account = {
+      id: "account-row-id",
+      handle: "anyulled",
+      instagram_user_id: "api-account-id",
+      instagram_webhook_user_id: "webhook-account-id",
+      access_token: "access-token",
+    };
+    const { database, from } = createFallbackDatabase([
+      { data: null, error: null },
+      { data: account, error: null },
+    ]);
+
+    await expect(
+      findInstagramAccount(database, ["webhook-account-id"]),
+    ).resolves.toEqual(account);
+
+    expect(from).toHaveBeenCalledTimes(2);
+  });
+
+  it("resolves and persists an unknown webhook identifier through Meta", async () => {
+    const account = {
+      id: "account-row-id",
+      handle: "anyulled",
+      instagram_user_id: "api-account-id",
+      instagram_webhook_user_id: null,
+      access_token: "access-token",
+    };
+    const { database, from } = createFallbackDatabase([
+      { data: null, error: null },
+      { data: null, error: null },
+      { data: [account], error: null },
+    ]);
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ username: "anyulled" }),
+    });
+
+    await expect(
+      findInstagramAccount(database, ["webhook-account-id"]),
+    ).resolves.toEqual({
+      ...account,
+      instagram_webhook_user_id: "webhook-account-id",
+    });
+
+    expect(from).toHaveBeenCalledTimes(4);
+  });
+
+  it("continues resolving when an account username does not match", async () => {
+    const firstAccount = {
+      id: "first-account-row-id",
+      handle: "sensuelleboudoir",
+      instagram_user_id: "first-api-account-id",
+      instagram_webhook_user_id: null,
+      access_token: "first-access-token",
+    };
+    const matchingAccount = {
+      id: "matching-account-row-id",
+      handle: "anyulled",
+      instagram_user_id: "matching-api-account-id",
+      instagram_webhook_user_id: null,
+      access_token: "matching-access-token",
+    };
+    const { database } = createFallbackDatabase([
+      { data: null, error: null },
+      { data: null, error: null },
+      { data: [firstAccount, matchingAccount], error: null },
+    ]);
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ username: "anyulled" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ username: "anyulled" }),
+      });
+
+    await expect(
+      findInstagramAccount(database, ["webhook-account-id"]),
+    ).resolves.toMatchObject({ id: matchingAccount.id });
+  });
+
+  it("propagates errors while listing active accounts for fallback", async () => {
+    const error = new Error("active accounts unavailable");
+    const { database } = createFallbackDatabase([
+      { data: null, error: null },
+      { data: null, error: null },
+      { data: null, error },
+    ]);
+
+    await expect(
+      findInstagramAccount(database, ["webhook-account-id"]),
+    ).rejects.toBe(error);
+  });
+
+  it("propagates errors while saving a resolved webhook identifier", async () => {
+    const account = {
+      id: "account-row-id",
+      handle: "anyulled",
+      instagram_user_id: "api-account-id",
+      instagram_webhook_user_id: null,
+      access_token: "access-token",
+    };
+    const error = new Error("webhook identifier could not be saved");
+    const { database } = createFallbackDatabase(
+      [
+        { data: null, error: null },
+        { data: null, error: null },
+        { data: [account], error: null },
+      ],
+      { error },
+    );
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ username: "anyulled" }),
+    });
+
+    await expect(
+      findInstagramAccount(database, ["webhook-account-id"]),
+    ).rejects.toBe(error);
+  });
+});
+
+describe("upsertInstagramAccount", () => {
+  it("stores the connected account credentials without changing webhook identity", async () => {
+    const { database, from } = createFallbackDatabase([]);
+
+    await expect(
+      upsertInstagramAccount(database, {
+        handle: "anyulled",
+        instagram_user_id: "api-account-id",
+        access_token: "access-token",
+        token_expires_at: null,
+      }),
+    ).resolves.toBeUndefined();
+
+    const query = from.mock.results[0]?.value as { upsert: jest.Mock };
+    expect(query.upsert).toHaveBeenCalledWith(
+      {
+        handle: "anyulled",
+        instagram_user_id: "api-account-id",
+        access_token: "access-token",
+        token_expires_at: null,
+        active: true,
+      },
+      { onConflict: "handle" },
+    );
+  });
+
+  it("propagates account persistence errors", async () => {
+    const error = new Error("account persistence failed");
+    const { database } = createFallbackDatabase([], { error: null }, { error });
+
+    await expect(
+      upsertInstagramAccount(database, {
+        handle: "anyulled",
+        instagram_user_id: "api-account-id",
+        access_token: "access-token",
+        token_expires_at: null,
+      }),
+    ).rejects.toBe(error);
   });
 });
