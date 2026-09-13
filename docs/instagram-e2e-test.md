@@ -35,6 +35,13 @@ Use equivalent messages in Italian, Spanish, or another supported language to ve
 6. Confirm that retrying or redelivering the same Instagram event does not send a second reply.
 7. Remove synthetic test data from the booking workflow only after confirming that the result has been recorded. Do not delete production conversations or submissions as part of this checklist.
 
+For the outbound message echo case:
+
+1. From the managed account, send one controlled test reply to the test sender, using an existing test conversation or a synthetic message.
+2. Confirm in the Meta webhook delivery details or Vercel logs that Meta redelivers the outbound event with `message.is_echo=true`.
+3. Confirm that the webhook acknowledges the event successfully.
+4. Confirm in Vercel logs and Supabase that the echo was not classified, persisted as a new inbound message, or followed by a second reply.
+
 ## Failure evidence
 
 If a case fails, capture the UTC timestamp, managed account handle, case name, HTTP status, and the reference returned by the admin panel. Check the Vercel function logs using that reference and inspect the Meta webhook delivery status. Never include access tokens, verification tokens, service-role keys, or complete direct-message bodies in the report.
