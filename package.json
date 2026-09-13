@@ -93,7 +93,7 @@
     "prettier": "^3.9.4",
     "supabase": "^2.109.0",
     "tailwindcss": "^4.3.0",
-    "ts-jest": "^29.4.1",
+    "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "tsx": "4.23.13",
     "typedoc": "^0.28.17",
