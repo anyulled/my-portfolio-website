@@ -139,7 +139,7 @@ jobs:
       - run: npm run audit:ci
 
   compatibility:
-    name: Node 22 compatibility
+    name: Node 24 compatibility
     needs: static
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -147,7 +147,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
-          node-version: 22.22.1
+          node-version-file: .node-version
           cache: npm
       - run: npm install --global --ignore-scripts npm@11.19.1
       - run: npm ci --ignore-scripts

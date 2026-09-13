@@ -24,6 +24,8 @@ Tests follow Arrange, Act, Assert. Unit tests cover utilities and isolated polic
 
 Mutation testing starts from the recorded 25% legacy break baseline, reports scores below 60% as low, and treats 80% as the target. Raise the break threshold whenever the measured repository score improves; never lower it to accommodate a regression.
 
+Static mutants are excluded because each module-initialization mutation reruns the entire suite and Stryker measured that 9% category as 86% of hosted-runner time. The nightly gate still mutates every dynamic TypeScript source candidate and enforces the ratcheted 25.4% break threshold. Reassess the exclusion when static-mutant isolation or runner capacity changes.
+
 ## E2E environments
 
 Local E2E runs a production build with `HARNESS_MODE=fixture`. Fixture mode must not call production Supabase, Redis, Blob, GCS, Meta, or email services and fails closed in Vercel production.

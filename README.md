@@ -8,7 +8,7 @@ Next.js App Router application for the Sensuelle Boudoir photography website, bo
 
 ## Prerequisites
 
-- Node.js 24.20.0 is preferred; Node.js 22.9 or newer is supported.
+- Node.js 24 LTS; `.node-version` pins local and CI execution to 24.20.0.
 - npm 11.19.1.
 - Copy `.env.example` to `.env.local` and populate only the integrations needed for the workflow being exercised.
 

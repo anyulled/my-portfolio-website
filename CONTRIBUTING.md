@@ -8,7 +8,7 @@ Do not mix incidental refactors into the task. Record new architecture decisions
 
 ## Development contract
 
-Use Node.js 24.20.0 and npm 11.19.1. Install with `npm ci`, copy `.env.example` to `.env.local`, and run `npm run doctor` before changing code.
+Use Node.js 24 LTS and npm 11.19.1. `.node-version` pins local and CI execution to Node.js 24.20.0, while deployment platforms may supply another Node.js 24 release. Install with `npm ci`, copy `.env.example` to `.env.local`, and run `npm run doctor` before changing code.
 
 Follow `AGENTS.md`. Do not disable lint rules, bypass Git hooks, expose credentials, or weaken a failing quality gate.
 
