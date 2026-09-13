@@ -25,17 +25,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          cp scorecard-badge.json /tmp/scorecard-badge.json
-          cp scorecard-report.md /tmp/scorecard-report.md
-          git fetch origin scorecard || true
-          if git show-ref --verify --quiet refs/remotes/origin/scorecard; then
-            git checkout --track origin/scorecard
+          scorecard_worktree="${RUNNER_TEMP}/scorecard"
+          if git fetch origin scorecard; then
+            git worktree add --detach "${scorecard_worktree}" origin/scorecard
           else
-            git checkout --orphan scorecard
-            git rm -rf .
+            git worktree add --detach "${scorecard_worktree}"
+            git -C "${scorecard_worktree}" checkout --orphan scorecard
+            git -C "${scorecard_worktree}" rm -rf .
           fi
-          cp /tmp/scorecard-badge.json scorecard-badge.json
-          cp /tmp/scorecard-report.md scorecard-report.md
-          git add scorecard-badge.json scorecard-report.md
-          git diff --cached --quiet || git commit -m "chore: update scorecard badge and report"
-          git push origin scorecard
+          cp scorecard-badge.json "${scorecard_worktree}/scorecard-badge.json"
+          cp scorecard-report.md "${scorecard_worktree}/scorecard-report.md"
+          git -C "${scorecard_worktree}" add scorecard-badge.json scorecard-report.md
+          git -C "${scorecard_worktree}" diff --cached --quiet || git -C "${scorecard_worktree}" commit -m "chore: update scorecard badge and report"
+          git -C "${scorecard_worktree}" push origin HEAD:scorecard
