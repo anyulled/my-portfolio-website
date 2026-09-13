@@ -81,6 +81,9 @@ export const parseInstagramWebhookPayload = (
       const sender = isRecord(event.sender) ? event.sender : {};
       const recipient = isRecord(event.recipient) ? event.recipient : {};
       const message = isRecord(event.message) ? event.message : {};
+      if (message.is_echo === true) {
+        return [];
+      }
       const participantId = getString(sender.id);
       const recipientId = getString(recipient.id);
       const messageId = getString(message.mid);

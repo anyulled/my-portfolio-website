@@ -21,6 +21,7 @@ Run one case at a time and record only the case result, timestamp, target accoun
 | Ambiguous model enquiry | The sender mentions modelling but omits the city or photography/collaboration work intent                      | `manual_review`         | No automatic reply; the conversation appears in the panel as pending and can be approved or ignored manually                                    |
 | Clear client enquiry    | The sender clearly wants to book a photography session but is not offering modelling services                  | `pricing`               | One automatic reply containing `/pricing`; the conversation is completed                                                                        |
 | Unrelated message       | The message has no clear model opportunity or client photography intent                                        | `ignore`                | No reply and no persisted conversation                                                                                                          |
+| Outbound message echo   | Meta redelivers an account message with `message.is_echo=true`                                                 | not processed           | The webhook acknowledges the event without classification, persistence, or a second reply                                                       |
 
 Use equivalent messages in Italian, Spanish, or another supported language to verify that the response language follows the incoming message. The test sender should avoid personal data and should not send attachments.
 
