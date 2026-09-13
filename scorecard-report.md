@@ -1,11 +1,11 @@
 # AI Harness Scorecard: my-portfolio-website
 
-**Grade: A** (87.1/100) | Strong harness. AI-generated code has robust mechanical safeguards.
+**Grade: A** (85.1/100) | Strong harness. AI-generated code has robust mechanical safeguards.
 
 - **Repository**: `/home/runner/work/my-portfolio-website/my-portfolio-website`
 - **Languages**: javascript, typescript
-- **Assessed**: 2026-09-11 17:37 UTC
-- **Checks**: 28/31 passed
+- **Assessed**: 2026-09-13 19:04 UTC
+- **Checks**: 27/31 passed
 
 ## Summary
 
@@ -13,7 +13,7 @@
 |----------|--------|-------|--------|
 | Architectural Documentation | 20% | 100% [##########] | 5/5 |
 | Mechanical Constraints | 25% | 86% [#########-] | 6/7 |
-| Testing & Stability | 25% | 68% [#######---] | 6/8 |
+| Testing & Stability | 25% | 60% [######----] | 5/8 |
 | Review & Drift Prevention | 15% | 100% [##########] | 6/6 |
 | AI-Specific Safeguards | 15% | 90% [#########-] | 5/5 |
 
@@ -56,7 +56,7 @@ _DORA 2025 - AI-accessible documentation_
 
 _DORA 2025 Report_
 
-**Evidence**: CI detected: github, github, github, github, github
+**Evidence**: CI detected: github, github, github, github, github, github, github
 
 ### [PASS] Linter Enforcement (4/4)
 
@@ -97,7 +97,7 @@ _Blog: 80% problem in AI-generated code_
 **Remediation**: Add unsafe_code = forbid (Rust), security linting (semgrep/bandit), or ESLint rules against dangerous patterns.
 
 
-## Testing & Stability (68%)
+## Testing & Stability (60%)
 
 ### [PASS] Test Suite (3/3)
 
@@ -105,25 +105,27 @@ _Kent Beck - tests define what correct means_
 
 **Evidence**: Tests present and executed in CI
 
-### [PASS] Feature Matrix Testing (3/3)
+### [FAIL] Feature Matrix Testing (0/3)
 
 _DORA 2025 - stability through comprehensive testing_
 
-**Evidence**: Matrix/parallel testing strategy found in CI
+**Evidence**: Only one test configuration found
 
-### [PASS] Code Coverage (2/4)
+**Remediation**: Add CI jobs for different feature flags, environments, or dependency versions (e.g. --all-features, --no-default-features, MSRV check).
+
+### [PASS] Code Coverage (4/4)
 
 _DORA 2025 - stability feedback loops_
 
-**Evidence**: Coverage config found (jest.config.ts) but not confirmed in CI
+**Evidence**: Coverage measurement in CI: coverage\.py|pytest-cov|--cov
 
-**Remediation**: Add coverage reporting to your CI pipeline.
-
-### [PASS] Mutation Testing (4/4)
+### [FAIL] Mutation Testing (0/4)
 
 _SlopCodeBench - code that 'appears correct but is unreliable'_
 
-**Evidence**: Mutation testing found in CI
+**Evidence**: No mutation testing found
+
+**Remediation**: Add cargo-mutants (Rust), Stryker (JS/TS), mutmut (Python), or PIT (Java). Mutation testing catches tests that pass without verifying behavior.
 
 ### [PASS] Property-Based Testing (3/3)
 
@@ -139,19 +141,17 @@ _Blog: 80% problem - catching what AI misses_
 
 **Remediation**: Add fuzz targets for parsing-heavy and input-handling code paths.
 
-### [FAIL] Contract / Compatibility Tests (0/3)
+### [PASS] Contract / Compatibility Tests (3/3)
 
 _OpenAI Harness Engineering - mechanical constraints_
 
-**Evidence**: No contract or compatibility tests found
-
-**Remediation**: Add contract tests that verify external interface stability (golden fixtures, snapshot tests, wire-format checks).
+**Evidence**: Contract/compatibility tests found: src/__tests__/services/harness/fixtures.test.ts, src/services/harness/fixtures.ts
 
 ### [PASS] Tests Block Merge (2/2)
 
 _DORA 2025 - stability metrics_
 
-**Evidence**: All test jobs are blocking: main, nightly
+**Evidence**: All test jobs are blocking: tests
 
 
 ## Review & Drift Prevention (100%)
@@ -199,7 +199,7 @@ _OpenAI Harness Engineering - curated knowledge base_
 
 _DORA 2025 - clear organizational stance on AI use_
 
-**Evidence**: AI usage norms found in CONTRIBUTING.md
+**Evidence**: AI usage norms found in AGENTS.md
 
 ### [PASS] Small Batch Enforcement (3/3)
 
