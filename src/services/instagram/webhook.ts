@@ -27,6 +27,43 @@ const getNumber = (value: unknown) =>
 const getRecords = (value: unknown) =>
   Array.isArray(value) ? value.filter(isRecord) : [];
 
+const getUniqueStrings = (...values: Array<string | null>) =>
+  Array.from(
+    new Set(values.filter((value): value is string => Boolean(value))),
+  );
+
+export type InstagramWebhookProcessingStage =
+  | "account_lookup"
+  | "classification"
+  | "persistence"
+  | "response_claim"
+  | "response_delivery";
+
+export class InstagramWebhookProcessingError extends Error {
+  constructor(
+    readonly stage: InstagramWebhookProcessingStage,
+    error: unknown,
+  ) {
+    super(
+      error instanceof Error
+        ? error.message
+        : "Instagram webhook processing failed",
+    );
+    this.name = "InstagramWebhookProcessingError";
+  }
+}
+
+const runWebhookStage = async <Result>(
+  stage: InstagramWebhookProcessingStage,
+  action: () => Promise<Result>,
+) => {
+  try {
+    return await action();
+  } catch (error) {
+    throw new InstagramWebhookProcessingError(stage, error);
+  }
+};
+
 export const parseInstagramWebhookPayload = (
   payload: unknown,
 ): Array<InstagramWebhookMessage> => {
@@ -42,8 +79,10 @@ export const parseInstagramWebhookPayload = (
 
     return getRecords(entry.messaging).flatMap((event) => {
       const sender = isRecord(event.sender) ? event.sender : {};
+      const recipient = isRecord(event.recipient) ? event.recipient : {};
       const message = isRecord(event.message) ? event.message : {};
       const participantId = getString(sender.id);
+      const recipientId = getString(recipient.id);
       const messageId = getString(message.mid);
       const text = getString(message.text);
       const timestamp = getNumber(event.timestamp);
@@ -54,6 +93,10 @@ export const parseInstagramWebhookPayload = (
       return [
         {
           accountInstagramUserId,
+          accountInstagramUserIdCandidates: getUniqueStrings(
+            accountInstagramUserId,
+            recipientId,
+          ),
           conversationId: getString(event.thread_id) ?? participantId,
           messageId,
           participantId,
@@ -68,17 +111,22 @@ export const parseInstagramWebhookPayload = (
 export const processInstagramWebhookMessage = async (
   message: InstagramWebhookMessage,
 ) => {
-  const database = getInstagramDatabase();
-  const account = await findInstagramAccount(
-    database,
-    message.accountInstagramUserId,
+  const { database, account } = await runWebhookStage(
+    "account_lookup",
+    async () => {
+      const database = getInstagramDatabase();
+      const account = await findInstagramAccount(
+        database,
+        message.accountInstagramUserIdCandidates,
+      );
+      return { database, account };
+    },
   );
-  const classification = await classifyInstagramMessage(message.text);
-  const result = await recordInstagramMessage(
-    database,
-    account,
-    message,
-    classification,
+  const classification = await runWebhookStage("classification", () =>
+    classifyInstagramMessage(message.text),
+  );
+  const result = await runWebhookStage("persistence", () =>
+    recordInstagramMessage(database, account, message, classification),
   );
 
   if (!result.conversation || !result.shouldRespond) {
@@ -90,45 +138,45 @@ export const processInstagramWebhookMessage = async (
     return responseRoute;
   }
 
-  const claimed = await claimInstagramResponse(
-    database,
-    result.conversation.id,
-    responseRoute,
+  const claimed = await runWebhookStage("response_claim", () =>
+    claimInstagramResponse(database, result.conversation.id, responseRoute),
   );
   if (!claimed) {
     return "already_claimed";
   }
 
-  try {
-    const leadToken =
-      responseRoute === "model_form"
-        ? await assignLeadCorrelationToken(database, result.conversation.id)
-        : null;
-    const path =
-      responseRoute === "model_form"
-        ? `/booking-a-session?lead=${leadToken}`
-        : "/pricing";
-    const responseText = renderBoundedResponse(
-      responseRoute,
-      classification.detectedLanguage,
-      `${getInstagramPublicUrl()}${path}`,
-    );
-    await sendInstagramText(
-      account.access_token,
-      account.instagram_user_id,
-      message.participantId,
-      responseText,
-    );
-    await markInstagramResponseSent(database, result.conversation.id);
-    return responseRoute;
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Instagram processing failed";
-    await releaseInstagramResponseClaim(
-      database,
-      result.conversation.id,
-      errorMessage,
-    );
-    throw error;
-  }
+  return runWebhookStage("response_delivery", async () => {
+    try {
+      const leadToken =
+        responseRoute === "model_form"
+          ? await assignLeadCorrelationToken(database, result.conversation.id)
+          : null;
+      const path =
+        responseRoute === "model_form"
+          ? `/booking-a-session?lead=${leadToken}`
+          : "/pricing";
+      const responseText = renderBoundedResponse(
+        responseRoute,
+        classification.detectedLanguage,
+        `${getInstagramPublicUrl()}${path}`,
+      );
+      await sendInstagramText(
+        account.access_token,
+        account.instagram_user_id,
+        message.participantId,
+        responseText,
+      );
+      await markInstagramResponseSent(database, result.conversation.id);
+      return responseRoute;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Instagram processing failed";
+      await releaseInstagramResponseClaim(
+        database,
+        result.conversation.id,
+        errorMessage,
+      );
+      throw error;
+    }
+  });
 };

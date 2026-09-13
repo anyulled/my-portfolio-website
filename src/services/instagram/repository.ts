@@ -92,18 +92,27 @@ export const listConnectedInstagramAccounts = async (
 
 export const findInstagramAccount = async (
   database: ReturnType<typeof getInstagramDatabase>,
-  instagramUserId: string,
+  instagramUserIds: string[],
 ): Promise<InstagramAccountRow> => {
+  const candidateIds = Array.from(new Set(instagramUserIds));
+  if (candidateIds.length === 0) {
+    throw new Error("Instagram account identifier is missing");
+  }
+
   const result = await database
     .from("instagram_accounts")
     .select("id, handle, instagram_user_id, access_token")
-    .eq("instagram_user_id", instagramUserId)
+    .in("instagram_user_id", candidateIds)
     .eq("active", true)
-    .single();
+    .maybeSingle();
   const data = result.data as unknown as InstagramAccountRow | null;
   const { error } = result;
 
-  if (error || !data) {
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
     throw new Error("Instagram account is not configured");
   }
 

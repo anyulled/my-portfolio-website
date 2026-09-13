@@ -67,6 +67,7 @@ export interface InstagramConversationRecord {
 
 export interface InstagramWebhookMessage {
   accountInstagramUserId: string;
+  accountInstagramUserIdCandidates: string[];
   conversationId: string;
   messageId: string;
   participantId: string;
