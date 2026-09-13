@@ -220,4 +220,45 @@ describe("InstagramInbox", () => {
       screen.getByText("I am a model visiting Barcelona."),
     ).toBeInTheDocument();
   });
+
+  it("clears a previous decision error after a successful retry", async () => {
+    mockPendingConversationLoad();
+    jest
+      .mocked(global.fetch)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 502,
+        json: async () => ({
+          message: "Unable to deliver the Instagram response.",
+        }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({ conversation: pendingConversation }),
+      } as Response);
+
+    render(<InstagramInbox />);
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Send model form" }),
+      ).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Send model form" }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Unable to deliver the Instagram response.",
+      ),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Send model form" }));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText("No conversations need attention."),
+      ).toBeInTheDocument(),
+    );
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
 });

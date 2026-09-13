@@ -106,6 +106,8 @@ export default function InstagramInbox({
   }, []);
 
   const decide = async (conversationId: string, decision: ReviewDecision) => {
+    setError(null);
+
     try {
       const response = await fetch(
         `/api/instagram/conversations/${conversationId}/decision`,
