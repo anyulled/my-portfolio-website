@@ -9,6 +9,7 @@ describe("parseInstagramWebhookPayload", () => {
           messaging: [
             {
               sender: { id: "participant-id" },
+              recipient: { id: "recipient-account-id" },
               timestamp: 1770000000000,
               message: { mid: "message-id", text: "Sono una modella" },
             },
@@ -20,6 +21,10 @@ describe("parseInstagramWebhookPayload", () => {
     expect(messages).toEqual([
       {
         accountInstagramUserId: "account-id",
+        accountInstagramUserIdCandidates: [
+          "account-id",
+          "recipient-account-id",
+        ],
         conversationId: "participant-id",
         messageId: "message-id",
         participantId: "participant-id",
@@ -33,5 +38,26 @@ describe("parseInstagramWebhookPayload", () => {
     expect(
       parseInstagramWebhookPayload({ entry: [{ id: "account-id" }] }),
     ).toEqual([]);
+  });
+
+  it("falls back to the entry identifier when Meta omits the recipient identifier", () => {
+    const messages = parseInstagramWebhookPayload({
+      entry: [
+        {
+          id: "account-id",
+          messaging: [
+            {
+              sender: { id: "participant-id" },
+              timestamp: 1770000000000,
+              message: { mid: "message-id", text: "Ciao" },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(messages[0]?.accountInstagramUserIdCandidates).toEqual([
+      "account-id",
+    ]);
   });
 });
