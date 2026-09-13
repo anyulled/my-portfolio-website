@@ -49,6 +49,18 @@ interface InstagramConversationListRow {
   instagram_messages: Array<{ message_text: string; sent_at: string }>;
 }
 
+type InstagramDeliveryAccount = Pick<
+  InstagramAccountRow,
+  "handle" | "instagram_user_id" | "access_token"
+>;
+
+type InstagramDeliveryAccountRelation =
+  InstagramDeliveryAccount | InstagramDeliveryAccount[] | null;
+
+const normalizeInstagramDeliveryAccount = (
+  relation: InstagramDeliveryAccountRelation,
+) => (Array.isArray(relation) ? (relation.at(0) ?? null) : relation);
+
 const getRequiredEnvironmentValue = (
   name: "SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY",
 ) => {
@@ -376,7 +388,7 @@ export const getInstagramConversationForDelivery = async (
     detected_language: string;
     response_route: ResponseRoute | null;
     response_sent_at: string | null;
-    instagram_accounts: Array<InstagramAccountRow>;
+    instagram_accounts: InstagramDeliveryAccountRelation;
   } | null;
   const { error } = result;
 
@@ -384,5 +396,10 @@ export const getInstagramConversationForDelivery = async (
     throw error ?? new Error("Instagram conversation was not found");
   }
 
-  return data;
+  return {
+    ...data,
+    instagram_accounts: normalizeInstagramDeliveryAccount(
+      data.instagram_accounts,
+    ),
+  };
 };

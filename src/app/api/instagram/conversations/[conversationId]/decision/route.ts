@@ -18,6 +18,39 @@ interface RouteContext {
   params: Promise<{ conversationId: string }>;
 }
 
+const getSafeError = (error: unknown) => {
+  if (!(error instanceof Error)) {
+    return {
+      name: "UnknownError",
+      message: "Unknown Instagram decision error",
+    };
+  }
+
+  return {
+    name: error.name,
+    message: error.message
+      .replace(/Bearer\s+\S+/gi, "Bearer [REDACTED]")
+      .replace(
+        /(access[_-]?token|client[_-]?secret|api[_-]?key|secret)[=:]\s*[^\s,;]+/gi,
+        "$1=[REDACTED]",
+      )
+      .slice(0, 300),
+  };
+};
+
+const isStaleReview = (error: unknown) =>
+  error instanceof Error &&
+  error.message === "Conversation is no longer awaiting review";
+
+const parseDecisionBody = async (request: Request) => {
+  try {
+    const body: unknown = await request.json();
+    return { body, valid: true as const };
+  } catch {
+    return { body: null, valid: false as const };
+  }
+};
+
 const sendApprovedResponse = async (
   database: ReturnType<typeof getInstagramDatabase>,
   conversationId: string,
@@ -27,7 +60,7 @@ const sendApprovedResponse = async (
     database,
     conversationId,
   );
-  const account = deliveryConversation.instagram_accounts[0];
+  const account = deliveryConversation.instagram_accounts;
   if (!account) {
     throw new Error("Instagram account is not configured");
   }
@@ -75,15 +108,26 @@ const sendApprovedResponse = async (
 };
 
 export async function POST(request: Request, context: RouteContext) {
+  const requestId = crypto.randomUUID();
   const operator = await getAuthenticatedOperator();
   if (!operator) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const body: unknown = await request.json();
+  const parsedBody = await parseDecisionBody(request);
+  if (!parsedBody.valid) {
+    return NextResponse.json(
+      {
+        message: "Invalid decision request.",
+        requestId,
+        resolution: "Retry from the inbox.",
+      },
+      { status: 400 },
+    );
+  }
   const decision = reviewDecisionSchema.safeParse(
-    typeof body === "object" && body !== null
-      ? (body as { decision?: unknown }).decision
+    typeof parsedBody.body === "object" && parsedBody.body !== null
+      ? (parsedBody.body as { decision?: unknown }).decision
       : undefined,
   );
   if (!decision.success) {
@@ -93,8 +137,8 @@ export async function POST(request: Request, context: RouteContext) {
     );
   }
 
+  const { conversationId } = await context.params;
   try {
-    const { conversationId } = await context.params;
     const database = getInstagramDatabase();
     const conversation = await setInstagramReviewDecision(
       database,
@@ -113,16 +157,43 @@ export async function POST(request: Request, context: RouteContext) {
     );
     if (!responseSent) {
       return NextResponse.json(
-        { message: "Conversation response was already claimed" },
+        {
+          message: "Conversation response was already claimed.",
+          requestId,
+          resolution: "Reload the inbox to see the current conversation state.",
+        },
         { status: 409 },
       );
     }
 
     return NextResponse.json({ conversation });
-  } catch {
+  } catch (error) {
+    console.error("instagram_conversation_decision_failed", {
+      requestId,
+      conversationId,
+      decision: decision.data,
+      error: getSafeError(error),
+    });
+
+    if (isStaleReview(error)) {
+      return NextResponse.json(
+        {
+          message: "Conversation is no longer awaiting review.",
+          requestId,
+          resolution: "Reload the inbox to see the current conversation state.",
+        },
+        { status: 409 },
+      );
+    }
+
     return NextResponse.json(
-      { message: "Conversation is no longer awaiting review" },
-      { status: 409 },
+      {
+        message: "Unable to deliver the Instagram response.",
+        requestId,
+        resolution:
+          "Retry the decision. If delivery still fails, check the connected Instagram account and Meta messaging permission.",
+      },
+      { status: 502 },
     );
   }
 }

@@ -33,16 +33,17 @@ const getInstagramAccountLabel = (account: InstagramHandle): string =>
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
-const getInboxError = (result: unknown): InboxError => {
+const getInboxError = (
+  result: unknown,
+  fallbackMessage = "Unable to load conversations.",
+): InboxError => {
   if (!isRecord(result)) {
-    return { message: "Unable to load conversations." };
+    return { message: fallbackMessage };
   }
 
   return {
     message:
-      typeof result.message === "string"
-        ? result.message
-        : "Unable to load conversations.",
+      typeof result.message === "string" ? result.message : fallbackMessage,
     requestId:
       typeof result.requestId === "string" ? result.requestId : undefined,
     resolution:
@@ -96,6 +97,7 @@ export default function InstagramInbox({
         message: "Unable to reach the Instagram inbox.",
         resolution: "Check your connection and retry.",
       });
+      return;
     }
   };
 
@@ -104,16 +106,25 @@ export default function InstagramInbox({
   }, []);
 
   const decide = async (conversationId: string, decision: ReviewDecision) => {
-    const response = await fetch(
-      `/api/instagram/conversations/${conversationId}/decision`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ decision }),
-      },
-    );
-    if (!response.ok) {
-      setError({ message: "Unable to apply the decision. Please retry." });
+    try {
+      const response = await fetch(
+        `/api/instagram/conversations/${conversationId}/decision`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ decision }),
+        },
+      );
+      const result: unknown = await response.json();
+      if (!response.ok) {
+        setError(getInboxError(result, "Unable to apply the decision."));
+        return;
+      }
+    } catch {
+      setError({
+        message: "Unable to reach the Instagram inbox.",
+        resolution: "Check your connection and retry.",
+      });
       return;
     }
     setConversations((current) =>
