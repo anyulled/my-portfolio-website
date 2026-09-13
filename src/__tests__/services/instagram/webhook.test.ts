@@ -40,6 +40,30 @@ describe("parseInstagramWebhookPayload", () => {
     ).toEqual([]);
   });
 
+  it("ignores outbound message echoes", () => {
+    expect(
+      parseInstagramWebhookPayload({
+        entry: [
+          {
+            id: "account-id",
+            messaging: [
+              {
+                sender: { id: "account-id" },
+                recipient: { id: "participant-id" },
+                timestamp: 1770000000000,
+                message: {
+                  is_echo: true,
+                  mid: "outbound-message-id",
+                  text: "Risposta automatica",
+                },
+              },
+            ],
+          },
+        ],
+      }),
+    ).toEqual([]);
+  });
+
   it("falls back to the entry identifier when Meta omits the recipient identifier", () => {
     const messages = parseInstagramWebhookPayload({
       entry: [
