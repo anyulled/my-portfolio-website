@@ -8,13 +8,12 @@ import {
   type ProcessingState,
   type ResponseRoute,
 } from "./types";
+import type { InstagramAccountRow } from "./accountRepository";
 
-interface InstagramAccountRow {
-  id: string;
-  handle: InstagramHandle;
-  instagram_user_id: string;
-  access_token: string;
-}
+export {
+  findInstagramAccount,
+  upsertInstagramAccount,
+} from "./accountRepository";
 
 interface InstagramConversationRow {
   id: string;
@@ -70,6 +69,8 @@ export const getInstagramDatabase = () =>
     { auth: { autoRefreshToken: false, persistSession: false } },
   );
 
+export type InstagramDatabase = ReturnType<typeof getInstagramDatabase>;
+
 export const listConnectedInstagramAccounts = async (
   database: ReturnType<typeof getInstagramDatabase>,
 ): Promise<Array<InstagramHandle>> => {
@@ -88,57 +89,6 @@ export const listConnectedInstagramAccounts = async (
     const handle = instagramHandleSchema.safeParse(account.handle);
     return handle.success ? [handle.data] : [];
   });
-};
-
-export const findInstagramAccount = async (
-  database: ReturnType<typeof getInstagramDatabase>,
-  instagramUserIds: string[],
-): Promise<InstagramAccountRow> => {
-  const candidateIds = Array.from(new Set(instagramUserIds));
-  if (candidateIds.length === 0) {
-    throw new Error("Instagram account identifier is missing");
-  }
-
-  const result = await database
-    .from("instagram_accounts")
-    .select("id, handle, instagram_user_id, access_token")
-    .in("instagram_user_id", candidateIds)
-    .eq("active", true)
-    .maybeSingle();
-  const data = result.data as unknown as InstagramAccountRow | null;
-  const { error } = result;
-
-  if (error) {
-    throw error;
-  }
-
-  if (!data) {
-    throw new Error("Instagram account is not configured");
-  }
-
-  return data;
-};
-
-export const upsertInstagramAccount = async (
-  database: ReturnType<typeof getInstagramDatabase>,
-  account: Pick<
-    InstagramAccountRow,
-    "handle" | "instagram_user_id" | "access_token"
-  > & { token_expires_at: string | null },
-) => {
-  const { error } = await database.from("instagram_accounts").upsert(
-    {
-      handle: account.handle,
-      instagram_user_id: account.instagram_user_id,
-      access_token: account.access_token,
-      token_expires_at: account.token_expires_at,
-      active: true,
-    },
-    { onConflict: "handle" },
-  );
-  if (error) {
-    throw error;
-  }
 };
 
 export const findInstagramConversation = async (

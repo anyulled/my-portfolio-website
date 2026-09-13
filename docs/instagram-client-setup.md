@@ -2,7 +2,7 @@
 
 ## Supabase
 
-Apply `supabase/migrations/20260911150000_create_instagram_model_workflow.sql` to the project configured by `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+Apply the Instagram migrations in `supabase/migrations` to the project configured by `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. The webhook identity migration stores Meta's delivery identifier separately from the account identifier used by the messaging API; the first delivery learns this mapping automatically.
 
 Configure the sole operator with `INSTAGRAM_ADMIN_EMAIL`, `SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
