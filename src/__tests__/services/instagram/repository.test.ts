@@ -1,5 +1,6 @@
 import {
   findInstagramAccount,
+  getInstagramConversationForDelivery,
   listConnectedInstagramAccounts,
   upsertInstagramAccount,
 } from "@/services/instagram/repository";
@@ -322,5 +323,66 @@ describe("upsertInstagramAccount", () => {
         token_expires_at: null,
       }),
     ).rejects.toBe(error);
+  });
+});
+
+const createDeliveryDatabase = (data: unknown) => {
+  const single = jest.fn().mockResolvedValue({ data, error: null });
+  const eq = jest.fn().mockReturnValue({ single });
+  const select = jest.fn().mockReturnValue({ eq });
+  const from = jest.fn().mockReturnValue({ select });
+
+  return { database: { from } as never, select, eq, single };
+};
+
+describe("getInstagramConversationForDelivery", () => {
+  const baseConversation = {
+    id: "conversation-row-id",
+    participant_id: "participant-id",
+    detected_language: "it",
+    response_route: "model_form",
+    response_sent_at: null,
+  };
+  const account = {
+    handle: "anyulled",
+    instagram_user_id: "stored-account-id",
+    access_token: "access-token",
+  };
+
+  it.each([
+    ["a related account object", account, account],
+    ["a related account array", [account], account],
+  ])("normalizes %s", async (_description, relation, expectedAccount) => {
+    const { database, select, eq, single } = createDeliveryDatabase({
+      ...baseConversation,
+      instagram_accounts: relation,
+    });
+
+    await expect(
+      getInstagramConversationForDelivery(database, "conversation-row-id"),
+    ).resolves.toEqual({
+      ...baseConversation,
+      instagram_accounts: expectedAccount,
+    });
+
+    expect(select).toHaveBeenCalledWith(
+      "id, participant_id, detected_language, response_route, response_sent_at, instagram_accounts(handle, instagram_user_id, access_token)",
+    );
+    expect(eq).toHaveBeenCalledWith("id", "conversation-row-id");
+    expect(single).toHaveBeenCalled();
+  });
+
+  it("returns no account when the relation is empty", async () => {
+    const { database } = createDeliveryDatabase({
+      ...baseConversation,
+      instagram_accounts: [],
+    });
+
+    await expect(
+      getInstagramConversationForDelivery(database, "conversation-row-id"),
+    ).resolves.toEqual({
+      ...baseConversation,
+      instagram_accounts: null,
+    });
   });
 });

@@ -35,7 +35,7 @@ export const classificationSchema = z.object({
   confidence: z.number().min(0).max(1),
   isModel: z.boolean(),
   mentionsBarcelona: z.boolean(),
-  mentionsPaidPhotography: z.boolean(),
+  mentionsPhotographyWork: z.boolean(),
   isPotentialClient: z.boolean(),
   reason: z.string().min(1).max(500),
 });

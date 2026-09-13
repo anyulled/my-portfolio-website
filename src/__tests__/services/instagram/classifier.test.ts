@@ -9,7 +9,7 @@ const classification = {
   confidence: 0.91,
   isModel: true,
   mentionsBarcelona: true,
-  mentionsPaidPhotography: true,
+  mentionsPhotographyWork: true,
   isPotentialClient: false,
   reason: "The sender explicitly requests paid modeling work in Barcelona.",
 };
@@ -38,7 +38,7 @@ describe("classifyInstagramMessage", () => {
         ...classification,
         isModel: false,
         mentionsBarcelona: false,
-        mentionsPaidPhotography: false,
+        mentionsPhotographyWork: false,
         isPotentialClient: true,
       },
     } as never);
@@ -58,13 +58,43 @@ describe("classifyInstagramMessage", () => {
     expect(result.route).toBe("manual_review");
   });
 
+  it("routes clear model collaboration in Barcelona without requiring a fee", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: {
+        ...classification,
+        mentionsPhotographyWork: true,
+      },
+    } as never);
+
+    const result = await classifyInstagramMessage(
+      "Ciao, sono una modella e sarò in Barcelona il mese prossimo, mi piacerebbe lavorare con te.",
+    );
+
+    expect(result.route).toBe("model_form");
+  });
+
+  it("keeps a model without photography or collaboration intent in manual review", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: {
+        ...classification,
+        mentionsPhotographyWork: false,
+      },
+    } as never);
+
+    const result = await classifyInstagramMessage(
+      "Ciao, sono una modella e sarò a Barcelona il mese prossimo.",
+    );
+
+    expect(result.route).toBe("manual_review");
+  });
+
   it("ignores unrelated messages", async () => {
     mockedGenerateText.mockResolvedValue({
       output: {
         ...classification,
         isModel: false,
         mentionsBarcelona: false,
-        mentionsPaidPhotography: false,
+        mentionsPhotographyWork: false,
         isPotentialClient: false,
       },
     } as never);

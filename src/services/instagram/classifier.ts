@@ -11,9 +11,9 @@ const classificationSystem = `You classify Instagram messages for a Barcelona ph
 
 Return only the requested structured object. Use route manual_review unless every required fact for an automatic route is explicit.
 
-model_form requires all of these: the sender explicitly says they are a model or offer modeling services; Barcelona is explicitly named; paid photography, a fee, cachet, rate, or remuneration is explicitly mentioned.
+model_form requires all of these: the sender explicitly says they are a model or offer modeling services; Barcelona is explicitly named; photography, a photo session, or collaboration/work with the photographer is explicitly mentioned. Do not require a fee or rate because the form collects the model's cachet and conditions without accepting the proposal.
 pricing requires clear intent to hire the photographer for a photography session for the sender or another person. Missing city or session type does not block pricing when client intent is clear.
-manual_review is required when identity or intent is uncertain, or when a model message lacks explicit Barcelona or paid-session language.
+manual_review is required when identity or intent is uncertain, or when a model message lacks explicit Barcelona or photography/collaboration language.
 ignore is required for unrelated messages without clear photography-client intent or model opportunity.
 Detect the language of the message. Do not infer facts from profile appearance, usernames, images, or general geography.`;
 
@@ -23,7 +23,7 @@ const normalizeClassification = (
   const isClearModel =
     classification.isModel &&
     classification.mentionsBarcelona &&
-    classification.mentionsPaidPhotography;
+    classification.mentionsPhotographyWork;
   const isClearClient =
     classification.isPotentialClient && !classification.isModel;
   const isUnrelated =

@@ -68,7 +68,7 @@ const classification = {
   confidence: 0.95,
   isModel: true,
   mentionsBarcelona: true,
-  mentionsPaidPhotography: true,
+  mentionsPhotographyWork: true,
   isPotentialClient: false,
   reason: "Clear paid model availability enquiry.",
 };
