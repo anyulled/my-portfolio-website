@@ -1,6 +1,29 @@
 import InstagramInbox from "@/app/instagram/InstagramInbox";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
+const pendingConversation = {
+  id: "conversation-id",
+  accountHandle: "anyulled",
+  participantId: "participant-id",
+  participantUsername: "model-account",
+  lastMessage: "I am a model visiting Barcelona.",
+  detectedLanguage: "en",
+  classification: "manual_review",
+  confidence: 0.9,
+  processingState: "pending",
+  responseRoute: null,
+  responseSentAt: null,
+  lastError: null,
+};
+
+const mockPendingConversationLoad = () => {
+  jest.mocked(global.fetch).mockResolvedValueOnce({
+    ok: true,
+    status: 200,
+    json: async () => ({ conversations: [pendingConversation] }),
+  } as Response);
+};
+
 describe("InstagramInbox", () => {
   beforeEach(() => {
     global.fetch = jest.fn();
@@ -138,40 +161,17 @@ describe("InstagramInbox", () => {
   });
 
   it("shows the server diagnosis when applying a decision fails", async () => {
-    jest
-      .mocked(global.fetch)
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => ({
-          conversations: [
-            {
-              id: "conversation-id",
-              accountHandle: "anyulled",
-              participantId: "participant-id",
-              participantUsername: "model-account",
-              lastMessage: "I am a model visiting Barcelona.",
-              detectedLanguage: "en",
-              classification: "manual_review",
-              confidence: 0.9,
-              processingState: "pending",
-              responseRoute: null,
-              responseSentAt: null,
-              lastError: null,
-            },
-          ],
-        }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: false,
-        status: 502,
-        json: async () => ({
-          message: "Unable to deliver the Instagram response.",
-          requestId: "decision-request-id",
-          resolution:
-            "Retry the decision. If delivery still fails, check the connected Instagram account and Meta messaging permission.",
-        }),
-      } as Response);
+    mockPendingConversationLoad();
+    jest.mocked(global.fetch).mockResolvedValueOnce({
+      ok: false,
+      status: 502,
+      json: async () => ({
+        message: "Unable to deliver the Instagram response.",
+        requestId: "decision-request-id",
+        resolution:
+          "Retry the decision. If delivery still fails, check the connected Instagram account and Meta messaging permission.",
+      }),
+    } as Response);
 
     render(<InstagramInbox />);
 
@@ -197,30 +197,9 @@ describe("InstagramInbox", () => {
   });
 
   it("keeps the conversation when the decision request cannot reach the server", async () => {
+    mockPendingConversationLoad();
     jest
       .mocked(global.fetch)
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => ({
-          conversations: [
-            {
-              id: "conversation-id",
-              accountHandle: "anyulled",
-              participantId: "participant-id",
-              participantUsername: "model-account",
-              lastMessage: "I am a model visiting Barcelona.",
-              detectedLanguage: "en",
-              classification: "manual_review",
-              confidence: 0.9,
-              processingState: "pending",
-              responseRoute: null,
-              responseSentAt: null,
-              lastError: null,
-            },
-          ],
-        }),
-      } as Response)
       .mockRejectedValueOnce(new Error("network unavailable"));
 
     render(<InstagramInbox />);
