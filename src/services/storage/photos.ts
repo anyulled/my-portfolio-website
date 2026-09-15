@@ -1,7 +1,6 @@
 import { createGCPStorageClient } from "@/lib/gcp/storage-client";
 
 import { concurrentMap } from "@/lib/async";
-import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { getHarnessPhotos } from "@/services/harness/fixtures";
 import { isHarnessFixtureMode } from "@/services/harness/mode";
@@ -150,27 +149,6 @@ const retrievePhotosFromCache = async (
     );
   }
 
-  // 2. Try to get from Vercel Blob Cache (Second Layer)
-  try {
-    const cachedPhotos = await getCachedData<Photo[]>(cacheKey);
-    if (cachedPhotos) {
-      console.log(
-        chalk.green(`[PhotosStorage] Vercel Blob hit for ${cacheKey}`),
-      );
-      const photos = filterInvalidPhotos(cachedPhotos);
-      // Hydrate Redis
-      setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
-      return photos;
-    }
-  } catch (error) {
-    console.warn(
-      chalk.yellow(
-        `[PhotosStorage] Failed to read from cache for ${cacheKey}:`,
-      ),
-      error,
-    );
-  }
-
   return null;
 };
 
@@ -183,17 +161,10 @@ const storePhotosInCache = async (
   try {
     console.log(
       chalk.cyan(
-        `[PhotosStorage] Writing ${photos.length} photos to cache layers`,
+        `[PhotosStorage] Writing ${photos.length} photos to Redis cache`,
       ),
     );
-    /*
-     * ⚡ Bolt: Execute independent cache writes concurrently via Promise.all
-     * to eliminate a request waterfall and reduce latency.
-     */
-    await Promise.all([
-      setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS),
-      setCachedData(cacheKey, photos, CACHE_TTL_SECONDS),
-    ]);
+    await setRedisCachedData(cacheKey, photos, CACHE_TTL_SECONDS);
   } catch (error) {
     console.warn(
       chalk.yellow(`[PhotosStorage] Failed to write to cache for ${cacheKey}:`),

@@ -23,7 +23,6 @@
     "@tailwindcss/postcss": "^4.3.0",
     "@upstash/redis": "^1.38.0",
     "@vercel/analytics": "^2.0.1",
-    "@vercel/blob": "^2.8.0",
     "@vercel/speed-insights": "^2.0.0",
     "ai": "^7.0.97",
     "chalk": "^6.0.0",

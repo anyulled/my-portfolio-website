@@ -1,12 +1,10 @@
 /** @jest-environment @stryker-mutator/jest-runner/jest-env/node */
-import { getCachedData, setCachedData } from "@/services/cache";
 import { getRedisCachedData, setRedisCachedData } from "@/services/redis";
 import { getPhotosFromStorage } from "@/services/storage/photos";
 import { Storage } from "@google-cloud/storage";
 
 // Mock dependencies
 jest.mock("@/services/redis");
-jest.mock("@/services/cache");
 jest.mock("@google-cloud/storage");
 jest.mock("@sentry/nextjs", () => ({
   captureException: jest.fn(),
@@ -94,28 +92,73 @@ describe("Photos Storage Service", () => {
 
     expect(result).toEqual([mockPhoto]);
     expect(getRedisCachedData).toHaveBeenCalled();
-    expect(getCachedData).not.toHaveBeenCalled();
     expect(mockStorageClient.bucket).not.toHaveBeenCalled();
   });
 
-  it("should return cached data from Vercel Blob if Redis misses", async () => {
+  it("should fetch from GCS and populate Redis if Redis misses", async () => {
     (getRedisCachedData as jest.Mock).mockResolvedValue(null);
-    (getCachedData as jest.Mock).mockResolvedValue([mockPhoto]);
 
     const result = await getPhotosFromStorage("test-prefix");
 
-    expect(result).toEqual([mockPhoto]);
-    expect(getCachedData).toHaveBeenCalled();
+    expect(result).toEqual([
+      expect.objectContaining({
+        id: mockPhoto.id,
+        title: mockPhoto.title,
+      }),
+    ]);
+    expect(mockStorageClient.bucket).toHaveBeenCalledWith(
+      "sensuelle-boudoir-homepage",
+    );
     expect(setRedisCachedData).toHaveBeenCalledWith(
-      expect.anything(),
-      [mockPhoto],
-      expect.any(Number),
+      "photos-test-prefix",
+      expect.any(Array),
+      43_200,
     );
   });
 
-  it("should fetch from GCS if caches miss", async () => {
+  it("should return GCS photos when Redis cannot store them", async () => {
     (getRedisCachedData as jest.Mock).mockResolvedValue(null);
-    (getCachedData as jest.Mock).mockResolvedValue(null);
+    (setRedisCachedData as jest.Mock).mockRejectedValueOnce(
+      new Error("Redis write error"),
+    );
+
+    const result = await getPhotosFromStorage("test-prefix");
+
+    expect(result).toEqual([
+      expect.objectContaining({
+        id: mockPhoto.id,
+        title: mockPhoto.title,
+      }),
+    ]);
+    expect(setRedisCachedData).toHaveBeenCalledWith(
+      "photos-test-prefix",
+      expect.any(Array),
+      43_200,
+    );
+  });
+
+  it("should fetch from GCS when Redis lookup fails", async () => {
+    (getRedisCachedData as jest.Mock).mockRejectedValueOnce(
+      new Error("Redis read error"),
+    );
+
+    const result = await getPhotosFromStorage("test-prefix");
+
+    expect(result).toEqual([
+      expect.objectContaining({
+        id: mockPhoto.id,
+        title: mockPhoto.title,
+      }),
+    ]);
+    expect(setRedisCachedData).toHaveBeenCalledWith(
+      "photos-test-prefix",
+      expect.any(Array),
+      43_200,
+    );
+  });
+
+  it("should fetch from GCS if Redis misses", async () => {
+    (getRedisCachedData as jest.Mock).mockResolvedValue(null);
 
     const result = await getPhotosFromStorage("test-prefix");
 
@@ -126,14 +169,11 @@ describe("Photos Storage Service", () => {
       autoPaginate: false,
       prefix: "test-prefix",
     });
-    // Should populate caches
-    expect(setRedisCachedData).toHaveBeenCalled();
-    expect(setCachedData).toHaveBeenCalled();
+    expect(setRedisCachedData).toHaveBeenCalledTimes(1);
   });
 
   it("should handle GCS errors gracefully", async () => {
     (getRedisCachedData as jest.Mock).mockResolvedValue(null);
-    (getCachedData as jest.Mock).mockResolvedValue(null);
     mockBucket.getFiles.mockRejectedValue(new Error("GCS Error"));
 
     const result = await getPhotosFromStorage("test-prefix");
@@ -143,7 +183,6 @@ describe("Photos Storage Service", () => {
 
   it("should generate hash-based ID for photos without valid metadata ID", async () => {
     (getRedisCachedData as jest.Mock).mockResolvedValue(null);
-    (getCachedData as jest.Mock).mockResolvedValue(null);
 
     const fileWithoutId = {
       ...mockFile,
@@ -162,7 +201,6 @@ describe("Photos Storage Service", () => {
 
   it("should respect limit parameter and process only subset of files", async () => {
     (getRedisCachedData as jest.Mock).mockResolvedValue(null);
-    (getCachedData as jest.Mock).mockResolvedValue(null);
 
     const createMockFile = (name: string) => ({
       ...mockFile,

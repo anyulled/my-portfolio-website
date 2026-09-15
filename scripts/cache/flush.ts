@@ -1,4 +1,3 @@
-import { list, del, ListBlobResult } from "@vercel/blob";
 import { Redis } from "@upstash/redis";
 import { loadEnvConfig } from "@next/env";
 import chalk from "chalk";
@@ -46,48 +45,9 @@ const flushRedis = async (): Promise<void> => {
   }
 };
 
-const flushVercelBlob = async (
-  cursor?: string,
-  deletedCount = 0,
-): Promise<number> => {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    console.warn(
-      chalk.yellow("⚠️ Vercel Blob token missing. Skipping Blob flush."),
-    );
-    return 0;
-  }
-
-  try {
-    const result: ListBlobResult = await list({ cursor, limit: 100 });
-    // Match sanitized keys (no dashes) and original keys
-    const photoBlobs = result.blobs.filter((b) =>
-      b.pathname.startsWith("photos"),
-    );
-
-    if (photoBlobs.length > 0) {
-      await del(photoBlobs.map((b) => b.url));
-    }
-
-    const currentDeletedCount = deletedCount + photoBlobs.length;
-
-    if (result.hasMore && result.cursor) {
-      return await flushVercelBlob(result.cursor, currentDeletedCount);
-    }
-
-    return currentDeletedCount;
-  } catch (error) {
-    console.error(chalk.red("❌ Vercel Blob flush failed:"), error);
-    return deletedCount;
-  }
-};
-
 const main = async (): Promise<void> => {
   console.log(chalk.cyan("🚀 Starting cache flush..."));
   await flushRedis();
-  const totalDeleted = await flushVercelBlob();
-  if (totalDeleted > 0) {
-    console.log(chalk.green(`✅ Vercel Blob: deleted ${totalDeleted} blobs.`));
-  }
   console.log(chalk.cyan("✨ Cache flush complete."));
 };
 
