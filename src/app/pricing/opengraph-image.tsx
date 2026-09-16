@@ -1,4 +1,5 @@
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
+import { fallbackOpenGraphImageUrl } from "@/lib/openGraphImage";
 import { ImageResponse } from "next/og";
 
 export const contentType = "image/png";
@@ -22,10 +23,11 @@ function generateFallbackImage() {
         fontFamily: "sans-serif",
       }}
     >
-      <div style={{ fontSize: 72, fontWeight: "bold" }}>Sensuelle Boudoir</div>
-      <div style={{ fontSize: 32, marginTop: 20, color: "#a0a0a0" }}>
-        Pricing & Experiences
-      </div>
+      <img
+        src={fallbackOpenGraphImageUrl}
+        alt=""
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      />
     </div>,
     { ...size },
   );

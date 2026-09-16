@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
     images: [
       {
-        url: "/placeholder.svg?height=630&width=1200&text=Boudoir+Myths+Debunked",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Boudoir Photography Myths Debunked",
@@ -35,9 +35,7 @@ export const metadata: Metadata = {
     title: "5 Common Boudoir Photography Myths Debunked",
     description:
       "Learn the truth about boudoir photography and debunk common misconceptions.",
-    images: [
-      "/placeholder.svg?height=630&width=1200&text=Boudoir+Myths+Debunked",
-    ],
+    images: ["/opengraph-image"],
   },
   alternates: {
     canonical: "https://boudoir.barcelona/boudoir-myths",
@@ -81,7 +79,7 @@ const structuredData: WithContext<Article> = {
   },
   image: {
     "@type": "ImageObject",
-    url: "/placeholder.svg?height=630&width=1200&text=Boudoir+Myths+Debunked",
+    url: "https://boudoir.barcelona/opengraph-image",
     width: "1200",
     height: "630",
   },

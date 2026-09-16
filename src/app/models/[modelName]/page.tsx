@@ -25,8 +25,8 @@ export const generateMetadata = async ({
   const images = [
     {
       url: `/models/${modelName}/opengraph-image`,
-      height: 1200,
-      width: 630,
+      width: 1200,
+      height: 630,
     },
   ];
 

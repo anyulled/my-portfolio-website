@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     description: "Boudoir photography service in Barcelona.",
     images: [
       {
-        url: "/opengraph-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Boudoir Barcelona",

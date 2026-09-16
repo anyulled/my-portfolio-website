@@ -2,6 +2,7 @@ import { styles } from "@/data/styles";
 import { extractNameFromTag } from "@/lib/extractName";
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 import { ImageResponse } from "next/og";
+import { fallbackOpenGraphImageUrl } from "@/lib/openGraphImage";
 
 export const contentType = "image/png";
 export const alt = "Sensuelle Boudoir";
@@ -24,7 +25,7 @@ export default async function OpengraphImage({
       <div tw="bg-neutral-800 flex flex-row w-full h-full">
         <div tw="w-2/5 py-12 px-4 p-8 flex ">
           <img
-            src={photos?.at(0)?.srcSet[0]?.src}
+            src={photos?.at(0)?.srcSet[0]?.src ?? fallbackOpenGraphImageUrl}
             alt={styleName}
             tw="w-full h-auto rounded-md"
           />

@@ -28,9 +28,9 @@ export const generateMetadata = async ({
       title: `Style: ${extractNameFromTag(styles, styleName)}`,
       images: [
         {
-          url: `/models/${styleName}/opengraph-image`,
-          height: 1200,
-          width: 630,
+          url: `/styles/${styleName}/opengraph-image`,
+          width: 1200,
+          height: 630,
         },
       ],
     },
@@ -39,9 +39,9 @@ export const generateMetadata = async ({
       title: `Style: ${extractNameFromTag(styles, styleName)}`,
       images: [
         {
-          url: `/models/${styleName}/opengraph-image`,
-          height: 1200,
-          width: 630,
+          url: `/styles/${styleName}/opengraph-image`,
+          width: 1200,
+          height: 630,
         },
       ],
     },

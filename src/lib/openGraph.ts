@@ -10,7 +10,7 @@ export const openGraph: OpenGraph = {
   siteName: "Sensuelle Boudoir · Boudoir Photography in Barcelona",
   images: [
     {
-      url: "/opengraph-image.jpg",
+      url: "/opengraph-image",
       width: 1200,
       height: 630,
       alt: "Boudoir photography in Barcelona",
