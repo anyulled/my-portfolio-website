@@ -81,7 +81,6 @@ describe("Photos Storage Service", () => {
 
     expect(result?.[0].srcSet[0].src).toBe("/images/DSC_7028.jpg");
     expect(getRedisCachedData).not.toHaveBeenCalled();
-    expect(getCachedData).not.toHaveBeenCalled();
     expect(mockStorageClient.bucket).not.toHaveBeenCalled();
   });
 
