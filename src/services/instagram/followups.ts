@@ -105,6 +105,7 @@ export const processInstagramFollowups = async (
       candidate.id,
       claimToken,
       now.toISOString(),
+      candidate.deliveryStartedAt,
     );
     if (!deliveryStarted) {
       continue;

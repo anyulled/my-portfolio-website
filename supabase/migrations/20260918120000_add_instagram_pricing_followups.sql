@@ -11,7 +11,7 @@ alter table instagram_conversations
 
 alter table instagram_conversations
   add constraint instagram_conversations_follow_up_attempts_check
-  check (follow_up_attempts >= 0);
+  check (follow_up_attempts >= 0) not valid;
 
 create or replace function complete_instagram_response(
   target_conversation_id uuid,

@@ -72,6 +72,7 @@ export interface InstagramFollowupCandidate {
   lastMessageAt: string;
   followUpDueAt: string;
   followUpAttempts: number;
+  deliveryStartedAt: string | null;
   account: {
     handle: InstagramHandle;
     instagramUserId: string;

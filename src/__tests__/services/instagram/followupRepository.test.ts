@@ -58,6 +58,7 @@ describe("Instagram follow-up repository", () => {
           detected_language: "es",
           follow_up_due_at: "2026-09-18T11:00:00.000Z",
           follow_up_attempts: 1,
+          follow_up_delivery_started_at: null,
           instagram_accounts: [
             {
               handle: "anyulled",
@@ -73,6 +74,7 @@ describe("Instagram follow-up repository", () => {
           detected_language: "es",
           follow_up_due_at: "2026-09-18T11:00:00.000Z",
           follow_up_attempts: 1,
+          follow_up_delivery_started_at: null,
           instagram_accounts: [],
         },
       ],
@@ -103,6 +105,7 @@ describe("Instagram follow-up repository", () => {
           detected_language: "es",
           follow_up_due_at: "2026-09-18T11:00:00.000Z",
           follow_up_attempts: 1,
+          follow_up_delivery_started_at: null,
           instagram_accounts: {
             handle: "sensuelleboudoir",
             instagram_user_id: "account-id",
