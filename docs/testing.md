@@ -28,7 +28,7 @@ Static mutants are excluded because each module-initialization mutation reruns t
 
 ## E2E environments
 
-Local E2E runs a production build with `HARNESS_MODE=fixture`. Fixture mode must not call production Supabase, Redis, Blob, GCS, Meta, or email services and fails closed in Vercel production.
+Local E2E runs a production build with `HARNESS_MODE=fixture`. Fixture mode must not call production Supabase, Redis, GCS, Meta, or email services and fails closed in Vercel production.
 
 Preview E2E is read-only. It verifies public rendering and authentication boundaries but does not submit forms, resize files, recalculate prices, or send Instagram messages. Real Instagram delivery remains a manual release procedure in `docs/instagram-e2e-test.md`.
 
