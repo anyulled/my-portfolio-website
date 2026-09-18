@@ -9,6 +9,7 @@ import {
 } from "./repository";
 import { classifyInstagramMessage } from "./classifier";
 import { getInstagramPublicUrl } from "./config";
+import { getInstagramFollowupDueAt } from "./followups";
 import { sendInstagramText } from "./metaClient";
 import { renderBoundedResponse } from "./responseTemplates";
 import type { InstagramWebhookMessage } from "./types";
@@ -169,7 +170,13 @@ export const processInstagramWebhookMessage = async (
         message.participantId,
         responseText,
       );
-      await markInstagramResponseSent(database, result.conversation.id);
+      await markInstagramResponseSent(
+        database,
+        result.conversation.id,
+        responseRoute === "pricing"
+          ? getInstagramFollowupDueAt(message.timestamp)
+          : null,
+      );
       return responseRoute;
     } catch (error) {
       const errorMessage =

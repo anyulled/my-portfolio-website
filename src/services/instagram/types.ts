@@ -65,6 +65,20 @@ export interface InstagramConversationRecord {
   lastError: string | null;
 }
 
+export interface InstagramFollowupCandidate {
+  id: string;
+  participantId: string;
+  detectedLanguage: string;
+  lastMessageAt: string;
+  followUpDueAt: string;
+  followUpAttempts: number;
+  account: {
+    handle: InstagramHandle;
+    instagramUserId: string;
+    accessToken: string;
+  };
+}
+
 export interface InstagramWebhookMessage {
   accountInstagramUserId: string;
   accountInstagramUserIdCandidates: string[];

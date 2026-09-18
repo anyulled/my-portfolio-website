@@ -1,4 +1,7 @@
-import { isCronRequestAuthorized } from "@/services/cron/authorization";
+import {
+  isCronRequestAuthorized,
+  isInstagramFollowupRequestAuthorized,
+} from "@/services/cron/authorization";
 
 describe("Cron request authorization", () => {
   const originalSecret = process.env.CRON_SECRET;
@@ -42,5 +45,46 @@ describe("Cron request authorization", () => {
     const authorized = isCronRequestAuthorized(request);
 
     expect(authorized).toBe(true);
+  });
+});
+
+describe("Instagram follow-up authorization", () => {
+  const originalToken = process.env.INSTAGRAM_FOLLOWUP_CRON_TOKEN;
+  const createRequest = (authorization: string | null) => ({
+    headers: { get: () => authorization },
+  });
+
+  afterEach(() => {
+    if (originalToken === undefined) {
+      delete process.env.INSTAGRAM_FOLLOWUP_CRON_TOKEN;
+    } else {
+      process.env.INSTAGRAM_FOLLOWUP_CRON_TOKEN = originalToken;
+    }
+  });
+
+  it.each([null, "Bearer invalid-token"])("rejects %s", (authorization) => {
+    process.env.INSTAGRAM_FOLLOWUP_CRON_TOKEN = "expected-token";
+
+    expect(
+      isInstagramFollowupRequestAuthorized(createRequest(authorization)),
+    ).toBe(false);
+  });
+
+  it("rejects requests when the follow-up token is not configured", () => {
+    delete process.env.INSTAGRAM_FOLLOWUP_CRON_TOKEN;
+
+    expect(
+      isInstagramFollowupRequestAuthorized(createRequest("Bearer token")),
+    ).toBe(false);
+  });
+
+  it("accepts the configured bearer token", () => {
+    process.env.INSTAGRAM_FOLLOWUP_CRON_TOKEN = "expected-token";
+
+    expect(
+      isInstagramFollowupRequestAuthorized(
+        createRequest("Bearer expected-token"),
+      ),
+    ).toBe(true);
   });
 });
