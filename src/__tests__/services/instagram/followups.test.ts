@@ -40,6 +40,7 @@ const candidate = {
   lastMessageAt: "2026-09-17T13:00:00.000Z",
   followUpDueAt: new Date(now.getTime() - 1).toISOString(),
   followUpAttempts: 0,
+  deliveryStartedAt: null,
   account: {
     handle: "anyulled" as const,
     instagramUserId: "account-id",
@@ -79,6 +80,7 @@ describe("processInstagramFollowups", () => {
       "conversation-id",
       expect.any(String),
       now.toISOString(),
+      null,
     );
     expect(sendInstagramText).toHaveBeenCalledWith(
       "secret-token",

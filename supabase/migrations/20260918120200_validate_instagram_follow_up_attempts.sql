@@ -1,0 +1,2 @@
+alter table instagram_conversations
+  validate constraint instagram_conversations_follow_up_attempts_check;

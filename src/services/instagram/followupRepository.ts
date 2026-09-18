@@ -47,16 +47,18 @@ export const listInstagramFollowupCandidates = async (
   const result = await database
     .from("instagram_conversations")
     .select(
-      "id, participant_id, last_message_at, detected_language, follow_up_due_at, follow_up_attempts, instagram_accounts(handle, instagram_user_id, access_token)",
+      "id, participant_id, last_message_at, detected_language, follow_up_due_at, follow_up_attempts, follow_up_delivery_started_at, instagram_accounts(handle, instagram_user_id, access_token)",
     )
     .eq("response_route", "pricing")
     .not("response_sent_at", "is", null)
     .not("follow_up_due_at", "is", null)
     .is("follow_up_sent_at", null)
     .is("follow_up_cancelled_at", null)
-    .is("follow_up_delivery_started_at", null)
     .or(
       `follow_up_claimed_at.is.null,follow_up_claimed_at.lt.${claimExpiredBefore}`,
+    )
+    .or(
+      `follow_up_delivery_started_at.is.null,follow_up_delivery_started_at.lt.${claimExpiredBefore}`,
     )
     .lt("follow_up_attempts", 3)
     .lte("follow_up_due_at", now)
@@ -69,6 +71,7 @@ export const listInstagramFollowupCandidates = async (
     detected_language: string;
     follow_up_due_at: string;
     follow_up_attempts: number;
+    follow_up_delivery_started_at: string | null;
     instagram_accounts: DeliveryAccountRelation;
   }> | null;
 
@@ -87,6 +90,7 @@ export const listInstagramFollowupCandidates = async (
             lastMessageAt: row.last_message_at,
             followUpDueAt: row.follow_up_due_at,
             followUpAttempts: row.follow_up_attempts,
+            deliveryStartedAt: row.follow_up_delivery_started_at,
             account: {
               handle: account.handle,
               instagramUserId: account.instagram_user_id,
@@ -122,7 +126,9 @@ export const claimInstagramFollowup = async (
     )
     .is("follow_up_sent_at", null)
     .is("follow_up_cancelled_at", null)
-    .is("follow_up_delivery_started_at", null)
+    .or(
+      `follow_up_delivery_started_at.is.null,follow_up_delivery_started_at.lt.${claimExpiredBefore}`,
+    )
     .lt("follow_up_attempts", 3)
     .select("id")
     .maybeSingle();
@@ -139,7 +145,19 @@ export const beginInstagramFollowupDelivery = async (
   conversationId: string,
   claimToken: string,
   startedAt: string,
+  previousStartedAt: string | null = null,
 ) => {
+  if (previousStartedAt) {
+    await markInstagramFollowupForReconciliation(
+      database,
+      conversationId,
+      claimToken,
+      null,
+      "Instagram follow-up delivery was interrupted before confirmation",
+    );
+    return false;
+  }
+
   const result = await database
     .from("instagram_conversations")
     .update({ follow_up_delivery_started_at: startedAt })
