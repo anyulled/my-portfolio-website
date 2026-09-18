@@ -1,6 +1,9 @@
 jest.mock("@/services/instagram/followupRepository", () => ({
+  beginInstagramFollowupDelivery: jest.fn(),
+  cancelInstagramFollowup: jest.fn(),
   claimInstagramFollowup: jest.fn(),
   listInstagramFollowupCandidates: jest.fn(),
+  markInstagramFollowupForReconciliation: jest.fn(),
   markInstagramFollowupSent: jest.fn(),
   releaseInstagramFollowupClaim: jest.fn(),
 }));
@@ -14,8 +17,11 @@ jest.mock("@/services/instagram/metaClient", () => ({
 }));
 
 import {
+  beginInstagramFollowupDelivery,
+  cancelInstagramFollowup,
   claimInstagramFollowup,
   listInstagramFollowupCandidates,
+  markInstagramFollowupForReconciliation,
   markInstagramFollowupSent,
   releaseInstagramFollowupClaim,
 } from "@/services/instagram/followupRepository";
@@ -46,10 +52,15 @@ describe("processInstagramFollowups", () => {
     jest.clearAllMocks();
     jest.mocked(listInstagramFollowupCandidates).mockResolvedValue([candidate]);
     jest.mocked(claimInstagramFollowup).mockResolvedValue(true);
+    jest.mocked(beginInstagramFollowupDelivery).mockResolvedValue(true);
     jest
       .mocked(sendInstagramText)
       .mockResolvedValue({ message_id: "message-id" });
-    jest.mocked(markInstagramFollowupSent).mockResolvedValue(undefined);
+    jest.mocked(markInstagramFollowupSent).mockResolvedValue(true);
+    jest
+      .mocked(markInstagramFollowupForReconciliation)
+      .mockResolvedValue(undefined);
+    jest.mocked(cancelInstagramFollowup).mockResolvedValue(undefined);
     jest.mocked(releaseInstagramFollowupClaim).mockResolvedValue(undefined);
   });
 
@@ -61,6 +72,13 @@ describe("processInstagramFollowups", () => {
       "conversation-id",
       1,
       now.toISOString(),
+      expect.any(String),
+    );
+    expect(beginInstagramFollowupDelivery).toHaveBeenCalledWith(
+      database,
+      "conversation-id",
+      expect.any(String),
+      now.toISOString(),
     );
     expect(sendInstagramText).toHaveBeenCalledWith(
       "secret-token",
@@ -71,6 +89,8 @@ describe("processInstagramFollowups", () => {
     expect(markInstagramFollowupSent).toHaveBeenCalledWith(
       database,
       "conversation-id",
+      expect.any(String),
+      "message-id",
     );
     expect(summary).toEqual({
       candidates: 1,
@@ -105,11 +125,10 @@ describe("processInstagramFollowups", () => {
         failed: 0,
       },
     );
-    expect(releaseInstagramFollowupClaim).toHaveBeenCalledWith(
+    expect(cancelInstagramFollowup).toHaveBeenCalledWith(
       database,
       "conversation-id",
       "Instagram follow-up window is closing",
-      true,
     );
     expect(claimInstagramFollowup).not.toHaveBeenCalled();
   });
@@ -126,6 +145,7 @@ describe("processInstagramFollowups", () => {
     expect(releaseInstagramFollowupClaim).toHaveBeenCalledWith(
       database,
       "conversation-id",
+      expect.any(String),
       error.message,
       true,
     );
@@ -140,6 +160,7 @@ describe("processInstagramFollowups", () => {
     expect(releaseInstagramFollowupClaim).toHaveBeenCalledWith(
       database,
       "conversation-id",
+      expect.any(String),
       error.message,
       false,
     );
@@ -153,6 +174,7 @@ describe("processInstagramFollowups", () => {
     expect(releaseInstagramFollowupClaim).toHaveBeenCalledWith(
       database,
       "conversation-id",
+      expect.any(String),
       "Instagram follow-up failed",
       false,
     );
@@ -160,5 +182,62 @@ describe("processInstagramFollowups", () => {
 
   it("keeps the 22-hour schedule explicit", () => {
     expect(INSTAGRAM_FOLLOWUP_DELAY_MS).toBe(22 * 60 * 60 * 1000);
+  });
+
+  it("does not send after cancellation invalidates delivery ownership", async () => {
+    jest.mocked(beginInstagramFollowupDelivery).mockResolvedValue(false);
+
+    await processInstagramFollowups(database, now);
+
+    expect(sendInstagramText).not.toHaveBeenCalled();
+  });
+
+  it("records delivered messages for reconciliation when finalization fails", async () => {
+    jest
+      .mocked(markInstagramFollowupSent)
+      .mockRejectedValue(new Error("database unavailable"));
+
+    await expect(processInstagramFollowups(database, now)).resolves.toEqual({
+      candidates: 1,
+      sent: 0,
+      cancelled: 0,
+      failed: 1,
+    });
+    expect(markInstagramFollowupForReconciliation).toHaveBeenCalledWith(
+      database,
+      "conversation-id",
+      expect.any(String),
+      "message-id",
+      "database unavailable",
+    );
+    expect(releaseInstagramFollowupClaim).not.toHaveBeenCalled();
+  });
+
+  it("does not count delivery as sent when ownership is lost before finalization", async () => {
+    jest.mocked(markInstagramFollowupSent).mockResolvedValue(false);
+
+    await expect(processInstagramFollowups(database, now)).resolves.toEqual({
+      candidates: 1,
+      sent: 0,
+      cancelled: 0,
+      failed: 1,
+    });
+  });
+
+  it("makes successful deliveries without identifiers non-retryable", async () => {
+    jest.mocked(sendInstagramText).mockResolvedValue({
+      recipient_id: "participant-id",
+    });
+
+    await processInstagramFollowups(database, now);
+
+    expect(markInstagramFollowupForReconciliation).toHaveBeenCalledWith(
+      database,
+      "conversation-id",
+      expect.any(String),
+      null,
+      "Instagram delivery identifier was not returned",
+    );
+    expect(releaseInstagramFollowupClaim).not.toHaveBeenCalled();
   });
 });

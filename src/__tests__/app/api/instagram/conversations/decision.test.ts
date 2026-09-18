@@ -16,6 +16,7 @@ jest.mock("@/services/instagram/repository", () => ({
   claimInstagramResponse: jest.fn(),
   getInstagramConversationForDelivery: jest.fn(),
   getInstagramDatabase: jest.fn(),
+  getInstagramInitialInboundMessageTimestamp: jest.fn(),
   markInstagramResponseSent: jest.fn(),
   releaseInstagramResponseClaim: jest.fn(),
   setInstagramReviewDecision: jest.fn(),
@@ -41,6 +42,7 @@ import {
   claimInstagramResponse,
   getInstagramConversationForDelivery,
   getInstagramDatabase,
+  getInstagramInitialInboundMessageTimestamp,
   markInstagramResponseSent,
   releaseInstagramResponseClaim,
   setInstagramReviewDecision,
@@ -86,6 +88,9 @@ describe("Instagram conversation decision API", () => {
       .mocked(getInstagramConversationForDelivery)
       .mockResolvedValue(deliveryConversation as never);
     jest.mocked(claimInstagramResponse).mockResolvedValue(true);
+    jest
+      .mocked(getInstagramInitialInboundMessageTimestamp)
+      .mockResolvedValue("2026-09-13T09:30:00.000Z");
     jest.mocked(assignLeadCorrelationToken).mockResolvedValue("lead-token");
     jest
       .mocked(getInstagramPublicUrl)
@@ -114,6 +119,7 @@ describe("Instagram conversation decision API", () => {
     expect(markInstagramResponseSent).toHaveBeenCalledWith(
       database,
       conversationId,
+      "2026-09-13T09:30:00.000Z",
       null,
     );
   });
@@ -134,7 +140,8 @@ describe("Instagram conversation decision API", () => {
     expect(markInstagramResponseSent).toHaveBeenCalledWith(
       database,
       conversationId,
-      "2026-09-14T08:00:00.000Z",
+      "2026-09-13T09:30:00.000Z",
+      "2026-09-14T07:30:00.000Z",
     );
   });
 

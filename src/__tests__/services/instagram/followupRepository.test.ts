@@ -1,6 +1,9 @@
 import {
+  beginInstagramFollowupDelivery,
+  cancelInstagramFollowup,
   claimInstagramFollowup,
   listInstagramFollowupCandidates,
+  markInstagramFollowupForReconciliation,
   markInstagramFollowupSent,
   releaseInstagramFollowupClaim,
   updateInstagramFollowupForNewInboundMessage,
@@ -11,6 +14,7 @@ const createDatabase = (result: { data?: unknown; error: unknown }) => {
     select: jest.fn(),
     eq: jest.fn(),
     not: jest.fn(),
+    or: jest.fn(),
     is: jest.fn(),
     lt: jest.fn(),
     lte: jest.fn(),
@@ -74,7 +78,7 @@ describe("Instagram follow-up repository", () => {
       ],
       error: null,
     };
-    const { database } = createDatabase(result);
+    const { database, builder } = createDatabase(result);
 
     await expect(
       listInstagramFollowupCandidates(database, "2026-09-18T12:00:00.000Z", 20),
@@ -84,6 +88,9 @@ describe("Instagram follow-up repository", () => {
         account: expect.objectContaining({ handle: "anyulled" }),
       }),
     ]);
+    expect(builder.or).toHaveBeenCalledWith(
+      "follow_up_claimed_at.is.null,follow_up_claimed_at.lt.2026-09-18T11:50:00.000Z",
+    );
   });
 
   it("normalizes an object account relation", async () => {
@@ -115,7 +122,15 @@ describe("Instagram follow-up repository", () => {
     ]);
   });
 
-  it("claims, marks sent, and releases a follow-up", async () => {
+  it("returns no candidates when the query has no rows", async () => {
+    const { database } = createDatabase({ data: null, error: null });
+
+    await expect(
+      listInstagramFollowupCandidates(database, "2026-09-18T12:00:00.000Z", 20),
+    ).resolves.toEqual([]);
+  });
+
+  it("claims, starts delivery, marks sent, and releases with ownership fencing", async () => {
     const { database, builder } = createDatabase({
       data: { id: "conversation-id" },
       error: null,
@@ -127,17 +142,75 @@ describe("Instagram follow-up repository", () => {
         "conversation-id",
         2,
         "2026-09-18T12:00:00.000Z",
+        "claim-token",
       ),
     ).resolves.toBe(true);
-    await markInstagramFollowupSent(database, "conversation-id");
+    await expect(
+      beginInstagramFollowupDelivery(
+        database,
+        "conversation-id",
+        "claim-token",
+        "2026-09-18T12:00:00.000Z",
+      ),
+    ).resolves.toBe(true);
+    await expect(
+      markInstagramFollowupSent(
+        database,
+        "conversation-id",
+        "claim-token",
+        "provider-message-id",
+      ),
+    ).resolves.toBe(true);
     await releaseInstagramFollowupClaim(
       database,
       "conversation-id",
+      "claim-token",
       "temporary",
       false,
     );
 
-    expect(builder.update).toHaveBeenCalledTimes(3);
+    expect(builder.update).toHaveBeenCalledTimes(4);
+    expect(builder.eq).toHaveBeenCalledWith(
+      "follow_up_claim_token",
+      "claim-token",
+    );
+  });
+
+  it("persists delivered follow-ups as non-retryable reconciliation work", async () => {
+    const { database, builder } = createDatabase({ error: null });
+
+    await markInstagramFollowupForReconciliation(
+      database,
+      "conversation-id",
+      "claim-token",
+      "provider-message-id",
+      "finalization failed",
+    );
+
+    expect(builder.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        follow_up_cancelled_at: expect.any(String),
+        follow_up_provider_message_id: "provider-message-id",
+        processing_state: "needs_attention",
+      }),
+    );
+  });
+
+  it("records terminal cancellation timestamps", async () => {
+    const { database, builder } = createDatabase({ error: null });
+
+    await cancelInstagramFollowup(
+      database,
+      "conversation-id",
+      "window closing",
+    );
+
+    expect(builder.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        follow_up_cancelled_at: expect.any(String),
+        follow_up_claim_token: null,
+      }),
+    );
   });
 
   it("propagates database errors", async () => {
@@ -153,20 +226,24 @@ describe("Instagram follow-up repository", () => {
         "conversation-id",
         1,
         "2026-09-18T12:00:00.000Z",
+        "claim-token",
+      ),
+    ).rejects.toBe(error);
+    await expect(
+      markInstagramFollowupSent(
+        database,
+        "conversation-id",
+        "claim-token",
+        "provider-message-id",
       ),
     ).rejects.toBe(error);
     const updateErrorDatabase = createDatabase({ error: null });
-    updateErrorDatabase.builder.eq.mockResolvedValue({ error });
-    await expect(
-      markInstagramFollowupSent(
-        updateErrorDatabase.database,
-        "conversation-id",
-      ),
-    ).rejects.toBe(error);
+    updateErrorDatabase.builder.is.mockResolvedValue({ error });
     await expect(
       releaseInstagramFollowupClaim(
         updateErrorDatabase.database,
         "conversation-id",
+        "claim-token",
         "error",
         true,
       ),

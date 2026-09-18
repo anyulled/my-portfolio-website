@@ -169,6 +169,7 @@ describe("processInstagramWebhookMessage", () => {
     expect(markInstagramResponseSent).toHaveBeenCalledWith(
       database,
       "conversation-row-id",
+      message.timestamp,
       null,
     );
   });
