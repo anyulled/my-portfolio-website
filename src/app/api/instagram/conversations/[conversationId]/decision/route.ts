@@ -4,6 +4,7 @@ import {
   claimInstagramResponse,
   getInstagramConversationForDelivery,
   getInstagramDatabase,
+  getInstagramInitialInboundMessageTimestamp,
   markInstagramResponseSent,
   releaseInstagramResponseClaim,
   setInstagramReviewDecision,
@@ -76,6 +77,11 @@ const sendApprovedResponse = async (
   }
 
   try {
+    const responseSourceTimestamp =
+      await getInstagramInitialInboundMessageTimestamp(
+        database,
+        conversationId,
+      );
     const leadToken =
       decision === "model_form"
         ? await assignLeadCorrelationToken(database, conversationId)
@@ -98,8 +104,9 @@ const sendApprovedResponse = async (
     await markInstagramResponseSent(
       database,
       conversationId,
+      responseSourceTimestamp,
       decision === "pricing"
-        ? getInstagramFollowupDueAt(deliveryConversation.last_message_at)
+        ? getInstagramFollowupDueAt(responseSourceTimestamp)
         : null,
     );
   } catch (error) {

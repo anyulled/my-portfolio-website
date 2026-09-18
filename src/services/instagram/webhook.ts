@@ -173,6 +173,7 @@ export const processInstagramWebhookMessage = async (
       await markInstagramResponseSent(
         database,
         result.conversation.id,
+        message.timestamp,
         responseRoute === "pricing"
           ? getInstagramFollowupDueAt(message.timestamp)
           : null,

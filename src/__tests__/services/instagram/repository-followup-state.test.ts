@@ -1,4 +1,5 @@
 import {
+  getInstagramInitialInboundMessageTimestamp,
   markInstagramResponseSent,
   recordInstagramMessage,
 } from "@/services/instagram/repository";
@@ -26,14 +27,17 @@ const createStateDatabase = () => {
     select: jest.fn(),
     eq: jest.fn(),
     is: jest.fn(),
+    limit: jest.fn(),
     maybeSingle: jest.fn(),
+    order: jest.fn(),
     single: jest.fn(),
     update: jest.fn(),
     upsert: jest.fn(),
   };
   Object.values(builder).forEach((method) => method.mockReturnValue(builder));
   const from = jest.fn().mockReturnValue(builder);
-  return { database: { from } as never, builder };
+  const rpc = jest.fn().mockResolvedValue({ data: true, error: null });
+  return { database: { from, rpc } as never, builder, rpc };
 };
 
 describe("Instagram follow-up state transitions", () => {
@@ -74,18 +78,20 @@ describe("Instagram follow-up state transitions", () => {
   });
 
   it("stores the follow-up schedule only after a response is sent", async () => {
-    const { database, builder } = createStateDatabase();
-    builder.is.mockResolvedValue({ error: null });
+    const { database, rpc } = createStateDatabase();
 
     await markInstagramResponseSent(
       database,
       "conversation-id",
+      "2026-09-17T12:00:00.000Z",
       "2026-09-18T10:00:00.000Z",
     );
 
-    expect(builder.update).toHaveBeenCalledWith(
-      expect.objectContaining({ follow_up_due_at: "2026-09-18T10:00:00.000Z" }),
-    );
+    expect(rpc).toHaveBeenCalledWith("complete_instagram_response", {
+      scheduled_follow_up_at: "2026-09-18T10:00:00.000Z",
+      source_message_at: "2026-09-17T12:00:00.000Z",
+      target_conversation_id: "conversation-id",
+    });
   });
 
   it("initializes follow-up state for a new conversation", async () => {
@@ -113,5 +119,65 @@ describe("Instagram follow-up state transitions", () => {
       expect.objectContaining({ follow_up_attempts: 0 }),
       expect.any(Object),
     );
+  });
+
+  it("rejects response completion when the atomic transition does not update", async () => {
+    const { database, rpc } = createStateDatabase();
+    rpc.mockResolvedValue({ data: false, error: null });
+
+    await expect(
+      markInstagramResponseSent(
+        database,
+        "conversation-id",
+        "2026-09-17T12:00:00.000Z",
+      ),
+    ).rejects.toThrow("Instagram response completion was not persisted");
+  });
+
+  it("propagates atomic response completion errors", async () => {
+    const error = new Error("completion failed");
+    const { database, rpc } = createStateDatabase();
+    rpc.mockResolvedValue({ data: null, error });
+
+    await expect(
+      markInstagramResponseSent(
+        database,
+        "conversation-id",
+        "2026-09-17T12:00:00.000Z",
+      ),
+    ).rejects.toBe(error);
+  });
+
+  it("queries the persisted initial inbound message timestamp", async () => {
+    const { database, builder } = createStateDatabase();
+    builder.maybeSingle.mockResolvedValue({
+      data: { sent_at: "2026-09-17T12:00:00.000Z" },
+      error: null,
+    });
+
+    await expect(
+      getInstagramInitialInboundMessageTimestamp(database, "conversation-id"),
+    ).resolves.toBe("2026-09-17T12:00:00.000Z");
+    expect(builder.order).toHaveBeenCalledWith("sent_at");
+    expect(builder.limit).toHaveBeenCalledWith(1);
+  });
+
+  it("rejects a missing initial inbound message", async () => {
+    const { database, builder } = createStateDatabase();
+    builder.maybeSingle.mockResolvedValue({ data: null, error: null });
+
+    await expect(
+      getInstagramInitialInboundMessageTimestamp(database, "conversation-id"),
+    ).rejects.toThrow("Instagram inbound message was not found");
+  });
+
+  it("propagates initial inbound message query errors", async () => {
+    const error = new Error("message query failed");
+    const { database, builder } = createStateDatabase();
+    builder.maybeSingle.mockResolvedValue({ data: null, error });
+
+    await expect(
+      getInstagramInitialInboundMessageTimestamp(database, "conversation-id"),
+    ).rejects.toBe(error);
   });
 });

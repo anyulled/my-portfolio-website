@@ -303,28 +303,42 @@ export const claimInstagramResponse = async (
 export const markInstagramResponseSent = async (
   database: ReturnType<typeof getInstagramDatabase>,
   conversationId: string,
+  responseSourceTimestamp: string,
   followUpDueAt: string | null = null,
 ) => {
-  const { error } = await database
-    .from("instagram_conversations")
-    .update({
-      processing_state: "completed",
-      response_sent_at: new Date().toISOString(),
-      response_claimed_at: null,
-      last_error: null,
-      follow_up_due_at: followUpDueAt,
-      follow_up_claimed_at: null,
-      follow_up_sent_at: null,
-      follow_up_cancelled_at: null,
-      follow_up_attempts: 0,
-      follow_up_last_error: null,
-    })
-    .eq("id", conversationId)
-    .is("response_sent_at", null);
+  const result = (await database.rpc("complete_instagram_response", {
+    scheduled_follow_up_at: followUpDueAt,
+    source_message_at: responseSourceTimestamp,
+    target_conversation_id: conversationId,
+  })) as unknown as { data: boolean | null; error: unknown };
 
-  if (error) {
-    throw error;
+  if (result.error) {
+    throw result.error;
   }
+
+  if (!result.data) {
+    throw new Error("Instagram response completion was not persisted");
+  }
+};
+
+export const getInstagramInitialInboundMessageTimestamp = async (
+  database: ReturnType<typeof getInstagramDatabase>,
+  conversationId: string,
+) => {
+  const result = await database
+    .from("instagram_messages")
+    .select("sent_at")
+    .eq("conversation_id", conversationId)
+    .order("sent_at")
+    .limit(1)
+    .maybeSingle();
+  const data = result.data as unknown as { sent_at: string } | null;
+
+  if (result.error || !data) {
+    throw result.error ?? new Error("Instagram inbound message was not found");
+  }
+
+  return data.sent_at;
 };
 
 export const releaseInstagramResponseClaim = async (

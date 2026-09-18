@@ -9,6 +9,8 @@ type DeliveryAccount = {
 
 type DeliveryAccountRelation = DeliveryAccount | DeliveryAccount[] | null;
 
+export const INSTAGRAM_FOLLOWUP_CLAIM_LEASE_MS = 10 * 60 * 1000;
+
 const normalizeAccount = (relation: DeliveryAccountRelation) =>
   Array.isArray(relation) ? (relation.at(0) ?? null) : relation;
 
@@ -23,6 +25,8 @@ export const updateInstagramFollowupForNewInboundMessage = async (
       last_message_at: messageTimestamp,
       follow_up_cancelled_at: new Date().toISOString(),
       follow_up_claimed_at: null,
+      follow_up_claim_token: null,
+      follow_up_delivery_started_at: null,
     })
     .eq("id", conversationId)
     .is("follow_up_sent_at", null);
@@ -37,6 +41,9 @@ export const listInstagramFollowupCandidates = async (
   now: string,
   batchSize: number,
 ): Promise<Array<InstagramFollowupCandidate>> => {
+  const claimExpiredBefore = new Date(
+    new Date(now).getTime() - INSTAGRAM_FOLLOWUP_CLAIM_LEASE_MS,
+  ).toISOString();
   const result = await database
     .from("instagram_conversations")
     .select(
@@ -47,7 +54,10 @@ export const listInstagramFollowupCandidates = async (
     .not("follow_up_due_at", "is", null)
     .is("follow_up_sent_at", null)
     .is("follow_up_cancelled_at", null)
-    .is("follow_up_claimed_at", null)
+    .is("follow_up_delivery_started_at", null)
+    .or(
+      `follow_up_claimed_at.is.null,follow_up_claimed_at.lt.${claimExpiredBefore}`,
+    )
     .lt("follow_up_attempts", 3)
     .lte("follow_up_due_at", now)
     .order("follow_up_due_at")
@@ -93,19 +103,50 @@ export const claimInstagramFollowup = async (
   conversationId: string,
   attempt: number,
   claimedAt: string,
+  claimToken: string,
 ) => {
+  const claimExpiredBefore = new Date(
+    new Date(claimedAt).getTime() - INSTAGRAM_FOLLOWUP_CLAIM_LEASE_MS,
+  ).toISOString();
   const result = await database
     .from("instagram_conversations")
     .update({
       follow_up_claimed_at: claimedAt,
+      follow_up_claim_token: claimToken,
       follow_up_attempts: attempt,
       follow_up_last_error: null,
     })
     .eq("id", conversationId)
-    .is("follow_up_claimed_at", null)
+    .or(
+      `follow_up_claimed_at.is.null,follow_up_claimed_at.lt.${claimExpiredBefore}`,
+    )
     .is("follow_up_sent_at", null)
     .is("follow_up_cancelled_at", null)
+    .is("follow_up_delivery_started_at", null)
     .lt("follow_up_attempts", 3)
+    .select("id")
+    .maybeSingle();
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  return Boolean(result.data);
+};
+
+export const beginInstagramFollowupDelivery = async (
+  database: InstagramDatabase,
+  conversationId: string,
+  claimToken: string,
+  startedAt: string,
+) => {
+  const result = await database
+    .from("instagram_conversations")
+    .update({ follow_up_delivery_started_at: startedAt })
+    .eq("id", conversationId)
+    .eq("follow_up_claim_token", claimToken)
+    .is("follow_up_sent_at", null)
+    .is("follow_up_cancelled_at", null)
     .select("id")
     .maybeSingle();
 
@@ -119,15 +160,75 @@ export const claimInstagramFollowup = async (
 export const markInstagramFollowupSent = async (
   database: InstagramDatabase,
   conversationId: string,
+  claimToken: string,
+  providerMessageId: string,
 ) => {
-  const { error } = await database
+  const result = await database
     .from("instagram_conversations")
     .update({
       follow_up_sent_at: new Date().toISOString(),
       follow_up_claimed_at: null,
+      follow_up_claim_token: null,
+      follow_up_provider_message_id: providerMessageId,
       follow_up_last_error: null,
     })
-    .eq("id", conversationId);
+    .eq("id", conversationId)
+    .eq("follow_up_claim_token", claimToken)
+    .is("follow_up_cancelled_at", null)
+    .select("id")
+    .maybeSingle();
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  return Boolean(result.data);
+};
+
+export const markInstagramFollowupForReconciliation = async (
+  database: InstagramDatabase,
+  conversationId: string,
+  claimToken: string,
+  providerMessageId: string | null,
+  errorMessage: string,
+) => {
+  const { error } = await database
+    .from("instagram_conversations")
+    .update({
+      follow_up_cancelled_at: new Date().toISOString(),
+      follow_up_claimed_at: null,
+      follow_up_claim_token: null,
+      follow_up_provider_message_id: providerMessageId,
+      follow_up_last_error: errorMessage,
+      processing_state: "needs_attention",
+    })
+    .eq("id", conversationId)
+    .eq("follow_up_claim_token", claimToken)
+    .is("follow_up_sent_at", null);
+
+  if (error) {
+    throw error;
+  }
+};
+
+export const cancelInstagramFollowup = async (
+  database: InstagramDatabase,
+  conversationId: string,
+  errorMessage: string,
+) => {
+  const { error } = await database
+    .from("instagram_conversations")
+    .update({
+      follow_up_cancelled_at: new Date().toISOString(),
+      follow_up_claimed_at: null,
+      follow_up_claim_token: null,
+      follow_up_delivery_started_at: null,
+      follow_up_last_error: errorMessage,
+      processing_state: "needs_attention",
+    })
+    .eq("id", conversationId)
+    .is("follow_up_sent_at", null)
+    .is("follow_up_cancelled_at", null);
 
   if (error) {
     throw error;
@@ -137,6 +238,7 @@ export const markInstagramFollowupSent = async (
 export const releaseInstagramFollowupClaim = async (
   database: InstagramDatabase,
   conversationId: string,
+  claimToken: string,
   errorMessage: string,
   needsAttention: boolean,
 ) => {
@@ -144,10 +246,15 @@ export const releaseInstagramFollowupClaim = async (
     .from("instagram_conversations")
     .update({
       follow_up_claimed_at: null,
+      follow_up_claim_token: null,
+      follow_up_delivery_started_at: null,
+      follow_up_cancelled_at: needsAttention ? new Date().toISOString() : null,
       follow_up_last_error: errorMessage,
       processing_state: needsAttention ? "needs_attention" : "completed",
     })
-    .eq("id", conversationId);
+    .eq("id", conversationId)
+    .eq("follow_up_claim_token", claimToken)
+    .is("follow_up_sent_at", null);
 
   if (error) {
     throw error;
