@@ -10,6 +10,8 @@ Configure the sole operator with `INSTAGRAM_ADMIN_EMAIL`, `SUPABASE_ANON_KEY`, `
 
 Configure `GROQ_API_KEY`. The default model is `openai/gpt-oss-20b`; override it with `GROQ_MODEL` when required.
 
+Configure the sensitive `INSTAGRAM_FOLLOWUP_CRON_TOKEN` in Vercel and use the same value as the `Authorization: Bearer` header in the external cron-job.org job described in `docs/instagram-followup-operations.md`. Do not add its value to tracked environment files.
+
 ## Meta
 
 Create or select the Meta app at https://developers.facebook.com/apps/ and add the Instagram product required by the selected Instagram API. Use the app credentials and callback configuration below; there is one Meta app for both professional Instagram accounts.

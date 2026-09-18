@@ -339,6 +339,7 @@ describe("getInstagramConversationForDelivery", () => {
   const baseConversation = {
     id: "conversation-row-id",
     participant_id: "participant-id",
+    last_message_at: "2026-09-13T10:00:00.000Z",
     detected_language: "it",
     response_route: "model_form",
     response_sent_at: null,
@@ -366,7 +367,7 @@ describe("getInstagramConversationForDelivery", () => {
     });
 
     expect(select).toHaveBeenCalledWith(
-      "id, participant_id, detected_language, response_route, response_sent_at, instagram_accounts(handle, instagram_user_id, access_token)",
+      "id, participant_id, last_message_at, detected_language, response_route, response_sent_at, instagram_accounts(handle, instagram_user_id, access_token)",
     );
     expect(eq).toHaveBeenCalledWith("id", "conversation-row-id");
     expect(single).toHaveBeenCalled();

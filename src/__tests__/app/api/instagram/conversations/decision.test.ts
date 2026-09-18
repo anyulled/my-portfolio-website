@@ -54,6 +54,7 @@ const conversation = { id: conversationId, classification: "model_form" };
 const deliveryConversation = {
   id: conversationId,
   participant_id: "participant-id",
+  last_message_at: "2026-09-13T10:00:00.000Z",
   detected_language: "it",
   response_route: "model_form",
   response_sent_at: null,
@@ -113,6 +114,7 @@ describe("Instagram conversation decision API", () => {
     expect(markInstagramResponseSent).toHaveBeenCalledWith(
       database,
       conversationId,
+      null,
     );
   });
 
@@ -128,6 +130,11 @@ describe("Instagram conversation decision API", () => {
       "pricing",
       "it",
       "https://boudoir.barcelona/pricing",
+    );
+    expect(markInstagramResponseSent).toHaveBeenCalledWith(
+      database,
+      conversationId,
+      "2026-09-14T08:00:00.000Z",
     );
   });
 

@@ -2,6 +2,15 @@ import type { ResponseRoute } from "./types";
 
 type SupportedLocale = "en" | "es" | "fr" | "ca" | "it" | "uk";
 
+const pricingFollowupTemplates: Record<SupportedLocale, string> = {
+  en: "Would you like help choosing the session that suits you best? You can see the available options and prices here: ",
+  es: "¿Te gustaría que te ayudara a elegir la sesión más adecuada? Puedes consultar las opciones y precios aquí: ",
+  fr: "Souhaitez-vous que je vous aide à choisir la séance la plus adaptée ? Vous pouvez consulter les options et les tarifs ici : ",
+  ca: "T'agradaria que t'ajudés a triar la sessió més adequada? Pots consultar les opcions i els preus aquí: ",
+  it: "Vuoi che ti aiuti a scegliere la sessione più adatta? Puoi consultare qui le opzioni e i prezzi disponibili: ",
+  uk: "Бажаєте, щоб я допоміг вам обрати найкращу сесію? Доступні варіанти та ціни можна переглянути тут: ",
+};
+
 const localeAliases: Record<SupportedLocale, string[]> = {
   en: ["en", "english", "anglais", "inglés", "inglese"],
   es: ["es", "spanish", "español", "espagnol", "spagnolo"],
@@ -90,5 +99,22 @@ export const renderBoundedResponse = (
     route === "model_form"
       ? localizedTemplates.model_form
       : localizedTemplates.pricing;
+  return `${message}${link}`;
+};
+
+export const renderPricingFollowup = (language: string, link: string) => {
+  const locale = normalizeResponseLocale(language);
+  const message =
+    locale === "es"
+      ? pricingFollowupTemplates.es
+      : locale === "fr"
+        ? pricingFollowupTemplates.fr
+        : locale === "ca"
+          ? pricingFollowupTemplates.ca
+          : locale === "it"
+            ? pricingFollowupTemplates.it
+            : locale === "uk"
+              ? pricingFollowupTemplates.uk
+              : pricingFollowupTemplates.en;
   return `${message}${link}`;
 };

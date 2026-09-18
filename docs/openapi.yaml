@@ -114,9 +114,24 @@ paths:
           description: Missing or invalid cron bearer token
         "503":
           description: One or more token refreshes failed
+  /api/instagram-followups:
+    post:
+      operationId: processInstagramFollowups
+      summary: Queue Instagram pricing follow-ups
+      security:
+        - instagramFollowupBearer: []
+      responses:
+        "202":
+          description: Follow-up processing accepted asynchronously
+        "401":
+          description: Missing or invalid follow-up bearer token
 components:
   securitySchemes:
     cronBearer:
       type: http
       scheme: bearer
       bearerFormat: CRON_SECRET
+    instagramFollowupBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: INSTAGRAM_FOLLOWUP_CRON_TOKEN

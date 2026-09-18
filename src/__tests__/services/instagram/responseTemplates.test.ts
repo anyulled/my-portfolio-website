@@ -1,6 +1,7 @@
 import {
   normalizeResponseLocale,
   renderBoundedResponse,
+  renderPricingFollowup,
 } from "@/services/instagram/responseTemplates";
 
 describe("response templates", () => {
@@ -24,4 +25,23 @@ describe("response templates", () => {
       "https://boudoir.barcelona/booking-a-session?lead=token",
     );
   });
+
+  it("renders a localized pricing follow-up", () => {
+    const result = renderPricingFollowup(
+      "it-IT",
+      "https://boudoir.barcelona/pricing",
+    );
+
+    expect(result).toContain("sessione");
+    expect(result).toContain("https://boudoir.barcelona/pricing");
+  });
+
+  it.each(["en", "es", "fr", "ca", "it", "uk"])(
+    "supports the %s pricing follow-up locale",
+    (language) => {
+      expect(
+        renderPricingFollowup(language, "https://boudoir.barcelona/pricing"),
+      ).toContain("https://boudoir.barcelona/pricing");
+    },
+  );
 });

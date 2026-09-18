@@ -9,6 +9,7 @@ import {
   type ResponseRoute,
 } from "./types";
 import type { InstagramAccountRow } from "./accountRepository";
+import { updateInstagramFollowupForNewInboundMessage } from "./followupRepository";
 
 export {
   findInstagramAccount,
@@ -144,6 +145,11 @@ export const recordInstagramMessage = async (
   );
 
   if (existingConversation?.response_sent_at) {
+    await updateInstagramFollowupForNewInboundMessage(
+      database,
+      existingConversation.id,
+      message.timestamp,
+    );
     return { conversation: existingConversation, shouldRespond: false };
   }
 
@@ -171,6 +177,12 @@ export const recordInstagramMessage = async (
             ? null
             : classification.route,
         last_error: null,
+        follow_up_due_at: null,
+        follow_up_claimed_at: null,
+        follow_up_sent_at: null,
+        follow_up_cancelled_at: null,
+        follow_up_attempts: 0,
+        follow_up_last_error: null,
       },
       { onConflict: "account_id,instagram_conversation_id" },
     )
@@ -291,6 +303,7 @@ export const claimInstagramResponse = async (
 export const markInstagramResponseSent = async (
   database: ReturnType<typeof getInstagramDatabase>,
   conversationId: string,
+  followUpDueAt: string | null = null,
 ) => {
   const { error } = await database
     .from("instagram_conversations")
@@ -299,6 +312,12 @@ export const markInstagramResponseSent = async (
       response_sent_at: new Date().toISOString(),
       response_claimed_at: null,
       last_error: null,
+      follow_up_due_at: followUpDueAt,
+      follow_up_claimed_at: null,
+      follow_up_sent_at: null,
+      follow_up_cancelled_at: null,
+      follow_up_attempts: 0,
+      follow_up_last_error: null,
     })
     .eq("id", conversationId)
     .is("response_sent_at", null);
@@ -378,13 +397,14 @@ export const getInstagramConversationForDelivery = async (
   const result = await database
     .from("instagram_conversations")
     .select(
-      "id, participant_id, detected_language, response_route, response_sent_at, instagram_accounts(handle, instagram_user_id, access_token)",
+      "id, participant_id, last_message_at, detected_language, response_route, response_sent_at, instagram_accounts(handle, instagram_user_id, access_token)",
     )
     .eq("id", conversationId)
     .single();
   const data = result.data as unknown as {
     id: string;
     participant_id: string;
+    last_message_at: string;
     detected_language: string;
     response_route: ResponseRoute | null;
     response_sent_at: string | null;

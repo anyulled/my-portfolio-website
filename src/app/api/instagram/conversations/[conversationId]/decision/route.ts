@@ -9,6 +9,7 @@ import {
   setInstagramReviewDecision,
 } from "@/services/instagram/repository";
 import { getInstagramPublicUrl } from "@/services/instagram/config";
+import { getInstagramFollowupDueAt } from "@/services/instagram/followups";
 import { sendInstagramText } from "@/services/instagram/metaClient";
 import { renderBoundedResponse } from "@/services/instagram/responseTemplates";
 import { reviewDecisionSchema } from "@/services/instagram/types";
@@ -94,7 +95,13 @@ const sendApprovedResponse = async (
       deliveryConversation.participant_id,
       responseText,
     );
-    await markInstagramResponseSent(database, conversationId);
+    await markInstagramResponseSent(
+      database,
+      conversationId,
+      decision === "pricing"
+        ? getInstagramFollowupDueAt(deliveryConversation.last_message_at)
+        : null,
+    );
   } catch (error) {
     await releaseInstagramResponseClaim(
       database,
