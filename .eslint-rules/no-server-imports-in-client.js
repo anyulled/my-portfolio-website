@@ -8,7 +8,6 @@ const serverImportPrefixes = [
   "@google-cloud/storage",
   "@supabase/supabase-js",
   "@upstash/redis",
-  "@vercel/blob",
 ];
 
 export default {
