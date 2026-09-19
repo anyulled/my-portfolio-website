@@ -195,9 +195,26 @@ export default function InstagramInbox({
         <Card key={conversation.id}>
           <CardHeader>
             <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
-              <span>
-                @
-                {conversation.participantUsername ?? conversation.participantId}
+              <span className="flex items-center gap-3">
+                {conversation.participantProfilePictureUrl ? (
+                  <span
+                    aria-hidden="true"
+                    className="size-12 rounded-full bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${conversation.participantProfilePictureUrl})`,
+                    }}
+                  />
+                ) : null}
+                <span>
+                  @
+                  {conversation.participantUsername ??
+                    conversation.participantId}
+                  {conversation.participantName ? (
+                    <span className="block text-sm font-normal text-muted-foreground">
+                      {conversation.participantName}
+                    </span>
+                  ) : null}
+                </span>
               </span>
               <span className="text-sm font-normal text-muted-foreground">
                 {conversation.accountHandle} · {conversation.detectedLanguage}
@@ -205,6 +222,17 @@ export default function InstagramInbox({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {conversation.participantBiography ? (
+              <p className="text-sm text-muted-foreground">
+                {conversation.participantBiography}
+              </p>
+            ) : null}
+            {typeof conversation.participantFollowersCount === "number" ? (
+              <p className="text-sm text-muted-foreground">
+                {conversation.participantFollowersCount.toLocaleString()}{" "}
+                followers
+              </p>
+            ) : null}
             <p>{conversation.lastMessage}</p>
             <p className="text-sm text-muted-foreground">
               Classification: {conversation.classification} · confidence{" "}

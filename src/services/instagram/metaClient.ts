@@ -5,8 +5,20 @@ interface InstagramSendResponse {
   message_id?: string;
 }
 
+export interface InstagramProfile {
+  username: string | null;
+  name: string | null;
+  biography: string | null;
+  followersCount: number | null;
+  profilePictureUrl: string | null;
+}
+
 interface InstagramProfileResponse {
   username?: unknown;
+  name?: unknown;
+  biography?: unknown;
+  followers_count?: unknown;
+  profile_picture_url?: unknown;
 }
 
 const getGraphApiVersion = () => {
@@ -50,6 +62,41 @@ export const resolveInstagramUsername = async (
   }
 
   return getInstagramUsername(await response.json());
+};
+
+const toOptionalString = (value: unknown) =>
+  typeof value === "string" && value.length > 0 ? value : null;
+
+const toOptionalNumber = (value: unknown) =>
+  typeof value === "number" && Number.isFinite(value) ? value : null;
+
+export const resolveInstagramProfile = async (
+  accessToken: string,
+  instagramUserId: string,
+): Promise<InstagramProfile | null> => {
+  const profileUrl = new URL(
+    `https://graph.instagram.com/${getGraphApiVersion()}/${instagramUserId}`,
+  );
+  profileUrl.searchParams.set(
+    "fields",
+    "username,name,biography,followers_count,profile_picture_url",
+  );
+
+  const response = await fetch(profileUrl, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!response.ok) {
+    return null;
+  }
+
+  const profile = (await response.json()) as InstagramProfileResponse;
+  return {
+    username: toOptionalString(profile.username),
+    name: toOptionalString(profile.name),
+    biography: toOptionalString(profile.biography),
+    followersCount: toOptionalNumber(profile.followers_count),
+    profilePictureUrl: toOptionalString(profile.profile_picture_url),
+  };
 };
 
 export const sendInstagramText = async (

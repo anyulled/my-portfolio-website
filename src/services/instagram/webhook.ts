@@ -10,7 +10,7 @@ import {
 import { classifyInstagramMessage } from "./classifier";
 import { getInstagramPublicUrl } from "./config";
 import { getInstagramFollowupDueAt } from "./followups";
-import { resolveInstagramUsername, sendInstagramText } from "./metaClient";
+import { resolveInstagramProfile, sendInstagramText } from "./metaClient";
 import { renderBoundedResponse } from "./responseTemplates";
 import type { InstagramWebhookMessage } from "./types";
 
@@ -129,8 +129,8 @@ export const processInstagramWebhookMessage = async (
   const classification = await runWebhookStage("classification", () =>
     classifyInstagramMessage(message.text),
   );
-  const participantUsername = await runWebhookStage("account_lookup", () =>
-    resolveInstagramUsername(account.access_token, message.participantId).catch(
+  const participantProfile = await runWebhookStage("account_lookup", () =>
+    resolveInstagramProfile(account.access_token, message.participantId).catch(
       () => null,
     ),
   );
@@ -138,7 +138,10 @@ export const processInstagramWebhookMessage = async (
     recordInstagramMessage(
       database,
       account,
-      { ...message, participantUsername: participantUsername ?? undefined },
+      {
+        ...message,
+        participantUsername: participantProfile?.username ?? undefined,
+      },
       classification,
     ),
   );
