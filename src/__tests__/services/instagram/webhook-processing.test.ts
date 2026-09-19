@@ -17,6 +17,7 @@ jest.mock("@/services/instagram/config", () => ({
 }));
 
 jest.mock("@/services/instagram/metaClient", () => ({
+  resolveInstagramUsername: jest.fn(),
   sendInstagramText: jest.fn(),
 }));
 
@@ -35,7 +36,10 @@ import {
   recordInstagramMessage,
   releaseInstagramResponseClaim,
 } from "@/services/instagram/repository";
-import { sendInstagramText } from "@/services/instagram/metaClient";
+import {
+  resolveInstagramUsername,
+  sendInstagramText,
+} from "@/services/instagram/metaClient";
 import { renderBoundedResponse } from "@/services/instagram/responseTemplates";
 import {
   processInstagramWebhookMessage,
@@ -78,6 +82,7 @@ describe("processInstagramWebhookMessage", () => {
     jest.clearAllMocks();
     jest.mocked(getInstagramDatabase).mockReturnValue(database);
     jest.mocked(findInstagramAccount).mockResolvedValue(account as never);
+    jest.mocked(resolveInstagramUsername).mockResolvedValue("model_handle");
     jest
       .mocked(classifyInstagramMessage)
       .mockResolvedValue(classification as never);
@@ -107,6 +112,21 @@ describe("processInstagramWebhookMessage", () => {
       "entry-account-id",
       "recipient-account-id",
     ]);
+  });
+
+  it("persists the sender handle resolved from the Instagram profile", async () => {
+    await processInstagramWebhookMessage(message);
+
+    expect(resolveInstagramUsername).toHaveBeenCalledWith(
+      "access-token",
+      "participant-id",
+    );
+    expect(recordInstagramMessage).toHaveBeenCalledWith(
+      database,
+      account,
+      expect.objectContaining({ participantUsername: "model_handle" }),
+      classification,
+    );
   });
 
   it("returns the classification when persistence does not require a response", async () => {
