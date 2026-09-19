@@ -17,6 +17,7 @@ jest.mock("@/services/instagram/config", () => ({
 }));
 
 jest.mock("@/services/instagram/metaClient", () => ({
+  resolveInstagramProfile: jest.fn(),
   sendInstagramText: jest.fn(),
 }));
 
@@ -35,7 +36,10 @@ import {
   recordInstagramMessage,
   releaseInstagramResponseClaim,
 } from "@/services/instagram/repository";
-import { sendInstagramText } from "@/services/instagram/metaClient";
+import {
+  resolveInstagramProfile,
+  sendInstagramText,
+} from "@/services/instagram/metaClient";
 import { renderBoundedResponse } from "@/services/instagram/responseTemplates";
 import {
   processInstagramWebhookMessage,
@@ -78,6 +82,13 @@ describe("processInstagramWebhookMessage", () => {
     jest.clearAllMocks();
     jest.mocked(getInstagramDatabase).mockReturnValue(database);
     jest.mocked(findInstagramAccount).mockResolvedValue(account as never);
+    jest.mocked(resolveInstagramProfile).mockResolvedValue({
+      username: "model_handle",
+      name: "Model Name",
+      biography: null,
+      followersCount: null,
+      profilePictureUrl: null,
+    });
     jest
       .mocked(classifyInstagramMessage)
       .mockResolvedValue(classification as never);
@@ -107,6 +118,37 @@ describe("processInstagramWebhookMessage", () => {
       "entry-account-id",
       "recipient-account-id",
     ]);
+  });
+
+  it("persists the sender handle resolved from the Instagram profile", async () => {
+    await processInstagramWebhookMessage(message);
+
+    expect(resolveInstagramProfile).toHaveBeenCalledWith(
+      "access-token",
+      "participant-id",
+    );
+    expect(recordInstagramMessage).toHaveBeenCalledWith(
+      database,
+      account,
+      expect.objectContaining({ participantUsername: "model_handle" }),
+      classification,
+    );
+  });
+
+  it("continues processing when the participant profile cannot be resolved", async () => {
+    jest
+      .mocked(resolveInstagramProfile)
+      .mockRejectedValueOnce(new Error("profile unavailable"));
+
+    await expect(processInstagramWebhookMessage(message)).resolves.toBe(
+      "model_form",
+    );
+    expect(recordInstagramMessage).toHaveBeenCalledWith(
+      database,
+      account,
+      expect.objectContaining({ participantUsername: undefined }),
+      classification,
+    );
   });
 
   it("returns the classification when persistence does not require a response", async () => {

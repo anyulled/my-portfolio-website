@@ -54,6 +54,10 @@ export interface InstagramConversationRecord {
   instagramConversationId: string;
   participantId: string;
   participantUsername: string | null;
+  participantName: string | null;
+  participantBiography: string | null;
+  participantFollowersCount: number | null;
+  participantProfilePictureUrl: string | null;
   lastMessage: string;
   lastMessageAt: string;
   detectedLanguage: string;

@@ -10,6 +10,7 @@ import {
 } from "./types";
 import type { InstagramAccountRow } from "./accountRepository";
 import { updateInstagramFollowupForNewInboundMessage } from "./followupRepository";
+import { presentInstagramConversation } from "./conversationPresentation";
 
 export {
   findInstagramAccount,
@@ -31,23 +32,6 @@ interface InstagramConversationRow {
   response_claimed_at: string | null;
   response_sent_at: string | null;
   last_error: string | null;
-}
-
-interface InstagramConversationListRow {
-  id: string;
-  account_handle: Array<{ handle: InstagramHandle }>;
-  instagram_conversation_id: string;
-  participant_id: string;
-  participant_username: string | null;
-  last_message_at: string;
-  detected_language: string;
-  classification: ClassificationRoute;
-  confidence: number;
-  processing_state: ProcessingState;
-  response_route: ResponseRoute | null;
-  response_sent_at: string | null;
-  last_error: string | null;
-  instagram_messages: Array<{ message_text: string; sent_at: string }>;
 }
 
 type InstagramDeliveryAccount = Pick<
@@ -223,41 +207,20 @@ export const listInstagramConversations = async (
   const result = await database
     .from("instagram_conversations")
     .select(
-      "id, account_handle:instagram_accounts(handle), instagram_conversation_id, participant_id, participant_username, last_message_at, detected_language, classification, confidence, processing_state, response_route, response_sent_at, last_error, instagram_messages(message_text, sent_at)",
+      "id, account_handle:instagram_accounts(handle, access_token), instagram_conversation_id, participant_id, participant_username, last_message_at, detected_language, classification, confidence, processing_state, response_route, response_sent_at, last_error, instagram_messages(message_text, sent_at)",
     )
     .in("processing_state", ["pending", "needs_attention"])
     .order("updated_at", { ascending: false });
-  const data =
-    result.data as unknown as Array<InstagramConversationListRow> | null;
+  const data = result.data as unknown[] | null;
   const { error } = result;
 
   if (error) {
     throw error;
   }
 
-  return (data ?? []).map((row) => {
-    const conversation = row as unknown as InstagramConversationListRow;
-    const lastMessage = conversation.instagram_messages.at(-1);
-    return {
-      id: conversation.id,
-      accountHandle: conversation.account_handle[0]?.handle ?? "anyulled",
-      instagramConversationId: conversation.instagram_conversation_id,
-      participantId: conversation.participant_id,
-      participantUsername: conversation.participant_username,
-      lastMessage: lastMessage?.message_text ?? "",
-      lastMessageAt: conversation.last_message_at,
-      detectedLanguage: conversation.detected_language,
-      classification:
-        conversation.classification === "ignore"
-          ? "ignored"
-          : conversation.classification,
-      confidence: conversation.confidence,
-      processingState: conversation.processing_state,
-      responseRoute: conversation.response_route,
-      responseSentAt: conversation.response_sent_at,
-      lastError: conversation.last_error,
-    };
-  });
+  return Promise.all(
+    (data ?? []).map((row) => presentInstagramConversation(row as never)),
+  );
 };
 
 export const markInstagramConversationError = async (

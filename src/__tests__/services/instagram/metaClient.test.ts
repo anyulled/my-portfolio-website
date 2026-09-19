@@ -1,4 +1,5 @@
 import {
+  resolveInstagramProfile,
   resolveInstagramUsername,
   sendInstagramText,
 } from "@/services/instagram/metaClient";
@@ -60,6 +61,64 @@ describe("sendInstagramText", () => {
 
     await expect(
       resolveInstagramUsername("access-token", "unknown-account-id"),
+    ).resolves.toBeNull();
+  });
+
+  it("resolves the profile details used by the inbox", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        username: "modelname",
+        name: "Model Name",
+        biography: "Barcelona model",
+        followers_count: 1234,
+        profile_picture_url: "https://example.com/profile.jpg",
+      }),
+    });
+
+    await expect(
+      resolveInstagramProfile("access-token", "participant-id"),
+    ).resolves.toEqual({
+      username: "modelname",
+      name: "Model Name",
+      biography: "Barcelona model",
+      followersCount: 1234,
+      profilePictureUrl: "https://example.com/profile.jpg",
+    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      new URL(
+        "https://graph.instagram.com/v26.0/participant-id?fields=username%2Cname%2Cbiography%2Cfollowers_count%2Cprofile_picture_url",
+      ),
+      { headers: { Authorization: "Bearer access-token" } },
+    );
+  });
+
+  it("normalizes unavailable profile fields and rejected responses", async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          username: "",
+          name: 42,
+          biography: null,
+          followers_count: "1234",
+          profile_picture_url: false,
+        }),
+      })
+      .mockResolvedValueOnce({ ok: false });
+
+    await expect(
+      resolveInstagramProfile("access-token", "participant-id"),
+    ).resolves.toEqual({
+      username: null,
+      name: null,
+      biography: null,
+      followersCount: null,
+      profilePictureUrl: null,
+    });
+    await expect(
+      resolveInstagramProfile("access-token", "participant-id"),
     ).resolves.toBeNull();
   });
 
