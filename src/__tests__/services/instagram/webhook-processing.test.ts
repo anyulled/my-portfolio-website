@@ -135,6 +135,22 @@ describe("processInstagramWebhookMessage", () => {
     );
   });
 
+  it("continues processing when the participant profile cannot be resolved", async () => {
+    jest
+      .mocked(resolveInstagramProfile)
+      .mockRejectedValueOnce(new Error("profile unavailable"));
+
+    await expect(processInstagramWebhookMessage(message)).resolves.toBe(
+      "model_form",
+    );
+    expect(recordInstagramMessage).toHaveBeenCalledWith(
+      database,
+      account,
+      expect.objectContaining({ participantUsername: undefined }),
+      classification,
+    );
+  });
+
   it("returns the classification when persistence does not require a response", async () => {
     jest.mocked(recordInstagramMessage).mockResolvedValue({
       conversation: null,

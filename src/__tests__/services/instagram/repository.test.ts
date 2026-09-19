@@ -2,8 +2,15 @@ import {
   findInstagramAccount,
   getInstagramConversationForDelivery,
   listConnectedInstagramAccounts,
+  listInstagramConversations,
   upsertInstagramAccount,
 } from "@/services/instagram/repository";
+
+jest.mock("@/services/instagram/conversationPresentation", () => ({
+  presentInstagramConversation: jest.fn(),
+}));
+
+import { presentInstagramConversation } from "@/services/instagram/conversationPresentation";
 
 const createDatabase = (result: { data: unknown; error: unknown }) => {
   const order = jest.fn().mockResolvedValue(result);
@@ -45,6 +52,56 @@ describe("listConnectedInstagramAccounts", () => {
     const { database } = createDatabase({ data: null, error });
 
     await expect(listConnectedInstagramAccounts(database)).rejects.toBe(error);
+  });
+});
+
+describe("listInstagramConversations", () => {
+  const createListDatabase = (result: { data: unknown; error: unknown }) => {
+    const order = jest.fn().mockResolvedValue(result);
+    const inFilter = jest.fn().mockReturnValue({ order });
+    const select = jest.fn().mockReturnValue({ in: inFilter });
+    const from = jest.fn().mockReturnValue({ select });
+
+    return { database: { from } as never, from, select, inFilter, order };
+  };
+
+  it("presents pending and attention conversations", async () => {
+    const row = { id: "conversation-id" };
+    const presentedConversation = { id: "conversation-id" };
+    const { database, from, select, inFilter, order } = createListDatabase({
+      data: [row],
+      error: null,
+    });
+    jest
+      .mocked(presentInstagramConversation)
+      .mockResolvedValue(presentedConversation as never);
+
+    await expect(listInstagramConversations(database)).resolves.toEqual([
+      presentedConversation,
+    ]);
+    expect(from).toHaveBeenCalledWith("instagram_conversations");
+    expect(select).toHaveBeenCalledWith(
+      expect.stringContaining("access_token"),
+    );
+    expect(inFilter).toHaveBeenCalledWith("processing_state", [
+      "pending",
+      "needs_attention",
+    ]);
+    expect(order).toHaveBeenCalledWith("updated_at", { ascending: false });
+    expect(presentInstagramConversation).toHaveBeenCalledWith(row);
+  });
+
+  it("returns no conversations when the database has no rows", async () => {
+    const { database } = createListDatabase({ data: null, error: null });
+
+    await expect(listInstagramConversations(database)).resolves.toEqual([]);
+  });
+
+  it("propagates conversation listing errors", async () => {
+    const error = new Error("conversation listing failed");
+    const { database } = createListDatabase({ data: null, error });
+
+    await expect(listInstagramConversations(database)).rejects.toBe(error);
   });
 });
 

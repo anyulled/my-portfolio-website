@@ -93,6 +93,35 @@ describe("sendInstagramText", () => {
     );
   });
 
+  it("normalizes unavailable profile fields and rejected responses", async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          username: "",
+          name: 42,
+          biography: null,
+          followers_count: "1234",
+          profile_picture_url: false,
+        }),
+      })
+      .mockResolvedValueOnce({ ok: false });
+
+    await expect(
+      resolveInstagramProfile("access-token", "participant-id"),
+    ).resolves.toEqual({
+      username: null,
+      name: null,
+      biography: null,
+      followersCount: null,
+      profilePictureUrl: null,
+    });
+    await expect(
+      resolveInstagramProfile("access-token", "participant-id"),
+    ).resolves.toBeNull();
+  });
+
   it("returns no username for malformed profile responses", async () => {
     global.fetch = jest
       .fn()

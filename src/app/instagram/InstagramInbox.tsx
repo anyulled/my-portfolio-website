@@ -198,7 +198,8 @@ export default function InstagramInbox({
               <span className="flex items-center gap-3">
                 {conversation.participantProfilePictureUrl ? (
                   <span
-                    aria-hidden="true"
+                    aria-label="Participant profile photo"
+                    role="img"
                     className="size-12 rounded-full bg-cover bg-center"
                     style={{
                       backgroundImage: `url(${conversation.participantProfilePictureUrl})`,

@@ -6,6 +6,10 @@ const pendingConversation = {
   accountHandle: "anyulled",
   participantId: "participant-id",
   participantUsername: "model-account",
+  participantName: "Model Name",
+  participantBiography: "Barcelona model",
+  participantFollowersCount: 1234,
+  participantProfilePictureUrl: "https://example.com/profile.jpg",
   lastMessage: "I am a model visiting Barcelona.",
   detectedLanguage: "en",
   classification: "manual_review",
@@ -44,6 +48,53 @@ describe("InstagramInbox", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Reference: oauth-reference",
     );
+  });
+
+  it("shows the participant profile details in the conversation card", async () => {
+    mockPendingConversationLoad();
+
+    render(<InstagramInbox />);
+
+    await waitFor(() =>
+      expect(screen.getByText("@model-account")).toBeInTheDocument(),
+    );
+    expect(screen.getByText("Model Name")).toBeInTheDocument();
+    expect(screen.getByText("Barcelona model")).toBeInTheDocument();
+    expect(screen.getByText("1,234 followers")).toBeInTheDocument();
+    expect(screen.getByLabelText("Participant profile photo")).toHaveStyle({
+      backgroundImage: "url(https://example.com/profile.jpg)",
+    });
+  });
+
+  it("falls back to the participant ID when profile metadata is absent", async () => {
+    jest.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        conversations: [
+          {
+            ...pendingConversation,
+            participantUsername: null,
+            participantName: null,
+            participantBiography: null,
+            participantFollowersCount: null,
+            participantProfilePictureUrl: null,
+          },
+        ],
+      }),
+    } as Response);
+
+    render(<InstagramInbox />);
+
+    await waitFor(() =>
+      expect(screen.getByText("@participant-id")).toBeInTheDocument(),
+    );
+    expect(screen.queryByText("Model Name")).not.toBeInTheDocument();
+    expect(screen.queryByText("Barcelona model")).not.toBeInTheDocument();
+    expect(screen.queryByText("1,234 followers")).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Participant profile photo"),
+    ).not.toBeInTheDocument();
   });
 
   it("shows the server diagnosis and reference without claiming the inbox is empty", async () => {
