@@ -49,7 +49,7 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
     "yet-another-react-lightbox": "^3.32.0",
-    "zod": "^4.4.2"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.29.7",
