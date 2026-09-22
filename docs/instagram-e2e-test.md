@@ -43,4 +43,4 @@ For the outbound message echo case:
 
 ## Failure evidence
 
-If a case fails, capture the UTC timestamp, managed account handle, case name, HTTP status, and the reference returned by the admin panel. Check the Vercel function logs using that reference and inspect the Conversations API sync result. Never include access tokens, verification tokens, service-role keys, or complete direct-message bodies in the report.
+If a case fails, capture the UTC timestamp, managed account handle, case name, HTTP status, and the `requestId` returned by the cron request. Treat `202` as acceptance only, then use that `requestId` to correlate the Vercel synchronization and follow-up logs and inspect the Conversations API sync result. Never include access tokens, verification tokens, service-role keys, or complete direct-message bodies in the report.
