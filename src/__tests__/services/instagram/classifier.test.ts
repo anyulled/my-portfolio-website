@@ -73,6 +73,82 @@ describe("classifyInstagramMessage", () => {
     expect(result.route).toBe("model_form");
   });
 
+  it("recognizes professional collaboration language as a model opportunity", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: {
+        ...classification,
+        isModel: false,
+        mentionsPhotographyWork: false,
+        isPotentialClient: false,
+      },
+    } as never);
+
+    const result = await classifyInstagramMessage(
+      "Hello! I’ll be in Barcelona tomorrow and after tomorrow. Do you want to work and create with me? Thanks Lola",
+    );
+
+    expect(result).toMatchObject({
+      route: "model_form",
+      isModel: true,
+      mentionsBarcelona: true,
+    });
+  });
+
+  it("does not turn clear client intent into a model opportunity", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: {
+        ...classification,
+        isModel: false,
+        mentionsBarcelona: true,
+        mentionsPhotographyWork: true,
+        isPotentialClient: true,
+      },
+    } as never);
+
+    const result = await classifyInstagramMessage(
+      "I will be in Barcelona tomorrow. Do you want to work and create a session for me?",
+    );
+
+    expect(result.route).toBe("pricing");
+    expect(result.isModel).toBe(false);
+  });
+
+  it("does not infer Barcelona availability from availability in another city", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: {
+        ...classification,
+        isModel: false,
+        mentionsBarcelona: true,
+        mentionsPhotographyWork: false,
+        isPotentialClient: false,
+      },
+    } as never);
+
+    const result = await classifyInstagramMessage(
+      "I will be in Paris tomorrow. Barcelona is beautiful. Do you want to work and create with me?",
+    );
+
+    expect(result.route).toBe("ignore");
+    expect(result.isModel).toBe(false);
+  });
+
+  it("keeps a Barcelona availability message without collaboration intent under review", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: {
+        ...classification,
+        isModel: true,
+        mentionsPhotographyWork: false,
+        isPotentialClient: false,
+      },
+    } as never);
+
+    const result = await classifyInstagramMessage(
+      "Hello, I will be in Barcelona tomorrow.",
+    );
+
+    expect(result.route).toBe("manual_review");
+  });
+
   it("keeps a model without photography or collaboration intent in manual review", async () => {
     mockedGenerateText.mockResolvedValue({
       output: {
