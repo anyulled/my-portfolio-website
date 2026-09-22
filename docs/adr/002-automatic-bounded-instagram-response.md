@@ -8,7 +8,7 @@ The classifier will use a conservative threshold: ambiguous enquiries are not an
 
 The authorized response will use the detected language of the inbound message, and the booking form will handle its own localized presentation.
 
-Each conversation may receive at most one automatic authorized response. The decision must be persisted so webhook retries and repeated inbound messages cannot produce duplicate invitations.
+Each conversation may receive at most one automatic authorized response. The decision must be persisted so repeated Conversations API syncs and inbound messages cannot produce duplicate invitations.
 
 Only conversations qualifying as a Barcelona paid availability enquiry are eligible for the model workflow; unrelated Instagram messages are excluded from Supabase and the unified inbox.
 
