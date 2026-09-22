@@ -23,6 +23,14 @@ const collaborationSignal =
 const availabilitySignal =
   /\b(?:be|visit|visiting|available|availability|stay|tomorrow|today|next week|this week|estar|visitar|disponib|mañana|hoy|semana próxima|essere|visitare|disponib|domani|questa settimana)\b/i;
 
+const hasBarcelonaAvailability = (message: string): boolean =>
+  message
+    .split(/[.!?;\n]+/)
+    .some(
+      (sentence) =>
+        /\bbarcelona\b/i.test(sentence) && availabilitySignal.test(sentence),
+    );
+
 const isLikelyModelCollaboration = (
   classification: Classification,
   message: string,
@@ -30,7 +38,7 @@ const isLikelyModelCollaboration = (
   !classification.isPotentialClient &&
   classification.mentionsBarcelona &&
   collaborationSignal.test(message) &&
-  availabilitySignal.test(message);
+  hasBarcelonaAvailability(message);
 
 const determineRoute = (
   classification: Classification,

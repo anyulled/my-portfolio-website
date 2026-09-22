@@ -113,6 +113,25 @@ describe("classifyInstagramMessage", () => {
     expect(result.isModel).toBe(false);
   });
 
+  it("does not infer Barcelona availability from availability in another city", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: {
+        ...classification,
+        isModel: false,
+        mentionsBarcelona: true,
+        mentionsPhotographyWork: false,
+        isPotentialClient: false,
+      },
+    } as never);
+
+    const result = await classifyInstagramMessage(
+      "I will be in Paris tomorrow. Barcelona is beautiful. Do you want to work and create with me?",
+    );
+
+    expect(result.route).toBe("ignore");
+    expect(result.isModel).toBe(false);
+  });
+
   it("keeps a Barcelona availability message without collaboration intent under review", async () => {
     mockedGenerateText.mockResolvedValue({
       output: {
