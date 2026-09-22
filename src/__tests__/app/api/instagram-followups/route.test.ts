@@ -44,6 +44,7 @@ describe("Instagram follow-up endpoint", () => {
       accounts: 2,
       messagesSeen: 0,
       outboundMessagesSkipped: 0,
+      truncated: false,
       duplicatesSkipped: 0,
       messagesProcessed: 0,
       failures: 0,

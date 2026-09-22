@@ -11,6 +11,10 @@ jest.mock("@/services/instagram/repository", () => ({
   hasInstagramMessage: jest.fn(),
 }));
 
+jest.mock("@/services/instagram/messageReservationRepository", () => ({
+  reserveInstagramMessage: jest.fn(),
+  releaseInstagramMessageReservation: jest.fn(),
+}));
 jest.mock("@/services/instagram/webhook", () => ({
   processInstagramWebhookMessage: jest.fn(),
 }));
@@ -21,6 +25,10 @@ import {
   getInstagramDatabase,
   hasInstagramMessage,
 } from "@/services/instagram/repository";
+import {
+  releaseInstagramMessageReservation,
+  reserveInstagramMessage,
+} from "@/services/instagram/messageReservationRepository";
 import { processInstagramWebhookMessage } from "@/services/instagram/webhook";
 import { syncInstagramConversations } from "@/services/instagram/sync";
 
@@ -71,6 +79,10 @@ describe("syncInstagramConversations", () => {
       .mocked(listActiveInstagramAccounts)
       .mockResolvedValue(accounts as never);
     jest.mocked(hasInstagramMessage).mockResolvedValue(false);
+    jest.mocked(reserveInstagramMessage).mockResolvedValue(true);
+    jest
+      .mocked(releaseInstagramMessageReservation)
+      .mockResolvedValue(undefined);
     jest
       .mocked(processInstagramWebhookMessage)
       .mockResolvedValue("model_form" as never);
@@ -96,6 +108,7 @@ describe("syncInstagramConversations", () => {
       accounts: 2,
       messagesSeen: 2,
       outboundMessagesSkipped: 0,
+      truncated: false,
       duplicatesSkipped: 0,
       messagesProcessed: 2,
       failures: 0,
@@ -130,6 +143,17 @@ describe("syncInstagramConversations", () => {
     expect(processInstagramWebhookMessage).not.toHaveBeenCalled();
   });
 
+  it("skips a message reserved by another sync", async () => {
+    jest.mocked(reserveInstagramMessage).mockResolvedValue(false);
+
+    await expect(syncInstagramConversations(database)).resolves.toMatchObject({
+      messagesSeen: 2,
+      duplicatesSkipped: 2,
+      messagesProcessed: 0,
+    });
+    expect(hasInstagramMessage).not.toHaveBeenCalled();
+    expect(processInstagramWebhookMessage).not.toHaveBeenCalled();
+  });
   it("counts processing failures without persisting message bodies in the summary", async () => {
     jest
       .mocked(processInstagramWebhookMessage)
@@ -155,6 +179,27 @@ describe("syncInstagramConversations", () => {
     });
   });
 
+  it("reports truncated account retrieval as a failure", async () => {
+    jest
+      .mocked(listInstagramConversationMessages)
+      .mockResolvedValueOnce({
+        ...createSyncResult([
+          createMessage(
+            "truncated-message",
+            "first",
+            "2026-09-22T15:00:00.000Z",
+          ),
+        ]),
+        truncated: true,
+      })
+      .mockResolvedValueOnce(emptySyncResult());
+
+    await expect(syncInstagramConversations(database)).resolves.toMatchObject({
+      messagesSeen: 1,
+      truncated: true,
+      failures: 1,
+    });
+  });
   it("processes messages in timestamp order within one conversation", async () => {
     jest
       .mocked(listInstagramConversationMessages)

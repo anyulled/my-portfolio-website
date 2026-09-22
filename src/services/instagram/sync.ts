@@ -7,6 +7,10 @@ import {
   type InstagramConversationMessage,
 } from "./metaClient";
 import { getInstagramDatabase, hasInstagramMessage } from "./repository";
+import {
+  releaseInstagramMessageReservation,
+  reserveInstagramMessage,
+} from "./messageReservationRepository";
 import { processInstagramWebhookMessage } from "./webhook";
 import type { InstagramDatabase } from "./repository";
 import type { InstagramWebhookMessage } from "./types";
@@ -28,6 +32,7 @@ export interface InstagramSyncSummary {
   accounts: number;
   messagesSeen: number;
   outboundMessagesSkipped: number;
+  truncated: boolean;
   duplicatesSkipped: number;
   messagesProcessed: number;
   failures: number;
@@ -56,6 +61,7 @@ export const syncInstagramConversations = async (
           return {
             messagesSeen: 0,
             outboundMessagesSkipped: 0,
+            truncated: false,
             duplicatesSkipped: 0,
             messagesProcessed: 0,
             failures: 1,
@@ -65,6 +71,7 @@ export const syncInstagramConversations = async (
         const accountSummary = {
           messagesSeen: syncResult.messages.length,
           outboundMessagesSkipped: syncResult.outboundMessagesSkipped,
+          truncated: syncResult.truncated,
           duplicatesSkipped: 0,
           messagesProcessed: 0,
           failures: syncResult.truncated ? 1 : 0,
@@ -82,7 +89,15 @@ export const syncInstagramConversations = async (
               async (summaryPromise, message) => {
                 const summary = await summaryPromise;
                 try {
-                  if (await hasInstagramMessage(database, message.messageId)) {
+                  const reserved = await reserveInstagramMessage(database, {
+                    messageId: message.messageId,
+                    accountId: account.id,
+                    conversationId: message.conversationId,
+                  });
+                  if (
+                    !reserved ||
+                    (await hasInstagramMessage(database, message.messageId))
+                  ) {
                     return {
                       ...summary,
                       duplicatesSkipped: summary.duplicatesSkipped + 1,
@@ -96,12 +111,17 @@ export const syncInstagramConversations = async (
                     messagesProcessed: summary.messagesProcessed + 1,
                   };
                 } catch {
+                  await releaseInstagramMessageReservation(
+                    database,
+                    message.messageId,
+                  ).catch(() => undefined);
                   return { ...summary, failures: summary.failures + 1 };
                 }
               },
               Promise.resolve({
                 messagesSeen: 0,
                 outboundMessagesSkipped: 0,
+                truncated: false,
                 duplicatesSkipped: 0,
                 messagesProcessed: 0,
                 failures: 0,
@@ -129,6 +149,7 @@ export const syncInstagramConversations = async (
     accounts: accounts.length,
     messagesSeen: 0,
     outboundMessagesSkipped: 0,
+    truncated: false,
     duplicatesSkipped: 0,
     messagesProcessed: 0,
     failures: 0,
@@ -141,6 +162,7 @@ export const syncInstagramConversations = async (
       outboundMessagesSkipped:
         summary.outboundMessagesSkipped +
         accountSummary.outboundMessagesSkipped,
+      truncated: summary.truncated || accountSummary.truncated,
       duplicatesSkipped:
         summary.duplicatesSkipped + accountSummary.duplicatesSkipped,
       messagesProcessed:
