@@ -67,7 +67,7 @@ export const syncInstagramConversations = async (
           outboundMessagesSkipped: syncResult.outboundMessagesSkipped,
           duplicatesSkipped: 0,
           messagesProcessed: 0,
-          failures: 0,
+          failures: syncResult.truncated ? 1 : 0,
         };
         const messagesByConversation = Object.groupBy(
           syncResult.messages,
