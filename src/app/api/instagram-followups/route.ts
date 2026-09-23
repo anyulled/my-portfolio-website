@@ -1,6 +1,7 @@
 import { after, NextResponse } from "next/server";
 import { isInstagramFollowupRequestAuthorized } from "@/services/cron/authorization";
 import { processInstagramFollowups } from "@/services/instagram/followups";
+import { syncInstagramConversations } from "@/services/instagram/sync";
 
 export const maxDuration = 60;
 
@@ -11,6 +12,19 @@ export async function POST(request: Request) {
   }
 
   after(async () => {
+    try {
+      const syncSummary = await syncInstagramConversations();
+      console.info("instagram_conversations_sync_completed", {
+        requestId,
+        ...syncSummary,
+      });
+    } catch (error) {
+      console.error("instagram_conversations_sync_failed", {
+        requestId,
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+
     try {
       const summary = await processInstagramFollowups();
       console.info("instagram_followups_completed", { requestId, ...summary });

@@ -1,4 +1,5 @@
 import {
+  listInstagramConversationMessages,
   resolveInstagramProfile,
   resolveInstagramUsername,
   sendInstagramText,
@@ -137,5 +138,192 @@ describe("sendInstagramText", () => {
     await expect(
       resolveInstagramUsername("access-token", "unknown-account-id"),
     ).resolves.toBeNull();
+  });
+
+  it("lists inbound messages from paginated Instagram conversations", async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: [
+            {
+              id: "conversation-id",
+              messages: {
+                data: [
+                  {
+                    id: "inbound-message-id",
+                    from: { id: "participant-id" },
+                    message: "Sono una modella",
+                    created_time: "2026-09-22T15:50:00+0000",
+                  },
+                  {
+                    id: "outbound-message-id",
+                    from: { id: "account-id" },
+                    message: "Risposta automatica",
+                    created_time: "2026-09-22T15:51:00+0000",
+                  },
+                  {
+                    id: "echo-message-id",
+                    from: { id: "participant-id" },
+                    message: "Echo",
+                    created_time: "2026-09-22T15:52:00+0000",
+                    is_echo: true,
+                  },
+                  {
+                    id: "invalid-message-id",
+                    from: { id: "participant-id" },
+                    message: "Invalid date",
+                    created_time: "not-a-date",
+                  },
+                  { id: "malformed-message" },
+                  null,
+                ],
+              },
+            },
+            { id: "conversation-without-messages" },
+            null,
+          ],
+          paging: { next: "https://graph.instagram.com/next-page" },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: [
+            {
+              id: "second-conversation-id",
+              messages: {
+                data: [
+                  {
+                    id: "second-message-id",
+                    from: { id: "second-participant-id" },
+                    message: "Ciao",
+                    created_time: "2026-09-22T16:00:00+0000",
+                  },
+                ],
+              },
+            },
+            { messages: { data: [] } },
+            "malformed-conversation",
+          ],
+        }),
+      });
+
+    await expect(
+      listInstagramConversationMessages("access-token", "account-id"),
+    ).resolves.toEqual({
+      messages: [
+        {
+          conversationId: "conversation-id",
+          messageId: "inbound-message-id",
+          participantId: "participant-id",
+          text: "Sono una modella",
+          timestamp: "2026-09-22T15:50:00.000Z",
+        },
+        {
+          conversationId: "second-conversation-id",
+          messageId: "second-message-id",
+          participantId: "second-participant-id",
+          text: "Ciao",
+          timestamp: "2026-09-22T16:00:00.000Z",
+        },
+      ],
+      truncated: false,
+      outboundMessagesSkipped: 2,
+    });
+
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      1,
+      expect.stringContaining(
+        "/v26.0/account-id/conversations?platform=instagram",
+      ),
+      { headers: { Authorization: "Bearer access-token" } },
+    );
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      2,
+      "https://graph.instagram.com/next-page",
+      { headers: { Authorization: "Bearer access-token" } },
+    );
+  });
+
+  it("fails when the Conversations API rejects a page", async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false });
+
+    await expect(
+      listInstagramConversationMessages("access-token", "account-id"),
+    ).rejects.toThrow("Instagram conversations lookup failed");
+  });
+
+  it("follows the nested message cursor for a conversation", async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: [
+            {
+              id: "conversation-id",
+              messages: {
+                data: [
+                  {
+                    id: "first-message-id",
+                    from: { id: "participant-id" },
+                    message: "first",
+                    created_time: "2026-09-22T15:00:00+0000",
+                  },
+                ],
+                paging: {
+                  next: "https://graph.instagram.com/conversation-messages",
+                },
+              },
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: [
+            {
+              id: "second-message-id",
+              from: { id: "participant-id" },
+              message: "second",
+              created_time: "2026-09-22T16:00:00+0000",
+            },
+          ],
+        }),
+      });
+
+    await expect(
+      listInstagramConversationMessages("access-token", "account-id"),
+    ).resolves.toMatchObject({
+      messages: [
+        expect.objectContaining({ messageId: "first-message-id" }),
+        expect.objectContaining({ messageId: "second-message-id" }),
+      ],
+      truncated: false,
+      outboundMessagesSkipped: 0,
+    });
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      2,
+      "https://graph.instagram.com/conversation-messages",
+      { headers: { Authorization: "Bearer access-token" } },
+    );
+  });
+
+  it("returns no messages when Meta omits the conversation page data", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+
+    await expect(
+      listInstagramConversationMessages("access-token", "account-id"),
+    ).resolves.toEqual({
+      messages: [],
+      truncated: false,
+      outboundMessagesSkipped: 0,
+    });
   });
 });

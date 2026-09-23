@@ -36,7 +36,9 @@ const getAccountByIdentifier = async (
   return data;
 };
 
-const listActiveAccounts = async (database: InstagramDatabase) => {
+export const listActiveInstagramAccounts = async (
+  database: InstagramDatabase,
+) => {
   const result = await database
     .from("instagram_accounts")
     .select(instagramAccountSelection)
@@ -70,7 +72,7 @@ const resolveAccountByMetaIdentity = async (
   database: InstagramDatabase,
   candidateIds: string[],
 ) => {
-  const accounts = await listActiveAccounts(database);
+  const accounts = await listActiveInstagramAccounts(database);
 
   for (const candidateId of candidateIds) {
     for (const account of accounts) {

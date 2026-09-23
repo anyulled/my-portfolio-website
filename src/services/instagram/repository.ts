@@ -109,6 +109,23 @@ export const findInstagramConversation = async (
   return data;
 };
 
+export const hasInstagramMessage = async (
+  database: ReturnType<typeof getInstagramDatabase>,
+  messageId: string,
+) => {
+  const result = await database
+    .from("instagram_messages")
+    .select("id")
+    .eq("instagram_message_id", messageId)
+    .maybeSingle();
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  return Boolean(result.data);
+};
+
 export const recordInstagramMessage = async (
   database: ReturnType<typeof getInstagramDatabase>,
   account: InstagramAccountRow,
