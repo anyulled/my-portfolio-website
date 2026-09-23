@@ -139,6 +139,20 @@ describe("Contact API", () => {
     );
   });
 
+  it("rejects unsupported package values", async () => {
+    const request = createRequest({
+      name: "Test User",
+      email: "test@example.com",
+      message: validMessage,
+      package: "unsupported",
+    });
+
+    const response = await POST(request);
+
+    expect(response.status).toBe(400);
+    expect(sendEMail).not.toHaveBeenCalled();
+  });
+
   it("returns a retryable error when delivery fails", async () => {
     jest.mocked(sendEMail).mockResolvedValue(null);
     const request = createRequest({

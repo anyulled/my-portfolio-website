@@ -81,7 +81,7 @@ export async function POST(request: Request) {
       name: getText(formData, "name"),
       email: getText(formData, "email"),
       message: getText(formData, "message"),
-      package: getText(formData, "package"),
+      package: getText(formData, "package") || undefined,
     };
     const result = contactFormSchema.safeParse(values);
     const copy = getContactCopy(locale);
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const selectedPackage = getText(formData, "package");
+    const selectedPackage = result.data.package;
     const emailMessage = selectedPackage
       ? `Selected package: ${selectedPackage}\n\n${result.data.message}`
       : result.data.message;

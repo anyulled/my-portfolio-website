@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const contactPackageSchema = z.enum(["express", "experience", "deluxe"]);
+
 export const contactFormSchema = z.object({
   name: z.string().trim().min(2, { message: "error_name" }),
   email: z.email({ message: "error_email" }),
@@ -10,7 +12,7 @@ export const contactFormSchema = z.object({
     .refine((value) => /\s/.test(value), {
       message: "error_message_spaces",
     }),
-  package: z.string().trim().optional(),
+  package: contactPackageSchema.optional(),
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
