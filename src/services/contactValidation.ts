@@ -10,6 +10,7 @@ export const contactFormSchema = z.object({
     .refine((value) => /\s/.test(value), {
       message: "error_message_spaces",
     }),
+  package: z.string().trim().optional(),
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;

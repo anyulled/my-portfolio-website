@@ -1,4 +1,5 @@
 import AnimatedPackages from "@/components/AnimatedPackages";
+import type { ContactPackage } from "@/components/ContactDialogContext";
 import FadeInTitle from "@/components/FadeInTitle";
 import { openGraph } from "@/lib/openGraph";
 import { randomInt } from "node:crypto";
@@ -68,6 +69,7 @@ const getPackages = (
   images: [string, string, string],
 ) => [
   {
+    key: "express" as ContactPackage,
     name: t("boudoir_express"),
     price: formatPrice(latestPricing?.express_price, defaultPricing.express),
     image: images[0],
@@ -95,6 +97,7 @@ const getPackages = (
     ],
   },
   {
+    key: "experience" as ContactPackage,
     name: t("boudoir_experience"),
     price: formatPrice(
       latestPricing?.experience_price,
@@ -125,6 +128,7 @@ const getPackages = (
     ],
   },
   {
+    key: "deluxe" as ContactPackage,
     name: t("deluxe_experience"),
     price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
     image: images[2],

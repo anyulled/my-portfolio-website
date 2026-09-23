@@ -217,6 +217,8 @@
   },
   "contact_form": {
     "contact_us": "Contáctanos",
+    "package": "Paquete",
+    "package_placeholder": "Elige un paquete",
     "email": "Tu correo electrónico",
     "error_delivery": "Lo sentimos, no podemos enviar tu mensaje en este momento. Inténtalo más tarde.",
     "error_email": "Introduce una dirección de correo válida.",

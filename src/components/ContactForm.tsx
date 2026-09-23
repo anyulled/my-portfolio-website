@@ -8,6 +8,10 @@ import { toast } from "@/hooks/use-toast";
 import { submitLeadForm } from "@/lib/gtag";
 import { contactFormSchema } from "@/services/contactValidation";
 import type { ContactFormValues } from "@/services/contactValidation";
+import type {
+  ContactPackage,
+  ContactPackageOption,
+} from "@/components/ContactDialogContext";
 import * as Sentry from "@sentry/nextjs";
 import { useLocale, useTranslations } from "next-intl";
 import { Aref_Ruqaa } from "next/font/google";
@@ -15,7 +19,7 @@ import React from "react";
 import { siTelegram, siWhatsapp } from "simple-icons";
 
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
-type ContactField = keyof ContactFormValues;
+type ContactField = Exclude<keyof ContactFormValues, "package">;
 type FieldErrors = Partial<Record<ContactField, string>>;
 type Translate = (key: string) => string;
 
@@ -85,13 +89,28 @@ function ErrorText({ id, message }: Readonly<ErrorTextProps>) {
   );
 }
 
-export default function ContactForm() {
+interface ContactFormProps {
+  selectedPackage?: ContactPackage;
+  packageOptions?: ContactPackageOption[];
+}
+
+export default function ContactForm({
+  selectedPackage,
+  packageOptions = [],
+}: Readonly<ContactFormProps>) {
   const gaEventTracker = useAnalyticsEventTracker("Contact");
   const locale = useLocale();
   const t = useTranslations("contact_form");
   const [sendingForm, setSendingForm] = React.useState<boolean>(false);
   const [fieldErrors, setFieldErrors] = React.useState<FieldErrors>({});
   const [submissionError, setSubmissionError] = React.useState("");
+  const [packageSelection, setPackageSelection] = React.useState(
+    selectedPackage ?? "",
+  );
+
+  React.useEffect(() => {
+    setPackageSelection(selectedPackage ?? "");
+  }, [selectedPackage]);
 
   const clearFieldError = (field: ContactField) => {
     setSubmissionError("");
@@ -134,6 +153,9 @@ export default function ContactForm() {
     setFieldErrors({});
     setSubmissionError("");
     formData.set("locale", locale);
+    if (packageSelection) {
+      formData.set("package", packageSelection);
+    }
     setSendingForm(true);
 
     try {
@@ -154,6 +176,7 @@ export default function ContactForm() {
           description: result.message,
         });
         formElement.reset();
+        setPackageSelection("");
         setSubmissionError("");
         submitLeadForm();
         gaEventTracker("form_submit", "success");
@@ -195,6 +218,25 @@ export default function ContactForm() {
           onSubmit={handleFormSubmit}
           noValidate
         >
+          {packageOptions.length > 0 && (
+            <div className="space-y-1">
+              <label htmlFor="contact-package">{t("package")}</label>
+              <select
+                id="contact-package"
+                name="package"
+                value={packageSelection}
+                onChange={(event) => setPackageSelection(event.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              >
+                <option value="">{t("package_placeholder")}</option>
+                {packageOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="space-y-1">
             <label className="sr-only" htmlFor="contact-name">
               {t("name")}
