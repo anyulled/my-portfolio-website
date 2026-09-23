@@ -1,5 +1,4 @@
 import Loading from "@/app/loading";
-import ContactForm from "@/components/ContactForm";
 import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
 import SocialMedia from "@/components/SocialMedia";
@@ -96,9 +95,6 @@ export default async function HomePage() {
       </Suspense>
       <SocialMedia />
       <Separator className="my-4 bg-border" />
-      <Suspense fallback={<Loading />}>
-        <ContactForm />
-      </Suspense>
     </main>
   );
 }

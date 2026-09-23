@@ -119,6 +119,26 @@ describe("Contact API", () => {
     );
   });
 
+  it("includes the selected package in the delivered message", async () => {
+    jest.mocked(sendEMail).mockResolvedValue({
+      messageId: "test-id",
+    } as unknown as SMTPTransport.SentMessageInfo);
+    const request = createRequest({
+      name: "Test User",
+      email: "test@example.com",
+      message: validMessage,
+      package: "deluxe",
+    });
+
+    await POST(request);
+
+    expect(sendEMail).toHaveBeenCalledWith(
+      `Selected package: deluxe\n\n${validMessage}`,
+      "test@example.com",
+      "Test User",
+    );
+  });
+
   it("returns a retryable error when delivery fails", async () => {
     jest.mocked(sendEMail).mockResolvedValue(null);
     const request = createRequest({

@@ -2,11 +2,13 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import ContactForm from "@/components/ContactForm";
+import {
+  useContactDialog,
+  type ContactPackage,
+} from "@/components/ContactDialogContext";
 
 interface Feature {
   icon: React.ReactNode;
@@ -14,6 +16,7 @@ interface Feature {
 }
 
 interface Package {
+  key: ContactPackage;
   name: string;
   price: string;
   image: string;
@@ -30,6 +33,7 @@ export default function AnimatedPackages({
   bookNowText,
 }: Readonly<AnimatedPackagesProps>) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { openContactDialog } = useContactDialog();
 
   useGSAP(
     () => {
@@ -57,11 +61,7 @@ export default function AnimatedPackages({
   return (
     <div ref={containerRef} className="grid lg:grid-cols-3 gap-2">
       {packages.map((pkg) => {
-        /*
-         * ⚡ Bolt: Hoisted the string replacement operation outside of the features
-         * array iteration to prevent redundant memory allocation and O(M*N) execution time.
-         */
-        const packageKey = pkg.name.replaceAll(" ", "-");
+        const packageKey = pkg.key;
 
         return (
           <div
@@ -97,16 +97,12 @@ export default function AnimatedPackages({
                 ))}
               </ul>
 
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded transition duration-300">
-                    {bookNowText}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-neutral-800 text-neutral-100">
-                  <ContactForm />
-                </DialogContent>
-              </Dialog>
+              <Button
+                onClick={() => openContactDialog(pkg.key)}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded transition duration-300"
+              >
+                {bookNowText}
+              </Button>
             </div>
           </div>
         );

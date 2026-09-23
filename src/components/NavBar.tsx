@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { useContactDialog } from "@/components/ContactDialogContext";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +15,7 @@ import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Dancing_Script } from "next/font/google";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import LocaleSwitcher from "@/components/LocaleSwitcher";
@@ -34,7 +35,7 @@ export default function NavBar() {
   const { theme, setTheme } = useTheme();
   const { lenis } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
-  const router = useRouter();
+  const { openContactDialog } = useContactDialog();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const scrollFramePending = useRef(false);
@@ -100,8 +101,9 @@ export default function NavBar() {
 
   const handleBookNow = useCallback(() => {
     gaEventTracker("book_now_click", "navbar");
-    router.push("/#book-session");
-  }, [gaEventTracker, router]);
+    setIsOpen(false);
+    openContactDialog();
+  }, [gaEventTracker, openContactDialog]);
 
   return (
     <nav

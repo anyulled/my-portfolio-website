@@ -145,6 +145,8 @@
   },
   "contact_form": {
     "contact_us": "Contacta'ns",
+    "package": "Paquet",
+    "package_placeholder": "Tria un paquet",
     "email": "El teu correu electrònic",
     "error_delivery": "Ho sentim, no podem enviar el teu missatge en aquest moment. Torna-ho a provar més tard.",
     "error_email": "Introdueix una adreça de correu vàlida.",

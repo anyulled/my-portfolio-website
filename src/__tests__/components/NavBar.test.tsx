@@ -1,5 +1,7 @@
 import NavBar from "@/components/NavBar";
-import { render, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+
+const mockOpenContactDialog = jest.fn();
 
 jest.mock("@/components/LocaleSwitcher", () => ({
   __esModule: true,
@@ -12,6 +14,10 @@ jest.mock("@/components/NavLinks", () => ({
 
 jest.mock("@/contexts/ScrollContext", () => ({
   useScroll: () => ({ lenis: null }),
+}));
+
+jest.mock("@/components/ContactDialogContext", () => ({
+  useContactDialog: () => ({ openContactDialog: mockOpenContactDialog }),
 }));
 
 jest.mock("@/hooks/eventTracker", () => ({
@@ -37,6 +43,10 @@ jest.mock("next-intl", () => ({
 }));
 
 describe("NavBar", () => {
+  beforeEach(() => {
+    mockOpenContactDialog.mockClear();
+  });
+
   it("updates its presentation through the native scroll fallback", async () => {
     Object.defineProperty(window, "scrollY", {
       configurable: true,
@@ -54,5 +64,13 @@ describe("NavBar", () => {
     await waitFor(() =>
       expect(container.querySelector("nav")).toHaveClass("backdrop-blur-md"),
     );
+  });
+
+  it("opens the contact dialog from the navbar", () => {
+    render(<NavBar />);
+
+    fireEvent.click(screen.getByRole("button", { name: "nav_bar.book_now" }));
+
+    expect(mockOpenContactDialog).toHaveBeenCalledWith();
   });
 });

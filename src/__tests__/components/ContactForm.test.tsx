@@ -107,6 +107,34 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText("message")).toHaveValue("");
   });
 
+  it("preselects a package, allows changing it, and submits the choice", async () => {
+    jest.mocked(global.fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true, message: "sent" }),
+    } as Response);
+    render(
+      <ContactForm
+        selectedPackage="express"
+        packageOptions={[
+          { value: "express", label: "Express" },
+          { value: "deluxe", label: "Deluxe" },
+        ]}
+      />,
+    );
+
+    expect(screen.getByLabelText("package")).toHaveValue("express");
+    fireEvent.change(screen.getByLabelText("package"), {
+      target: { value: "deluxe" },
+    });
+    fillContactFields();
+    fireEvent.click(screen.getByRole("button", { name: "send_message" }));
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const request = jest.mocked(global.fetch).mock.calls[0]?.[1];
+    expect(request?.body).toBeInstanceOf(FormData);
+    expect((request?.body as FormData).get("package")).toBe("deluxe");
+  });
+
   it("shows the server-provided delivery error", async () => {
     jest.mocked(global.fetch).mockResolvedValue({
       ok: false,

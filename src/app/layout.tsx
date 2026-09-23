@@ -1,5 +1,6 @@
 import Analytics from "@/components/Analytics";
 import CookieConsent from "@/components/CookieConsent";
+import ContactDialogProvider from "@/components/ContactDialogProvider";
 import Footer from "@/components/Footer";
 import MixpanelLayout from "@/components/MixpanelLayout";
 import NavBar from "@/components/NavBar";
@@ -159,8 +160,10 @@ async function LocalizedShell({ children }: { children: React.ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ScrollProvider>
             <div className="min-h-screen bg-background text-foreground dark:bg-background dark:text-foreground">
-              <NavBar />
-              <MixpanelLayout>{children}</MixpanelLayout>
+              <ContactDialogProvider>
+                <NavBar />
+                <MixpanelLayout>{children}</MixpanelLayout>
+              </ContactDialogProvider>
             </div>
             <Toaster />
             <CookieConsent />

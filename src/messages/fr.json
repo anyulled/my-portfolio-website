@@ -145,6 +145,8 @@
   },
   "contact_form": {
     "contact_us": "Contactez-nous",
+    "package": "Forfait",
+    "package_placeholder": "Choisissez un forfait",
     "email": "Votre email",
     "error_delivery": "Désolé, nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer plus tard.",
     "error_email": "Saisissez une adresse e-mail valide.",
