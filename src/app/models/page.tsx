@@ -1,106 +1,87 @@
-import models from "@/data/models";
-import { getPhotosFromStorage } from "@/services/storage/photos-cached";
-import { Photo } from "@/types/photos";
-import { Metadata } from "next";
-import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
+import { connection } from "next/server";
+import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import {
+  getPublishedPortfolioCollections,
+  getPublishedPortfolioModels,
+} from "@/services/portfolio/public";
 
-const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
-const dancingScript = Dancing_Script({ subsets: ["latin"] });
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("portfolio");
+  return {
+    title: t("models_title"),
+    description: t("models_description"),
+    openGraph: {
+      title: t("models_title"),
+      description: t("models_description"),
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("models_title"),
+      description: t("models_description"),
+    },
+  };
+}
 
-export const metadata: Metadata = {
-  title: "Models",
-  openGraph: { title: "Models" },
-  twitter: { title: "Models" },
-};
-
-const fetchPhotos = async (): Promise<Photo[]> => {
-  try {
-    return (await getPhotosFromStorage("models", 200)) || [];
-  } catch (error) {
-    console.error("Error fetching photos from storage:", error);
-    return [];
-  }
-};
-
-export default async function ModelIndexPage() {
-  const allPhotos = await fetchPhotos();
-
-  /*
-   * ⚡ Bolt: Hoisted the sorting of photos outside the models map loop to avoid
-   * redundant array allocations and O(M * N log N) time complexity.
-   * This reduces CPU overhead when rendering the models index page.
-   */
-  const sortedPhotos = allPhotos.toSorted((a, b) => b.views - a.views);
-
-  /*
-   * ⚡ Bolt: Pre-compute photo tags into a Map for O(1) lookups.
-   * This eliminates the O(M * N) nested loop and redundant photo.tags.includes()
-   * string allocations on every iteration, significantly improving rendering performance.
-   * We use the specific tag format expected from models to preserve the exact matching mechanics.
-   */
-  const photoMap = new Map<string, Photo>();
-
-  for (const model of models) {
-    const searchTag = model.tag.replace("-", "");
-    for (const photo of sortedPhotos) {
-      if (photo.tags?.includes(searchTag)) {
-        photoMap.set(searchTag, photo);
-        break;
-      }
+export default async function ModelsPage() {
+  await connection();
+  const [t, models, collections] = await Promise.all([
+    getTranslations("portfolio"),
+    getPublishedPortfolioModels(),
+    getPublishedPortfolioCollections(),
+  ]);
+  const coverByModel = new Map<string, string>();
+  for (const collection of collections) {
+    const cover = collection.photos[0]?.publicUrl;
+    if (!cover) continue;
+    for (const model of collection.models) {
+      if (!coverByModel.has(model.id)) coverByModel.set(model.id, cover);
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 text-neutral-100">
-      <div className="container mx-auto px-4 py-16">
-        <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center`}
-        >
-          Els Nostres Models
+    <main className="container mx-auto min-h-screen space-y-8 px-4 py-24">
+      <header className="mx-auto max-w-3xl space-y-4 text-center">
+        <h1 className="text-4xl font-semibold md:text-6xl">
+          {t("models_title")}
         </h1>
-        <p
-          className={`${arefRuqaa.className} text-xl md:text-2xl text-neutral-300 text-center mb-12`}
-        >
-          Descobreix el talent que fa brillar les nostres fotografies
+        <p className="text-lg text-muted-foreground">{t("models_intro")}</p>
+      </header>
+      {models.length === 0 ? (
+        <p className="py-20 text-center text-muted-foreground">
+          {t("no_collections")}
         </p>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {models.map((model) => {
-            /*
-             * ⚡ Bolt: Using the pre-computed map for O(1) lookup.
-             */
-            const searchTag = model.tag.replace("-", "");
-            const matchedPhoto = photoMap.get(searchTag);
-
-            return (
-              <div key={model.tag} className="group">
-                <h2
-                  className={`${arefRuqaa.className} text-lg md:text-xl text-white mb-2`}
-                >
-                  {model.name}
-                </h2>
-                {matchedPhoto && (
-                  <Link
-                    href={`/models/${model.tag}`}
-                    className="relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105"
-                  >
-                    <Image
-                      src={matchedPhoto.srcSet[0].src}
-                      alt={matchedPhoto.title}
-                      width={300}
-                      height={400}
-                      className="object-cover w-full h-[400px]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-                  </Link>
+      ) : (
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+          {models.map((model) => (
+            <article key={model.id} className="group">
+              <Link href={`/models/${model.slug}`} className="block">
+                {coverByModel.get(model.id) && (
+                  <Image
+                    src={coverByModel.get(model.id) ?? ""}
+                    alt={model.name}
+                    width={600}
+                    height={800}
+                    className="h-80 w-full rounded-md object-cover transition-transform group-hover:scale-[1.02]"
+                  />
                 )}
-              </div>
-            );
-          })}
+                <h2 className="pt-3 text-lg font-medium">{model.name}</h2>
+              </Link>
+              <a
+                className="text-sm text-muted-foreground underline"
+                href={model.profileUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {model.profileUrl}
+              </a>
+            </article>
+          ))}
         </div>
-      </div>
-    </div>
+      )}
+    </main>
   );
 }

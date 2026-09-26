@@ -26,6 +26,7 @@ jest.mock("next/font/google", () => ({
 jest.mock("next-intl/server", () => ({
   getTranslations: jest.fn(),
 }));
+jest.mock("next/server", () => ({ connection: jest.fn() }));
 
 import { metadata as aboutMetadata } from "@/app/about/page";
 import { metadata as mythsMetadata } from "@/app/boudoir-myths/page";

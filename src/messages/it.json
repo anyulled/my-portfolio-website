@@ -677,5 +677,31 @@
     "process_link": "Scopri come funziona la sessione",
     "how_to_name": "Come prepararsi per una sessione di fotografia boudoir",
     "how_to_description": "Consigli pratici per prepararti a una sessione di fotografia boudoir confortevole e valorizzante a Barcellona."
+  },
+  "portfolio": {
+    "title": "Fotografie in evidenza",
+    "description": "Scopri le collezioni boudoir, ritratto, moda e lifestyle del fotografo di Barcellona Anyul Rivas.",
+    "intro": "Scopri le collezioni selezionate, ognuna dedicata a una sessione e a uno stile diversi.",
+    "no_collections": "Non ci sono ancora collezioni disponibili.",
+    "view_collection": "Vedi la collezione",
+    "session_date": "Data",
+    "location": "Luogo",
+    "style": "Stile",
+    "brand": "Marchio di lingerie",
+    "models": "Modelle",
+    "models_title": "Le nostre modelle",
+    "models_description": "Scopri le modelle presenti nelle collezioni boudoir e ritratto di Anyul Rivas a Barcellona.",
+    "models_intro": "Scopri le modelle presenti nelle nostre collezioni fotografiche.",
+    "styles_title": "Stili fotografici",
+    "styles_description": "Esplora la fotografia boudoir, ritratto, glamour, moda, costumi da bagno e lifestyle a Barcellona.",
+    "model_description": "Scopri le collezioni con {name}, fotografate a Barcellona da Anyul Rivas.",
+    "style_description": "Esplora le collezioni di fotografia {style} del fotografo di Barcellona Anyul Rivas.",
+    "portrait": "Ritratto",
+    "artistic_nude": "Nudo artistico",
+    "boudoir": "Boudoir",
+    "glamour": "Glamour",
+    "swimwear": "Costume da bagno",
+    "fashion": "Moda",
+    "lifestyle": "Lifestyle"
   }
 }
