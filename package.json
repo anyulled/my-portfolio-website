@@ -30,6 +30,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^13.1.0",
     "gsap": "^3.13.0",
+    "google-auth-library": "9.15.1",
     "lenis": "latest",
     "lucide-react": "^1.44.0",
     "mixpanel-browser": "^2.83.0",
