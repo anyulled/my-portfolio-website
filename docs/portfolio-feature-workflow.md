@@ -30,6 +30,15 @@ Use this workflow for changes to portfolio collections, Drive selection, public 
 3. Keep changed-code coverage at or above 90 percent and run the repository-prescribed verification gates. Do not weaken lint, coverage, hooks, or CI to make a slice pass.
 4. Before handoff, run `npm run verify:full` and check `git status --short --branch` for unrelated or generated files.
 
+## Lint and commit each vertical
+
+1. Run `npm run lint:ci` before committing. This is the zero-warning ESLint gate used in CI. Also run `npm run verify:quick` during implementation; it includes lint, formatting, and type checking.
+2. Fix the source of every lint failure. Do not disable rules, add broad suppressions, or bypass hooks. Re-run the failed command and `npm run lint:ci` until both pass.
+3. Stage only the completed vertical's files and inspect `git diff --cached` before committing. Keep unrelated changes out of the commit.
+4. Use a Conventional Commit message with a lowercase subject and an allowed type: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`, `style`, `ci`, or `build`. Examples: `feat(portfolio): add collection editor` and `docs: document portfolio commit workflow`.
+5. Let the commit hooks run: `pre-commit` runs lint-staged, `commit-msg` validates the message with commitlint, and `pre-push` runs the harness build and tests for changed files. Never use `--no-verify` or remove hook commands.
+6. If a hook fails, fix the cause, rerun the relevant check, then create or retry the commit. For long-running hooks, keep and poll the command session until it exits successfully before pushing.
+
 ## Publish without losing task context
 
 - Push only the feature branch after its local hooks finish successfully. If a network command fails because the sandbox cannot resolve GitHub, retry through the approved elevated command path instead of interpreting the error as a missing issue or branch.
