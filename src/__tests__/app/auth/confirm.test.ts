@@ -72,6 +72,25 @@ describe("Instagram auth confirmation", () => {
     consoleError.mockRestore();
   });
 
+  it("keeps the portfolio administration route when confirmation fails", async () => {
+    jest.mocked(createInstagramAuthClient).mockResolvedValue({
+      auth: {
+        verifyOtp: jest.fn().mockResolvedValue({ error: new Error("Expired") }),
+        exchangeCodeForSession: jest.fn(),
+      },
+    } as never);
+    const consoleError = jest.spyOn(console, "error").mockImplementation();
+
+    const response = await GET(
+      createRequest("token_hash=token&type=email&next=%2Fadmin%2Fportfolio"),
+    );
+
+    expect(response.url).toMatch(
+      /\/instagram\/login\?error=confirmation_failed&reference=.*&next=%2Fadmin%2Fportfolio$/,
+    );
+    consoleError.mockRestore();
+  });
+
   it("logs a failed PKCE exchange", async () => {
     const error = new Error("Code has expired");
     jest.mocked(createInstagramAuthClient).mockResolvedValue({

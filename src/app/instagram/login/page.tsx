@@ -3,6 +3,7 @@ import LoginForm from "./LoginForm";
 interface InstagramLoginPageProps {
   searchParams: Promise<{
     error?: string;
+    next?: string;
     reference?: string;
   }>;
 }
@@ -20,7 +21,7 @@ export default async function InstagramLoginPage({
 
   return (
     <main className="mx-auto flex min-h-[70vh] max-w-md items-center px-6 py-12">
-      <LoginForm initialMessage={initialMessage} />
+      <LoginForm initialMessage={initialMessage} redirectTo={params.next} />
     </main>
   );
 }

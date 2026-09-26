@@ -12,9 +12,13 @@ interface LoginResponse {
 
 interface LoginFormProps {
   initialMessage?: string;
+  redirectTo?: string;
 }
 
-export default function LoginForm({ initialMessage = "" }: LoginFormProps) {
+export default function LoginForm({
+  initialMessage = "",
+  redirectTo = "/instagram",
+}: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState(initialMessage);
   const [submitting, setSubmitting] = useState(false);
@@ -27,7 +31,7 @@ export default function LoginForm({ initialMessage = "" }: LoginFormProps) {
       const response = await fetch("/api/instagram/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, redirectTo }),
       });
       const result = (await response.json()) as LoginResponse;
       const reference = result.requestId

@@ -59,8 +59,32 @@ describe("Instagram login API", () => {
       email: "anyulled@gmail.com",
       options: {
         shouldCreateUser: false,
-        emailRedirectTo: "https://boudoir.barcelona/auth/confirm",
+        emailRedirectTo:
+          "https://boudoir.barcelona/auth/confirm?next=%2Finstagram",
       },
     });
+  });
+
+  it("preserves the portfolio administration return path in the magic link", async () => {
+    const signInWithOtp = jest.fn().mockResolvedValue({ error: null });
+    jest.mocked(createInstagramAuthClient).mockResolvedValue({
+      auth: { signInWithOtp },
+    } as never);
+
+    await POST(
+      createRequest({
+        email: "anyulled@gmail.com",
+        redirectTo: "/admin/portfolio",
+      }),
+    );
+
+    expect(signInWithOtp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          emailRedirectTo:
+            "https://boudoir.barcelona/auth/confirm?next=%2Fadmin%2Fportfolio",
+        }),
+      }),
+    );
   });
 });
