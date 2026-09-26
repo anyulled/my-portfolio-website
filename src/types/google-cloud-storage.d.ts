@@ -8,6 +8,11 @@ declare module "@google-cloud/storage" {
       };
     });
     bucket(name: string): {
+      file(name: string): {
+        save(data: Buffer, options?: unknown): Promise<unknown>;
+        delete(): Promise<unknown>;
+        publicUrl(): string;
+      };
       getFiles(options?: {
         autoPaginate?: boolean;
         maxResults?: number;
