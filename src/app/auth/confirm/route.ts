@@ -1,4 +1,5 @@
 import { createInstagramAuthClient } from "@/services/instagram/auth";
+import { getSafeAuthReturnPath } from "@/services/instagram/authRedirect";
 import { NextResponse } from "next/server";
 
 const getErrorDetails = (error: unknown) => {
@@ -15,7 +16,8 @@ export async function GET(request: Request) {
   const tokenHash = url.searchParams.get("token_hash");
   const type = url.searchParams.get("type");
   const code = url.searchParams.get("code");
-  const redirectUrl = new URL("/instagram", url.origin);
+  const nextPath = getSafeAuthReturnPath(url.searchParams.get("next"));
+  const redirectUrl = new URL(nextPath, url.origin);
 
   const confirmationError = await (async () => {
     try {
@@ -82,5 +84,8 @@ export async function GET(request: Request) {
   redirectUrl.pathname = "/instagram/login";
   redirectUrl.searchParams.set("error", "confirmation_failed");
   redirectUrl.searchParams.set("reference", requestId);
+  if (nextPath === "/admin/portfolio") {
+    redirectUrl.searchParams.set("next", nextPath);
+  }
   return NextResponse.redirect(redirectUrl);
 }

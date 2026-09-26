@@ -1,4 +1,5 @@
 import { createInstagramAuthClient } from "@/services/instagram/auth";
+import { getSafeAuthReturnPath } from "@/services/instagram/authRedirect";
 import { NextResponse } from "next/server";
 
 const getEmailDomain = (email: string) => email.split("@").at(1) ?? "unknown";
@@ -18,6 +19,10 @@ export async function POST(request: Request) {
       typeof body === "object" && body !== null && "email" in body
         ? (body as { email?: unknown }).email
         : undefined;
+    const redirectTo =
+      typeof body === "object" && body !== null && "redirectTo" in body
+        ? (body as { redirectTo?: unknown }).redirectTo
+        : undefined;
     if (typeof email !== "string" || !email.trim()) {
       return NextResponse.json(
         { message: "A valid email address is required.", requestId },
@@ -30,7 +35,10 @@ export async function POST(request: Request) {
       email: email.trim(),
       options: {
         shouldCreateUser: false,
-        emailRedirectTo: new URL("/auth/confirm", request.url).toString(),
+        emailRedirectTo: new URL(
+          `/auth/confirm?next=${encodeURIComponent(getSafeAuthReturnPath(redirectTo))}`,
+          request.url,
+        ).toString(),
       },
     });
     if (error) {
