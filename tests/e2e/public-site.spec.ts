@@ -7,6 +7,12 @@ const publicPaths = [
   "/model-release",
   "/booking-a-session",
   "/instagram/login",
+  "/portfolio",
+  "/portfolio/barcelona-editorial-session",
+  "/models",
+  "/models/harness-model",
+  "/styles",
+  "/styles/boudoir",
 ];
 
 test.describe("public harness journeys", () => {
@@ -30,6 +36,25 @@ test.describe("public harness journeys", () => {
       expect(browserErrors).toEqual([]);
     });
   }
+
+  test("portfolio pages expose localized SEO metadata and generated OG art", async ({
+    page,
+  }) => {
+    await page.goto("/portfolio/barcelona-editorial-session");
+
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      "content",
+      /boudoir photography by Anyul Rivas/i,
+    );
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      "content",
+      /opengraph-image/,
+    );
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+      "content",
+      "summary_large_image",
+    );
+  });
 
   test("booking requires the core contact fields before submission", async ({
     page,

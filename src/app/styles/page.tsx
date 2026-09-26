@@ -1,100 +1,89 @@
-import { styles } from "@/data/styles";
-import { getPhotosFromStorage } from "@/services/storage/photos-cached";
-import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import { Dancing_Script, Playfair_Display } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-
-const playfair = Playfair_Display({ subsets: ["latin"] });
-const dancingScript = Dancing_Script({ subsets: ["latin"] });
+import { connection } from "next/server";
+import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import {
+  portfolioStyles,
+  type PortfolioStyle,
+} from "@/services/portfolio/types";
+import { getPortfolioStyleMessageKey } from "@/lib/portfolioStyleLabel";
+import {
+  getPublishedPortfolioCollections,
+  getPublishedPortfolioStyles,
+} from "@/services/portfolio/public";
 
 export const metadata: Metadata = {
-  title: "Our Photography styles",
+  title: "Photography Styles",
   description:
     "Explore private boudoir photography styles in Barcelona, from soft and romantic to bold and editorial, and find the visual approach that feels most like you.",
+  openGraph: {
+    title: "Photography Styles",
+    description:
+      "Explore private boudoir photography styles in Barcelona, from soft and romantic to bold and editorial, and find the visual approach that feels most like you.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Photography Styles",
+    description:
+      "Explore private boudoir photography styles in Barcelona, from soft and romantic to bold and editorial, and find the visual approach that feels most like you.",
+  },
 };
 
 export default async function PhotographyStylesPage() {
-  /*
-   * ⚡ Bolt: Concurrently load photos and translations to prevent
-   * sequential data waterfalls and drastically speed up time to first byte.
-   */
-  const [res, t] = await Promise.all([
-    getPhotosFromStorage("styles", 500),
-    getTranslations("styles-index"),
+  await connection();
+  const [t, activeStyles, collections] = await Promise.all([
+    getTranslations("portfolio"),
+    getPublishedPortfolioStyles(),
+    getPublishedPortfolioCollections(),
   ]);
-
-  /*
-   * ⚡ Bolt: Pre-compute photo tags into a Map for O(1) lookups.
-   * This eliminates the O(M * N) nested loop and redundant photo.tags.split(" ")
-   * string allocations on every iteration, significantly improving rendering performance.
-   */
-  const photoTagMap = new Map<string, string>();
-  for (const photo of res ?? []) {
-    if (!photo.tags) continue;
-    const tags = photo.tags.split(" ");
-    const src = photo.srcSet[0]?.src;
-    if (!src) continue;
-
-    for (const tag of tags) {
-      if (tag && !photoTagMap.has(tag)) {
-        photoTagMap.set(tag, src);
-      }
+  const active = new Set(activeStyles);
+  const coverByStyle = new Map<PortfolioStyle, string>();
+  for (const collection of collections) {
+    const cover = collection.photos[0]?.publicUrl;
+    if (cover && !coverByStyle.has(collection.style)) {
+      coverByStyle.set(collection.style, cover);
     }
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-16">
-        <h1
-          className={`${dancingScript.className} text-5xl md:text-7xl mb-4 text-center mt-4 text-primary`}
-        >
-          {t("photography-styles")}
+    <main className="container mx-auto min-h-screen space-y-8 px-4 py-24">
+      <header className="mx-auto max-w-3xl text-center">
+        <h1 className="text-4xl font-semibold md:text-6xl">
+          {t("styles_title")}
         </h1>
-        <p
-          className={`${playfair.className} text-xl md:text-2xl text-muted-foreground text-center mb-12`}
-        >
-          {t("discover-our-styles")}
+      </header>
+      {active.size === 0 ? (
+        <p className="py-20 text-center text-muted-foreground">
+          {t("no_collections")}
         </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {styles.map((style, index) => {
-            /*
-             * ⚡ Bolt: Removed the intermediate `photoStyles` array allocation.
-             * Doing string replacements and object lookups directly inside the
-             * original single pass is faster and consumes less memory than
-             * allocating intermediate arrays and iterating multiple times.
-             */
-            const searchTag = style.tag.replace("-", "");
-            const name = style.tag.replace("-", " ");
-            const image = photoTagMap.get(searchTag) ?? "";
-            const link = `styles/${style.name}`;
-
-            return (
-              <Link href={link} key={index + style.name} className="group">
-                <div className="relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105">
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {portfolioStyles
+            .filter((style) => active.has(style))
+            .map((style) => (
+              <Link
+                key={style}
+                href={`/styles/${style}`}
+                className="group relative overflow-hidden rounded-lg"
+              >
+                {coverByStyle.has(style) && (
                   <Image
-                    src={image}
-                    alt={`${name} photography`}
-                    width={300}
-                    height={400}
-                    className="object-cover w-full h-[400px]"
+                    src={coverByStyle.get(style) ?? ""}
+                    alt={t(getPortfolioStyleMessageKey(style))}
+                    width={900}
+                    height={1200}
+                    className="h-[28rem] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h2
-                      className={`${playfair.className} text-2xl md:text-3xl text-primary-foreground group-hover:text-primary transition-colors duration-300 capitalize`}
-                    >
-                      {name}
-                    </h2>
-                  </div>
-                </div>
+                )}
+                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent px-5 pb-5 pt-16 text-2xl font-semibold text-white">
+                  {t(getPortfolioStyleMessageKey(style))}
+                </span>
               </Link>
-            );
-          })}
+            ))}
         </div>
-      </div>
-    </div>
+      )}
+    </main>
   );
 }

@@ -1,6 +1,7 @@
 import type { Testimonial } from "@/lib/testimonials";
 import type { PricingPackageRecord } from "@/services/database";
 import type { Photo } from "@/types/photos";
+import type { PortfolioCollection } from "@/services/portfolio/types";
 
 const fixtureDate = new Date("2024-01-01T00:00:00.000Z");
 
@@ -52,3 +53,33 @@ export const getHarnessPricing = (): PricingPackageRecord => ({
   experience_price: 350,
   deluxe_price: 600,
 });
+
+export const getHarnessPortfolioCollections = (): PortfolioCollection[] => [
+  {
+    id: "harness-portfolio-collection",
+    name: "Barcelona Editorial Session",
+    slug: "barcelona-editorial-session",
+    sessionDate: "2024-06-15",
+    location: "Barcelona",
+    style: "boudoir",
+    lingerieBrand: null,
+    archivedAt: null,
+    photos: [
+      {
+        id: "harness-portfolio-photo",
+        objectPath: "harness/portfolio.webp",
+        publicUrl: "/images/DSC_7028.jpg",
+        altText: "Harness portfolio photograph",
+        position: 0,
+      },
+    ],
+    models: [
+      {
+        id: "harness-portfolio-model",
+        name: "Harness Model",
+        slug: "harness-model",
+        profileUrl: "https://example.com/model",
+      },
+    ],
+  },
+];

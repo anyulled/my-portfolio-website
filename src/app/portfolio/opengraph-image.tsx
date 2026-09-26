@@ -1,32 +1,27 @@
-import { getPublishedPortfolioForModel } from "@/services/portfolio/public";
+import { getPublishedPortfolioCollections } from "@/services/portfolio/public";
 import { fallbackOpenGraphImageUrl } from "@/lib/openGraphImage";
 import { ImageResponse } from "next/og";
 import { connection } from "next/server";
 
-export const alt = "Sensuelle Boudoir";
+export const alt = "Featured photography collections by Sensuelle Boudoir";
 export const size = { width: 1200, height: 630 };
 
-export default async function ModelOpenGraphImage({
-  params,
-}: {
-  params: Promise<{ modelName: string }>;
-}) {
+export default async function PortfolioOpenGraphImage() {
   await connection();
-  const { modelName } = await params;
-  const model = await getPublishedPortfolioForModel(modelName);
+  const collections = await getPublishedPortfolioCollections();
   const image =
-    model?.collections[0]?.photos[0]?.publicUrl ?? fallbackOpenGraphImageUrl;
+    collections[0]?.photos[0]?.publicUrl ?? fallbackOpenGraphImageUrl;
 
   return new ImageResponse(
     <div tw="flex h-full w-full items-center justify-center bg-neutral-950 text-white">
       <img
         src={image}
-        alt={model?.name ?? "Model"}
+        alt="Featured boudoir photography"
         tw="h-full w-1/2 object-cover"
       />
       <div tw="flex h-full w-1/2 flex-col justify-center p-12">
         <h1 tw="text-5xl">Sensuelle Boudoir</h1>
-        <h2 tw="text-4xl">{model?.name ?? "Model"}</h2>
+        <h2 tw="text-4xl">Featured Photography</h2>
       </div>
     </div>,
     size,

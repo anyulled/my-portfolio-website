@@ -675,5 +675,31 @@
     "process_link": "See how the session works",
     "how_to_name": "How to prepare for a boudoir photography session",
     "how_to_description": "Practical preparation guidance for a comfortable and empowering boudoir photography session in Barcelona."
+  },
+  "portfolio": {
+    "title": "Featured Photography",
+    "description": "Browse curated boudoir, portrait, fashion, and lifestyle photography collections by Barcelona photographer Anyul Rivas.",
+    "intro": "Explore selected photography collections, each shaped around a distinct session and style.",
+    "no_collections": "No collections are available yet.",
+    "view_collection": "View collection",
+    "session_date": "Date",
+    "location": "Location",
+    "style": "Style",
+    "brand": "Lingerie brand",
+    "models": "Models",
+    "models_title": "Our Models",
+    "models_description": "Discover the models featured in Anyul Rivas's boudoir and portrait photography collections in Barcelona.",
+    "models_intro": "Meet the models featured in our photography collections.",
+    "styles_title": "Photography Styles",
+    "styles_description": "Explore boudoir, portrait, glamour, fashion, swimwear, and lifestyle photography in Barcelona.",
+    "model_description": "Browse photography collections featuring {name}, photographed in Barcelona by Anyul Rivas.",
+    "style_description": "Explore {style} photography collections by Barcelona photographer Anyul Rivas.",
+    "portrait": "Portrait",
+    "artistic_nude": "Artistic nude",
+    "boudoir": "Boudoir",
+    "glamour": "Glamour",
+    "swimwear": "Swimwear",
+    "fashion": "Fashion",
+    "lifestyle": "Lifestyle"
   }
 }
