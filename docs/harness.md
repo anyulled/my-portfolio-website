@@ -17,6 +17,7 @@ Repository files hold durable product, architecture, environment, and verificati
 3. Run `npm ci` after dependency changes or a fresh clone.
 4. Run `npm run doctor` and establish a passing `npm run verify:quick` checkpoint.
 5. Confirm the working tree and base branch before editing.
+6. Follow the [portfolio feature delivery workflow](portfolio-feature-workflow.md) for portfolio collection work.
 
 ## Task state
 
