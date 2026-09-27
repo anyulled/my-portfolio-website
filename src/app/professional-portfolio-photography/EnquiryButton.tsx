@@ -2,7 +2,7 @@
 
 import { useContactDialog } from "@/components/ContactDialogContext";
 
-export default function EnquiryButton({ label }: { label: string }) {
+export default function EnquiryButton({ label }: Readonly<{ label: string }>) {
   const { openContactDialog } = useContactDialog();
 
   return (
