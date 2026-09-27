@@ -1,5 +1,5 @@
 import { getPricing } from "@/lib/pricing";
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 
 const packageDetails = [
   { id: "express", name: "Boudoir Express", fallbackPrice: 200 },
@@ -8,6 +8,7 @@ const packageDetails = [
 ] as const;
 
 export async function GET() {
+  await connection();
   const latestPricing = await getPricing();
   const prices = {
     express: latestPricing?.express_price,

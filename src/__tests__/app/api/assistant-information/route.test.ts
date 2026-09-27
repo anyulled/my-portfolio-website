@@ -1,5 +1,6 @@
 jest.mock("@/lib/pricing", () => ({ getPricing: jest.fn() }));
 jest.mock("next/server", () => ({
+  connection: jest.fn(async () => undefined),
   NextResponse: {
     json: (body: unknown) => ({ json: async () => body }),
   },
@@ -7,6 +8,7 @@ jest.mock("next/server", () => ({
 
 import { GET } from "@/app/api/assistant-information/route";
 import { getPricing } from "@/lib/pricing";
+import { connection } from "next/server";
 
 const mockedGetPricing = jest.mocked(getPricing);
 
@@ -28,6 +30,7 @@ describe("assistant information", () => {
       225, 375, 625,
     ]);
     expect(body.photographer.name).toBe("Anyul Rivas");
+    expect(connection).toHaveBeenCalled();
     expect(body.enquiry.confirmation).toContain("does not confirm");
   });
 
