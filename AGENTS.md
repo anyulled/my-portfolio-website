@@ -34,6 +34,13 @@ Follow the project-specific [Vercel CLI runbook](docs/vercel-cli.md) for project
 - Favor React Server Components for data fetching where appropriate, minimizing client-side JavaScript.
 - Maintain clear boundaries between server-side logic and client-side interactivity (`"use client"`).
 
+## Internationalization
+
+- Keep new static user-facing copy, including page metadata and structured-data labels, in the existing `src/messages/{en,es,fr,ca,it,uk}.json` catalogues. Use `next-intl` to read it in pages and components.
+- Do not create parallel translation maps in TypeScript or duplicate translated copy in tests. Tests that assert copy should read the message catalogue.
+- Add native translations for every supported locale when introducing or changing a key. Do not use English as a fallback for another locale.
+- Run `npm run check-i18n` after changing messages; key parity is necessary, and the translated text must also be reviewed for the correct language and meaning.
+
 ## Coding Principles
 
 Agents must adhere to the following core principles:
