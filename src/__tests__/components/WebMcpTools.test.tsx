@@ -95,9 +95,8 @@ describe("WebMcpTools", () => {
       value: { registerTool: () => Promise.reject(new Error("unsupported")) },
     });
 
-    await act(async () => {
-      render(<WebMcpTools openContactDialog={openContactDialog} />);
-    });
+    render(<WebMcpTools openContactDialog={openContactDialog} />);
+    await Promise.resolve();
 
     expect(openContactDialog).not.toHaveBeenCalled();
   });

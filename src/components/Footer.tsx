@@ -1,5 +1,4 @@
-import { useTranslations } from "next-intl";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { getProfessionalPortfolioCopy } from "@/lib/professionalPortfolioCopy";
 import type { Locale } from "@/i18n/config";
