@@ -1,5 +1,8 @@
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import Link from "next/link";
+import { getProfessionalPortfolioCopy } from "@/lib/professionalPortfolioCopy";
+import type { Locale } from "@/i18n/config";
 
 const footerLinks = [
   { name: "privacy", href: "/privacy" },
@@ -20,6 +23,8 @@ const siteLinks = [
 
 export default function Footer() {
   const t = useTranslations("footer");
+  const locale = useLocale() as Locale;
+  const portfolioCopy = getProfessionalPortfolioCopy(locale);
   return (
     <footer className="bg-muted dark:bg-muted/10 border-t">
       <div className="container mx-auto px-6 py-8">
@@ -34,6 +39,22 @@ export default function Footer() {
                 {((key: string) => t(key))(link.name)}
               </Link>
             ))}
+          </nav>
+          <nav className="mb-4 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/professional-portfolio-photography"
+              className="text-sm text-primary underline"
+            >
+              {portfolioCopy.title}
+            </Link>
+            <a
+              href="https://g.page/r/CXYGEWUyinIwEBM/review"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-primary underline"
+            >
+              {portfolioCopy.reviews}
+            </a>
           </nav>
           <nav className="flex flex-wrap justify-center gap-4 mb-4">
             {footerLinks.map((link) => (
