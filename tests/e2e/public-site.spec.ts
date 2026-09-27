@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 const publicPaths = [
   "/",
   "/pricing",
+  "/professional-portfolio-photography",
   "/photography-release",
   "/model-release",
   "/booking-a-session",
@@ -54,6 +55,25 @@ test.describe("public harness journeys", () => {
       "content",
       "summary_large_image",
     );
+  });
+
+  test("professional portfolio visitors can review and open a session enquiry", async ({
+    page,
+  }) => {
+    await page.goto("/professional-portfolio-photography");
+
+    await expect(page.getByText(/I welcome escorts/)).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Review Sensuelle Boudoir on Google" }),
+    ).toHaveAttribute("href", "https://g.page/r/CXYGEWUyinIwEBM/review");
+    await page
+      .getByRole("button", { name: "Enquire about a portfolio session" })
+      .click();
+
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /send message/i }),
+    ).toBeVisible();
   });
 
   test("booking requires the core contact fields before submission", async ({

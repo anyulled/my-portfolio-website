@@ -61,6 +61,10 @@ jest.mock("@/services/storage/photos-cached", () => {
   };
 });
 
+jest.mock("next-intl/server", () => ({
+  getLocale: jest.fn(async () => "en"),
+}));
+
 const createPhoto = (overrides: Partial<Photo> = {}): Photo => ({
   id: overrides.id ?? 1,
   description: overrides.description ?? "desc",
@@ -115,6 +119,9 @@ describe("HomePage", () => {
     expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
+    expect(
+      screen.getByRole("link", { name: "Enquire about a portfolio session" }),
+    ).toHaveAttribute("href", "/professional-portfolio-photography");
     expect(mockHero).toHaveBeenCalledWith(
       expect.objectContaining({
         image: expect.objectContaining({
