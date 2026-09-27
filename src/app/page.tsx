@@ -11,11 +11,14 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Boudoir Photography in Barcelona",
-  description:
-    "Intimate, elegant boudoir photography in Barcelona, with empowering portraits, expert guidance, luxe styling, and a private experience tailored to you.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("home");
+
+  return {
+    title: t("metadataTitle"),
+    description: t("metadataDescription"),
+  };
+}
 
 /*
  * ⚡ Bolt: Hoisted the invariant `fallbackGalleryPhotos` array out of the
@@ -53,7 +56,7 @@ async function selectRandomPhoto(photos: Photo[]): Promise<Photo | null> {
 }
 
 export default async function HomePage() {
-  const tPortfolio = await getTranslations("professional_portfolio");
+  const t = await getTranslations("home");
   // Parallelize data fetching to reduce waterfall effect and improve LCP
   const [fetchedGallery, heroPhotosRaw] = await Promise.all([
     getPhotosFromStorage("boudoir", 12),
@@ -94,18 +97,23 @@ export default async function HomePage() {
     <main>
       <Hero image={heroImage} />
       <section className="container mx-auto max-w-4xl space-y-4 px-6 py-12">
-        <h2 className="text-3xl font-semibold">{tPortfolio("title")}</h2>
-        <p>{tPortfolio("intro")}</p>
-        <p>{tPortfolio("privacy")}</p>
+        <h2 className="text-3xl font-semibold">{t("audiencesTitle")}</h2>
+        <p>{t("audiencesIntro")}</p>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>{t("women")}</li>
+          <li>{t("couples")}</li>
+          <li>{t("gifts")}</li>
+          <li>{t("professional")}</li>
+        </ul>
         <div className="flex flex-wrap gap-6">
+          <Link href="/pricing" className="text-primary underline">
+            {t("pricingLink")}
+          </Link>
           <Link
             href="/professional-portfolio-photography"
             className="text-primary underline"
           >
-            {tPortfolio("enquiry")}
-          </Link>
-          <Link href="/pricing" className="text-primary underline">
-            {tPortfolio("pricingLink")}
+            {t("professionalLink")}
           </Link>
         </div>
       </section>

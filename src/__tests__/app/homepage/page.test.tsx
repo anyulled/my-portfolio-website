@@ -67,7 +67,7 @@ jest.mock("next-intl/server", () => ({
       jest.requireActual<typeof import("@/messages/en.json")>(
         "@/messages/en.json",
       );
-    return String(Reflect.get(messages.professional_portfolio, key));
+    return String(Reflect.get(messages.home, key));
   }),
 }));
 
@@ -125,8 +125,19 @@ describe("HomePage", () => {
     expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
+    expect(screen.getByText(/For women seeking/)).toBeInTheDocument();
+    expect(screen.getByText(/For couples who want/)).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Enquire about a portfolio session" }),
+      screen.getByText(/For husbands and other partners/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/including independent escorts/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Explore sessions and pricing" }),
+    ).toHaveAttribute("href", "/pricing");
+    expect(
+      screen.getByRole("link", { name: "Explore professional portfolios" }),
     ).toHaveAttribute("href", "/professional-portfolio-photography");
     expect(mockHero).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -198,7 +198,17 @@
     "title": "La nostra Galeria"
   },
   "home": {
-    "capture_your_essence": "Captura la Teva Essència"
+    "capture_your_essence": "Captura la Teva Essència",
+    "metadataTitle": "Fotografia boudoir a Barcelona",
+    "metadataDescription": "Fotografia boudoir privada a Barcelona per a dones, parelles, regals especials i portafolis professionals, amb sessions guiades a la teva mida.",
+    "audiencesTitle": "Fotografia boudoir per a la teva història",
+    "audiencesIntro": "Tant si vols celebrar-te, compartir una experiència, sorprendre algú que estimes o crear imatges per a la feina, la sessió s’adapta a tu.",
+    "women": "Per a dones que volen guanyar confiança i tenir retrats en què es reconeguin.",
+    "couples": "Per a parelles que volen celebrar la seva connexió.",
+    "gifts": "Per a marits i altres parelles que volen regalar una experiència especial a qui estimen.",
+    "professional": "Per a professionals, incloses escorts independents, que necessiten un portafoli distintiu i privat.",
+    "pricingLink": "Veure sessions i preus",
+    "professionalLink": "Veure portafolis professionals"
   },
   "nav_bar": {
     "book_now": "Reserva Ara",

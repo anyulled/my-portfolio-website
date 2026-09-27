@@ -337,7 +337,17 @@
     "title": "Our Gallery"
   },
   "home": {
-    "capture_your_essence": "Capture Your Essence"
+    "capture_your_essence": "Capture Your Essence",
+    "metadataTitle": "Boudoir Photography in Barcelona",
+    "metadataDescription": "Private boudoir photography in Barcelona for women, couples, meaningful gifts and professional portfolios, with guided sessions shaped around your story.",
+    "audiencesTitle": "Boudoir photography for your story",
+    "audiencesIntro": "Whether you are celebrating yourself, sharing an experience, surprising someone you love or creating images for work, your session is shaped around you.",
+    "women": "For women seeking a confidence-building experience and portraits that feel like their own.",
+    "couples": "For couples who want to celebrate their connection together.",
+    "gifts": "For husbands and other partners gifting a meaningful experience to someone they love.",
+    "professional": "For professionals, including independent escorts, who need a distinctive, private portfolio.",
+    "pricingLink": "Explore sessions and pricing",
+    "professionalLink": "Explore professional portfolios"
   },
   "locale": {
     "date": "en-US"

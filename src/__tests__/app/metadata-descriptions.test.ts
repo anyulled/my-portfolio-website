@@ -32,7 +32,7 @@ import { metadata as aboutMetadata } from "@/app/about/page";
 import { metadata as mythsMetadata } from "@/app/boudoir-myths/page";
 import { metadata as faqMetadata } from "@/app/faq/page";
 import { metadata as processMetadata } from "@/app/our-process/page";
-import { metadata as homeMetadata } from "@/app/page";
+import { generateMetadata as generateHomeMetadata } from "@/app/page";
 import { metadata as pricingMetadata } from "@/app/pricing/page";
 import { metadata as styleGuideMetadata } from "@/app/style-guide/page";
 import { metadata as stylesMetadata } from "@/app/styles/page";
@@ -59,11 +59,6 @@ const pageMetadata = [
     "our process",
     processMetadata,
     "Follow our Barcelona boudoir photography process from consultation through planning, your guided session, image selection, and final artwork delivery.",
-  ],
-  [
-    "home",
-    homeMetadata,
-    "Intimate, elegant boudoir photography in Barcelona, with empowering portraits, expert guidance, luxe styling, and a private experience tailored to you.",
   ],
   [
     "pricing",
@@ -93,6 +88,26 @@ const pageMetadata = [
 ] as const;
 
 describe("page metadata descriptions", () => {
+  it("uses the localized homepage description", async () => {
+    const { getTranslations } = jest.requireMock("next-intl/server");
+    const messages =
+      jest.requireActual<typeof import("@/messages/en.json")>(
+        "@/messages/en.json",
+      );
+    getTranslations.mockResolvedValue((key: keyof typeof messages.home) =>
+      Reflect.get(messages.home, key),
+    );
+
+    const metadata = await generateHomeMetadata();
+
+    expect(metadata.title).toBe(messages.home.metadataTitle);
+    expect(metadata.description).toBe(messages.home.metadataDescription);
+    expect(messages.home.metadataDescription.length).toBeGreaterThanOrEqual(
+      150,
+    );
+    expect(messages.home.metadataDescription.length).toBeLessThanOrEqual(160);
+  });
+
   it.each(pageMetadata)(
     "%s has an SEO-ready description",
     (_pageName, metadata, expectedDescription) => {
