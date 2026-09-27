@@ -1,10 +1,11 @@
 import { getPricing } from "@/lib/pricing";
+import { publicPrice } from "@/lib/publicPrice";
 import { connection, NextResponse } from "next/server";
 
 const packageDetails = [
-  { id: "express", name: "Boudoir Express", fallbackPrice: 200 },
-  { id: "experience", name: "Boudoir Experience", fallbackPrice: 350 },
-  { id: "deluxe", name: "Deluxe Experience", fallbackPrice: 600 },
+  { id: "express", name: "Boudoir Express" },
+  { id: "experience", name: "Boudoir Experience" },
+  { id: "deluxe", name: "Deluxe Experience" },
 ] as const;
 
 export async function GET() {
@@ -26,7 +27,7 @@ export async function GET() {
     packages: packageDetails.map((detail) => ({
       id: detail.id,
       name: detail.name,
-      price: Number(prices[detail.id] ?? detail.fallbackPrice),
+      price: publicPrice(prices[detail.id]),
       currency: "EUR",
       detailsUrl: "https://boudoir.barcelona/pricing",
     })),

@@ -18,32 +18,11 @@ import { Aref_Ruqaa, Dancing_Script } from "next/font/google";
 import { Offer, WithContext } from "schema-dts";
 
 import { getPricing, PricingPackageRecord } from "@/lib/pricing";
+import { publicPrice } from "@/lib/publicPrice";
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
 
 const dancingScript = Dancing_Script({ subsets: ["latin"] });
 const arefRuqaa = Aref_Ruqaa({ subsets: ["latin"], weight: "400" });
-
-const defaultPricing = {
-  express: 200,
-  experience: 350,
-  deluxe: 600,
-} as const;
-
-const formatPrice = (
-  value: number | string | null | undefined,
-  fallback: number,
-) => {
-  if (value === null || value === undefined) {
-    return `${fallback} €`;
-  }
-
-  const parsed = typeof value === "string" ? Number(value) : value;
-  if (Number.isFinite(parsed)) {
-    return `${parsed} €`;
-  }
-
-  return `${fallback} €`;
-};
 
 export const metadata: Metadata = {
   title: " Pricing ",
@@ -67,100 +46,110 @@ const getPackages = (
   t: (key: string) => string,
   latestPricing: PricingPackageRecord | null,
   images: [string, string, string],
-) => [
-  {
-    key: "express" as ContactPackage,
-    name: t("boudoir_express"),
-    price: formatPrice(latestPricing?.express_price, defaultPricing.express),
-    image: images[0],
-    features: [
-      {
-        icon: <Photo className="w-5 h-5" />,
-        text: `12 ${t("edited_photos")}`,
-      },
-      {
-        icon: <Camera className="w-5 h-5" />,
-        text: `150 ${t("photos_hd")}`,
-      },
-      {
-        icon: <Shirt className="w-5 h-5" />,
-        text: `3 ${t("clothing_change")}`,
-      },
-      {
-        icon: <Clock className="w-5 h-5" />,
-        text: `2 ${t("hours_studio")}`,
-      },
-      {
-        icon: <Check className="w-5 h-5" />,
-        text: t("clothing_and_attrezzo"),
-      },
-    ],
-  },
-  {
-    key: "experience" as ContactPackage,
-    name: t("boudoir_experience"),
-    price: formatPrice(
-      latestPricing?.experience_price,
-      defaultPricing.experience,
-    ),
-    image: images[1],
-    features: [
-      {
-        icon: <Photo className="w-5 h-5" />,
-        text: `18 ${t("edited_photos")}`,
-      },
-      {
-        icon: <Shirt className="w-5 h-5" />,
-        text: `4 ${t("clothing_change")}`,
-      },
-      {
-        icon: <Clock className="w-5 h-5" />,
-        text: `2 ${t("hours_studio")}`,
-      },
-      {
-        icon: <Camera className="w-5 h-5" />,
-        text: `200 ${t("photos_hd")}`,
-      },
-      {
-        icon: <Check className="w-5 h-5" />,
-        text: t("clothing_and_attrezzo"),
-      },
-    ],
-  },
-  {
-    key: "deluxe" as ContactPackage,
-    name: t("deluxe_experience"),
-    price: formatPrice(latestPricing?.deluxe_price, defaultPricing.deluxe),
-    image: images[2],
-    features: [
-      {
-        icon: <Photo className="w-5 h-5" />,
-        text: `24 ${t("edited_photos")}`,
-      },
-      { icon: <Video className="w-5 h-5" />, text: t("video") },
-      {
-        icon: <UserRound className="w-5 h-5" />,
-        text: t("professional_makeup"),
-      },
-      {
-        icon: <Shirt className="w-5 h-5" />,
-        text: `4 ${t("clothing_change")}`,
-      },
-      {
-        icon: <Clock className="w-5 h-5" />,
-        text: `3 ${t("hours_studio")}`,
-      },
-      {
-        icon: <Camera className="w-5 h-5" />,
-        text: `200 ${t("photos_hd")}`,
-      },
-      {
-        icon: <Check className="w-5 h-5" />,
-        text: t("clothing_and_attrezzo"),
-      },
-    ],
-  },
-];
+) => {
+  const expressPrice = publicPrice(latestPricing?.express_price);
+  const experiencePrice = publicPrice(latestPricing?.experience_price);
+  const deluxePrice = publicPrice(latestPricing?.deluxe_price);
+
+  return [
+    {
+      key: "express" as ContactPackage,
+      name: t("boudoir_express"),
+      amount: expressPrice,
+      price:
+        expressPrice === null ? t("price_unavailable") : `${expressPrice} €`,
+      image: images[0],
+      features: [
+        {
+          icon: <Photo className="w-5 h-5" />,
+          text: `12 ${t("edited_photos")}`,
+        },
+        {
+          icon: <Camera className="w-5 h-5" />,
+          text: `150 ${t("photos_hd")}`,
+        },
+        {
+          icon: <Shirt className="w-5 h-5" />,
+          text: `3 ${t("clothing_change")}`,
+        },
+        {
+          icon: <Clock className="w-5 h-5" />,
+          text: `2 ${t("hours_studio")}`,
+        },
+        {
+          icon: <Check className="w-5 h-5" />,
+          text: t("clothing_and_attrezzo"),
+        },
+      ],
+    },
+    {
+      key: "experience" as ContactPackage,
+      name: t("boudoir_experience"),
+      amount: experiencePrice,
+      price:
+        experiencePrice === null
+          ? t("price_unavailable")
+          : `${experiencePrice} €`,
+      image: images[1],
+      features: [
+        {
+          icon: <Photo className="w-5 h-5" />,
+          text: `18 ${t("edited_photos")}`,
+        },
+        {
+          icon: <Shirt className="w-5 h-5" />,
+          text: `4 ${t("clothing_change")}`,
+        },
+        {
+          icon: <Clock className="w-5 h-5" />,
+          text: `2 ${t("hours_studio")}`,
+        },
+        {
+          icon: <Camera className="w-5 h-5" />,
+          text: `200 ${t("photos_hd")}`,
+        },
+        {
+          icon: <Check className="w-5 h-5" />,
+          text: t("clothing_and_attrezzo"),
+        },
+      ],
+    },
+    {
+      key: "deluxe" as ContactPackage,
+      name: t("deluxe_experience"),
+      amount: deluxePrice,
+      price: deluxePrice === null ? t("price_unavailable") : `${deluxePrice} €`,
+      image: images[2],
+      features: [
+        {
+          icon: <Photo className="w-5 h-5" />,
+          text: `24 ${t("edited_photos")}`,
+        },
+        { icon: <Video className="w-5 h-5" />, text: t("video") },
+        {
+          icon: <UserRound className="w-5 h-5" />,
+          text: t("professional_makeup"),
+        },
+        {
+          icon: <Shirt className="w-5 h-5" />,
+          text: `4 ${t("clothing_change")}`,
+        },
+        {
+          icon: <Clock className="w-5 h-5" />,
+          text: `3 ${t("hours_studio")}`,
+        },
+        {
+          icon: <Camera className="w-5 h-5" />,
+          text: `200 ${t("photos_hd")}`,
+        },
+        {
+          icon: <Check className="w-5 h-5" />,
+          text: t("clothing_and_attrezzo"),
+        },
+      ],
+    },
+  ];
+};
 
 const getRandomPhotosForPricing = (
   pricingPhotos: { srcSet: { src: string }[] }[],
@@ -220,17 +209,19 @@ export default async function PricingPage() {
 
   const packages = getPackages((key: string) => t(key), latestPricing, images);
 
-  const structuredData: WithContext<Offer>[] = packages.map((pkg) => ({
-    "@context": "https://schema.org",
-    "@type": "Offer",
-    name: pkg.name,
-    price: pkg.price.replace(" €", ""),
-    priceCurrency: "EUR",
-    image: pkg.image,
-    description: pkg.features.map((f) => f.text).join(", "),
-    availability: "https://schema.org/InStock",
-    url: "https://boudoir.barcelona/pricing",
-  }));
+  const structuredData: WithContext<Offer>[] = packages
+    .filter((pkg) => pkg.amount !== null)
+    .map((pkg) => ({
+      "@context": "https://schema.org",
+      "@type": "Offer",
+      name: pkg.name,
+      price: String(pkg.amount),
+      priceCurrency: "EUR",
+      image: pkg.image,
+      description: pkg.features.map((f) => f.text).join(", "),
+      availability: "https://schema.org/InStock",
+      url: "https://boudoir.barcelona/pricing",
+    }));
 
   return (
     <div className="min-h-screen pt-24">
