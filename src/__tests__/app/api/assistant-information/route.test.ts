@@ -1,0 +1,44 @@
+jest.mock("@/lib/pricing", () => ({ getPricing: jest.fn() }));
+jest.mock("next/server", () => ({
+  NextResponse: {
+    json: (body: unknown) => ({ json: async () => body }),
+  },
+}));
+
+import { GET } from "@/app/api/assistant-information/route";
+import { getPricing } from "@/lib/pricing";
+
+const mockedGetPricing = jest.mocked(getPricing);
+
+describe("assistant information", () => {
+  beforeEach(() => mockedGetPricing.mockReset());
+
+  it("returns current public prices and the enquiry limitation", async () => {
+    mockedGetPricing.mockResolvedValue({
+      id: "current",
+      express_price: 225,
+      experience_price: 375,
+      deluxe_price: 625,
+    } as Awaited<ReturnType<typeof getPricing>>);
+
+    const response = await GET();
+    const body = await response.json();
+
+    expect(body.packages.map((item: { price: number }) => item.price)).toEqual([
+      225, 375, 625,
+    ]);
+    expect(body.photographer.name).toBe("Anyul Rivas");
+    expect(body.enquiry.confirmation).toContain("does not confirm");
+  });
+
+  it("uses the displayed fallback prices when no current record exists", async () => {
+    mockedGetPricing.mockResolvedValue(null);
+
+    const response = await GET();
+    const body = await response.json();
+
+    expect(body.packages.map((item: { price: number }) => item.price)).toEqual([
+      200, 350, 600,
+    ]);
+  });
+});
