@@ -1,4 +1,5 @@
 import type { Photo } from "@/types/photos";
+import messages from "@/messages/en.json";
 import { render, screen } from "@testing-library/react";
 
 jest.mock("@/components/Gallery", () => ({
@@ -125,14 +126,10 @@ describe("HomePage", () => {
     expect(context.getPhotosFromStorageMock).toHaveBeenCalledWith("hero", 6);
 
     expect(screen.getByTestId("gallery")).toHaveTextContent("5");
-    expect(screen.getByText(/For women seeking/)).toBeInTheDocument();
-    expect(screen.getByText(/For couples who want/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/For husbands and other partners/),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/including independent escorts/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(messages.home.women)).toBeInTheDocument();
+    expect(screen.getByText(messages.home.couples)).toBeInTheDocument();
+    expect(screen.getByText(messages.home.gifts)).toBeInTheDocument();
+    expect(screen.getByText(messages.home.professional)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Explore sessions and pricing" }),
     ).toHaveAttribute("href", "/pricing");

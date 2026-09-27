@@ -1,5 +1,6 @@
 import PricingPage from "@/app/pricing/page";
 import { getPricing } from "@/lib/pricing";
+import messages from "@/messages/en.json";
 import { render, screen } from "@testing-library/react";
 
 jest.mock("@/lib/pricing", () => ({ getPricing: jest.fn() }));
@@ -68,7 +69,7 @@ describe("PricingPage", () => {
     render(await PricingPage());
 
     expect(
-      screen.getAllByText("Contact us for the current price"),
+      screen.getAllByText(messages.pricing.price_unavailable),
     ).toHaveLength(3);
     expect(screen.queryByText(/200 €|350 €|600 €/)).not.toBeInTheDocument();
     const offers = JSON.parse(
