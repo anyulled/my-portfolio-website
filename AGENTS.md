@@ -25,6 +25,7 @@ Follow the project-specific [Vercel CLI runbook](docs/vercel-cli.md) for project
 
 - Start every change from one `state:active` GitHub issue with explicit acceptance criteria and exclusions.
 - Run `npm run doctor` before work, `npm run verify:quick` during work, and `npm run verify:full` before handoff.
+- After creating or updating a pull request, watch its checks and review threads at the latest commit. Fix actionable failures and review findings, push the fixes, and repeat until required checks pass and review findings are resolved. If a reviewer is unavailable or rate limited, report the exact remaining review state instead of claiming the pull request is ready.
 - Follow [Harness Engineering](docs/harness.md), [Testing](docs/testing.md), [Architecture](architecture.md), and [Security](SECURITY.md) through progressive disclosure.
 - GitHub issues and comments are the only task-state store. ADRs and RFCs hold durable decisions.
 
