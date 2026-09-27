@@ -1,4 +1,4 @@
-jest.mock("next-intl/server", () => ({ getLocale: jest.fn() }));
+jest.mock("next-intl/server", () => ({ getTranslations: jest.fn() }));
 jest.mock("@/app/professional-portfolio-photography/EnquiryButton", () => ({
   __esModule: true,
   default: ({ label }: { label: string }) => <button>{label}</button>,
@@ -8,13 +8,26 @@ import ProfessionalPortfolioPage, {
   generateMetadata,
 } from "@/app/professional-portfolio-photography/page";
 import { render, screen } from "@testing-library/react";
-import { getLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
 
-const mockedGetLocale = jest.mocked(getLocale);
+const mockedGetTranslations = jest.mocked(getTranslations);
+
+const useMessages = (locale: "en" | "es") => {
+  const copy =
+    locale === "en"
+      ? enMessages.professional_portfolio
+      : esMessages.professional_portfolio;
+  mockedGetTranslations.mockResolvedValue(((key: keyof typeof copy) =>
+    String(Reflect.get(copy, key))) as Awaited<
+    ReturnType<typeof getTranslations>
+  >);
+};
 
 describe("professional portfolio page", () => {
   it("presents escort portfolio work, privacy, prices, and the Google review link", async () => {
-    mockedGetLocale.mockResolvedValue("en");
+    useMessages("en");
 
     render(await ProfessionalPortfolioPage());
 
@@ -32,7 +45,7 @@ describe("professional portfolio page", () => {
   });
 
   it("uses localized copy in the page and canonical metadata", async () => {
-    mockedGetLocale.mockResolvedValue("es");
+    useMessages("es");
 
     const metadata = await generateMetadata();
     render(await ProfessionalPortfolioPage());
