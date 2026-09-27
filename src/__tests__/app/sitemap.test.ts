@@ -40,4 +40,17 @@ describe("public sitemap", () => {
       true,
     );
   });
+
+  it("keeps public URLs available when pricing lookup fails", async () => {
+    getPricing.mockRejectedValue(new Error("database unavailable"));
+
+    const entries = await sitemap();
+
+    expect(entries.map((entry) => entry.url)).toContain(
+      "https://boudoir.barcelona/pricing",
+    );
+    expect(entries.every((entry) => entry.lastModified === undefined)).toBe(
+      true,
+    );
+  });
 });

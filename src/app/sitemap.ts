@@ -4,7 +4,7 @@ import { connection } from "next/server";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connection();
-  const pricing = await getPricing();
+  const pricing = await getPricing().catch(() => null);
   const baseUrl = "https://boudoir.barcelona";
   const publicPaths = [
     "",
