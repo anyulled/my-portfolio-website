@@ -4,13 +4,11 @@ import Hero from "@/components/Hero";
 import SocialMedia from "@/components/SocialMedia";
 import { Separator } from "@/components/ui/separator";
 import { getPhotosFromStorage } from "@/services/storage/photos-cached";
-import { getProfessionalPortfolioCopy } from "@/lib/professionalPortfolioCopy";
-import type { Locale } from "@/i18n/config";
 import type { Photo } from "@/types/photos";
 import { randomInt } from "node:crypto";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { getLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -55,8 +53,7 @@ async function selectRandomPhoto(photos: Photo[]): Promise<Photo | null> {
 }
 
 export default async function HomePage() {
-  const locale = (await getLocale()) as Locale;
-  const portfolioCopy = getProfessionalPortfolioCopy(locale);
+  const tPortfolio = await getTranslations("professional_portfolio");
   // Parallelize data fetching to reduce waterfall effect and improve LCP
   const [fetchedGallery, heroPhotosRaw] = await Promise.all([
     getPhotosFromStorage("boudoir", 12),
@@ -97,18 +94,18 @@ export default async function HomePage() {
     <main>
       <Hero image={heroImage} />
       <section className="container mx-auto max-w-4xl space-y-4 px-6 py-12">
-        <h2 className="text-3xl font-semibold">{portfolioCopy.title}</h2>
-        <p>{portfolioCopy.intro}</p>
-        <p>{portfolioCopy.privacy}</p>
+        <h2 className="text-3xl font-semibold">{tPortfolio("title")}</h2>
+        <p>{tPortfolio("intro")}</p>
+        <p>{tPortfolio("privacy")}</p>
         <div className="flex flex-wrap gap-6">
           <Link
             href="/professional-portfolio-photography"
             className="text-primary underline"
           >
-            {portfolioCopy.enquiry}
+            {tPortfolio("enquiry")}
           </Link>
           <Link href="/pricing" className="text-primary underline">
-            {portfolioCopy.pricingLink}
+            {tPortfolio("pricingLink")}
           </Link>
         </div>
       </section>

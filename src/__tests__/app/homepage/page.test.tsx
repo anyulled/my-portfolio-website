@@ -62,7 +62,13 @@ jest.mock("@/services/storage/photos-cached", () => {
 });
 
 jest.mock("next-intl/server", () => ({
-  getLocale: jest.fn(async () => "en"),
+  getTranslations: jest.fn(async () => (key: string) => {
+    const messages =
+      jest.requireActual<typeof import("@/messages/en.json")>(
+        "@/messages/en.json",
+      );
+    return String(Reflect.get(messages.professional_portfolio, key));
+  }),
 }));
 
 const createPhoto = (overrides: Partial<Photo> = {}): Photo => ({

@@ -1,6 +1,14 @@
 jest.mock("next-intl", () => ({
-  useTranslations: () => (key: string) => key,
-  useLocale: () => "en",
+  useTranslations: (namespace: string) => (key: string) => {
+    if (namespace === "professional_portfolio") {
+      const messages =
+        jest.requireActual<typeof import("@/messages/en.json")>(
+          "@/messages/en.json",
+        );
+      return String(Reflect.get(messages.professional_portfolio, key));
+    }
+    return key;
+  },
 }));
 
 import Footer from "@/components/Footer";
