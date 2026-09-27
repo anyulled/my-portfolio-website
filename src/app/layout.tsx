@@ -86,7 +86,6 @@ const structuredData: WithContext<LocalBusiness> = {
     },
   ],
   sameAs: ["https://www.instagram.com/sensuelleboudoir"],
-  priceRange: "$$$$",
   areaServed: {
     "@type": "Place",
     address: {

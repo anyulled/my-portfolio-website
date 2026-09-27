@@ -34,14 +34,16 @@ describe("assistant information", () => {
     expect(body.enquiry.confirmation).toContain("does not confirm");
   });
 
-  it("uses the displayed fallback prices when no current record exists", async () => {
+  it("does not invent prices when no current record exists", async () => {
     mockedGetPricing.mockResolvedValue(null);
 
     const response = await GET();
     const body = await response.json();
 
     expect(body.packages.map((item: { price: number }) => item.price)).toEqual([
-      200, 350, 600,
+      null,
+      null,
+      null,
     ]);
   });
 });
