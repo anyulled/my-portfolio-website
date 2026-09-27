@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { useTranslations } from "next-intl";
 import React from "react";
+import WebMcpTools from "@/components/WebMcpTools";
 
 export default function ContactDialogProvider({
   children,
@@ -47,6 +48,7 @@ export default function ContactDialogProvider({
   return (
     <ContactDialogContext.Provider value={{ openContactDialog }}>
       {children}
+      <WebMcpTools openContactDialog={openContactDialog} />
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[520px]">
           <DialogTitle className="sr-only">{t("book_now")}</DialogTitle>
