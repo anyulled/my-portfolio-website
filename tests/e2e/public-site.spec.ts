@@ -64,7 +64,9 @@ test.describe("public harness journeys", () => {
 
     await expect(page.getByText(/I welcome escorts/)).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Review Sensuelle Boudoir on Google" }),
+      page
+        .getByRole("main")
+        .getByRole("link", { name: "Review Sensuelle Boudoir on Google" }),
     ).toHaveAttribute("href", "https://g.page/r/CXYGEWUyinIwEBM/review");
     await page
       .getByRole("button", { name: "Enquire about a portfolio session" })
