@@ -259,7 +259,7 @@ describe("processInstagramFollowups", () => {
     );
     expect(releaseInstagramFollowupClaim).not.toHaveBeenCalled();
   });
-  it.each([0.9, 0.89])(
+  it.each([0.9, 0.89, Number.NaN])(
     "holds low-confidence followups (%s)",
     async (confidence) => {
       jest
@@ -318,5 +318,36 @@ describe("processInstagramFollowups", () => {
     expect(generateInstagramReply).not.toHaveBeenCalled();
     expect(sendInstagramText).not.toHaveBeenCalled();
     expect(releaseInstagramFollowupClaim).not.toHaveBeenCalled();
+  });
+  it("stops after the third failed generation without beginning delivery", async () => {
+    jest
+      .mocked(listInstagramFollowupCandidates)
+      .mockResolvedValue([{ ...candidate, followUpAttempts: 2 }]);
+    jest
+      .mocked(generateInstagramReply)
+      .mockRejectedValue(new Error("Groq unavailable"));
+    await processInstagramFollowups(database, now);
+    expect(releaseInstagramFollowupClaim).toHaveBeenCalledWith(
+      database,
+      candidate.id,
+      expect.any(String),
+      "Groq unavailable",
+      true,
+    );
+    expect(beginInstagramFollowupDelivery).not.toHaveBeenCalled();
+  });
+  it("processes multiple conversations serially and aggregates delivery outcomes", async () => {
+    jest
+      .mocked(listInstagramFollowupCandidates)
+      .mockResolvedValue([
+        candidate,
+        { ...candidate, id: "second-conversation" },
+      ]);
+    expect((await processInstagramFollowups(database, now)).sent).toBe(2);
+    expect(
+      jest.mocked(markInstagramFollowupSent).mock.invocationCallOrder[0],
+    ).toBeLessThan(
+      jest.mocked(generateInstagramReply).mock.invocationCallOrder[1],
+    );
   });
 });

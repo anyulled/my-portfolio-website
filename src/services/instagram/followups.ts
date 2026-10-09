@@ -69,11 +69,13 @@ const cancelIneligibleFollowup = async (
   now: Date,
   cutoffAt: Date,
 ) => {
-  const reason = !(candidate.confidence > 0.9)
+  const confidenceRequiresReview =
+    !Number.isFinite(candidate.confidence) || candidate.confidence <= 0.9;
+  const windowReason =
+    now >= cutoffAt ? "Instagram follow-up window is closing" : null;
+  const reason = confidenceRequiresReview
     ? "Instagram confidence requires manual review"
-    : now >= cutoffAt
-      ? "Instagram follow-up window is closing"
-      : null;
+    : windowReason;
   if (!reason) return false;
   await cancelInstagramFollowup(database, candidate.id, reason);
   return true;
@@ -118,6 +120,104 @@ const prepareFollowup = async (
   }
 };
 
+type FollowupOutcome = "sent" | "cancelled" | "failed" | "skipped";
+
+const processFollowupCandidate = async (
+  database: ReturnType<typeof getInstagramDatabase>,
+  candidate: InstagramFollowupCandidate,
+  now: Date,
+): Promise<FollowupOutcome> => {
+  const cutoffAt = getFollowupCutoffAt(candidate.lastMessageAt);
+  if (await cancelIneligibleFollowup(database, candidate, now, cutoffAt)) {
+    return "cancelled";
+  }
+
+  const claimToken = crypto.randomUUID();
+  const claimed = await claimInstagramFollowup(
+    database,
+    candidate.id,
+    candidate.followUpAttempts + 1,
+    now.toISOString(),
+    claimToken,
+  );
+  if (!claimed) {
+    return "skipped";
+  }
+
+  const responseText = await prepareFollowup(
+    database,
+    candidate,
+    claimToken,
+    now,
+  );
+  if (!responseText) {
+    return "failed";
+  }
+
+  const deliveryStarted = await beginInstagramFollowupDelivery(
+    database,
+    candidate.id,
+    claimToken,
+    now.toISOString(),
+    candidate.deliveryStartedAt,
+  );
+  if (!deliveryStarted) {
+    return "skipped";
+  }
+
+  const deliveryResult = await sendFollowup(candidate, responseText);
+  if ("error" in deliveryResult) {
+    const errorMessage = getErrorMessage(deliveryResult.error);
+    const shouldStop =
+      candidate.followUpAttempts + 1 >= INSTAGRAM_FOLLOWUP_MAX_ATTEMPTS;
+    await releaseInstagramFollowupClaim(
+      database,
+      candidate.id,
+      claimToken,
+      errorMessage,
+      shouldStop,
+    );
+    return "failed";
+  }
+
+  const { delivery } = deliveryResult;
+  const providerMessageId = delivery.message_id;
+  if (!providerMessageId) {
+    await markInstagramFollowupForReconciliation(
+      database,
+      candidate.id,
+      claimToken,
+      null,
+      "Instagram delivery identifier was not returned",
+    );
+    return "failed";
+  }
+
+  try {
+    const finalized = await markInstagramFollowupSent(
+      database,
+      candidate.id,
+      claimToken,
+      providerMessageId,
+    );
+    if (finalized) {
+      return "sent";
+    }
+
+    return "failed";
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    await markInstagramFollowupForReconciliation(
+      database,
+      candidate.id,
+      claimToken,
+      providerMessageId,
+      errorMessage,
+    );
+    return "failed";
+  }
+};
+
 export const processInstagramFollowups = async (
   database = getInstagramDatabase(),
   now = new Date(),
@@ -127,109 +227,20 @@ export const processInstagramFollowups = async (
     now.toISOString(),
     INSTAGRAM_FOLLOWUP_BATCH_SIZE,
   );
-  const summary: FollowupSummary = {
+  const initialSummary: FollowupSummary = {
     candidates: candidates.length,
     sent: 0,
     cancelled: 0,
     failed: 0,
   };
-
-  for (const candidate of candidates) {
-    const cutoffAt = getFollowupCutoffAt(candidate.lastMessageAt);
-    if (await cancelIneligibleFollowup(database, candidate, now, cutoffAt)) {
-      summary.cancelled += 1;
-      continue;
-    }
-
-    const claimToken = crypto.randomUUID();
-    const claimed = await claimInstagramFollowup(
-      database,
-      candidate.id,
-      candidate.followUpAttempts + 1,
-      now.toISOString(),
-      claimToken,
-    );
-    if (!claimed) {
-      continue;
-    }
-
-    const responseText = await prepareFollowup(
-      database,
-      candidate,
-      claimToken,
-      now,
-    );
-    if (!responseText) {
-      summary.failed += 1;
-      continue;
-    }
-
-    const deliveryStarted = await beginInstagramFollowupDelivery(
-      database,
-      candidate.id,
-      claimToken,
-      now.toISOString(),
-      candidate.deliveryStartedAt,
-    );
-    if (!deliveryStarted) {
-      continue;
-    }
-
-    const deliveryResult = await sendFollowup(candidate, responseText);
-    if ("error" in deliveryResult) {
-      const errorMessage = getErrorMessage(deliveryResult.error);
-      const shouldStop =
-        candidate.followUpAttempts + 1 >= INSTAGRAM_FOLLOWUP_MAX_ATTEMPTS;
-      await releaseInstagramFollowupClaim(
-        database,
-        candidate.id,
-        claimToken,
-        errorMessage,
-        shouldStop,
-      );
-      summary.failed += 1;
-      continue;
-    }
-
-    const { delivery } = deliveryResult;
-    const providerMessageId = delivery.message_id;
-    if (!providerMessageId) {
-      await markInstagramFollowupForReconciliation(
-        database,
-        candidate.id,
-        claimToken,
-        null,
-        "Instagram delivery identifier was not returned",
-      );
-      summary.failed += 1;
-      continue;
-    }
-
-    try {
-      const finalized = await markInstagramFollowupSent(
-        database,
-        candidate.id,
-        claimToken,
-        providerMessageId,
-      );
-      if (finalized) {
-        summary.sent += 1;
-        continue;
-      }
-
-      summary.failed += 1;
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
-      await markInstagramFollowupForReconciliation(
-        database,
-        candidate.id,
-        claimToken,
-        providerMessageId,
-        errorMessage,
-      );
-      summary.failed += 1;
-    }
-  }
-
-  return summary;
+  return candidates.reduce(async (previousSummary, candidate) => {
+    const summary = await previousSummary;
+    const outcome = await processFollowupCandidate(database, candidate, now);
+    return {
+      ...summary,
+      sent: summary.sent + Number(outcome === "sent"),
+      cancelled: summary.cancelled + Number(outcome === "cancelled"),
+      failed: summary.failed + Number(outcome === "failed"),
+    };
+  }, Promise.resolve(initialSummary));
 };
