@@ -6,6 +6,28 @@ jest.mock("@/services/instagram/metaClient", () => ({
 }));
 
 describe("resolveStoredParticipantProfile", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("preserves the stored username when Meta returns no profile", async () => {
+    jest.mocked(resolveInstagramProfile).mockResolvedValue(null);
+
+    await expect(
+      resolveStoredParticipantProfile(
+        "stored-name",
+        "access-token",
+        "participant-id",
+      ),
+    ).resolves.toEqual({
+      username: "stored-name",
+      name: null,
+      biography: null,
+      followersCount: null,
+      profilePictureUrl: null,
+    });
+  });
+
   it("uses the stored username when no account token is available", async () => {
     await expect(
       resolveStoredParticipantProfile("modelname", undefined, "participant-id"),

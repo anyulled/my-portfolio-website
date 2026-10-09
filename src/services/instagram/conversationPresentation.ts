@@ -3,7 +3,7 @@ import { resolveStoredParticipantProfile } from "./participantIdentity";
 
 type ConversationRow = {
   id: string;
-  account_handle: Array<{ handle: InstagramHandle; access_token: string }>;
+  account_handle: { handle: InstagramHandle; access_token: string } | null;
   instagram_conversation_id: string;
   participant_id: string;
   participant_username: string | null;
@@ -19,7 +19,7 @@ type ConversationRow = {
 };
 
 const getConversationAccount = (conversation: ConversationRow) =>
-  conversation.account_handle[0];
+  conversation.account_handle;
 
 const getLastMessage = (conversation: ConversationRow) =>
   conversation.instagram_messages.at(-1)?.message_text ?? "";
