@@ -43,6 +43,7 @@ const getAccountMessages = async (account: InstagramAccountRow) => {
     return await listInstagramConversationMessages(
       account.access_token,
       account.instagram_user_id,
+      account.instagram_webhook_user_id,
     );
   } catch {
     return null;
@@ -103,9 +104,16 @@ export const syncInstagramConversations = async (
                       duplicatesSkipped: summary.duplicatesSkipped + 1,
                     };
                   }
-                  await processInstagramWebhookMessage(
+                  const result = await processInstagramWebhookMessage(
                     toInboundMessage(account, message),
                   );
+                  if (result === "outbound_skipped") {
+                    return {
+                      ...summary,
+                      outboundMessagesSkipped:
+                        summary.outboundMessagesSkipped + 1,
+                    };
+                  }
                   return {
                     ...summary,
                     messagesProcessed: summary.messagesProcessed + 1,
@@ -133,6 +141,8 @@ export const syncInstagramConversations = async (
         return results.reduce(
           (summary, result) => ({
             ...summary,
+            outboundMessagesSkipped:
+              summary.outboundMessagesSkipped + result.outboundMessagesSkipped,
             duplicatesSkipped:
               summary.duplicatesSkipped + result.duplicatesSkipped,
             messagesProcessed:

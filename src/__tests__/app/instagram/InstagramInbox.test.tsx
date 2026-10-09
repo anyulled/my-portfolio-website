@@ -1,5 +1,15 @@
 import InstagramInbox from "@/app/instagram/InstagramInbox";
+import messages from "@/messages/en.json";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+
+jest.mock("next-intl", () => ({
+  useTranslations:
+    () =>
+    (key: keyof typeof messages.instagram_inbox, values?: { count: string }) =>
+      (
+        new Map(Object.entries(messages.instagram_inbox)).get(key) ?? key
+      ).replace("{count}", values?.count ?? ""),
+}));
 
 const pendingConversation = {
   id: "conversation-id",
@@ -64,6 +74,41 @@ describe("InstagramInbox", () => {
     expect(screen.getByLabelText("Participant profile photo")).toHaveStyle({
       backgroundImage: "url(https://example.com/profile.jpg)",
     });
+  });
+
+  it("shows distinct full profiles for the sender and connected account", async () => {
+    jest.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        conversations: [
+          {
+            ...pendingConversation,
+            accountProfile: {
+              username: "anyulled",
+              name: "Anyul Rivas",
+              biography: "Photographer",
+              followersCount: 5936,
+              profilePictureUrl: "https://example.com/account.jpg",
+            },
+          },
+        ],
+      }),
+    } as Response);
+
+    render(<InstagramInbox />);
+
+    expect(await screen.findByText("@model-account")).toBeInTheDocument();
+    const account = screen.getByRole("region", {
+      name: messages.instagram_inbox.account,
+    });
+    expect(account).toHaveTextContent("@anyulled");
+    expect(account).toHaveTextContent("Anyul Rivas");
+    expect(account).toHaveTextContent("Photographer");
+    expect(account).toHaveTextContent("5,936 followers");
+    expect(screen.getByLabelText(messages.instagram_inbox.photo)).toHaveStyle({
+      backgroundImage: "url(https://example.com/account.jpg)",
+    });
+    expect(screen.getByText("1,234 followers")).toBeInTheDocument();
   });
 
   it("falls back to the participant ID when profile metadata is absent", async () => {

@@ -118,11 +118,13 @@ describe("syncInstagramConversations", () => {
       1,
       "anyulled-token",
       "anyulled-id",
+      null,
     );
     expect(listInstagramConversationMessages).toHaveBeenNthCalledWith(
       2,
       "sensuelle-token",
       "sensuelle-id",
+      null,
     );
     expect(processInstagramWebhookMessage).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -130,6 +132,17 @@ describe("syncInstagramConversations", () => {
         messageId: "anyulled-id-message",
       }),
     );
+  });
+
+  it("counts messages identified by the processor as outgoing without reporting them processed", async () => {
+    jest
+      .mocked(processInstagramWebhookMessage)
+      .mockResolvedValue("outbound_skipped");
+
+    const result = await syncInstagramConversations(database);
+
+    expect(result.outboundMessagesSkipped).toBe(2);
+    expect(result.messagesProcessed).toBe(0);
   });
 
   it("skips messages already recorded by an earlier sync", async () => {

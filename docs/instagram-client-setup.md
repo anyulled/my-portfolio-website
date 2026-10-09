@@ -25,3 +25,11 @@ Open `/instagram`, sign in with the configured email through the magic link, and
 The production Vercel cron refreshes active long-lived Instagram tokens once they have 14 days or less remaining. It uses `CRON_SECRET` for authorization and requires no additional environment variable. If a token is already expired, reconnect that Instagram account from `/instagram`.
 
 The external cron-job.org job synchronizes the Conversations API for both accounts every 15 minutes before processing pricing follow-ups. Production use requires the Meta app to have the approved Instagram messaging permissions. Until then, keep the app in test mode with the authorized test accounts.
+
+## Sender and connected account profiles
+
+Inbox cards distinguish the other participant from the connected professional account. Both profiles include the available username, name, photo, biography, and follower count. Meta uses `profile_pic` and `follower_count` for messaging-scoped participants, while professional accounts expose `profile_picture_url` and `followers_count`; the client retries the messaging field set when Meta rejects the professional field request.
+
+The OAuth account ID and messaging/webhook ID may differ. Synchronization filters both known IDs, and processing checks the resolved account handle before classifying or persisting a self message. Outgoing replies are counted as skipped and do not trigger automation.
+
+Historical participant corrections must use the exact stored message metadata. Check that Meta identifies the stored participant as the connected account and that exactly one other recipient exists before updating only `participant_id` and `participant_username`. Never infer a participant from message text, delete history, or replay automation to repair identity.

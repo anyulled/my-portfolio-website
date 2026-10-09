@@ -1,3 +1,4 @@
+import type { InstagramProfile } from "./metaClient";
 import { z } from "zod";
 
 export const instagramHandleSchema = z.enum(["anyulled", "sensuelleboudoir"]);
@@ -51,6 +52,7 @@ export type NormalizedClassification = z.infer<
 export interface InstagramConversationRecord {
   id: string;
   accountHandle: InstagramHandle;
+  accountProfile?: InstagramProfile | null;
   instagramConversationId: string;
   participantId: string;
   participantUsername: string | null;

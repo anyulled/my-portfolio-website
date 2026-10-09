@@ -224,7 +224,7 @@ export const listInstagramConversations = async (
   const result = await database
     .from("instagram_conversations")
     .select(
-      "id, account_handle:instagram_accounts(handle, access_token), instagram_conversation_id, participant_id, participant_username, last_message_at, detected_language, classification, confidence, processing_state, response_route, response_sent_at, last_error, instagram_messages(message_text, sent_at)",
+      "id, account_handle:instagram_accounts(handle, access_token, instagram_user_id), instagram_conversation_id, participant_id, participant_username, last_message_at, detected_language, classification, confidence, processing_state, response_route, response_sent_at, last_error, instagram_messages(message_text, sent_at)",
     )
     .in("processing_state", ["pending", "needs_attention"])
     .order("updated_at", { ascending: false });

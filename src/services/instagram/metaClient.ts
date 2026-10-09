@@ -27,6 +27,8 @@ interface InstagramProfileResponse {
   biography?: unknown;
   followers_count?: unknown;
   profile_picture_url?: unknown;
+  profile_pic?: unknown;
+  follower_count?: unknown;
 }
 
 interface InstagramConversationMessageResponse {
@@ -123,7 +125,7 @@ const toOptionalNumber = (value: unknown) =>
 const parseConversationMessagePage = (
   conversationId: string | null,
   page: InstagramConversationMessagePageResponse | undefined,
-  accountId: string,
+  accountId: string[],
 ): InstagramConversationMessagePage => {
   if (!conversationId || !page) {
     return {
@@ -149,7 +151,7 @@ const parseConversationMessagePage = (
       const createdTime = message.created_time;
       if (
         typeof participantId !== "string" ||
-        participantId === accountId ||
+        accountId.includes(participantId) ||
         typeof text !== "string" ||
         typeof messageId !== "string" ||
         typeof createdTime !== "string" ||
@@ -179,8 +181,9 @@ const parseConversationMessagePage = (
       (value) =>
         typeof value === "object" &&
         value !== null &&
-        ((value as InstagramConversationMessageResponse).from?.id ===
-          accountId ||
+        (accountId.includes(
+          String((value as InstagramConversationMessageResponse).from?.id),
+        ) ||
           (value as InstagramConversationMessageResponse).is_echo === true),
     ).length,
   };
@@ -188,7 +191,7 @@ const parseConversationMessagePage = (
 
 const fetchConversationMessagePages = async (
   accessToken: string,
-  accountId: string,
+  accountId: string[],
   conversationId: string,
   page: InstagramConversationMessagePage,
   pageCount: number,
@@ -230,7 +233,7 @@ const fetchConversationMessagePages = async (
 const getConversationMessages = async (
   accessToken: string,
   conversation: InstagramConversationResponse,
-  accountId: string,
+  accountId: string[],
 ) =>
   fetchConversationMessagePages(
     accessToken,
@@ -247,7 +250,7 @@ const getConversationMessages = async (
 const parseConversationsPage = async (
   accessToken: string,
   payload: InstagramConversationsPage,
-  accountId: string,
+  accountId: string[],
 ): Promise<InstagramConversationSyncResult & { nextPage: string | null }> => {
   const conversations = Array.isArray(payload.data) ? payload.data : [];
   const conversationResults = await Promise.all(
@@ -278,6 +281,7 @@ const parseConversationsPage = async (
 export const listInstagramConversationMessages = async (
   accessToken: string,
   instagramUserId: string,
+  messagingUserId?: string | null,
 ): Promise<InstagramConversationSyncResult> => {
   const url = new URL(getConversationsApiUrl(instagramUserId));
   url.searchParams.set("platform", "instagram");
@@ -306,7 +310,7 @@ export const listInstagramConversationMessages = async (
     const page = await parseConversationsPage(
       accessToken,
       (await response.json()) as InstagramConversationsPage,
-      instagramUserId,
+      [instagramUserId, ...(messagingUserId ? [messagingUserId] : [])],
     );
     return fetchPage(page.nextPage, pageCount + 1, {
       messages: [...result.messages, ...page.messages],
@@ -335,9 +339,20 @@ export const resolveInstagramProfile = async (
     "username,name,biography,followers_count,profile_picture_url",
   );
 
-  const response = await fetch(profileUrl, {
+  const professionalResponse = await fetch(profileUrl, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
+  const senderProfileUrl = new URL(profileUrl);
+  senderProfileUrl.searchParams.set(
+    "fields",
+    "username,name,profile_pic,follower_count",
+  );
+  const response =
+    !professionalResponse.ok && professionalResponse.status === 400
+      ? await fetch(senderProfileUrl, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+      : professionalResponse;
   if (!response.ok) {
     return null;
   }
@@ -347,8 +362,12 @@ export const resolveInstagramProfile = async (
     username: toOptionalString(profile.username),
     name: toOptionalString(profile.name),
     biography: toOptionalString(profile.biography),
-    followersCount: toOptionalNumber(profile.followers_count),
-    profilePictureUrl: toOptionalString(profile.profile_picture_url),
+    followersCount: toOptionalNumber(
+      profile.followers_count ?? profile.follower_count,
+    ),
+    profilePictureUrl: toOptionalString(
+      profile.profile_picture_url ?? profile.profile_pic,
+    ),
   };
 };
 

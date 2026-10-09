@@ -725,5 +725,11 @@
     "swimwear": "Maillot de bain",
     "fashion": "Mode",
     "lifestyle": "Lifestyle"
+  },
+  "instagram_inbox": {
+    "sender": "Expéditeur",
+    "account": "Compte connecté",
+    "photo": "Photo de profil du compte connecté",
+    "followers": "{count} abonnés"
   }
 }
