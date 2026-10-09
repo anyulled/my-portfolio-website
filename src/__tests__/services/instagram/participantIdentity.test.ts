@@ -10,6 +10,28 @@ describe("resolveStoredParticipantProfile", () => {
     jest.clearAllMocks();
   });
 
+  it.each(["stored-name", null])(
+    "retains live profile fields when its username is missing and the stored username is %s",
+    async (username) => {
+      const profile = {
+        username: null,
+        name: "Model Name",
+        biography: "Barcelona model",
+        followersCount: 1234,
+        profilePictureUrl: "https://example.com/profile.jpg",
+      };
+      jest.mocked(resolveInstagramProfile).mockResolvedValue(profile);
+
+      await expect(
+        resolveStoredParticipantProfile(
+          username,
+          "access-token",
+          "participant-id",
+        ),
+      ).resolves.toEqual({ ...profile, username });
+    },
+  );
+
   it("preserves the stored username when Meta returns no profile", async () => {
     jest.mocked(resolveInstagramProfile).mockResolvedValue(null);
 

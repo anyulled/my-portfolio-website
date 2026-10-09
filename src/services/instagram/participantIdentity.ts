@@ -22,5 +22,7 @@ export const resolveStoredParticipantProfile = async (
     accessToken,
     participantId,
   ).catch(() => null);
-  return profile ?? storedProfile;
+  return profile
+    ? { ...profile, username: profile.username ?? username }
+    : storedProfile;
 };
