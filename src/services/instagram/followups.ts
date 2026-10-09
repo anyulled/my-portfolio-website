@@ -7,10 +7,13 @@ import {
   markInstagramFollowupSent,
   releaseInstagramFollowupClaim,
 } from "./followupRepository";
-import { getInstagramDatabase } from "./repository";
+import {
+  getInstagramDatabase,
+  getInstagramInitialInboundMessage,
+} from "./repository";
 import { getInstagramPublicUrl } from "./config";
 import { sendInstagramText } from "./metaClient";
-import { renderPricingFollowup } from "./responseTemplates";
+import { generateInstagramReply } from "./replies";
 import type { InstagramFollowupCandidate } from "./types";
 
 export const INSTAGRAM_FOLLOWUP_DELAY_MS = 22 * 60 * 60 * 1000;
@@ -43,20 +46,75 @@ const getErrorMessage = (error: unknown) =>
     ? error.message.slice(0, 300)
     : "Instagram follow-up failed";
 
-const sendFollowup = async (candidate: InstagramFollowupCandidate) => {
+const sendFollowup = async (
+  candidate: InstagramFollowupCandidate,
+  responseText: string,
+) => {
   try {
     const delivery = await sendInstagramText(
       candidate.account.accessToken,
       candidate.account.instagramUserId,
       candidate.participantId,
-      renderPricingFollowup(
-        candidate.detectedLanguage,
-        `${getInstagramPublicUrl()}/pricing`,
-      ),
+      responseText,
     );
     return { delivery } as const;
   } catch (error) {
     return { error } as const;
+  }
+};
+
+const cancelIneligibleFollowup = async (
+  database: ReturnType<typeof getInstagramDatabase>,
+  candidate: InstagramFollowupCandidate,
+  now: Date,
+  cutoffAt: Date,
+) => {
+  const reason = !(candidate.confidence > 0.9)
+    ? "Instagram confidence requires manual review"
+    : now >= cutoffAt
+      ? "Instagram follow-up window is closing"
+      : null;
+  if (!reason) return false;
+  await cancelInstagramFollowup(database, candidate.id, reason);
+  return true;
+};
+
+const prepareFollowup = async (
+  database: ReturnType<typeof getInstagramDatabase>,
+  candidate: InstagramFollowupCandidate,
+  claimToken: string,
+  now: Date,
+) => {
+  if (candidate.deliveryStartedAt) {
+    await beginInstagramFollowupDelivery(
+      database,
+      candidate.id,
+      claimToken,
+      now.toISOString(),
+      candidate.deliveryStartedAt,
+    );
+    return null;
+  }
+  try {
+    const sourceMessage = await getInstagramInitialInboundMessage(
+      database,
+      candidate.id,
+    );
+    return await generateInstagramReply(
+      "pricing_followup",
+      candidate.detectedLanguage,
+      sourceMessage.message_text,
+      `${getInstagramPublicUrl()}/pricing`,
+    );
+  } catch (error) {
+    await releaseInstagramFollowupClaim(
+      database,
+      candidate.id,
+      claimToken,
+      getErrorMessage(error),
+      candidate.followUpAttempts + 1 >= INSTAGRAM_FOLLOWUP_MAX_ATTEMPTS,
+    );
+    return null;
   }
 };
 
@@ -78,12 +136,7 @@ export const processInstagramFollowups = async (
 
   for (const candidate of candidates) {
     const cutoffAt = getFollowupCutoffAt(candidate.lastMessageAt);
-    if (now >= cutoffAt) {
-      await cancelInstagramFollowup(
-        database,
-        candidate.id,
-        "Instagram follow-up window is closing",
-      );
+    if (await cancelIneligibleFollowup(database, candidate, now, cutoffAt)) {
       summary.cancelled += 1;
       continue;
     }
@@ -100,6 +153,17 @@ export const processInstagramFollowups = async (
       continue;
     }
 
+    const responseText = await prepareFollowup(
+      database,
+      candidate,
+      claimToken,
+      now,
+    );
+    if (!responseText) {
+      summary.failed += 1;
+      continue;
+    }
+
     const deliveryStarted = await beginInstagramFollowupDelivery(
       database,
       candidate.id,
@@ -111,12 +175,11 @@ export const processInstagramFollowups = async (
       continue;
     }
 
-    const deliveryResult = await sendFollowup(candidate);
+    const deliveryResult = await sendFollowup(candidate, responseText);
     if ("error" in deliveryResult) {
       const errorMessage = getErrorMessage(deliveryResult.error);
       const shouldStop =
-        candidate.followUpAttempts + 1 >= INSTAGRAM_FOLLOWUP_MAX_ATTEMPTS ||
-        now >= cutoffAt;
+        candidate.followUpAttempts + 1 >= INSTAGRAM_FOLLOWUP_MAX_ATTEMPTS;
       await releaseInstagramFollowupClaim(
         database,
         candidate.id,

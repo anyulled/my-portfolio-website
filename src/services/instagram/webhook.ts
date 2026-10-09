@@ -11,7 +11,7 @@ import { classifyInstagramMessage } from "./classifier";
 import { getInstagramPublicUrl } from "./config";
 import { getInstagramFollowupDueAt } from "./followups";
 import { resolveInstagramProfile, sendInstagramText } from "./metaClient";
-import { renderBoundedResponse } from "./responseTemplates";
+import { generateInstagramReply } from "./replies";
 import type { InstagramWebhookMessage } from "./types";
 
 type UnknownRecord = Record<string, unknown>;
@@ -184,9 +184,10 @@ export const processInstagramWebhookMessage = async (
         responseRoute === "model_form"
           ? `/booking-a-session?lead=${leadToken}`
           : "/pricing";
-      const responseText = renderBoundedResponse(
+      const responseText = await generateInstagramReply(
         responseRoute,
         classification.detectedLanguage,
+        message.text,
         `${getInstagramPublicUrl()}${path}`,
       );
       await sendInstagramText(

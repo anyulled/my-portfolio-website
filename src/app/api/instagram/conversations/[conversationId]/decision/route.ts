@@ -4,7 +4,7 @@ import {
   claimInstagramResponse,
   getInstagramConversationForDelivery,
   getInstagramDatabase,
-  getInstagramInitialInboundMessageTimestamp,
+  getInstagramInitialInboundMessage,
   markInstagramResponseSent,
   releaseInstagramResponseClaim,
   setInstagramReviewDecision,
@@ -12,7 +12,7 @@ import {
 import { getInstagramPublicUrl } from "@/services/instagram/config";
 import { getInstagramFollowupDueAt } from "@/services/instagram/followups";
 import { sendInstagramText } from "@/services/instagram/metaClient";
-import { renderBoundedResponse } from "@/services/instagram/responseTemplates";
+import { generateInstagramReply } from "@/services/instagram/replies";
 import { reviewDecisionSchema } from "@/services/instagram/types";
 import { NextResponse } from "next/server";
 
@@ -77,11 +77,10 @@ const sendApprovedResponse = async (
   }
 
   try {
-    const responseSourceTimestamp =
-      await getInstagramInitialInboundMessageTimestamp(
-        database,
-        conversationId,
-      );
+    const sourceMessage = await getInstagramInitialInboundMessage(
+      database,
+      conversationId,
+    );
     const leadToken =
       decision === "model_form"
         ? await assignLeadCorrelationToken(database, conversationId)
@@ -90,9 +89,10 @@ const sendApprovedResponse = async (
       decision === "model_form"
         ? `/booking-a-session?lead=${leadToken}`
         : "/pricing";
-    const responseText = renderBoundedResponse(
+    const responseText = await generateInstagramReply(
       decision,
       deliveryConversation.detected_language,
+      sourceMessage.message_text,
       `${getInstagramPublicUrl()}${path}`,
     );
     await sendInstagramText(
@@ -104,9 +104,9 @@ const sendApprovedResponse = async (
     await markInstagramResponseSent(
       database,
       conversationId,
-      responseSourceTimestamp,
+      sourceMessage.sent_at,
       decision === "pricing"
-        ? getInstagramFollowupDueAt(responseSourceTimestamp)
+        ? getInstagramFollowupDueAt(sourceMessage.sent_at)
         : null,
     );
   } catch (error) {

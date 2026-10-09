@@ -301,24 +301,38 @@ export const markInstagramResponseSent = async (
   }
 };
 
-export const getInstagramInitialInboundMessageTimestamp = async (
+export const getInstagramInitialInboundMessage = async (
   database: ReturnType<typeof getInstagramDatabase>,
   conversationId: string,
 ) => {
   const result = await database
     .from("instagram_messages")
-    .select("sent_at")
+    .select("sent_at, message_text")
     .eq("conversation_id", conversationId)
     .order("sent_at")
     .limit(1)
     .maybeSingle();
-  const data = result.data as unknown as { sent_at: string } | null;
+  const data = result.data as unknown as {
+    sent_at: string;
+    message_text: string;
+  } | null;
 
   if (result.error || !data) {
     throw result.error ?? new Error("Instagram inbound message was not found");
   }
 
-  return data.sent_at;
+  return data;
+};
+
+export const getInstagramInitialInboundMessageTimestamp = async (
+  database: ReturnType<typeof getInstagramDatabase>,
+  conversationId: string,
+) => {
+  const message = await getInstagramInitialInboundMessage(
+    database,
+    conversationId,
+  );
+  return message.sent_at;
 };
 
 export const releaseInstagramResponseClaim = async (
@@ -371,7 +385,9 @@ export const setInstagramReviewDecision = async (
       last_error: null,
     })
     .eq("id", conversationId)
-    .eq("processing_state", "pending")
+    .in("processing_state", ["pending", "needs_attention"])
+    .is("response_sent_at", null)
+    .is("response_claimed_at", null)
     .select("*")
     .single();
   const data = result.data as unknown as InstagramConversationRow | null;

@@ -179,4 +179,32 @@ describe("classifyInstagramMessage", () => {
 
     expect(result.route).toBe("ignore");
   });
+  it.each([0, 0.89, 0.9])(
+    "holds actionable intent at confidence %s for review",
+    async (confidence) => {
+      mockedGenerateText.mockResolvedValue({
+        output: { ...classification, confidence },
+      } as never);
+      expect(
+        (
+          await classifyInstagramMessage(
+            "Model available for photography in Barcelona",
+          )
+        ).route,
+      ).toBe("manual_review");
+    },
+  );
+
+  it("allows actionable intent strictly above ninety percent", async () => {
+    mockedGenerateText.mockResolvedValue({
+      output: { ...classification, confidence: 0.9001 },
+    } as never);
+    expect(
+      (
+        await classifyInstagramMessage(
+          "Model available for photography in Barcelona",
+        )
+      ).route,
+    ).toBe("model_form");
+  });
 });

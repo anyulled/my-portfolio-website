@@ -21,8 +21,8 @@ jest.mock("@/services/instagram/metaClient", () => ({
   sendInstagramText: jest.fn(),
 }));
 
-jest.mock("@/services/instagram/responseTemplates", () => ({
-  renderBoundedResponse: jest.fn(),
+jest.mock("@/services/instagram/replies", () => ({
+  generateInstagramReply: jest.fn(),
 }));
 
 import { classifyInstagramMessage } from "@/services/instagram/classifier";
@@ -40,7 +40,7 @@ import {
   resolveInstagramProfile,
   sendInstagramText,
 } from "@/services/instagram/metaClient";
-import { renderBoundedResponse } from "@/services/instagram/responseTemplates";
+import { generateInstagramReply } from "@/services/instagram/replies";
 import {
   processInstagramWebhookMessage,
   InstagramWebhookProcessingError,
@@ -103,7 +103,7 @@ describe("processInstagramWebhookMessage", () => {
     jest
       .mocked(getInstagramPublicUrl)
       .mockReturnValue("https://boudoir.barcelona");
-    jest.mocked(renderBoundedResponse).mockReturnValue("localized response");
+    jest.mocked(generateInstagramReply).mockResolvedValue("localized response");
     jest.mocked(sendInstagramText).mockResolvedValue({
       message_id: "sent-message-id",
     });
@@ -234,9 +234,10 @@ describe("processInstagramWebhookMessage", () => {
       database,
       "conversation-row-id",
     );
-    expect(renderBoundedResponse).toHaveBeenCalledWith(
+    expect(generateInstagramReply).toHaveBeenCalledWith(
       "model_form",
       "it",
+      message.text,
       "https://boudoir.barcelona/booking-a-session?lead=lead-token",
     );
     expect(sendInstagramText).toHaveBeenCalledWith(
@@ -266,9 +267,10 @@ describe("processInstagramWebhookMessage", () => {
     );
 
     expect(assignLeadCorrelationToken).not.toHaveBeenCalled();
-    expect(renderBoundedResponse).toHaveBeenCalledWith(
+    expect(generateInstagramReply).toHaveBeenCalledWith(
       "pricing",
       "it",
+      message.text,
       "https://boudoir.barcelona/pricing",
     );
   });
@@ -342,4 +344,19 @@ describe("processInstagramWebhookMessage", () => {
       );
     },
   );
+  it("holds delivery when Groq generation fails without sending a template", async () => {
+    jest
+      .mocked(generateInstagramReply)
+      .mockRejectedValueOnce(new Error("Groq unavailable"));
+    await expect(processInstagramWebhookMessage(message)).rejects.toMatchObject(
+      { stage: "response_delivery", message: "Groq unavailable" },
+    );
+    expect(sendInstagramText).not.toHaveBeenCalled();
+    expect(markInstagramResponseSent).not.toHaveBeenCalled();
+    expect(releaseInstagramResponseClaim).toHaveBeenCalledWith(
+      database,
+      "conversation-row-id",
+      "Groq unavailable",
+    );
+  });
 });

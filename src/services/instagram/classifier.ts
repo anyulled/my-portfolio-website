@@ -74,10 +74,15 @@ const normalizeClassification = (
   );
   const isModel = classification.isModel || isModelCollaboration;
 
+  const route = determineRoute(classification, isModel, isModelCollaboration);
+
   return {
     ...classification,
     isModel,
-    route: determineRoute(classification, isModel, isModelCollaboration),
+    route:
+      route !== "ignore" && classification.confidence <= 0.9
+        ? "manual_review"
+        : route,
   };
 };
 
