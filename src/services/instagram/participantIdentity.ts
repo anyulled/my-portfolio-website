@@ -5,27 +5,24 @@ export const resolveStoredParticipantProfile = async (
   accessToken: string | undefined,
   participantId: string,
 ): Promise<InstagramProfile | null> => {
+  const storedProfile = username
+    ? {
+        username,
+        name: null,
+        biography: null,
+        followersCount: null,
+        profilePictureUrl: null,
+      }
+    : null;
   if (!accessToken) {
-    return username
-      ? {
-          username,
-          name: null,
-          biography: null,
-          followersCount: null,
-          profilePictureUrl: null,
-        }
-      : null;
+    return storedProfile;
   }
 
-  return resolveInstagramProfile(accessToken, participantId).catch(() =>
-    username
-      ? {
-          username,
-          name: null,
-          biography: null,
-          followersCount: null,
-          profilePictureUrl: null,
-        }
-      : null,
-  );
+  const profile = await resolveInstagramProfile(
+    accessToken,
+    participantId,
+  ).catch(() => null);
+  return profile
+    ? { ...profile, username: profile.username ?? username }
+    : storedProfile;
 };

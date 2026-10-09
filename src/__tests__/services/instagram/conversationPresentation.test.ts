@@ -7,9 +7,7 @@ jest.mock("@/services/instagram/participantIdentity", () => ({
 
 const conversation = {
   id: "conversation-id",
-  account_handle: [
-    { handle: "anyulled" as const, access_token: "access-token" },
-  ],
+  account_handle: { handle: "anyulled" as const, access_token: "access-token" },
   instagram_conversation_id: "meta-conversation-id",
   participant_id: "participant-id",
   participant_username: "stored-name",
@@ -25,6 +23,40 @@ const conversation = {
 };
 
 describe("presentInstagramConversation", () => {
+  it("uses the joined account object to load the participant profile", async () => {
+    jest.mocked(resolveStoredParticipantProfile).mockResolvedValue({
+      username: "modelname",
+      name: "Model Name",
+      biography: "Barcelona model",
+      followersCount: 1234,
+      profilePictureUrl: "https://example.com/profile.jpg",
+    });
+
+    const result = await presentInstagramConversation({
+      ...conversation,
+      account_handle: {
+        handle: "sensuelleboudoir",
+        access_token: "sensuelle-access-token",
+      },
+      participant_username: null,
+    });
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        accountHandle: "sensuelleboudoir",
+        participantUsername: "modelname",
+        participantName: "Model Name",
+        participantFollowersCount: 1234,
+        participantProfilePictureUrl: "https://example.com/profile.jpg",
+      }),
+    );
+    expect(resolveStoredParticipantProfile).toHaveBeenCalledWith(
+      null,
+      "sensuelle-access-token",
+      "participant-id",
+    );
+  });
+
   it("presents live profile details and marks ignored classifications", async () => {
     jest.mocked(resolveStoredParticipantProfile).mockResolvedValue({
       username: "modelname",
@@ -60,7 +92,7 @@ describe("presentInstagramConversation", () => {
     await expect(
       presentInstagramConversation({
         ...conversation,
-        account_handle: [],
+        account_handle: null,
         classification: "pricing",
         instagram_messages: [
           { message_text: "Need pricing", sent_at: "2026-09-19T09:00:00.000Z" },
