@@ -16,7 +16,7 @@ jest.mock("@/services/instagram/repository", () => ({
   claimInstagramResponse: jest.fn(),
   getInstagramConversationForDelivery: jest.fn(),
   getInstagramDatabase: jest.fn(),
-  getInstagramInitialInboundMessageTimestamp: jest.fn(),
+  getInstagramInitialInboundMessage: jest.fn(),
   markInstagramResponseSent: jest.fn(),
   releaseInstagramResponseClaim: jest.fn(),
   setInstagramReviewDecision: jest.fn(),
@@ -30,8 +30,8 @@ jest.mock("@/services/instagram/metaClient", () => ({
   sendInstagramText: jest.fn(),
 }));
 
-jest.mock("@/services/instagram/responseTemplates", () => ({
-  renderBoundedResponse: jest.fn(),
+jest.mock("@/services/instagram/replies", () => ({
+  generateInstagramReply: jest.fn(),
 }));
 
 import { POST } from "@/app/api/instagram/conversations/[conversationId]/decision/route";
@@ -42,13 +42,13 @@ import {
   claimInstagramResponse,
   getInstagramConversationForDelivery,
   getInstagramDatabase,
-  getInstagramInitialInboundMessageTimestamp,
+  getInstagramInitialInboundMessage,
   markInstagramResponseSent,
   releaseInstagramResponseClaim,
   setInstagramReviewDecision,
 } from "@/services/instagram/repository";
 import { sendInstagramText } from "@/services/instagram/metaClient";
-import { renderBoundedResponse } from "@/services/instagram/responseTemplates";
+import { generateInstagramReply } from "@/services/instagram/replies";
 
 const database = {} as ReturnType<typeof getInstagramDatabase>;
 const conversationId = "conversation-row-id";
@@ -88,14 +88,15 @@ describe("Instagram conversation decision API", () => {
       .mocked(getInstagramConversationForDelivery)
       .mockResolvedValue(deliveryConversation as never);
     jest.mocked(claimInstagramResponse).mockResolvedValue(true);
-    jest
-      .mocked(getInstagramInitialInboundMessageTimestamp)
-      .mockResolvedValue("2026-09-13T09:30:00.000Z");
+    jest.mocked(getInstagramInitialInboundMessage).mockResolvedValue({
+      sent_at: "2026-09-13T09:30:00.000Z",
+      message_text: "Ciao, vorrei prenotare un servizio!",
+    });
     jest.mocked(assignLeadCorrelationToken).mockResolvedValue("lead-token");
     jest
       .mocked(getInstagramPublicUrl)
       .mockReturnValue("https://boudoir.barcelona");
-    jest.mocked(renderBoundedResponse).mockReturnValue("localized response");
+    jest.mocked(generateInstagramReply).mockResolvedValue("localized response");
     jest.mocked(sendInstagramText).mockResolvedValue({
       message_id: "sent-message-id",
     });
@@ -132,9 +133,10 @@ describe("Instagram conversation decision API", () => {
 
     expect(response.status).toBe(200);
     expect(assignLeadCorrelationToken).not.toHaveBeenCalled();
-    expect(renderBoundedResponse).toHaveBeenCalledWith(
+    expect(generateInstagramReply).toHaveBeenCalledWith(
       "pricing",
       "it",
+      "Ciao, vorrei prenotare un servizio!",
       "https://boudoir.barcelona/pricing",
     );
     expect(markInstagramResponseSent).toHaveBeenCalledWith(
@@ -324,5 +326,22 @@ describe("Instagram conversation decision API", () => {
       requestId: expect.any(String),
       resolution: "Reload the inbox to see the current conversation state.",
     });
+  });
+  it("holds delivery when Groq generation fails without sending a template", async () => {
+    jest
+      .mocked(generateInstagramReply)
+      .mockRejectedValueOnce(new Error("Groq unavailable"));
+    const consoleError = jest.spyOn(console, "error").mockImplementation();
+    expect(
+      (await POST(createRequest({ decision: "pricing" }), context)).status,
+    ).toBe(502);
+    consoleError.mockRestore();
+    expect(sendInstagramText).not.toHaveBeenCalled();
+    expect(markInstagramResponseSent).not.toHaveBeenCalled();
+    expect(releaseInstagramResponseClaim).toHaveBeenCalledWith(
+      database,
+      "conversation-row-id",
+      "Groq unavailable",
+    );
   });
 });

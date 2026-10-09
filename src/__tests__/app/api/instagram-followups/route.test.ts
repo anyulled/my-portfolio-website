@@ -39,6 +39,7 @@ describe("Instagram follow-up endpoint", () => {
       sent: 1,
       cancelled: 0,
       failed: 0,
+      reconciled: 0,
     });
     jest.mocked(syncInstagramConversations).mockResolvedValue({
       accounts: 2,

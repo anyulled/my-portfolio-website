@@ -72,6 +72,7 @@ export interface InstagramConversationRecord {
 }
 
 export interface InstagramFollowupCandidate {
+  confidence: number;
   id: string;
   participantId: string;
   detectedLanguage: string;

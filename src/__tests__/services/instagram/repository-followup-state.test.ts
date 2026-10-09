@@ -1,5 +1,7 @@
 import {
   getInstagramInitialInboundMessageTimestamp,
+  getInstagramInitialInboundMessage,
+  setInstagramReviewDecision,
   markInstagramResponseSent,
   recordInstagramMessage,
 } from "@/services/instagram/repository";
@@ -27,6 +29,7 @@ const createStateDatabase = () => {
     select: jest.fn(),
     eq: jest.fn(),
     is: jest.fn(),
+    in: jest.fn(),
     limit: jest.fn(),
     maybeSingle: jest.fn(),
     order: jest.fn(),
@@ -178,6 +181,57 @@ describe("Instagram follow-up state transitions", () => {
 
     await expect(
       getInstagramInitialInboundMessageTimestamp(database, "conversation-id"),
+    ).rejects.toBe(error);
+  });
+  it("returns original message text together with its source timestamp", async () => {
+    const { database, builder } = createStateDatabase();
+    const sourceMessage = {
+      sent_at: "2026-09-17T12:00:00.000Z",
+      message_text: "Hey! Can I book? 😊",
+    };
+    builder.maybeSingle.mockResolvedValue({ data: sourceMessage, error: null });
+    expect(
+      await getInstagramInitialInboundMessage(database, "conversation-id"),
+    ).toEqual(sourceMessage);
+    expect(builder.select).toHaveBeenCalledWith("sent_at, message_text");
+  });
+  it.each(["model_form", "pricing", "ignore"] as const)(
+    "allows %s review of pending or failed unsent, unclaimed conversations",
+    async (decision) => {
+      const { database, builder } = createStateDatabase();
+      const conversation = { id: "conversation-id" };
+      builder.single.mockResolvedValue({ data: conversation, error: null });
+      expect(
+        await setInstagramReviewDecision(database, "conversation-id", decision),
+      ).toBe(conversation);
+      expect(builder.in).toHaveBeenCalledWith("processing_state", [
+        "pending",
+        "needs_attention",
+      ]);
+      expect(builder.is).toHaveBeenCalledWith("response_sent_at", null);
+      expect(builder.is).toHaveBeenCalledWith("response_claimed_at", null);
+      expect(builder.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          classification: decision === "ignore" ? "ignored" : decision,
+          processing_state: decision === "ignore" ? "completed" : "processed",
+          response_route: decision === "ignore" ? null : decision,
+        }),
+      );
+    },
+  );
+  it("rejects a stale decision when no eligible conversation remains", async () => {
+    const { database, builder } = createStateDatabase();
+    builder.single.mockResolvedValue({ data: null, error: null });
+    await expect(
+      setInstagramReviewDecision(database, "conversation-id", "pricing"),
+    ).rejects.toThrow("Conversation is no longer awaiting review");
+  });
+  it("propagates review persistence errors", async () => {
+    const { database, builder } = createStateDatabase();
+    const error = new Error("review persistence failed");
+    builder.single.mockResolvedValue({ data: null, error });
+    await expect(
+      setInstagramReviewDecision(database, "conversation-id", "pricing"),
     ).rejects.toBe(error);
   });
 });

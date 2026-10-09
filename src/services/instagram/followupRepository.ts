@@ -47,7 +47,7 @@ export const listInstagramFollowupCandidates = async (
   const result = await database
     .from("instagram_conversations")
     .select(
-      "id, participant_id, last_message_at, detected_language, follow_up_due_at, follow_up_attempts, follow_up_delivery_started_at, instagram_accounts(handle, instagram_user_id, access_token)",
+      "id, participant_id, confidence, last_message_at, detected_language, follow_up_due_at, follow_up_attempts, follow_up_delivery_started_at, instagram_accounts(handle, instagram_user_id, access_token)",
     )
     .eq("response_route", "pricing")
     .not("response_sent_at", "is", null)
@@ -69,6 +69,7 @@ export const listInstagramFollowupCandidates = async (
     participant_id: string;
     last_message_at: string;
     detected_language: string;
+    confidence: number;
     follow_up_due_at: string;
     follow_up_attempts: number;
     follow_up_delivery_started_at: string | null;
@@ -87,6 +88,7 @@ export const listInstagramFollowupCandidates = async (
             id: row.id,
             participantId: row.participant_id,
             detectedLanguage: row.detected_language,
+            confidence: row.confidence,
             lastMessageAt: row.last_message_at,
             followUpDueAt: row.follow_up_due_at,
             followUpAttempts: row.follow_up_attempts,

@@ -1,3 +1,12 @@
+jest.mock("@/services/instagram/repository", () => ({
+  getInstagramDatabase: jest.fn(),
+  getInstagramInitialInboundMessage: jest.fn(),
+}));
+jest.mock("@/services/instagram/replies", () => ({
+  generateInstagramReply: jest.fn(),
+}));
+import { getInstagramInitialInboundMessage } from "@/services/instagram/repository";
+import { generateInstagramReply } from "@/services/instagram/replies";
 jest.mock("@/services/instagram/followupRepository", () => ({
   beginInstagramFollowupDelivery: jest.fn(),
   cancelInstagramFollowup: jest.fn(),
@@ -34,6 +43,7 @@ import {
 const database = {} as never;
 const now = new Date("2026-09-18T12:00:00.000Z");
 const candidate = {
+  confidence: 0.95,
   id: "conversation-id",
   participantId: "participant-id",
   detectedLanguage: "it",
@@ -51,6 +61,13 @@ const candidate = {
 describe("processInstagramFollowups", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(getInstagramInitialInboundMessage).mockResolvedValue({
+      sent_at: candidate.lastMessageAt,
+      message_text: "Ciao! Vorrei conoscere i prezzi 😊",
+    });
+    jest
+      .mocked(generateInstagramReply)
+      .mockResolvedValue("Hai domande? https://boudoir.barcelona/pricing");
     jest.mocked(listInstagramFollowupCandidates).mockResolvedValue([candidate]);
     jest.mocked(claimInstagramFollowup).mockResolvedValue(true);
     jest.mocked(beginInstagramFollowupDelivery).mockResolvedValue(true);
@@ -99,6 +116,7 @@ describe("processInstagramFollowups", () => {
       sent: 1,
       cancelled: 0,
       failed: 0,
+      reconciled: 0,
     });
   });
 
@@ -110,6 +128,7 @@ describe("processInstagramFollowups", () => {
       sent: 0,
       cancelled: 0,
       failed: 0,
+      reconciled: 0,
     });
     expect(sendInstagramText).not.toHaveBeenCalled();
   });
@@ -125,6 +144,7 @@ describe("processInstagramFollowups", () => {
         sent: 0,
         cancelled: 1,
         failed: 0,
+        reconciled: 0,
       },
     );
     expect(cancelInstagramFollowup).toHaveBeenCalledWith(
@@ -204,6 +224,7 @@ describe("processInstagramFollowups", () => {
       sent: 0,
       cancelled: 0,
       failed: 1,
+      reconciled: 0,
     });
     expect(markInstagramFollowupForReconciliation).toHaveBeenCalledWith(
       database,
@@ -223,6 +244,7 @@ describe("processInstagramFollowups", () => {
       sent: 0,
       cancelled: 0,
       failed: 1,
+      reconciled: 0,
     });
   });
 
@@ -241,5 +263,100 @@ describe("processInstagramFollowups", () => {
       "Instagram delivery identifier was not returned",
     );
     expect(releaseInstagramFollowupClaim).not.toHaveBeenCalled();
+  });
+  it.each([0.9, 0.89, Number.NaN])(
+    "holds low-confidence followups (%s)",
+    async (confidence) => {
+      jest
+        .mocked(listInstagramFollowupCandidates)
+        .mockResolvedValue([{ ...candidate, confidence }]);
+      expect((await processInstagramFollowups(database, now)).cancelled).toBe(
+        1,
+      );
+      expect(generateInstagramReply).not.toHaveBeenCalled();
+      expect(sendInstagramText).not.toHaveBeenCalled();
+    },
+  );
+  it("generates a followup from the original sender message before beginning delivery", async () => {
+    await processInstagramFollowups(database, now);
+    expect(generateInstagramReply).toHaveBeenCalledWith(
+      "pricing_followup",
+      "it",
+      "Ciao! Vorrei conoscere i prezzi 😊",
+      "https://boudoir.barcelona/pricing",
+    );
+    expect(
+      jest.mocked(generateInstagramReply).mock.invocationCallOrder[0],
+    ).toBeLessThan(
+      jest.mocked(beginInstagramFollowupDelivery).mock.invocationCallOrder[0],
+    );
+  });
+  it("does not begin delivery when Groq is unavailable", async () => {
+    jest
+      .mocked(generateInstagramReply)
+      .mockRejectedValue(new Error("Groq unavailable"));
+    expect((await processInstagramFollowups(database, now)).failed).toBe(1);
+    expect(beginInstagramFollowupDelivery).not.toHaveBeenCalled();
+    expect(sendInstagramText).not.toHaveBeenCalled();
+    expect(releaseInstagramFollowupClaim).toHaveBeenCalledWith(
+      database,
+      candidate.id,
+      expect.any(String),
+      "Groq unavailable",
+      false,
+    );
+  });
+  it("reconciles interrupted deliveries before generation without releasing them for resend", async () => {
+    const deliveryStartedAt = now.toISOString();
+    jest
+      .mocked(listInstagramFollowupCandidates)
+      .mockResolvedValue([{ ...candidate, deliveryStartedAt }]);
+    jest.mocked(beginInstagramFollowupDelivery).mockResolvedValue(false);
+    expect(await processInstagramFollowups(database, now)).toMatchObject({
+      reconciled: 1,
+      failed: 0,
+      sent: 0,
+    });
+    expect(beginInstagramFollowupDelivery).toHaveBeenCalledWith(
+      database,
+      candidate.id,
+      expect.any(String),
+      now.toISOString(),
+      deliveryStartedAt,
+    );
+    expect(generateInstagramReply).not.toHaveBeenCalled();
+    expect(sendInstagramText).not.toHaveBeenCalled();
+    expect(releaseInstagramFollowupClaim).not.toHaveBeenCalled();
+  });
+  it("stops after the third failed generation without beginning delivery", async () => {
+    jest
+      .mocked(listInstagramFollowupCandidates)
+      .mockResolvedValue([{ ...candidate, followUpAttempts: 2 }]);
+    jest
+      .mocked(generateInstagramReply)
+      .mockRejectedValue(new Error("Groq unavailable"));
+    await processInstagramFollowups(database, now);
+    expect(releaseInstagramFollowupClaim).toHaveBeenCalledWith(
+      database,
+      candidate.id,
+      expect.any(String),
+      "Groq unavailable",
+      true,
+    );
+    expect(beginInstagramFollowupDelivery).not.toHaveBeenCalled();
+  });
+  it("processes multiple conversations serially and aggregates delivery outcomes", async () => {
+    jest
+      .mocked(listInstagramFollowupCandidates)
+      .mockResolvedValue([
+        candidate,
+        { ...candidate, id: "second-conversation" },
+      ]);
+    expect((await processInstagramFollowups(database, now)).sent).toBe(2);
+    expect(
+      jest.mocked(markInstagramFollowupSent).mock.invocationCallOrder[0],
+    ).toBeLessThan(
+      jest.mocked(generateInstagramReply).mock.invocationCallOrder[1],
+    );
   });
 });
