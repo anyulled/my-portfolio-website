@@ -116,6 +116,7 @@ describe("processInstagramFollowups", () => {
       sent: 1,
       cancelled: 0,
       failed: 0,
+      reconciled: 0,
     });
   });
 
@@ -127,6 +128,7 @@ describe("processInstagramFollowups", () => {
       sent: 0,
       cancelled: 0,
       failed: 0,
+      reconciled: 0,
     });
     expect(sendInstagramText).not.toHaveBeenCalled();
   });
@@ -142,6 +144,7 @@ describe("processInstagramFollowups", () => {
         sent: 0,
         cancelled: 1,
         failed: 0,
+        reconciled: 0,
       },
     );
     expect(cancelInstagramFollowup).toHaveBeenCalledWith(
@@ -221,6 +224,7 @@ describe("processInstagramFollowups", () => {
       sent: 0,
       cancelled: 0,
       failed: 1,
+      reconciled: 0,
     });
     expect(markInstagramFollowupForReconciliation).toHaveBeenCalledWith(
       database,
@@ -240,6 +244,7 @@ describe("processInstagramFollowups", () => {
       sent: 0,
       cancelled: 0,
       failed: 1,
+      reconciled: 0,
     });
   });
 
@@ -307,7 +312,11 @@ describe("processInstagramFollowups", () => {
       .mocked(listInstagramFollowupCandidates)
       .mockResolvedValue([{ ...candidate, deliveryStartedAt }]);
     jest.mocked(beginInstagramFollowupDelivery).mockResolvedValue(false);
-    await processInstagramFollowups(database, now);
+    expect(await processInstagramFollowups(database, now)).toMatchObject({
+      reconciled: 1,
+      failed: 0,
+      sent: 0,
+    });
     expect(beginInstagramFollowupDelivery).toHaveBeenCalledWith(
       database,
       candidate.id,

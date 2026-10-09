@@ -1,7 +1,24 @@
 import { generateText, Output } from "ai";
 import { groq } from "@ai-sdk/groq";
 import { z } from "zod";
+import { domainToUnicode } from "node:url";
 import { getInstagramModel } from "./config";
+
+const containsReplyLink = (text: string): boolean => {
+  if (/(?:[a-z][a-z\d+.-]*:\/\/|www\.)/i.test(text)) return true;
+  return text.split(/[\s()[\]{}<>"']+/).some((token) => {
+    const candidate = token.replace(/[.,!?;]+$/, "");
+    const address = `https://${candidate}`;
+    if (!URL.canParse(address)) return false;
+    const { hostname } = new URL(address);
+    const labels = domainToUnicode(hostname).split(".");
+    return (
+      labels.length >= 2 &&
+      labels.every((label) => /^[\p{L}\p{N}-]+$/u.test(label)) &&
+      /^\p{L}{2,}$/u.test(labels.at(-1) ?? "")
+    );
+  });
+};
 
 const replySchema = z.object({
   replyText: z
@@ -10,7 +27,7 @@ const replySchema = z.object({
     .min(1)
     .max(800)
     .refine(
-      (text) => !/(?:https?:\/\/|www\.)/i.test(text),
+      (text) => !containsReplyLink(text),
       "Reply text must not contain links",
     ),
 });

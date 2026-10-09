@@ -37,6 +37,13 @@ describe("generateInstagramReply", () => {
     "  ",
     "https://attacker.example",
     "www.attacker.example",
+    "example.com",
+    "example.photography/path",
+    "Vedi example.com/path.",
+    "[click](example.com/path)",
+    "https://attacker.example/path",
+    "ftp://attacker.example",
+    "例子.中国/路径",
     "a".repeat(801),
   ])(
     "rejects invalid generated text without falling back to a template",
@@ -73,5 +80,18 @@ describe("generateInstagramReply", () => {
         "https://boudoir.barcelona/" + "a".repeat(200),
       ),
     ).rejects.toThrow();
+  });
+  it.each([
+    "Thanks! e.g. a portrait session.",
+    "Version v1.2 is ready.",
+    "The price is 3.14.",
+    "Thanks U.S.A. 😊",
+    "Hello (thanks)!",
+    "A session with Dr. Smith.",
+  ])("accepts ordinary dotted and punctuated text: %s", async (replyText) => {
+    mockedGenerateText.mockResolvedValue({ output: { replyText } } as never);
+    await expect(
+      generateInstagramReply("pricing", "en", "How much?", link),
+    ).resolves.toBe(`${replyText}\n\n${link}`);
   });
 });

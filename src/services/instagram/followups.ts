@@ -27,6 +27,7 @@ interface FollowupSummary {
   sent: number;
   cancelled: number;
   failed: number;
+  reconciled: number;
 }
 
 export const getInstagramFollowupDueAt = (messageTimestamp: string) =>
@@ -95,7 +96,7 @@ const prepareFollowup = async (
       now.toISOString(),
       candidate.deliveryStartedAt,
     );
-    return null;
+    return { reconciled: true } as const;
   }
   try {
     const sourceMessage = await getInstagramInitialInboundMessage(
@@ -120,7 +121,8 @@ const prepareFollowup = async (
   }
 };
 
-type FollowupOutcome = "sent" | "cancelled" | "failed" | "skipped";
+type FollowupOutcome =
+  "sent" | "cancelled" | "failed" | "skipped" | "reconciled";
 
 const processFollowupCandidate = async (
   database: ReturnType<typeof getInstagramDatabase>,
@@ -152,6 +154,9 @@ const processFollowupCandidate = async (
   );
   if (!responseText) {
     return "failed";
+  }
+  if (typeof responseText !== "string") {
+    return "reconciled";
   }
 
   const deliveryStarted = await beginInstagramFollowupDelivery(
@@ -232,6 +237,7 @@ export const processInstagramFollowups = async (
     sent: 0,
     cancelled: 0,
     failed: 0,
+    reconciled: 0,
   };
   return candidates.reduce(async (previousSummary, candidate) => {
     const summary = await previousSummary;
@@ -241,6 +247,7 @@ export const processInstagramFollowups = async (
       sent: summary.sent + Number(outcome === "sent"),
       cancelled: summary.cancelled + Number(outcome === "cancelled"),
       failed: summary.failed + Number(outcome === "failed"),
+      reconciled: summary.reconciled + Number(outcome === "reconciled"),
     };
   }, Promise.resolve(initialSummary));
 };
