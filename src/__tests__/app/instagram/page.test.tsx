@@ -19,6 +19,8 @@ jest.mock("next/navigation", () => ({
   redirect: jest.fn(),
 }));
 
+jest.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+
 describe("InstagramPage", () => {
   beforeEach(() => {
     jest.mocked(getAuthenticatedOperator).mockResolvedValue({

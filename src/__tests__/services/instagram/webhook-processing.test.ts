@@ -120,6 +120,43 @@ describe("processInstagramWebhookMessage", () => {
     ]);
   });
 
+  it.each(["stored-account-id", "messaging-account-id"])(
+    "skips outgoing messages from %s before classification",
+    async (participantId) => {
+      jest.mocked(findInstagramAccount).mockResolvedValue({
+        ...account,
+        instagram_webhook_user_id: "messaging-account-id",
+      } as never);
+
+      const result = await processInstagramWebhookMessage({
+        ...message,
+        participantId,
+      });
+
+      expect(result).toBe("outbound_skipped");
+      expect(classifyInstagramMessage).not.toHaveBeenCalled();
+      expect(recordInstagramMessage).not.toHaveBeenCalled();
+      expect(sendInstagramText).not.toHaveBeenCalled();
+    },
+  );
+
+  it("skips self messages identified by the account handle when IDs differ", async () => {
+    jest.mocked(resolveInstagramProfile).mockResolvedValue({
+      username: "AnyUlLeD",
+      name: null,
+      biography: null,
+      followersCount: null,
+      profilePictureUrl: null,
+    });
+
+    const result = await processInstagramWebhookMessage(message);
+
+    expect(result).toBe("outbound_skipped");
+    expect(classifyInstagramMessage).not.toHaveBeenCalled();
+    expect(recordInstagramMessage).not.toHaveBeenCalled();
+    expect(sendInstagramText).not.toHaveBeenCalled();
+  });
+
   it("persists the sender handle resolved from the Instagram profile", async () => {
     await processInstagramWebhookMessage(message);
 

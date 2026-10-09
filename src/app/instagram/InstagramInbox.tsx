@@ -7,6 +7,8 @@ import type {
   InstagramHandle,
   ReviewDecision,
 } from "@/services/instagram/types";
+import type { InstagramProfile } from "@/services/instagram/metaClient";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 interface InboxError {
@@ -61,6 +63,50 @@ const getConversations = (
   return result.conversations as InstagramConversationRecord[];
 };
 
+function ConnectedAccountProfile({
+  profile,
+  handle,
+}: {
+  profile: InstagramProfile | null | undefined;
+  handle: InstagramHandle;
+}) {
+  const t = useTranslations("instagram_inbox");
+  return (
+    <section
+      aria-label={t("account")}
+      className="space-y-3 rounded-lg border p-4"
+    >
+      <p className="text-sm text-muted-foreground">{t("account")}</p>
+      <div className="flex items-center gap-3">
+        {profile?.profilePictureUrl && (
+          <span
+            role="img"
+            aria-label={t("photo")}
+            className="size-12 shrink-0 rounded-full bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${profile.profilePictureUrl})`,
+            }}
+          />
+        )}
+        <div>
+          <p className="font-semibold">@{profile?.username ?? handle}</p>
+          {profile?.name && <p>{profile.name}</p>}
+        </div>
+      </div>
+      {profile?.biography && (
+        <p className="text-sm text-muted-foreground">{profile.biography}</p>
+      )}
+      {typeof profile?.followersCount === "number" && (
+        <p className="text-sm text-muted-foreground">
+          {t("followers", {
+            count: profile.followersCount.toLocaleString(),
+          })}
+        </p>
+      )}
+    </section>
+  );
+}
+
 export default function InstagramInbox({
   connectionError,
   connectedAccounts = [],
@@ -68,6 +114,7 @@ export default function InstagramInbox({
   connectionError?: ConnectionError;
   connectedAccounts?: InstagramHandle[];
 } = {}) {
+  const t = useTranslations("instagram_inbox");
   const [conversations, setConversations] = useState<
     InstagramConversationRecord[]
   >([]);
@@ -194,6 +241,7 @@ export default function InstagramInbox({
       {conversations.map((conversation) => (
         <Card key={conversation.id}>
           <CardHeader>
+            <p className="text-sm text-muted-foreground">{t("sender")}</p>
             <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
               <span className="flex items-center gap-3">
                 {conversation.participantProfilePictureUrl ? (
@@ -234,6 +282,10 @@ export default function InstagramInbox({
                 followers
               </p>
             ) : null}
+            <ConnectedAccountProfile
+              profile={conversation.accountProfile}
+              handle={conversation.accountHandle}
+            />
             <p>{conversation.lastMessage}</p>
             <p className="text-sm text-muted-foreground">
               Classification: {conversation.classification} · confidence{" "}

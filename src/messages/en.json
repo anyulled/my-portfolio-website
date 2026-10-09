@@ -725,5 +725,11 @@
     "swimwear": "Swimwear",
     "fashion": "Fashion",
     "lifestyle": "Lifestyle"
+  },
+  "instagram_inbox": {
+    "sender": "Sender",
+    "account": "Connected account",
+    "photo": "Connected account profile photo",
+    "followers": "{count} followers"
   }
 }

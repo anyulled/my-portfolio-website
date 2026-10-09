@@ -94,6 +94,77 @@ describe("sendInstagramText", () => {
     );
   });
 
+  it("loads sender-scoped profile fields when professional fields are rejected", async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({ ok: false, status: 400 })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          username: "sender",
+          name: "Sender Name",
+          follower_count: 1131,
+          profile_pic: "https://example.com/sender.jpg",
+        }),
+      });
+
+    const profile = await resolveInstagramProfile("token", "sender-id");
+
+    expect(profile).toEqual({
+      username: "sender",
+      name: "Sender Name",
+      biography: null,
+      followersCount: 1131,
+      profilePictureUrl: "https://example.com/sender.jpg",
+    });
+    expect(global.fetch).toHaveBeenLastCalledWith(
+      new URL(
+        "https://graph.instagram.com/v26.0/sender-id?fields=username%2Cname%2Cprofile_pic%2Cfollower_count",
+      ),
+      { headers: { Authorization: "Bearer token" } },
+    );
+  });
+
+  it("excludes outgoing messages under the account messaging ID", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: [
+          {
+            id: "thread",
+            messages: {
+              data: [
+                {
+                  id: "outgoing",
+                  from: { id: "messaging-account-id" },
+                  message: "Reply",
+                  created_time: "2026-09-13T18:19:05+0000",
+                },
+                {
+                  id: "incoming",
+                  from: { id: "sender-id" },
+                  message: "Enquiry",
+                  created_time: "2026-09-13T18:18:05+0000",
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    });
+
+    const result = await listInstagramConversationMessages(
+      "token",
+      "oauth-account-id",
+      "messaging-account-id",
+    );
+
+    expect(result.messages.map((message) => message.participantId)).toEqual([
+      "sender-id",
+    ]);
+    expect(result.outboundMessagesSkipped).toBe(1);
+  });
+
   it("normalizes unavailable profile fields and rejected responses", async () => {
     global.fetch = jest
       .fn()

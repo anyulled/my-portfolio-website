@@ -126,13 +126,25 @@ export const processInstagramWebhookMessage = async (
       return { database, account };
     },
   );
-  const classification = await runWebhookStage("classification", () =>
-    classifyInstagramMessage(message.text),
-  );
+  if (
+    [account.instagram_user_id, account.instagram_webhook_user_id].includes(
+      message.participantId,
+    )
+  ) {
+    return "outbound_skipped";
+  }
   const participantProfile = await runWebhookStage("account_lookup", () =>
     resolveInstagramProfile(account.access_token, message.participantId).catch(
       () => null,
     ),
+  );
+  if (
+    participantProfile?.username?.toLowerCase() === account.handle.toLowerCase()
+  ) {
+    return "outbound_skipped";
+  }
+  const classification = await runWebhookStage("classification", () =>
+    classifyInstagramMessage(message.text),
   );
   const result = await runWebhookStage("persistence", () =>
     recordInstagramMessage(

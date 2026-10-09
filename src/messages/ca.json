@@ -725,5 +725,11 @@
     "swimwear": "Banyador",
     "fashion": "Moda",
     "lifestyle": "Lifestyle"
+  },
+  "instagram_inbox": {
+    "sender": "Remitent",
+    "account": "Compte connectat",
+    "photo": "Foto de perfil del compte connectat",
+    "followers": "{count} seguidors"
   }
 }

@@ -1,9 +1,14 @@
 import type { InstagramConversationRecord, InstagramHandle } from "./types";
+import { resolveInstagramProfile } from "./metaClient";
 import { resolveStoredParticipantProfile } from "./participantIdentity";
 
 type ConversationRow = {
   id: string;
-  account_handle: { handle: InstagramHandle; access_token: string } | null;
+  account_handle: {
+    handle: InstagramHandle;
+    access_token: string;
+    instagram_user_id?: string;
+  } | null;
   instagram_conversation_id: string;
   participant_id: string;
   participant_username: string | null;
@@ -52,14 +57,20 @@ export const presentInstagramConversation = async (
   conversation: ConversationRow,
 ): Promise<InstagramConversationRecord> => {
   const account = getConversationAccount(conversation);
-  const participantProfile = await getParticipantProfile(
-    conversation,
-    account?.access_token,
-  );
+  const [participantProfile, accountProfile] = await Promise.all([
+    getParticipantProfile(conversation, account?.access_token),
+    account?.instagram_user_id
+      ? resolveInstagramProfile(
+          account.access_token,
+          account.instagram_user_id,
+        ).catch(() => null)
+      : Promise.resolve(null),
+  ]);
 
   return {
     id: conversation.id,
     accountHandle: account?.handle ?? "anyulled",
+    accountProfile,
     instagramConversationId: conversation.instagram_conversation_id,
     participantId: conversation.participant_id,
     ...participantProfile,

@@ -726,5 +726,11 @@
     "swimwear": "Traje de baño",
     "fashion": "Moda",
     "lifestyle": "Lifestyle"
+  },
+  "instagram_inbox": {
+    "sender": "Remitente",
+    "account": "Cuenta conectada",
+    "photo": "Foto de perfil de la cuenta conectada",
+    "followers": "{count} seguidores"
   }
 }

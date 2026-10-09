@@ -725,5 +725,11 @@
     "swimwear": "Costume da bagno",
     "fashion": "Moda",
     "lifestyle": "Lifestyle"
+  },
+  "instagram_inbox": {
+    "sender": "Mittente",
+    "account": "Account collegato",
+    "photo": "Foto del profilo dell’account collegato",
+    "followers": "{count} follower"
   }
 }

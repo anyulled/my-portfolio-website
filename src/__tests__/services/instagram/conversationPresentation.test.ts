@@ -1,5 +1,10 @@
+import { resolveInstagramProfile } from "@/services/instagram/metaClient";
 import { presentInstagramConversation } from "@/services/instagram/conversationPresentation";
 import { resolveStoredParticipantProfile } from "@/services/instagram/participantIdentity";
+
+jest.mock("@/services/instagram/metaClient", () => ({
+  resolveInstagramProfile: jest.fn(),
+}));
 
 jest.mock("@/services/instagram/participantIdentity", () => ({
   resolveStoredParticipantProfile: jest.fn(),
@@ -23,6 +28,58 @@ const conversation = {
 };
 
 describe("presentInstagramConversation", () => {
+  it("loads the connected account profile independently of the sender", async () => {
+    const profile = {
+      username: "anyulled",
+      name: "Anyul Rivas",
+      biography: null,
+      followersCount: 5936,
+      profilePictureUrl: "https://example.com/account.jpg",
+    };
+    jest.mocked(resolveInstagramProfile).mockResolvedValue(profile);
+    jest.mocked(resolveStoredParticipantProfile).mockResolvedValue(null);
+
+    const result = await presentInstagramConversation({
+      ...conversation,
+      account_handle: {
+        ...conversation.account_handle,
+        instagram_user_id: "account-id",
+      },
+    });
+
+    expect(result.accountProfile).toEqual(profile);
+    expect(resolveInstagramProfile).toHaveBeenCalledWith(
+      "access-token",
+      "account-id",
+    );
+    expect(result.participantUsername).toBeNull();
+  });
+
+  it("retains sender details when the connected account profile request fails", async () => {
+    jest
+      .mocked(resolveInstagramProfile)
+      .mockRejectedValueOnce(new Error("Meta unavailable"));
+    jest.mocked(resolveStoredParticipantProfile).mockResolvedValue({
+      username: "sender",
+      name: "Sender",
+      biography: null,
+      followersCount: 1131,
+      profilePictureUrl: null,
+    });
+
+    const result = await presentInstagramConversation({
+      ...conversation,
+      account_handle: {
+        ...conversation.account_handle,
+        instagram_user_id: "account-id",
+      },
+    });
+
+    expect(result.accountProfile).toBeNull();
+    expect(result.participantUsername).toBe("sender");
+    expect(result.participantFollowersCount).toBe(1131);
+  });
+
   it("uses the joined account object to load the participant profile", async () => {
     jest.mocked(resolveStoredParticipantProfile).mockResolvedValue({
       username: "modelname",
