@@ -5,9 +5,12 @@ import { domainToUnicode } from "node:url";
 import { getInstagramModel } from "./config";
 
 const containsReplyLink = (text: string): boolean => {
-  if (/(?:[a-z][a-z\d+.-]*:\/\/|www\.)/i.test(text)) return true;
+  if (text.includes("://") || text.toLowerCase().includes("www.")) return true;
   return text.split(/[\s()[\]{}<>"']+/).some((token) => {
-    const candidate = token.replace(/[.,!?;]+$/, "");
+    const lastAddressCharacter = token
+      .split("")
+      .findLastIndex((character) => !".,!?;".includes(character));
+    const candidate = token.slice(0, lastAddressCharacter + 1);
     const address = `https://${candidate}`;
     if (!URL.canParse(address)) return false;
     const { hostname } = new URL(address);
@@ -27,7 +30,7 @@ const replySchema = z.object({
     .min(1)
     .max(800)
     .refine(
-      (text) => !containsReplyLink(text),
+      (text) => text.length <= 800 && !containsReplyLink(text),
       "Reply text must not contain links",
     ),
 });
