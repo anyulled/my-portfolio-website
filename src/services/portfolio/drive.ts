@@ -14,6 +14,7 @@ interface DriveFileResponse {
   mimeType: string;
   parents?: string[];
   size?: string;
+  thumbnailLink?: string;
 }
 
 interface DriveFilesResponse {
@@ -62,7 +63,7 @@ const getDriveFile = async (fileId: string): Promise<DriveFileResponse> => {
   const authClient = await getDriveAuthClient();
   const response = await authClient.request<DriveFileResponse>({
     url: `${DRIVE_API}/files/${encodeURIComponent(fileId)}`,
-    params: { fields: "id,name,mimeType,parents,size" },
+    params: { fields: "id,name,mimeType,parents,size,thumbnailLink" },
   });
   return response.data;
 };
@@ -87,6 +88,7 @@ const isFolderWithinRoot = async (
 export const listDriveFolder = async (
   folderId = getRootFolder(),
   pageToken?: string,
+  searchTerm = "",
 ): Promise<DriveFolderPage> => {
   if (folderId !== getRootFolder() && !(await isFolderWithinRoot(folderId))) {
     throw new Error("The requested folder is outside the tearsheets library");
@@ -96,7 +98,15 @@ export const listDriveFolder = async (
   const response = await authClient.request<DriveFilesResponse>({
     url: `${DRIVE_API}/files`,
     params: {
-      q: `'${folderId.replaceAll("'", "\\'")}' in parents and trashed = false`,
+      q: [
+        `'${folderId.replaceAll("'", "\\'")}' in parents`,
+        "trashed = false",
+        searchTerm.trim()
+          ? `name contains '${searchTerm.trim().replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" and "),
       fields: "nextPageToken,files(id,name,mimeType,parents,size)",
       orderBy: "folder,name",
       pageSize: 100,
@@ -123,6 +133,33 @@ export const listDriveFolder = async (
     entries,
     nextPageToken: response.data.nextPageToken ?? null,
   };
+};
+
+export const downloadDriveThumbnail = async (
+  fileId: string,
+): Promise<Buffer> => {
+  const file = await getDriveFile(fileId);
+  if (!file.mimeType.startsWith("image/")) {
+    throw new Error("Only image files can be previewed");
+  }
+  const isAllowed = (
+    await Promise.all(
+      (file.parents ?? []).map((parentId) => isFolderWithinRoot(parentId)),
+    )
+  ).some(Boolean);
+  if (!isAllowed) {
+    throw new Error("The selected image is outside the tearsheets library");
+  }
+  if (!file.thumbnailLink) {
+    return (await downloadDriveImage(fileId)).buffer;
+  }
+
+  const authClient = await getDriveAuthClient();
+  const response = await authClient.request<ArrayBuffer>({
+    url: file.thumbnailLink,
+    responseType: "arraybuffer",
+  });
+  return Buffer.from(response.data);
 };
 
 export const downloadDriveImage = async (

@@ -42,16 +42,16 @@ export default function PortfolioManager({
     models,
     moveImage,
     newModel,
-    previewId,
     saveCollection,
     saving,
+    searchTerm,
     selectedIds,
     setArchived,
     setDraft,
     setField,
     setFolderTrail,
     setNewModel,
-    setPreviewId,
+    setSearchTerm,
     toggleDriveImage,
     toggleModel,
   } = usePortfolioManager({
@@ -286,7 +286,7 @@ export default function PortfolioManager({
             folderPage={folderPage}
             folderTrail={folderTrail}
             loadingFolder={loadingFolder}
-            previewId={previewId}
+            searchTerm={searchTerm}
             selectedIds={selectedIds}
             onBreadcrumb={(folder, index) => {
               setFolderTrail((current) => current.slice(0, index + 1));
@@ -308,15 +308,13 @@ export default function PortfolioManager({
               ]);
               void loadFolder(entry.id);
             }}
-            onPreview={(id) =>
-              setPreviewId((current) => (current === id ? null : id))
-            }
             onRemove={(id) =>
               setField(
                 "driveImages",
                 draft.driveImages.filter((image) => image.id !== id),
               )
             }
+            onSearch={setSearchTerm}
             onToggle={toggleDriveImage}
           />
 
