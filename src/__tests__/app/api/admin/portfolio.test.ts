@@ -165,7 +165,7 @@ describe("portfolio administration API", () => {
     });
     expect(errorLog).toHaveBeenCalledWith(
       "portfolio_collection_save_failed",
-      databaseError,
+      {},
     );
   });
 

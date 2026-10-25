@@ -38,6 +38,11 @@ import {
 import sharp from "sharp";
 
 const request = (url: string): Request => ({ url }) as Request;
+const createDriveError = (status: number) =>
+  Object.assign(new Error("Drive error"), {
+    status,
+    config: { headers: { Authorization: "Bearer test-token" } },
+  });
 
 describe("portfolio Drive endpoints", () => {
   const logError = jest
@@ -92,16 +97,16 @@ describe("portfolio Drive endpoints", () => {
     );
     expect(response.status).toBe(200);
     expect(listDriveFolder).toHaveBeenCalledWith("folder-1", "page-2");
-    jest
-      .mocked(listDriveFolder)
-      .mockRejectedValueOnce(new Error("Drive error"));
+    jest.mocked(listDriveFolder).mockRejectedValueOnce(createDriveError(403));
     expect(
       (await listDrive(request("http://localhost/api/admin/portfolio/drive")))
         .status,
     ).toBe(502);
-    expect(logError).toHaveBeenCalledWith(
-      "portfolio_drive_listing_failed",
-      expect.any(Error),
+    expect(logError).toHaveBeenCalledWith("portfolio_drive_listing_failed", {
+      status: 403,
+    });
+    expect(JSON.stringify(logError.mock.calls)).not.toContain(
+      "Bearer test-token",
     );
   });
 
@@ -143,7 +148,7 @@ describe("portfolio Drive endpoints", () => {
   it("returns a gateway error when the preview cannot be generated", async () => {
     jest
       .mocked(downloadDriveImage)
-      .mockRejectedValueOnce(new Error("read error"));
+      .mockRejectedValueOnce(createDriveError(502));
     expect(
       (
         await previewDriveImage(
@@ -151,9 +156,11 @@ describe("portfolio Drive endpoints", () => {
         )
       ).status,
     ).toBe(502);
-    expect(logError).toHaveBeenCalledWith(
-      "portfolio_drive_preview_failed",
-      expect.any(Error),
+    expect(logError).toHaveBeenCalledWith("portfolio_drive_preview_failed", {
+      status: 502,
+    });
+    expect(JSON.stringify(logError.mock.calls)).not.toContain(
+      "Bearer test-token",
     );
   });
 });

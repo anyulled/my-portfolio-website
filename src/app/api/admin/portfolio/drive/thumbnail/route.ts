@@ -1,6 +1,7 @@
 import { getAuthenticatedOperator } from "@/services/instagram/auth";
 import { isHarnessFixtureMode } from "@/services/harness/mode";
 import { downloadDriveImage } from "@/services/portfolio/drive";
+import { getSafeErrorMetadata } from "@/services/portfolio/errorMetadata";
 import { connection, NextResponse } from "next/server";
 import sharp from "sharp";
 
@@ -46,7 +47,10 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error("portfolio_drive_preview_failed", error);
+    console.error(
+      "portfolio_drive_preview_failed",
+      getSafeErrorMetadata(error),
+    );
     return NextResponse.json(
       { message: "Unable to preview the selected Drive image." },
       { status: 502 },

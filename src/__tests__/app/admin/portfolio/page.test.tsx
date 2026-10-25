@@ -107,9 +107,6 @@ describe("portfolio administration page", () => {
       models: [],
       databaseUnavailableMessage: "database_unavailable",
     });
-    expect(errorLog).toHaveBeenCalledWith(
-      "portfolio_admin_load_failed",
-      databaseError,
-    );
+    expect(errorLog).toHaveBeenCalledWith("portfolio_admin_load_failed", {});
   });
 });

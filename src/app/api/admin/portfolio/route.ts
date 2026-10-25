@@ -1,5 +1,6 @@
 import { getAuthenticatedOperator } from "@/services/instagram/auth";
 import { isHarnessFixtureMode } from "@/services/harness/mode";
+import { getSafeErrorMetadata } from "@/services/portfolio/errorMetadata";
 import {
   deletePortfolioPhotoObjects,
   uploadDriveImages,
@@ -74,7 +75,7 @@ export async function GET() {
     ]);
     return NextResponse.json({ collections, models });
   } catch (error) {
-    console.error("portfolio_admin_load_failed", error);
+    console.error("portfolio_admin_load_failed", getSafeErrorMetadata(error));
     return NextResponse.json(
       { message: "Unable to load portfolio collections." },
       { status: 503 },
@@ -148,7 +149,10 @@ export async function POST(request: Request) {
     revalidatePath("/styles");
     return NextResponse.json({ collectionId: savedCollectionId });
   } catch (error) {
-    console.error("portfolio_collection_save_failed", error);
+    console.error(
+      "portfolio_collection_save_failed",
+      getSafeErrorMetadata(error),
+    );
     return NextResponse.json(
       {
         message:
