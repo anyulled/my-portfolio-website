@@ -22,8 +22,11 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const folderId = url.searchParams.get("folderId") ?? undefined;
   const pageToken = url.searchParams.get("pageToken") ?? undefined;
+  const searchTerm = url.searchParams.get("search") ?? "";
   try {
-    return NextResponse.json(await listDriveFolder(folderId, pageToken));
+    return NextResponse.json(
+      await listDriveFolder(folderId, pageToken, searchTerm),
+    );
   } catch (error) {
     console.error(
       "portfolio_drive_listing_failed",

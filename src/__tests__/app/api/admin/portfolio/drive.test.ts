@@ -22,7 +22,7 @@ jest.mock("@/services/harness/mode", () => ({
   isHarnessFixtureMode: jest.fn(),
 }));
 jest.mock("@/services/portfolio/drive", () => ({
-  downloadDriveImage: jest.fn(),
+  downloadDriveThumbnail: jest.fn(),
   listDriveFolder: jest.fn(),
 }));
 jest.mock("sharp", () => jest.fn());
@@ -32,7 +32,7 @@ import { GET as previewDriveImage } from "@/app/api/admin/portfolio/drive/thumbn
 import { getAuthenticatedOperator } from "@/services/instagram/auth";
 import { isHarnessFixtureMode } from "@/services/harness/mode";
 import {
-  downloadDriveImage,
+  downloadDriveThumbnail,
   listDriveFolder,
 } from "@/services/portfolio/drive";
 import sharp from "sharp";
@@ -58,11 +58,7 @@ describe("portfolio Drive endpoints", () => {
       entries: [],
       nextPageToken: null,
     });
-    jest.mocked(downloadDriveImage).mockResolvedValue({
-      name: "photo.jpg",
-      mimeType: "image/jpeg",
-      buffer: Buffer.from("image"),
-    });
+    jest.mocked(downloadDriveThumbnail).mockResolvedValue(Buffer.from("image"));
     const toBuffer = jest.fn().mockResolvedValue(Buffer.from("webp"));
     const webp = jest.fn(() => ({ toBuffer }));
     const resize = jest.fn(() => ({ webp }));
@@ -92,11 +88,15 @@ describe("portfolio Drive endpoints", () => {
   it("lists the requested folder and page, returning gateway errors from Drive", async () => {
     const response = await listDrive(
       request(
-        "http://localhost/api/admin/portfolio/drive?folderId=folder-1&pageToken=page-2",
+        "http://localhost/api/admin/portfolio/drive?folderId=folder-1&pageToken=page-2&search=Margarita",
       ),
     );
     expect(response.status).toBe(200);
-    expect(listDriveFolder).toHaveBeenCalledWith("folder-1", "page-2");
+    expect(listDriveFolder).toHaveBeenCalledWith(
+      "folder-1",
+      "page-2",
+      "Margarita",
+    );
     jest.mocked(listDriveFolder).mockRejectedValueOnce(createDriveError(403));
     expect(
       (await listDrive(request("http://localhost/api/admin/portfolio/drive")))
@@ -130,7 +130,7 @@ describe("portfolio Drive endpoints", () => {
     expect(
       (await previewDriveImage(request("http://localhost/api/preview"))).status,
     ).toBe(400);
-    expect(downloadDriveImage).not.toHaveBeenCalled();
+    expect(downloadDriveThumbnail).not.toHaveBeenCalled();
   });
 
   it("converts a selected Drive image to a private WebP preview", async () => {
@@ -141,13 +141,13 @@ describe("portfolio Drive endpoints", () => {
     expect(response.headers.get("Content-Type")).toBe("image/webp");
     expect(response.headers.get("Cache-Control")).toBe("private, max-age=300");
     expect(response.headers.get("X-Content-Type-Options")).toBe("nosniff");
-    expect(downloadDriveImage).toHaveBeenCalledWith("photo-id");
+    expect(downloadDriveThumbnail).toHaveBeenCalledWith("photo-id");
     expect(sharp).toHaveBeenCalledWith(Buffer.from("image"));
   });
 
   it("returns a gateway error when the preview cannot be generated", async () => {
     jest
-      .mocked(downloadDriveImage)
+      .mocked(downloadDriveThumbnail)
       .mockRejectedValueOnce(createDriveError(502));
     expect(
       (

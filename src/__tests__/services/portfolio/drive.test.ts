@@ -9,6 +9,7 @@ jest.mock("google-auth-library", () => ({
 import { GoogleAuth } from "google-auth-library";
 import {
   downloadDriveImage,
+  downloadDriveThumbnail,
   listDriveFolder,
 } from "@/services/portfolio/drive";
 
@@ -150,6 +151,104 @@ describe("Google Drive portfolio library", () => {
         },
       });
     await expect(listDriveFolder("outside")).rejects.toThrow(
+      "outside the tearsheets library",
+    );
+  });
+
+  it("filters names within the requested folder and escapes Drive query text", async () => {
+    mockRequest
+      .mockResolvedValueOnce({ data: { files: [] } })
+      .mockResolvedValueOnce({
+        data: {
+          id: "root",
+          name: "tearsheets",
+          mimeType: "application/vnd.google-apps.folder",
+        },
+      });
+
+    await listDriveFolder("root", undefined, "Margarita's\\set");
+
+    expect(mockRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: "https://www.googleapis.com/drive/v3/files",
+        params: expect.objectContaining({
+          q: "'root' in parents and trashed = false and name contains 'Margarita\\'s\\\\set'",
+        }),
+      }),
+    );
+  });
+
+  it("uses a credentialed Drive thumbnail when one is available", async () => {
+    mockRequest
+      .mockResolvedValueOnce({
+        data: {
+          id: "photo",
+          name: "photo.jpg",
+          mimeType: "image/jpeg",
+          parents: ["root"],
+          thumbnailLink: "https://drive.google.com/thumbnail/photo",
+        },
+      })
+      .mockResolvedValueOnce({ data: Uint8Array.from([4, 5, 6]).buffer });
+
+    await expect(downloadDriveThumbnail("photo")).resolves.toEqual(
+      Buffer.from([4, 5, 6]),
+    );
+    expect(mockRequest).toHaveBeenLastCalledWith({
+      url: "https://drive.google.com/thumbnail/photo",
+      responseType: "arraybuffer",
+    });
+  });
+
+  it("falls back to the full image when Drive has no thumbnail", async () => {
+    mockRequest
+      .mockResolvedValueOnce({
+        data: {
+          id: "photo",
+          name: "photo.jpg",
+          mimeType: "image/jpeg",
+          parents: ["root"],
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          id: "photo",
+          name: "photo.jpg",
+          mimeType: "image/jpeg",
+          parents: ["root"],
+        },
+      })
+      .mockResolvedValueOnce({ data: Uint8Array.from([7, 8, 9]).buffer });
+
+    await expect(downloadDriveThumbnail("photo")).resolves.toEqual(
+      Buffer.from([7, 8, 9]),
+    );
+    expect(mockRequest).toHaveBeenLastCalledWith(
+      expect.objectContaining({ params: { alt: "media" } }),
+    );
+  });
+
+  it("rejects thumbnail requests for non-images and images outside the library", async () => {
+    mockRequest.mockResolvedValueOnce({
+      data: {
+        id: "document",
+        name: "notes.pdf",
+        mimeType: "application/pdf",
+      },
+    });
+    await expect(downloadDriveThumbnail("document")).rejects.toThrow(
+      "Only image files can be previewed",
+    );
+
+    mockRequest.mockResolvedValueOnce({
+      data: {
+        id: "outside-photo",
+        name: "photo.jpg",
+        mimeType: "image/jpeg",
+        parents: [],
+      },
+    });
+    await expect(downloadDriveThumbnail("outside-photo")).rejects.toThrow(
       "outside the tearsheets library",
     );
   });

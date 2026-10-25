@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   CollectionDraft,
   DriveEntry,
@@ -41,6 +41,47 @@ const getJson = async <T>(response: Response): Promise<T> => {
   return result as T;
 };
 
+const getDriveFolderUrl = (
+  folderId?: string,
+  pageToken?: string,
+  searchQuery = "",
+) => {
+  const params = new URLSearchParams();
+  if (folderId) params.set("folderId", folderId);
+  if (pageToken) params.set("pageToken", pageToken);
+  if (searchQuery) params.set("search", searchQuery);
+  const suffix = params.size > 0 ? `?${params.toString()}` : "";
+  return `/api/admin/portfolio/drive${suffix}`;
+};
+
+const mergeDriveFolderPage = (
+  current: DriveFolderPage | null,
+  next: DriveFolderPage,
+  append: boolean,
+): DriveFolderPage =>
+  append && current
+    ? { ...next, entries: [...current.entries, ...next.entries] }
+    : next;
+
+const reportDriveFolderError = (
+  error: unknown,
+  controller: AbortController,
+  setError: (message: string) => void,
+) => {
+  if (controller.signal.aborted) return;
+  setError(error instanceof Error ? error.message : "Unable to browse Drive.");
+};
+
+const finishDriveFolderRequest = (
+  controller: AbortController,
+  activeRequest: { current: AbortController | null },
+  setLoadingFolder: (loading: boolean) => void,
+) => {
+  if (activeRequest.current !== controller) return;
+  activeRequest.current = null;
+  setLoadingFolder(false);
+};
+
 export const usePortfolioManager = ({
   collections: initialCollections,
   models: initialModels,
@@ -53,7 +94,8 @@ export const usePortfolioManager = ({
     profileUrl: "",
   });
   const [folderPage, setFolderPage] = useState<DriveFolderPage | null>(null);
-  const [previewId, setPreviewId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [folderTrail, setFolderTrail] = useState<
     Array<{ id: string; name: string }>
   >([]);
@@ -61,6 +103,9 @@ export const usePortfolioManager = ({
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const activeFolderId = useRef<string | undefined>(undefined);
+  const activeFolderRequest = useRef<AbortController | null>(null);
+  const skipInitialSearch = useRef(true);
   const editing = Boolean(draft.id);
   const selectedIds = useMemo(
     () => new Set(draft.driveImages.map((image) => image.id)),
@@ -71,36 +116,62 @@ export const usePortfolioManager = ({
     folderId?: string,
     pageToken?: string,
     append = false,
+    searchQuery = debouncedSearchTerm,
   ) => {
+    activeFolderRequest.current?.abort();
+    const controller = new AbortController();
+    activeFolderRequest.current = controller;
+    activeFolderId.current = folderId;
     setLoadingFolder(true);
     setError("");
+    if (!append) setFolderPage(null);
     try {
-      const query = new URLSearchParams();
-      if (folderId) query.set("folderId", folderId);
-      if (pageToken) query.set("pageToken", pageToken);
-      const suffix = query.size > 0 ? `?${query.toString()}` : "";
       const page = await getJson<DriveFolderPage>(
-        await fetch(`/api/admin/portfolio/drive${suffix}`),
+        await fetch(getDriveFolderUrl(folderId, pageToken, searchQuery), {
+          signal: controller.signal,
+        }),
       );
-      setFolderPage((current) =>
-        append && current
-          ? { ...page, entries: [...current.entries, ...page.entries] }
-          : page,
-      );
+      if (controller.signal.aborted) return;
+      activeFolderId.current = page.folderId;
+      setFolderPage((current) => mergeDriveFolderPage(current, page, append));
       if (!folderId)
         setFolderTrail([{ id: page.folderId, name: page.folderName }]);
     } catch (caught) {
-      setError(
-        caught instanceof Error ? caught.message : "Unable to browse Drive.",
-      );
+      reportDriveFolderError(caught, controller, setError);
     } finally {
-      setLoadingFolder(false);
+      finishDriveFolderRequest(
+        controller,
+        activeFolderRequest,
+        setLoadingFolder,
+      );
     }
   };
 
   useEffect(() => {
     void loadFolder();
+    return () => activeFolderRequest.current?.abort();
   }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setDebouncedSearchTerm(searchTerm.trim()),
+      300,
+    );
+    return () => clearTimeout(timeout);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (skipInitialSearch.current) {
+      skipInitialSearch.current = false;
+      return;
+    }
+    void loadFolder(
+      activeFolderId.current,
+      undefined,
+      false,
+      debouncedSearchTerm,
+    );
+  }, [debouncedSearchTerm]);
 
   const setField = <Key extends keyof CollectionDraft>(
     key: Key,
@@ -250,9 +321,10 @@ export const usePortfolioManager = ({
     models,
     moveImage,
     newModel,
-    previewId,
     saveCollection,
     saving,
+    searchTerm,
+    setSearchTerm,
     selectedIds,
     setArchived,
     setDraft,
@@ -260,7 +332,6 @@ export const usePortfolioManager = ({
     setField,
     setFolderTrail,
     setNewModel,
-    setPreviewId,
     toggleDriveImage,
     toggleModel,
   };

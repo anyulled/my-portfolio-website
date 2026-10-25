@@ -63,7 +63,7 @@ const callbacks = {
   setField: jest.fn(),
   setFolderTrail: jest.fn(),
   setNewModel: jest.fn(),
-  setPreviewId: jest.fn(),
+  setSearchTerm: jest.fn(),
   toggleDriveImage: jest.fn(),
   toggleModel: jest.fn(),
 };
@@ -95,7 +95,7 @@ const makeManagerState = (overrides: Record<string, unknown> = {}) => ({
   message: "Collection saved.",
   models: collection.models,
   newModel: { name: "", profileUrl: "" },
-  previewId: "third",
+  searchTerm: "",
   saving: false,
   selectedIds: new Set(["first", "second"]),
   ...overrides,
@@ -162,9 +162,14 @@ describe("PortfolioManager", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "Remove" })[1]);
     fireEvent.click(screen.getByRole("button", { name: /Nested/ }));
     fireEvent.click(screen.getByRole("button", { name: "tearsheets" }));
-    fireEvent.click(screen.getByRole("button", { name: "Load more files" }));
+    fireEvent.click(screen.getByRole("button", { name: "Load more" }));
     fireEvent.click(screen.getByRole("checkbox", { name: /third.jpg/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: "Search this folder" }),
+      {
+        target: { value: "Margarita" },
+      },
+    );
     fireEvent.click(screen.getAllByRole("button", { name: "Remove" })[0]);
     fireEvent.click(
       screen.getByRole("button", { name: "Move first.jpg down" }),
@@ -186,11 +191,7 @@ describe("PortfolioManager", () => {
     );
     expect(callbacks.setNewModel).toHaveBeenCalledTimes(2);
     expect(callbacks.setFolderTrail).toHaveBeenCalledTimes(2);
-    const updatePreview = callbacks.setPreviewId.mock.calls[0][0] as (
-      current: string | null,
-    ) => string | null;
-    expect(updatePreview("third")).toBeNull();
-    expect(updatePreview(null)).toBe("third");
+    expect(callbacks.setSearchTerm).toHaveBeenCalledWith("Margarita");
     expect(callbacks.setField).toHaveBeenCalled();
     expect(callbacks.toggleModel).toHaveBeenCalledWith(collection.models[0].id);
     expect(callbacks.addNewModel).toHaveBeenCalled();
@@ -237,7 +238,7 @@ describe("PortfolioManager", () => {
       screen.getByRole("button", { name: "Saving and publishing…" }),
     ).toBeDisabled();
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Loading Drive folder…",
+      "Loading this folder…",
     );
     expect(screen.getByText("No collections yet.")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Collection name"), {

@@ -94,7 +94,61 @@ describe("usePortfolioManager", () => {
     expect(fetchMock).toHaveBeenNthCalledWith(
       3,
       "/api/admin/portfolio/drive?folderId=root&pageToken=next",
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
     );
+  });
+
+  it("debounces name search and replaces the current result page", async () => {
+    const searchPage = { ...drivePage, entries: [drivePage.entries[1]] };
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce(createResponse(drivePage))
+      .mockResolvedValueOnce(createResponse(searchPage));
+    global.fetch = fetchMock;
+    const { result } = renderHook(() =>
+      usePortfolioManager({ collections: [], models: [] }),
+    );
+    await waitFor(() => expect(result.current.folderPage).toEqual(drivePage));
+
+    await act(async () => {
+      result.current.setSearchTerm("Mar");
+      result.current.setSearchTerm("Margarita");
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    });
+
+    await waitFor(() => expect(result.current.folderPage).toEqual(searchPage));
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/admin/portfolio/drive?folderId=root&search=Margarita",
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
+  });
+
+  it("ignores an older folder response after a newer search starts", async () => {
+    const pending: Array<(response: Response) => void> = [];
+    const fetchMock = jest.fn(
+      () => new Promise<Response>((resolve) => pending.push(resolve)),
+    );
+    global.fetch = fetchMock;
+    const { result } = renderHook(() =>
+      usePortfolioManager({ collections: [], models: [] }),
+    );
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    act(() => result.current.setSearchTerm("Margarita"));
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 350)));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const searchPage = { ...drivePage, entries: [drivePage.entries[1]] };
+    await act(async () => {
+      pending[1](createResponse(searchPage));
+    });
+    await waitFor(() => expect(result.current.folderPage).toEqual(searchPage));
+    await act(async () => {
+      pending[0](createResponse(drivePage));
+    });
+
+    expect(result.current.folderPage).toEqual(searchPage);
   });
 
   it("tracks selected images, new models, edits, ordering, and cancellation", async () => {
@@ -111,8 +165,12 @@ describe("usePortfolioManager", () => {
     expect(result.current.draft.driveImages).toEqual([
       { id: "photo-id", name: "photo.jpg" },
     ]);
+    act(() => result.current.toggleDriveImage(drivePage.entries[1]));
+    expect(result.current.draft.driveImages).toEqual([]);
     act(() => result.current.toggleModel("model-id"));
     expect(result.current.draft.modelIds).toEqual(["model-id"]);
+    act(() => result.current.toggleModel("model-id"));
+    expect(result.current.draft.modelIds).toEqual([]);
     act(() =>
       result.current.setNewModel({
         name: " New Model ",
@@ -152,7 +210,8 @@ describe("usePortfolioManager", () => {
     global.fetch = jest
       .fn()
       .mockResolvedValueOnce(createResponse(drivePage))
-      .mockRejectedValueOnce(new Error("Drive unavailable"));
+      .mockRejectedValueOnce(new Error("Drive unavailable"))
+      .mockRejectedValueOnce("Network unavailable");
     const { result } = renderHook(() =>
       usePortfolioManager({ collections: [], models: [] }),
     );
@@ -165,6 +224,33 @@ describe("usePortfolioManager", () => {
     );
     await act(async () => result.current.loadFolder("broken"));
     expect(result.current.error).toBe("Drive unavailable");
+    await act(async () => result.current.loadFolder("broken-again"));
+    expect(result.current.error).toBe("Unable to browse Drive.");
+    expect(result.current.loadingFolder).toBe(false);
+  });
+
+  it("does not report a request error after search cancels that request", async () => {
+    const fetchMock = jest
+      .fn()
+      .mockImplementationOnce(
+        (_url: string, options: RequestInit) =>
+          new Promise<Response>((_resolve, reject) => {
+            options.signal?.addEventListener("abort", () =>
+              reject(new Error("Request aborted")),
+            );
+          }),
+      )
+      .mockResolvedValueOnce(createResponse(drivePage));
+    global.fetch = fetchMock;
+    const { result } = renderHook(() =>
+      usePortfolioManager({ collections: [], models: [] }),
+    );
+
+    act(() => result.current.setSearchTerm("Margarita"));
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 350)));
+    await waitFor(() => expect(result.current.folderPage).toEqual(drivePage));
+
+    expect(result.current.error).toBe("");
     expect(result.current.loadingFolder).toBe(false);
   });
 

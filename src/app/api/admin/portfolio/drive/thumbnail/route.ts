@@ -1,6 +1,6 @@
 import { getAuthenticatedOperator } from "@/services/instagram/auth";
 import { isHarnessFixtureMode } from "@/services/harness/mode";
-import { downloadDriveImage } from "@/services/portfolio/drive";
+import { downloadDriveThumbnail } from "@/services/portfolio/drive";
 import { getSafeErrorMetadata } from "@/services/portfolio/errorMetadata";
 import { connection, NextResponse } from "next/server";
 import sharp from "sharp";
@@ -28,16 +28,16 @@ export async function GET(request: Request) {
     );
   }
   try {
-    const image = await downloadDriveImage(fileId);
-    const preview = await sharp(image.buffer)
+    const thumbnail = await downloadDriveThumbnail(fileId);
+    const preview = await sharp(thumbnail)
       .rotate()
       .resize({
-        width: 480,
-        height: 640,
+        width: 320,
+        height: 400,
         fit: "inside",
         withoutEnlargement: true,
       })
-      .webp({ quality: 72 })
+      .webp({ quality: 64 })
       .toBuffer();
     return new NextResponse(preview, {
       headers: {
