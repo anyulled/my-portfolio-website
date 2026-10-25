@@ -4,7 +4,7 @@
 
 - **Repository**: `/home/runner/work/my-portfolio-website/my-portfolio-website`
 - **Languages**: javascript, typescript
-- **Assessed**: 2026-10-09 17:21 UTC
+- **Assessed**: 2026-10-25 01:37 UTC
 - **Checks**: 27/31 passed
 
 ## Summary
@@ -56,7 +56,7 @@ _DORA 2025 - AI-accessible documentation_
 
 _DORA 2025 Report_
 
-**Evidence**: CI detected: github, github, github, github, github, github, github
+**Evidence**: CI detected: github, github, github, github, github, github, github, github
 
 ### [PASS] Linter Enforcement (4/4)
 
