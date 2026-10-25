@@ -40,8 +40,8 @@ export default function LocaleSwitcherSelect({
     };
 
     if (isLocale(value)) {
-      startTransition(() => {
-        setUserLocale(value);
+      startTransition(async () => {
+        await setUserLocale(value);
       });
     }
   }
