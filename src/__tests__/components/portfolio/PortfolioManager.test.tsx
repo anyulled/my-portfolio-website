@@ -4,8 +4,12 @@ jest.mock("@/components/portfolio/usePortfolioManager", () => ({
 jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
 
 import { fireEvent, render, screen } from "@testing-library/react";
+import { useRouter } from "next/navigation";
 import PortfolioManager from "@/components/portfolio/PortfolioManager";
 import { usePortfolioManager } from "@/components/portfolio/usePortfolioManager";
 import { getHarnessPortfolioCollections } from "@/services/harness/fixtures";
@@ -63,6 +67,7 @@ const callbacks = {
   toggleDriveImage: jest.fn(),
   toggleModel: jest.fn(),
 };
+const refresh = jest.fn();
 
 const makeManagerState = (overrides: Record<string, unknown> = {}) => ({
   ...callbacks,
@@ -99,6 +104,17 @@ const makeManagerState = (overrides: Record<string, unknown> = {}) => ({
 describe("PortfolioManager", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(useRouter).mockReturnValue({ refresh } as never);
+    callbacks.setNewModel.mockImplementation((update) => {
+      if (typeof update === "function") {
+        update({ name: "", profileUrl: "" });
+      }
+    });
+    callbacks.setFolderTrail.mockImplementation((update) => {
+      if (typeof update === "function") {
+        update([{ id: "root", name: "tearsheets" }]);
+      }
+    });
     jest
       .mocked(usePortfolioManager)
       .mockReturnValue(makeManagerState() as never);
@@ -134,6 +150,7 @@ describe("PortfolioManager", () => {
       target: { value: "Brand Two" },
     });
     fireEvent.click(screen.getByRole("checkbox", { name: /Harness Model/ }));
+    fireEvent.click(screen.getAllByRole("link", { name: "Profile" })[0]);
     fireEvent.change(screen.getByPlaceholderText("New model name"), {
       target: { value: "Another Model" },
     });
@@ -142,7 +159,7 @@ describe("PortfolioManager", () => {
       { target: { value: "https://example.com/another" } },
     );
     fireEvent.click(screen.getByRole("button", { name: "Add model" }));
-    fireEvent.click(screen.getAllByRole("button", { name: "Remove" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Remove" })[1]);
     fireEvent.click(screen.getByRole("button", { name: /Nested/ }));
     fireEvent.click(screen.getByRole("button", { name: "tearsheets" }));
     fireEvent.click(screen.getByRole("button", { name: "Load more files" }));
@@ -167,6 +184,8 @@ describe("PortfolioManager", () => {
     expect(updateDraft({ id: "existing", slug: "old-slug" }).slug).toBe(
       "old-slug",
     );
+    expect(callbacks.setNewModel).toHaveBeenCalledTimes(2);
+    expect(callbacks.setFolderTrail).toHaveBeenCalledTimes(2);
     const updatePreview = callbacks.setPreviewId.mock.calls[0][0] as (
       current: string | null,
     ) => string | null;
@@ -244,5 +263,20 @@ describe("PortfolioManager", () => {
       screen.getByText("database_unavailable").closest("[role=alert]"),
     ).toBeInTheDocument();
     expect(screen.queryByText(/PGRST205/)).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Collection name")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Add model" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "Save and publish" }),
+    ).toBeDisabled();
+    expect(
+      screen.queryByRole("button", { name: "Edit" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Archive" }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "retry" }));
+
+    expect(refresh).toHaveBeenCalledTimes(1);
   });
 });
