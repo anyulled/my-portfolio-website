@@ -3,6 +3,9 @@ jest.mock("next/navigation", () => ({
     throw new Error("REDIRECT");
   }),
 }));
+jest.mock("next-intl/server", () => ({
+  getTranslations: jest.fn(async () => (key: string) => key),
+}));
 jest.mock("@/services/instagram/auth", () => ({
   getAuthenticatedOperator: jest.fn(),
 }));
@@ -83,5 +86,30 @@ describe("portfolio administration page", () => {
       collections: [{ id: "collection" }],
       models: [{ id: "model" }],
     });
+  });
+
+  it("renders the admin manager when the portfolio schema is unavailable", async () => {
+    const databaseError = Object.assign(
+      new Error("Could not find the table 'public.portfolio_collections'"),
+      { code: "PGRST205" },
+    );
+    jest.mocked(listPortfolioCollections).mockRejectedValueOnce(databaseError);
+    const errorLog = jest.spyOn(console, "error").mockImplementation();
+
+    render(await PortfolioAdminPage());
+
+    expect(
+      JSON.parse(
+        screen.getByTestId("manager").getAttribute("data-props") ?? "{}",
+      ),
+    ).toEqual({
+      collections: [],
+      models: [],
+      databaseUnavailableMessage: "database_unavailable",
+    });
+    expect(errorLog).toHaveBeenCalledWith(
+      "portfolio_admin_load_failed",
+      databaseError,
+    );
   });
 });

@@ -130,9 +130,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const database = getPortfolioDatabase();
   const collectionId = draft.id ?? crypto.randomUUID();
   try {
+    const database = getPortfolioDatabase();
     const previousObjectPaths = draft.id
       ? await getCollectionPhotoPaths(database, draft.id)
       : [];
