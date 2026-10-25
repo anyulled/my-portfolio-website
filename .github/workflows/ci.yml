@@ -160,9 +160,11 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Enumerate tracked documentation
+        run: git ls-files '*.md' '*.html' | grep -Ev '^(coverage|docs/api-reference|node_modules|\.next)/' > .lychee-files
       - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
         with:
-          args: --config lychee.toml './**/*.md' './**/*.html'
+          args: --config lychee.toml --files-from .lychee-files
           fail: true
 
   complete:

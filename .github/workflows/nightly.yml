@@ -36,12 +36,14 @@ jobs:
         name: Verify application quality
         continue-on-error: true
         run: npm run verify:nightly && npm run harness:clean
+      - name: Enumerate tracked documentation
+        run: git ls-files '*.md' '*.html' | grep -Ev '^(coverage|docs/api-reference|node_modules|\.next)/' > .lychee-files
       - id: links
         name: Verify documentation links
         continue-on-error: true
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
         with:
-          args: --config lychee.toml './**/*.md' './**/*.html'
+          args: --config lychee.toml --files-from .lychee-files
           fail: true
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
@@ -64,7 +66,7 @@ jobs:
           script: |
             const subsystems = [
               { key: 'quality', name: 'application quality', outcome: process.env.QUALITY_OUTCOME, command: 'npm run verify:nightly' },
-              { key: 'links', name: 'documentation links', outcome: process.env.LINKS_OUTCOME, command: "lychee --config lychee.toml './**/*.md' './**/*.html'" },
+              { key: 'links', name: 'documentation links', outcome: process.env.LINKS_OUTCOME, command: "lychee --config lychee.toml --files-from .lychee-files" },
             ];
             const label = 'automation:nightly';
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
