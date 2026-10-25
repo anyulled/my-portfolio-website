@@ -1,6 +1,6 @@
 import LocaleSwitcherSelect from "@/components/LocaleSwitcherSelect";
 import { setUserLocale } from "@/services/locale";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { usePathname } from "next/navigation";
 import { useTransition } from "react";
 
@@ -70,6 +70,11 @@ describe("LocaleSwitcherSelect", () => {
   });
 
   it("keeps the transition pending until locale persistence finishes", async () => {
+    jest
+      .mocked(useTransition)
+      .mockImplementation(
+        jest.requireActual<typeof import("react")>("react").useTransition,
+      );
     let finishPersistence: () => void = () => undefined;
     jest.mocked(setUserLocale).mockReturnValue(
       new Promise<void>((resolve) => {
@@ -78,14 +83,26 @@ describe("LocaleSwitcherSelect", () => {
     );
     renderSwitcher();
 
-    fireEvent.click(screen.getByRole("button", { name: "Choose Spanish" }));
-    const action: () => Promise<void> = startTransition.mock.calls[0][0];
-    const persistence = action();
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Choose Spanish" }));
+    });
 
-    expect(persistence).toBeInstanceOf(Promise);
     expect(setUserLocale).toHaveBeenCalledWith("es");
-    finishPersistence();
-    await expect(persistence).resolves.toBeUndefined();
+    expect(screen.getByRole("button", { name: "Language" })).toHaveClass(
+      "pointer-events-none",
+      "opacity-60",
+    );
+
+    await act(async () => {
+      finishPersistence();
+    });
+
+    expect(screen.getByRole("button", { name: "Language" })).not.toHaveClass(
+      "pointer-events-none",
+    );
+    expect(screen.getByRole("button", { name: "Language" })).not.toHaveClass(
+      "opacity-60",
+    );
   });
 
   it("propagates persistence errors to React's transition", async () => {
