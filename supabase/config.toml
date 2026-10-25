@@ -1,0 +1,4 @@
+project_id = "boudoir-barcelona"
+
+[db.migrations]
+enabled = true
