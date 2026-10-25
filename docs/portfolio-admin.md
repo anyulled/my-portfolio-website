@@ -4,11 +4,17 @@ The private `/admin/portfolio` page uses the existing Supabase Magic Link for th
 
 ## Setup
 
-1. Apply `supabase/migrations/20260926120000_create_portfolio_collections.sql` to the project configured by `SUPABASE_URL`.
-2. Enable the Google Drive API in the GCP project used by the application.
-3. Share only the Drive `tearsheets` folder with the service account configured by `GCP_CLIENT_EMAIL` or `GCP_SERVICE_ACCOUNT_EMAIL`, with Viewer access.
-4. Set `GOOGLE_DRIVE_TEARSHEETS_FOLDER_ID` to the ID of that folder in local and deployed environments.
-5. Confirm the existing service account can create and delete objects in `GCP_HOMEPAGE_BUCKET`, and that the bucket's public-read policy is intentional for portfolio images.
+1. Add the `SUPABASE_DB_PASSWORD` GitHub repository secret. The migration workflow uses the existing `SUPABASE_PAT` secret and `SUPABASE_URL` repository variable.
+2. Grant the Supabase personal access token the project settings, API keys, and API key secrets read scopes required by `supabase link`.
+3. Merge migration files into `main`; GitHub Actions previews and applies pending migrations after each push to `main`.
+4. Enable the Google Drive API in the GCP project used by the application.
+5. Share only the Drive `tearsheets` folder with the service account configured by `GCP_CLIENT_EMAIL` or `GCP_SERVICE_ACCOUNT_EMAIL`, with Viewer access.
+6. Set `GOOGLE_DRIVE_TEARSHEETS_FOLDER_ID` to the ID of that folder in local and deployed environments.
+7. Confirm the existing service account can create and delete objects in `GCP_HOMEPAGE_BUCKET`, and that the bucket's public-read policy is intentional for portfolio images.
+
+The migration job links the project from `SUPABASE_URL`, runs `npm run supabase:migrate:remote -- --dry-run`, then applies pending migrations with `npm run supabase:migrate:remote`. The existing `npm run supabase:migrate` command stays local. The production migration workflow does not control Vercel's application deployment.
+
+If the migration job reports out-of-sync history, reconcile the remote migration history before retrying. Do not run `migration repair` automatically; it changes migration tracking without applying SQL.
 
 The Drive credential is used by server code with the Drive read-only scope. Credentials and Drive file IDs are never returned by the public portfolio routes. Admin mutations verify the sole operator session before using the Supabase service-role key.
 
