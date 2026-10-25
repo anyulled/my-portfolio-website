@@ -35,3 +35,5 @@ Preview E2E is read-only. It verifies public rendering and authentication bounda
 ## Evidence
 
 CI retains JUnit, coverage, mutation, Playwright traces, screenshots, videos, and structured server output when relevant. A green exit code without the required behavioral evidence is not completion.
+
+The nightly documentation-link check reads the tracked Markdown/HTML manifest from `.lychee-files`, so installed dependencies and generated reports cannot expand the scan after the quality checks. The link step has a ten-minute timeout within the existing 90-minute job budget, leaving time to upload evidence and reconcile repair issues. Nightly artifacts include the `lychee/` report directory and the input manifest, including when a check fails; an interrupted Lychee process may not finish its report.

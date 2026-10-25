@@ -40,12 +40,13 @@ jobs:
         run: git ls-files '*.md' '*.html' | grep -Ev '^(coverage|docs/api-reference|node_modules|\.next)/' > .lychee-files
       - id: links
         name: Verify documentation links
+        timeout-minutes: 10
         continue-on-error: true
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
         with:
           args: --config lychee.toml --files-from .lychee-files
           fail: true
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:
           name: nightly-verification
@@ -54,11 +55,14 @@ jobs:
             playwright-report
             test-results
             reports
+            lychee
+            .lychee-files
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
       - name: Reconcile repair issues
         if: always()
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
         env:
           QUALITY_OUTCOME: ${{ steps.quality.outcome }}
           LINKS_OUTCOME: ${{ steps.links.outcome }}
