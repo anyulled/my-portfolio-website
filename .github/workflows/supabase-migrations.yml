@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - supabase/migrations/**
+      - .github/workflows/supabase-migrations.yml
 
 concurrency:
   group: supabase-production-migrations
