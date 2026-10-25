@@ -14,11 +14,13 @@ import { slugifyPortfolioName } from "@/lib/portfolio";
 interface PortfolioManagerProps {
   collections: PortfolioCollection[];
   models: PortfolioModel[];
+  databaseUnavailableMessage?: string;
 }
 
 export default function PortfolioManager({
   collections: initialCollections,
   models: initialModels,
+  databaseUnavailableMessage,
 }: PortfolioManagerProps) {
   const {
     addNewModel,
@@ -62,6 +64,15 @@ export default function PortfolioManager({
           session.
         </p>
       </header>
+
+      {databaseUnavailableMessage && (
+        <p
+          role="alert"
+          className="rounded-md border border-destructive/40 p-4 text-sm"
+        >
+          {databaseUnavailableMessage}
+        </p>
+      )}
 
       <form
         onSubmit={saveCollection}

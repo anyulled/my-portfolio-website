@@ -1,6 +1,9 @@
 jest.mock("@/components/portfolio/usePortfolioManager", () => ({
   usePortfolioManager: jest.fn(),
 }));
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+}));
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import PortfolioManager from "@/components/portfolio/PortfolioManager";
@@ -226,5 +229,20 @@ describe("PortfolioManager", () => {
       slug: string;
     }) => { slug: string };
     expect(updateDraft({ slug: "" }).slug).toBe("new-editorial");
+  });
+
+  it("shows a translated safe message when database collections are unavailable", () => {
+    render(
+      <PortfolioManager
+        collections={[]}
+        models={[]}
+        databaseUnavailableMessage="database_unavailable"
+      />,
+    );
+
+    expect(
+      screen.getByText("database_unavailable").closest("[role=alert]"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/PGRST205/)).not.toBeInTheDocument();
   });
 });

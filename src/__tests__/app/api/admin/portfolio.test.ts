@@ -40,6 +40,7 @@ import {
   createPortfolioModels,
   deleteUnusedPortfolioModels,
   getCollectionPhotoPaths,
+  getPortfolioDatabase,
   listPortfolioCollections,
   listPortfolioModels,
   savePortfolioCollection,
@@ -146,6 +147,26 @@ describe("portfolio administration API", () => {
       ).status,
     ).toBe(400);
     expect(uploadDriveImages).not.toHaveBeenCalled();
+  });
+
+  it("returns a safe response when the Supabase client cannot be created", async () => {
+    const databaseError = new Error("SUPABASE_SERVICE_ROLE_KEY is required");
+    jest.mocked(getPortfolioDatabase).mockImplementationOnce(() => {
+      throw databaseError;
+    });
+    const errorLog = jest.spyOn(console, "error").mockImplementation();
+
+    const response = await POST(request(validDraft));
+
+    expect(response.status).toBe(503);
+    expect(await json(response)).toEqual({
+      message:
+        "Unable to publish the collection. The previous version is unchanged.",
+    });
+    expect(errorLog).toHaveBeenCalledWith(
+      "portfolio_collection_save_failed",
+      databaseError,
+    );
   });
 
   it("publishes new collections, removes old objects after edits, and cleans failed saves", async () => {
