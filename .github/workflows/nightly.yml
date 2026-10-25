@@ -66,7 +66,7 @@ jobs:
           script: |
             const subsystems = [
               { key: 'quality', name: 'application quality', outcome: process.env.QUALITY_OUTCOME, command: 'npm run verify:nightly' },
-              { key: 'links', name: 'documentation links', outcome: process.env.LINKS_OUTCOME, command: "lychee --config lychee.toml './**/*.md' './**/*.html'" },
+              { key: 'links', name: 'documentation links', outcome: process.env.LINKS_OUTCOME, command: "lychee --config lychee.toml --files-from .lychee-files" },
             ];
             const label = 'automation:nightly';
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
