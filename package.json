@@ -21,7 +21,7 @@
     "@sentry/nextjs": "^10.74.0",
     "@supabase/ssr": "^0.12.7",
     "@tailwindcss/postcss": "^4.3.0",
-    "@upstash/redis": "^1.38.0",
+    "@upstash/redis": "^1.39.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "ai": "^7.0.97",
