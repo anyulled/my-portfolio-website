@@ -5,6 +5,7 @@ import {
   listPortfolioCollections,
   listPortfolioModels,
 } from "@/services/portfolio/repository";
+import { getSafeErrorMetadata } from "@/services/portfolio/errorMetadata";
 import { redirect } from "next/navigation";
 import PortfolioManager from "@/components/portfolio/PortfolioManager";
 import type {
@@ -30,7 +31,7 @@ const getPortfolioAdminData = async (): Promise<{
     ]);
     return { collections, models };
   } catch (error) {
-    console.error("portfolio_admin_load_failed", error);
+    console.error("portfolio_admin_load_failed", getSafeErrorMetadata(error));
     const t = await getTranslations("portfolio");
     return {
       collections: [],

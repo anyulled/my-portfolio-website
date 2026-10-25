@@ -4,6 +4,7 @@ import {
   getPortfolioDatabase,
   setPortfolioCollectionArchived,
 } from "@/services/portfolio/repository";
+import { getSafeErrorMetadata } from "@/services/portfolio/errorMetadata";
 import { connection, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -57,7 +58,10 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     revalidatePath("/styles");
     return NextResponse.json({ archived: parsed.data.archived });
   } catch (error) {
-    console.error("portfolio_collection_archive_failed", error);
+    console.error(
+      "portfolio_collection_archive_failed",
+      getSafeErrorMetadata(error),
+    );
     return NextResponse.json(
       { message: "Unable to update the collection." },
       { status: 503 },
