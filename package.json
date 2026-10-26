@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@ai-sdk/groq": "^4.0.40",
+    "@ai-sdk/groq": "^4.0.69",
     "@fontsource/noto-sans": "^5.3.0",
     "@google-cloud/storage": "^8.2.0",
     "@gsap/react": "^2.1.2",
