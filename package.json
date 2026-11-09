@@ -101,7 +101,7 @@
     "tsx": "4.23.13",
     "typedoc": "^0.28.20",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.65.0",
+    "typescript-eslint": "^8.72.1",
     "yaml": "2.9.1"
   },
   "name": "boudoir-barcelona",
